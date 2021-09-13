@@ -1,0 +1,9 @@
+PatternReturnVariableExists {
+var Int test = 0
+reduction sum([Int] input) : Int res{
+    res += input[INDEX]
+}
+seq main() : Void {
+    test = 2
+}
+}

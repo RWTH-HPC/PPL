@@ -1,0 +1,4 @@
+FunctionDeclarationNoReturnType{
+seq main() : {
+    return 1
+}}

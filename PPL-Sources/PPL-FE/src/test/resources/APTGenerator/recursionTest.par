@@ -1,0 +1,24 @@
+recursionTest{
+
+recursion simple(Int input) : Int res {
+    if (input > 4) {
+        return res
+    }
+
+    res = simple<<<>>>(input + 1)
+
+    return res
+
+}
+
+
+
+seq main() : Int {
+
+    var Int input = 0
+
+    input = simple<<<>>>(0)
+
+    return 0
+}
+}

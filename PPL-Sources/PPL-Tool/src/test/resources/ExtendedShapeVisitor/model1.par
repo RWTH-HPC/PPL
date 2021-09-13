@@ -1,0 +1,38 @@
+model1{
+
+map add([Int] input1, [Int] input2) : [Int] res {
+    res[INDEX] = input1[INDEX] + input2[INDEX]
+}
+
+reduction sum([Int] input) : Int res {
+    res += input[INDEX]
+}
+
+seq test([[Int]] input1, [Int] input2, Int input3) : [Int] {
+    var [Int] res = [0,0,0]
+    res[0] = input1[0][0]
+    res[1] = input2[0]
+    res[3] = input3
+    return res
+}
+
+seq main() : Int {
+
+    var [[Int]] big = init_List([6,8],3)
+
+    var [Int] small = [1,2,3,4,5]
+
+    var Int summation = 0
+
+    summation--
+
+    test(big,test(big,small,5),4)
+
+    summation = sum<<<>>>(small)
+
+    var [Int] mapRes = init_List([7])
+
+    mapRes = add<<<>>>(small, small)
+
+    return 0
+}}

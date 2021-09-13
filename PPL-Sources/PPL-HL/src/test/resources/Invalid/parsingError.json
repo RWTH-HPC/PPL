@@ -1,0 +1,58 @@
+{
+  "topology": "fully",
+  "bandwidth": "1000",
+  "latency": "100000",
+  "nodes": [
+    {
+      "type": "numa",
+      "count": "4",
+      "size": "128000000",
+      "bandwidth": "32000",
+      "latency": "10000",
+      "devices": [
+        {
+          "type": "CPU",
+          "cores": "64",
+          "frequency": "2500",
+          "arithmetic-units": "4",
+          "vectorization": "avx512",
+          "caches": [
+            {
+              "latency": "3",
+              "bandwidth": "6400000",
+              "size": "32"
+            },
+            {
+              "latency": "15",
+              "bandwidth": "1600000",
+              "size": "128"
+            },
+            {
+              "latency": "120",
+              "bandwidth": "400000",
+              "size": "2096"
+            }
+          ]
+        },
+        {
+          "type": "GPU",
+          "cores": "2096",
+          "frequency": "800",
+          "arithmetic-units": "4",
+          "vectorization": "avx256",
+          "caches": [
+            {
+              "latency": "15",
+              "bandwidth": "1600000",
+              "size": "16000000"
+            },
+            {
+              "latency": "12000",
+              "bandwidth": "40000",
+              "size": "124235"
+            }
+          ]
+        }
+      ]
+    }
+  ]

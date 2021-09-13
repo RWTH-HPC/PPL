@@ -1,0 +1,38 @@
+multi_filter {
+
+    stencil sobel_horizontal([[Double]] input) : [[Double]] res {
+        var Double right = 2 * input[INDEX0][INDEX1 + 1] + input[INDEX0 - 1][INDEX1 + 1] + input[INDEX0 + 1][INDEX1 + 1]
+        var Double left = 2 * input[INDEX0][INDEX1 - 1] + input[INDEX0 - 1][INDEX1 - 1] + input[INDEX0 + 1][INDEX1 - 1]
+        res[INDEX0][INDEX1] = right - left
+    }
+
+    stencil prewitt_horizontal([[Double]] input) : [[Double]] res {
+        //var Double right = input[INDEX0][INDEX1 + 1] + input[INDEX0 - 1][INDEX1 + 1] + input[INDEX0 + 1][INDEX1 + 1]
+        //var Double left = input[INDEX0][INDEX1 - 1] + input[INDEX0 - 1][INDEX1 - 1] + input[INDEX0 + 1][INDEX1 - 1]
+
+        var Double right = input[INDEX0 + 4096][INDEX1 + 1] + input[INDEX0 + 4095][INDEX1 + 1] + input[INDEX0 + 4097][INDEX1 + 1]
+        var Double left = input[INDEX0 + 4096][INDEX1 - 1] + input[INDEX0 + 4095][INDEX1 - 1] + input[INDEX0 + 4097][INDEX1 - 1]
+        res[INDEX0][INDEX1] = right - left
+    }
+
+    stencil laplacian([[Double]] input) : [[Double]] res {
+        var Double outer = input[INDEX0 - 1][INDEX1] + input[INDEX0][INDEX1 - 1] + input[INDEX0][INDEX1 + 1] + input[INDEX0 + 1][INDEX1]
+        res[INDEX0][INDEX1] = outer - 4 * input[INDEX0][INDEX1]
+    }
+
+    seq main() : Int {
+        var [[Double]] image = init_List([8194, 8194])
+        var [[Double]] upper_half = init_List([4096, 8192])
+        var [[Double]] lower_half = init_List([4096, 8192])
+        var [[Double]] full = init_List([8192, 8192])
+
+        image = read("image.txt")
+
+        upper_half = sobel_horizontal<<<>>>(image)
+        lower_half = prewitt_horizontal<<<>>>(image)
+        full = laplacian<<<>>>(image)
+
+        return 0
+    }
+
+}

@@ -1,0 +1,12 @@
+// Abstract Pattern Tree
+digraph {
+	mKAkZto42ODyAk8UCoVR [label=Main]
+	gWap6p75Cx1fENTLcylD [label=Serial fillcolor=lawngreen style=filled]
+	FPDuZVmYjkLKtmZvvAb0 [label="Map: kernel" fillcolor=orangered style=filled]
+	MQdqxzKZMXN6ebIFi7ik [label=Serial fillcolor=lawngreen style=filled]
+	"4zVW9kpFpdDA13ul33Co" [label=Serial fillcolor=lawngreen style=filled]
+	mKAkZto42ODyAk8UCoVR -> gWap6p75Cx1fENTLcylD
+	mKAkZto42ODyAk8UCoVR -> FPDuZVmYjkLKtmZvvAb0
+	FPDuZVmYjkLKtmZvvAb0 -> MQdqxzKZMXN6ebIFi7ik
+	mKAkZto42ODyAk8UCoVR -> "4zVW9kpFpdDA13ul33Co"
+}

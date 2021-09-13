@@ -1,0 +1,10 @@
+ReadOnlyPatternParameter {
+var Int test = 0
+reduction sum([Int] input) : Int res {
+    input[INDEX]++
+    res += input[INDEX]
+}
+seq main() : Void {
+    test = 2
+}
+}

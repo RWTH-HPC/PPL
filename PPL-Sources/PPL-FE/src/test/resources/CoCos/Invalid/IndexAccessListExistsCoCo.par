@@ -1,0 +1,6 @@
+IndexAccessListExistsCoCo {
+    var Int test = 1
+seq main() : Void {
+    test[0] = 2
+}
+}

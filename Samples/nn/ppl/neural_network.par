@@ -1,0 +1,71 @@
+neural_network {
+	
+	reduction mult_sum([Float] vectorA, [Float] vectorB) : Float res {
+		res += vectorA[INDEX] * vectorB[INDEX]
+	}
+
+    seq tanh(Float x) : Float {
+        // Taylor expansion of tanh
+        return x - (1.0 / 3.0) * (x * x * x) + (2.0 / 15.0) * (x * x * x * x * x)
+    }
+
+    map layer([[Float]] weights, [Float] feature) : [Float] res {
+        var Float z = 0
+        var Float act = 0
+
+		z = mult_sum<<<>>>(weights[INDEX], feature)
+		
+        act = tanh(z)
+        res[INDEX] = act
+    }
+
+    map forwardFirst([[Float]] batch, [[Float]] weights) : [[Float]] res {
+        res[INDEX] = layer<<<>>>(weights, batch[INDEX])
+    }
+
+    map forwardLast([[Float]] batch, [[Float]] weights) : [[Float]] res {
+        res[INDEX] = layer<<<>>>(weights, batch[INDEX])
+    }
+
+    map forward([[Float]] batch, [[Float]] weights) : [[Float]] res {
+        res[INDEX] = layer<<<>>>(weights, batch[INDEX])
+    }
+
+    seq main() : Int {
+        var [[Float]] batch = init_List([262144, 64])
+
+        var [[Float]] weights_1 = init_List([64, 64])
+        var [[Float]] weights_2 = init_List([64, 64])
+        var [[Float]] weights_3 = init_List([64, 64])
+        var [[Float]] weights_4 = init_List([64, 64])
+        var [[Float]] weights_5 = init_List([64, 64])
+        var [[Float]] weights_6 = init_List([64, 64])
+        var [[Float]] weights_7 = init_List([64, 64])
+        var [[Float]] weights_8 = init_List([10, 64])
+
+        var [[Float]] activations_1 = init_List([262144, 64])
+        var [[Float]] activations_2 = init_List([262144, 64])
+        var [[Float]] activations_3 = init_List([262144, 64])
+        var [[Float]] activations_4 = init_List([262144, 64])
+        var [[Float]] activations_5 = init_List([262144, 64])
+        var [[Float]] activations_6 = init_List([262144, 64])
+        var [[Float]] activations_7 = init_List([262144, 64])
+        var [[Float]] result = init_List([262144, 10])
+        
+        batch = read("batch.txt")
+
+        activations_1 = forwardFirst<<<>>>(batch, weights_1)
+        activations_2 = forward<<<>>>(activations_1, weights_2)
+        activations_3 = forward<<<>>>(activations_2, weights_3)
+        activations_4 = forward<<<>>>(activations_3, weights_4)
+        activations_5 = forward<<<>>>(activations_4, weights_5)
+        activations_6 = forward<<<>>>(activations_5, weights_6)
+        activations_7 = forward<<<>>>(activations_6, weights_7)
+        result = forwardLast<<<>>>(activations_7, weights_8)
+
+        write("result.txt", {result})
+
+        return 0
+    }
+
+}

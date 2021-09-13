@@ -1,0 +1,7 @@
+ReadOnlyConstant {
+const test = 0
+
+seq main() : Int {
+    return test
+}
+}

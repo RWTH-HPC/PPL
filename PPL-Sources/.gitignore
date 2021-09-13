@@ -1,0 +1,11 @@
+target/
+# IntelliJ
+out/
+# User-specific stuff
+.idea/
+*.iml
+*.ipr
+
+*.classpath
+*.settings/
+*.project

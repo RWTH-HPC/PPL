@@ -1,0 +1,14 @@
+model4{
+
+const dsf = 0
+
+
+
+seq main():Int {
+
+    var [Int] simplelist = [dsf, dsf]
+    var [[Int]] List = [[13,3],[23,4]]
+
+    return dsf
+}
+}

@@ -1,0 +1,7 @@
+ListOperator{
+var [Float] list = [1.2, 2, 3.5]
+seq main() : Void {
+    var Int length = #list
+    var [Float] newList = list ++ [34, 2.4]
+
+}}

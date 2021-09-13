@@ -1,0 +1,6 @@
+VariableDeclaration{
+include "test.par"
+var Int test = 1
+var [Float] list = [1.2, 2, 3.5]
+var Int res
+}

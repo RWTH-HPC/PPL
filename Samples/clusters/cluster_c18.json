@@ -1,0 +1,24 @@
+{
+    "topology": "fully",
+    "connectivity-bandwidth": [
+      ["0", "4148"],
+      ["4148", "0"]
+    ],
+    "connectivity-latency": [
+      ["0", "1840"],
+      ["1840", "0"]
+    ],
+  
+    "nodes": [
+      {
+        "identifier": "Node1",
+        "address": "192.165.0.1.125",
+        "template": "Nodes/node_c18.json"
+      }{
+        "identifier": "Node2",
+        "address": "192.165.0.1.126",
+        "template": "Nodes/node_c18.json"
+      },
+
+    ]
+  }

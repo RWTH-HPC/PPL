@@ -1,0 +1,26 @@
+FunctionDeclaration{
+map add([Int] input1, [Int] input2) : [Int] res {
+    res[Index] = input1[INDEX] + input2[INDEX]
+}
+
+reduction sum([Int] input) : Int res {
+    res += input[INDEX]
+}
+
+stencil sten([Int] input) : [Int] res {
+    res[INDEX0] = input[INDEX0 + 1] +  input[INDEX0 - 1]
+}
+
+recursion rec(Int input) : Int res {
+    res = rec<<<>>>(res + input)
+}
+
+seq main() : Int {
+    var [Int] V1 = [1, 2, 3]
+    var [Int] V2 = [4, 5, 6]
+
+    var Int res
+    rea = sum<<<2>>>( add(V1, V2))
+
+    res++
+}}

@@ -1,0 +1,6 @@
+ReadOnlyGlobalVar {
+var Int test = 0
+seq main() : Void {
+    test ++
+}
+}

@@ -1,0 +1,8 @@
+model7{
+seq main():Int {
+    var [Int] array = read("testFile.txt")
+    print({array})
+
+    return 0
+}
+}

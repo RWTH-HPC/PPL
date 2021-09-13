@@ -1,0 +1,10 @@
+model8{
+
+map test([Int] input): [Int] res {
+    res[INDEX] = input[2*INDEX+4]
+}
+
+seq main():Int {
+    return 0
+}
+}

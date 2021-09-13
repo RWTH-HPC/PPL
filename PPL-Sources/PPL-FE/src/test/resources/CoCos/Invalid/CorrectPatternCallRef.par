@@ -1,0 +1,11 @@
+CorrectPatternCallRef {
+
+seq add([Int] input) : [Int] {
+    return input + 1
+}
+seq main() : Void {
+    var [Int] test = [0,0]
+    test = add<<<>>>(test)
+
+}
+}

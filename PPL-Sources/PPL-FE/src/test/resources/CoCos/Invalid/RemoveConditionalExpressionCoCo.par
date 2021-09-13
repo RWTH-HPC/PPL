@@ -1,0 +1,6 @@
+RemoveConditionalExpressionCoCo {
+var Int test = 0
+seq main() : Void {
+    true ? test++ : test--
+}
+}

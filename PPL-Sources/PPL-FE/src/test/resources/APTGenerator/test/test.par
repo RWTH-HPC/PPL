@@ -1,0 +1,21 @@
+test{
+
+
+seq loopCall() : Int {
+    var Int a = 0
+    if a < 3 {
+        a = 5
+    } else if a > 5{
+        a = 3
+    } else {
+        a = 4
+    }
+    return a
+}
+
+seq test():Int {
+
+    var Int a = loopCall()
+    return 0
+}
+}

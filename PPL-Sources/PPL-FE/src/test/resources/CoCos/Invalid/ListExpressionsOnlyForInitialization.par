@@ -1,0 +1,8 @@
+ListExpressionsOnlyForInitialization {
+seq test([Int] input) : Void {
+    return
+}
+seq main() : Int {
+    test([1,2,3])
+}
+}

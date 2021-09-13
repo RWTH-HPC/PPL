@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  
+  <parent>
+    <groupId>de.parallelpatterndsl</groupId>
+    <artifactId>PPL-Sources</artifactId>
+    <version>1.0.0</version>
+  </parent>
+  
+  <artifactId>PPL-FE</artifactId>
+  
+  <build>
+    <plugins>
+      <!-- MontiCore Generation -->
+      <plugin>
+        <groupId>de.monticore.mojo</groupId>
+        <artifactId>monticore-maven-plugin</artifactId>
+      </plugin>
+      <!-- Other Configuration -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>${java.version}</source>
+          <target>${java.version}</target>
+        </configuration>
+      </plugin>
+
+      <!-- Unit Tests -->
+      <!-- default folder is src/test/java/ -->
+      <!-- default incl. are "**/Test*.java", "**/*Test.java", "**/*TestCase.java" -->
+      <plugin>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>${surefire.plugin}</version>
+        <configuration>
+          <useSystemClassLoader>false</useSystemClassLoader>
+          <classpathDependencyExcludes>
+            <classpathDependencyExclude>de.monticore:monticore-cli</classpathDependencyExclude>
+          </classpathDependencyExcludes>
+        </configuration>
+        <dependencies>
+          <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-surefire-provider</artifactId>
+            <version>${junit.platform.version}</version>
+          </dependency>
+        </dependencies>
+      </plugin>
+    </plugins>
+  </build>
+  
+  <dependencies>
+    <dependency>
+      <groupId>de.parallelpatterndsl</groupId>
+      <artifactId>PPL-IR</artifactId>
+      <version>1.0.0</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+    </dependency>
+    
+    <dependency>
+      <groupId>org.antlr</groupId>
+      <artifactId>antlr4-runtime</artifactId>
+    </dependency>
+    
+    <!-- MontiCore Dependencies -->
+    <dependency>
+      <groupId>de.monticore</groupId>
+      <artifactId>monticore-runtime</artifactId>
+    </dependency>
+    
+    <dependency>
+      <groupId>de.monticore</groupId>
+      <artifactId>monticore-grammar</artifactId>
+    </dependency>
+    
+    <dependency>
+      <groupId>de.monticore</groupId>
+      <artifactId>monticore-grammar</artifactId>
+      <classifier>${grammars.classifier}</classifier>
+      <scope>provided</scope>
+    </dependency>
+    
+    <!-- Test Libraries  -->
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-engine</artifactId>
+      <scope>test</scope>
+      <!-- doc: http://junit.org/junit5/ -->
+    </dependency>
+
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-params</artifactId>
+      <scope>test</scope>
+      <!-- doc: http://junit.org/junit5/docs/current/user-guide/#writing-tests-parameterized-tests -->
+    </dependency>
+
+    <dependency>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-classic</artifactId>
+      <version>${logback.version}</version>
+      <scope>test</scope>
+    </dependency>
+    
+    <dependency>
+      <groupId>de.monticore</groupId>
+      <artifactId>monticore-runtime</artifactId>
+      <type>test-jar</type>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+</project>

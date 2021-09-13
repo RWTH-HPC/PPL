@@ -1,0 +1,5 @@
+VariableExistsCoCo {
+seq main() : Void {
+    test = 2
+}
+}

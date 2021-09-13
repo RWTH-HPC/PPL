@@ -1,0 +1,47 @@
+nn {
+include "../math"
+
+map kernel([Float] lon, [Float] lat, Float target_lon, Float target_lat):[Float] res {
+	res[INDEX] = sqrt((lon[INDEX]-target_lon)*(lon[INDEX]-target_lon) + (lat[INDEX]-target_lat)*(lat[INDEX]-target_lat))
+}
+
+seq main():Int {
+	var [Float] lon = init_List([160000000])
+	var [Float] lat = init_List([160000000])
+	var [Float] neighbor_dist = init_List([5000],100000)
+	var [Int] neighbor_id = init_List([5000])
+	var [Float] dists  = init_List([160000000])
+	var [String] names = init_List([160000000])
+	
+	var Float target_lon = 50.47
+	var Float target_lat = 6.5
+	
+	lon = read("longitude.txt")
+	lat = read("latitude.txt")
+	names = read("names.txt")
+	
+	dists = kernel<<<>>>(lon,lat,target_lon,target_lat)
+	
+	for var Int i = 0; i< #dists; i++ {
+		var Int max_id = 0
+		var Float max_val = 0-1
+		for var Int j = 0; j <#neighbor_id;j++ {
+			if neighbor_dist[j] > max_val {
+				max_val = neighbor_dist[j]
+				max_id = j
+			}
+		}
+		if max_val > dists[i] {
+			neighbor_dist[max_id] = dists[i]
+			neighbor_id[max_id] = names[i]
+		}
+	
+	}
+	
+	write("dists.txt", {neighbor_dist})
+	write("canes.txt", {neighbor_id})
+	
+	
+	return 0
+}
+}

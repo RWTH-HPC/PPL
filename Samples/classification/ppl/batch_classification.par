@@ -1,0 +1,81 @@
+batch_classification {
+
+    var [Double] classifier_thresh = init_List([4096])
+    var [Double] classifier_weights = init_List([4096])
+    var Double mu = 0.4
+    var Double variance = 0.3
+	
+	map inner_normalization([Double] data) : [Double] normalized {
+		normalized[INDEX] = (data[INDEX] - mu) / variance
+	}
+
+    map normalize([[Double]] data) : [[Double]] normalized {
+        normalized[INDEX] = inner_normalization<<<>>>(data[INDEX])
+    }
+	
+	reduction single_feature([Double] data) : Double feature {
+		var Double temp = 0.0
+		
+		if data[INDEX] < 0 {
+			temp = 0 - data[INDEX]
+		} else {
+			temp = data[INDEX]
+		}
+		
+		feature += temp
+	}
+
+    map extract([[Double]] data) : [Double] features {
+        var Double sum = 0.0
+		
+        sum = single_feature<<<>>>(data[INDEX])
+
+        sum = sum / #data[INDEX]
+        features[INDEX] = sum
+    }
+
+    map classify([Double] integrals) : [Int] classes {
+        var Int integral = 0
+        integral = integrals[INDEX]
+
+        var Double vote = 0.0
+        for var Int j = 0; j < 4096; j++ {
+            var Double thresh = 0.0
+            var Double weight = 0.0
+
+            thresh = classifier_thresh[j]
+            weight = classifier_weights[j]
+
+            if integral > thresh {
+                vote = vote + weight
+            } else {
+                vote = vote - weight
+            }
+        }
+
+        var Int class_result = 0
+        if vote >= 0.0 {
+            class_result = 1
+        } else {
+            class_result = 0 - 1
+        }
+
+        classes[INDEX] = class_result
+    }
+
+    seq main() : Int {
+        var [[Double]] data = init_List([524288, 4096])
+        var [[Double]] normalized = init_List([524288, 4096])
+        var [Double] features = init_List([524288])
+        var [Int] classes = init_List([524288])
+
+        data = read("data.txt")
+        
+        normalized = normalize<<<>>>(data)
+        features = extract<<<>>>(normalized)
+        classes = classify<<<>>>(features)
+
+        return 0
+    }
+
+}

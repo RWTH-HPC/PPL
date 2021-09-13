@@ -1,0 +1,36 @@
+model2{
+
+    var [Int] Test = [1, 2, 3, 4]
+    var String name = "init"
+    include "test/test"
+    const ast = 42
+    const dsf = ast
+
+reduction scalar([Int] input1, [Int] input2) : Int res {
+    res += input1[INDEX] * input2[INDEX]
+}
+
+map MxV([[Int]] input1, [Int] input2) : [Int] res {
+    res[INDEX] = scalar<<<>>>(input1[INDEX], input2)
+}
+
+map MxM([[Int]] input1, [[Int]] input2) : [[Int]] res {
+    res[2*INDEX-1] = MxV<<<[0,1],2>>>(input1, input2[2*INDEX-4])
+}
+
+seq MatrixSquare([[Int]] input) : [[Int]] {
+    var [[Int]] result = [[0,0,0,0], [0,0,0,0], [0,0,0,0], [0,0,0,0]]
+    result = MxM<<<>>>(input, input)
+    return result
+}
+
+seq main():Int {
+    var [Int] V1 = [1, 2, 3, 4]
+    var [[Int]] M1 = init_List([4,4])
+    var [[Int]] M2 = M1
+    M2 = MatrixSquare(M1)
+    var Int testing = #M1[0]
+    var [Int] dsf2 = [dsf,dsf]
+    return dsf
+}
+}

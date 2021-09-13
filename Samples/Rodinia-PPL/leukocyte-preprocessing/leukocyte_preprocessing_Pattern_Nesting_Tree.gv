@@ -1,0 +1,74 @@
+// Abstract Pattern Tree
+digraph {
+	qsIC5QT2MUAUcbFr6HWc [label=Main]
+	"8C7CT7kgz4DSFo46pD3c" [label=Serial fillcolor=lawngreen style=filled]
+	Hq7HDYKUIcAduNzBdK9Y [label="Stencil: gicov_computation" fillcolor=orangered style=filled]
+	RrQXEBVxHDfS0sdfYRWd [label=Serial fillcolor=lawngreen style=filled]
+	XYF6EgGmx2m9hJySLr2y [label="For Loop" fillcolor=cyan style=filled]
+	AoQk8fqySkH5oaraqxWn [label="Reduction: sum" fillcolor=orangered style=filled]
+	imHmVQlai7pEAfExh4a3 [label=Serial fillcolor=lawngreen style=filled]
+	QKIzKoqkvNm950d6HQHV [label=Serial fillcolor=lawngreen style=filled]
+	Zij92G8mWuLefqiYluu7 [label=Serial fillcolor=lawngreen style=filled]
+	uzEz0vFyt8iFAdEonaGa [label="Stencil: sqr_elements" fillcolor=orangered style=filled]
+	CZUpCXHT7Bo3cyJBHpRo [label=Serial fillcolor=lawngreen style=filled]
+	yTADQOpgvdauRDhM4LIz [label=Serial fillcolor=lawngreen style=filled]
+	vzqhiNs7r5x8bItcLeGS [label="Stencil: dilate12" fillcolor=orangered style=filled]
+	ztV5s9pGgRHqQumq80D7 [label=Serial fillcolor=lawngreen style=filled]
+	sXipzBzBSxuCRoKf2gQc [label=Serial fillcolor=lawngreen style=filled]
+	h1GZREHGOf83BSWGZ7bQ [label="Stencil: mtrm_mlt" fillcolor=orangered style=filled]
+	"4Enk6RigD7rWU1NPus2c" [label=Serial fillcolor=lawngreen style=filled]
+	xMxt9NUbcV9WqDLSTfEc [label=Serial fillcolor=lawngreen style=filled]
+	Ob93edX03YRGa8HY1E24 [label="Map: mmtr_mlt" fillcolor=orangered style=filled]
+	"1hroq6QMlFeUSaNAnlJC" [label=Serial fillcolor=lawngreen style=filled]
+	ljmd7COg3xETm9iRq0Ff [label="Map: MxV" fillcolor=orangered style=filled]
+	aqPlooaXxDxAmGNuoMDC [label=Serial fillcolor=lawngreen style=filled]
+	F5Ibhkp3fvssLT10RhzO [label="Reduction: dot" fillcolor=orangered style=filled]
+	b13M2kL0XrXsJdorlSB4 [label=Serial fillcolor=lawngreen style=filled]
+	cidXLkJLM7g4ISUmkX1M [label=Serial fillcolor=lawngreen style=filled]
+	gLilEUSjqOvLbZrrIj5O [label="For Loop" fillcolor=cyan style=filled]
+	P9vb8BxiuioccvW0MrdY [label=Branch fillcolor=cyan style=filled]
+	r2HrcSiK25z1pPBJ8Ung [label=Branch fillcolor=cyan style=filled]
+	DXY62R6M0ONPDBQUWUU3 [label="Map: MxV" fillcolor=orangered style=filled]
+	fpgnojf9hZkGyvyaSbsf [label=Serial fillcolor=lawngreen style=filled]
+	EjDoQYqvPUUqryAP4jkS [label="Reduction: dot" fillcolor=orangered style=filled]
+	F7k0MThvcbPayyjygXnL [label=Serial fillcolor=lawngreen style=filled]
+	"30gvVs2ao4CzzumpSTLv" [label="Map: MxV" fillcolor=orangered style=filled]
+	IecypvUTjpdVbppuhons [label=Serial fillcolor=lawngreen style=filled]
+	xHYEvhxxY531m5U4y0cp [label="Reduction: dot" fillcolor=orangered style=filled]
+	LCh1GjtnuzVtzCOcDUxB [label=Serial fillcolor=lawngreen style=filled]
+	qsIC5QT2MUAUcbFr6HWc -> "8C7CT7kgz4DSFo46pD3c"
+	qsIC5QT2MUAUcbFr6HWc -> Hq7HDYKUIcAduNzBdK9Y
+	Hq7HDYKUIcAduNzBdK9Y -> RrQXEBVxHDfS0sdfYRWd
+	Hq7HDYKUIcAduNzBdK9Y -> XYF6EgGmx2m9hJySLr2y
+	XYF6EgGmx2m9hJySLr2y -> AoQk8fqySkH5oaraqxWn
+	AoQk8fqySkH5oaraqxWn -> imHmVQlai7pEAfExh4a3
+	XYF6EgGmx2m9hJySLr2y -> QKIzKoqkvNm950d6HQHV
+	qsIC5QT2MUAUcbFr6HWc -> Zij92G8mWuLefqiYluu7
+	qsIC5QT2MUAUcbFr6HWc -> uzEz0vFyt8iFAdEonaGa
+	uzEz0vFyt8iFAdEonaGa -> CZUpCXHT7Bo3cyJBHpRo
+	qsIC5QT2MUAUcbFr6HWc -> yTADQOpgvdauRDhM4LIz
+	qsIC5QT2MUAUcbFr6HWc -> vzqhiNs7r5x8bItcLeGS
+	vzqhiNs7r5x8bItcLeGS -> ztV5s9pGgRHqQumq80D7
+	qsIC5QT2MUAUcbFr6HWc -> sXipzBzBSxuCRoKf2gQc
+	qsIC5QT2MUAUcbFr6HWc -> h1GZREHGOf83BSWGZ7bQ
+	h1GZREHGOf83BSWGZ7bQ -> "4Enk6RigD7rWU1NPus2c"
+	qsIC5QT2MUAUcbFr6HWc -> xMxt9NUbcV9WqDLSTfEc
+	qsIC5QT2MUAUcbFr6HWc -> Ob93edX03YRGa8HY1E24
+	Ob93edX03YRGa8HY1E24 -> "1hroq6QMlFeUSaNAnlJC"
+	Ob93edX03YRGa8HY1E24 -> ljmd7COg3xETm9iRq0Ff
+	ljmd7COg3xETm9iRq0Ff -> aqPlooaXxDxAmGNuoMDC
+	ljmd7COg3xETm9iRq0Ff -> F5Ibhkp3fvssLT10RhzO
+	F5Ibhkp3fvssLT10RhzO -> b13M2kL0XrXsJdorlSB4
+	qsIC5QT2MUAUcbFr6HWc -> cidXLkJLM7g4ISUmkX1M
+	qsIC5QT2MUAUcbFr6HWc -> gLilEUSjqOvLbZrrIj5O
+	gLilEUSjqOvLbZrrIj5O -> P9vb8BxiuioccvW0MrdY
+	P9vb8BxiuioccvW0MrdY -> r2HrcSiK25z1pPBJ8Ung
+	r2HrcSiK25z1pPBJ8Ung -> DXY62R6M0ONPDBQUWUU3
+	DXY62R6M0ONPDBQUWUU3 -> fpgnojf9hZkGyvyaSbsf
+	DXY62R6M0ONPDBQUWUU3 -> EjDoQYqvPUUqryAP4jkS
+	EjDoQYqvPUUqryAP4jkS -> F7k0MThvcbPayyjygXnL
+	r2HrcSiK25z1pPBJ8Ung -> "30gvVs2ao4CzzumpSTLv"
+	"30gvVs2ao4CzzumpSTLv" -> IecypvUTjpdVbppuhons
+	"30gvVs2ao4CzzumpSTLv" -> xHYEvhxxY531m5U4y0cp
+	xHYEvhxxY531m5U4y0cp -> LCh1GjtnuzVtzCOcDUxB
+}

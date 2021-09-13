@@ -1,0 +1,8 @@
+ConstantWithoutCallExpression {
+seq three() : Int {
+    return 3
+}
+seq main() : Void {
+    const test = [34, three()]
+}
+}

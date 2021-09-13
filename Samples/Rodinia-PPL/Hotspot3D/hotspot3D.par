@@ -1,0 +1,129 @@
+hotspot3D {
+
+
+	var Int STR_SIZE = 256
+
+	/* maximum power density possible (say 300W for a 10mm x 10mm chip)	*/
+	var Float MAX_PD = (3.0e6)
+	/* required precision in degrees	*/
+	var Float PRECISION = 0.001
+	var Float SPEC_HEAT_SI =  1.75e6
+	var Int K_SI = 100
+	/* capacitance fitting factor	*/
+	var Float FACTOR_CHIP = 0.5
+
+	/* chip parameters	*/
+	var Float t_chip = 0.0005
+	var Float chip_height = 0.016
+	var Float chip_width = 0.016
+
+	/* ambient temperature, assuming no package at all	*/
+	var Float amb_temp = 80.0
+	
+	var Int row = 80000
+	var Int col = 80000
+	var Int layer = 10000
+	
+	stencil copy([[[Float]]] org) : [[[Float]]] res {
+		res[INDEX0][INDEX1][INDEX2] = org[INDEX0][INDEX1][INDEX2]
+	}
+	
+	stencil single_iteration([[[Float]]] temp, [[[Float]]] power, Float cc, Float cew, Float cns, Float ctb, Float stepDivCap ) : [[[Float]]] result {	
+		result[INDEX0][INDEX1][INDEX2] = cc * temp[INDEX0][INDEX1][INDEX2] + cew * temp[INDEX0][INDEX1 + 1][INDEX2] + cew * temp[INDEX0][INDEX1 - 1][INDEX2]
+                            + cns * temp[INDEX0][INDEX1][INDEX2 - 1] + cns * temp[INDEX0][INDEX1][INDEX2 + 1] + ctb * temp[INDEX0 + 1][INDEX1][INDEX2] 
+							+ ctb * temp[INDEX0 + 1][INDEX1][INDEX2] + (stepDivCap) * power[INDEX0 - 1][INDEX1 - 1][INDEX2 - 1] + ctb*amb_temp
+		
+	}
+	
+	stencil side_north([[[Float]]] temp) : [[[Float]]] result {
+		result[INDEX0][INDEX1 - 80001][INDEX2] = temp[INDEX0][INDEX1 - 80000][INDEX2]
+	}
+	
+	stencil side_south([[[Float]]] temp) : [[[Float]]] result {
+		result[INDEX0][INDEX1 + 80001][INDEX2] = temp[INDEX0][INDEX1 + 80000][INDEX2]
+	}
+	
+	stencil side_west([[[Float]]] temp) : [[[Float]]] result {
+		result[INDEX0][INDEX1][INDEX2 + 80001] = temp[INDEX0][INDEX1][INDEX2 + 80000]
+	}
+	
+	stencil side_east([[[Float]]] temp) : [[[Float]]] result {
+		result[INDEX0][INDEX1][INDEX2 - 80001] = temp[INDEX0][INDEX1][INDEX2 - 80000]
+	}
+	
+	stencil side_top([[[Float]]] temp) : [[[Float]]] result {
+		result[INDEX0 - 10001][INDEX1][INDEX2] = temp[INDEX0 - 10000][INDEX1][INDEX2]
+	}
+	
+	stencil side_bottom([[[Float]]] temp) : [[[Float]]] result {
+		result[INDEX0 + 10001][INDEX1][INDEX2] = temp[INDEX0 + 10000][INDEX1][INDEX2]
+	}
+	
+	stencil add_padding_1([[[Float]]] input) : [[[Float]]] result {
+		result[INDEX0 + 1][INDEX1 + 1][INDEX2 + 1] = input[INDEX0][INDEX1][INDEX2]
+	}
+	
+	seq compute_tran_temp(Int iterations, [[[Float]]] temp, [[[Float]]] power):[[[Float]]] {
+		var [[[Float]]] result = init_List([10002,80002,80002],0)
+		var [[[Float]]] result_old = init_List([10002,80002,80002],0)
+		result_old = add_padding_1<<<>>>(temp)
+		
+		var Float grid_height = chip_height / row
+		var Float grid_width = chip_width / col
+		var Float grid_layers = t_chip / layer
+
+		var Float Cap = FACTOR_CHIP * SPEC_HEAT_SI * t_chip * grid_width * grid_height
+		var Float Rx = grid_width / (2.0 * K_SI * t_chip * grid_height)
+		var Float Ry = grid_height / (2.0 * K_SI * t_chip * grid_width)
+		var Float Rz = t_chip / (K_SI * grid_height * grid_width)
+		
+	 
+		
+		var Float max_slope = MAX_PD / (FACTOR_CHIP * t_chip * SPEC_HEAT_SI)
+		var Float step = PRECISION / max_slope
+		
+		var Float stepDivCap = step / Cap
+		
+		var Float cew=stepDivCap/Rx
+		var Float cns=stepDivCap/Ry
+		var Float ctb=stepDivCap/Rz
+		
+		var Float cc = 1.0 - (2.0*cew + 2.0*cns + 3.0*ctb)
+		
+		for var Int i = 0; i < iterations; i++ {
+			
+			// update the padding sides
+            result_old = side_north<<<>>>(result)
+			result_old = side_south<<<>>>(result)
+			result_old = side_east<<<>>>(result)
+			result_old = side_west<<<>>>(result)
+			result_old = side_top<<<>>>(result)
+			result_old = side_bottom<<<>>>(result)			
+			
+			result = single_iteration<<<>>>(result_old, power, cc, cew, cns, ctb, stepDivCap) 
+			
+			result_old = copy<<<>>>(result)
+			
+		}
+		
+		return result
+		
+	}
+	
+	seq main () : Int{
+	
+		var [[[Float]]] temperature = init_List([10000,80000,80000])
+		var [[[Float]]] power = init_List([10000,80000,80000])
+		var [[[Float]]] result = init_List([10002,80002,80002],0)
+		var Int iter = 500
+		
+		temperature = read("temp.txt")
+		power = read("pow.txt")
+		
+		result = compute_tran_temp(iter, temperature, power)
+		
+		write("result.txt", {result})
+			
+		return 0
+	}
+}

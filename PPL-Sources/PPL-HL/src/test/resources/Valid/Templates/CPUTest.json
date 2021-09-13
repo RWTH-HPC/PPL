@@ -1,0 +1,25 @@
+{
+  "type": "CPU",
+  "latency": "3",
+  "bandwidth": "6400000",
+  "max-bandwidth": "6400000",
+  "size": "32",
+  "cache-group": [
+    {
+      "identifier": "1",
+      "template": "CacheGroupTest.json"
+    },
+    {
+      "identifier": "2",
+      "template": "CacheGroupTest.json"
+    },
+    {
+      "identifier": "3",
+      "template": "CacheGroupTest.json"
+    },
+    {
+      "identifier": "4",
+      "template": "CacheGroupTest.json"
+    }
+  ]
+}

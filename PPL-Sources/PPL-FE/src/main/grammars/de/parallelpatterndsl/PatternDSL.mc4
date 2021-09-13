@@ -1,0 +1,160 @@
+package de.parallelpatterndsl;
+
+grammar PatternDSL extends de.monticore.literals.Literals,
+                        de.monticore.expressions.ExpressionsBasis,
+                        de.monticore.expressions.CommonExpressions {
+    symbol scope Module
+         = Name "{" Definition* "}";
+
+    interface Type;
+
+    TypeName implements Type <170> = Name;
+
+    ListType implements Type <190> = "[" Type "]";
+
+    ListExpression implements Expression <190>
+        = "[" (Expression || ",")* "]";
+
+    interface Definition;
+
+    interface Statement;
+
+    /*=================================================================*/
+    /*                         DEFINITIONS                             */
+    /*=================================================================*/
+
+    Include implements Definition <800>
+        = "include" String ;
+
+    symbol Variable implements Definition <800>
+        = "var" Type Name ("=" Expression)?;
+
+    symbol Constant implements Definition <800>
+        = "const" Name "=" (NameExpression | ListExpression | LitExpression);
+
+    FunctionParameters
+        = "(" (FunctionParameter || ",")* ")";
+
+    symbol FunctionParameter
+        =  Type Name;
+
+    symbol scope Function implements Definition
+        = PatternType Name FunctionParameters ":" (Type | FunctionParameter) BlockStatement;
+
+    PatternType
+        = Map | Reduction | Serial | Stencil | Recursion | DynamicProgramming;
+
+    Map = "map";
+
+    Reduction = "reduction";
+
+    Serial = "seq";
+
+    Stencil = "stencil";
+
+    Recursion = "recursion";
+
+    DynamicProgramming = "dp";
+
+
+    /*=================================================================*/
+    /*                    CONTROL STATEMENTS                           */
+    /*=================================================================*/
+
+    PatternCallStatement implements Statement <500>
+            = left:Expression "=" Name "<<<" args:(Expression || ",")* ">>>" Arguments;
+
+    IfStatement implements Statement
+        = "if" condition:Expression thenStatement:BlockStatement ("else" elseStatement:ElseStatement )? ;
+
+    ElseStatement
+        = BlockStatement | IfStatement;
+
+    ReturnStatement implements Statement
+        = "return" returnExpression:Expression?;
+
+    ForStatement implements Statement
+        = "for" ForControl BlockStatement;
+
+    interface ForControl;
+
+    CommonForControl implements ForControl
+        = ForInit ";" condition:Expression ";" Expression;
+
+    ForEachControl implements ForControl
+        = Variable "in" Expression;
+
+    ForInit
+        = Expression | Variable;
+
+    WhileStatement implements Statement
+        = "while" condition:Expression BlockStatement;
+
+    scope BlockStatement implements Statement
+        = "{" BlockElement* "}";
+
+    BlockElement
+        = (Statement | Variable | Expression | Constant);
+
+    ExtLiteral = Literal;
+
+    LitExpression implements Expression <380> = Literal;
+
+    /*=================================================================*/
+    /*                    OPERATOR EXPRESSIONS                         */
+    /*=================================================================*/
+
+    ReadExpression implements Expression
+        = "read" "(" StringLiteral ")";
+
+    PrintExpression implements Expression
+        = "print" "(" PrintElement* ")";
+
+    WriteExpression implements Expression
+        = "write" "(" StringLiteral "," PrintElement* ")";
+
+    PrintElement = StringLiteral | "{" Expression "}";
+
+    AssignmentExpression implements Expression <20>
+        = left:Expression "=" right:Expression;
+
+    BooleanAndOpExpressionDiff implements Expression <120>, InfixExpression
+        = left:Expression operator:"and" right:Expression;
+
+    BooleanOrOpExpressionDiff implements Expression <117>, InfixExpression
+        = left:Expression operator:"or" right:Expression;
+
+    BooleanNotOpExpressionDiff implements Expression
+        = "not" Expression;
+
+    RemainderExpressionDiff implements Expression <120>, InfixExpression
+        = left:Expression operator:"mod" right:Expression;
+
+
+    LengthExpression implements Expression
+        = "#" Expression;
+
+    InExpression implements Expression
+        = left:Expression "in" right:Expression;
+
+    IndexAccessExpression implements Expression <180>
+        = Expression "[" index:Expression "]";
+
+    IncrementExpression implements Expression <250>
+        = left:Expression "++";
+
+    DecrementExpression implements Expression
+        = left:Expression "--";
+
+    AssignmentByIncreaseExpression implements Expression
+        = left:Expression "+=" right:Expression;
+
+    AssignmentByDecreaseExpression implements Expression
+        = left:Expression "-=" right:Expression;
+
+    AssignmentByMultiplyExpression implements Expression
+        = left:Expression "*=" right:Expression;
+
+
+
+}

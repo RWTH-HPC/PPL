@@ -1,0 +1,17 @@
+model1{
+
+
+seq main() : Int {
+    var Float F = 1.5
+    var [Float] array = [1.5, 1.4, 1.3]
+
+    for var Int i = 0; i <= 3; i++ {
+        F = array[1 * 1 + 1] * F
+    }
+
+    for var Int i = 3; i > 1; i-- {
+        F = array[i - 1] * F
+    }
+
+    return 0
+}}

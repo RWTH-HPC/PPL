@@ -1,0 +1,33 @@
+{
+  "type": "numa",
+  "connectivity-bandwidth": [
+    [ "0", "100", "200", "300" ],
+    [ "0", "100", "200", "300" ],
+    [ "0", "100", "200", "300" ],
+    [ "0", "100", "200", "300" ]
+  ],
+  "connectivity-latency": [
+    [ "0", "100", "200", "300" ],
+    [ "0", "100", "200", "300" ],
+    [ "0", "100", "200", "300" ],
+    [ "0", "100", "200", "300" ]
+  ],
+  "devices": [
+    {
+      "identifier": "CPU1",
+      "template": "CPUTest.json"
+    },
+    {
+      "identifier": "CPU2",
+      "template": "CPUTest.json"
+    },
+    {
+      "identifier": "GPU1",
+      "template": "GPUTest.json"
+    },
+    {
+      "identifier": "GPU2",
+      "template": "GPUTest.json"
+    }
+  ]
+}

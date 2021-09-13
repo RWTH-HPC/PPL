@@ -1,0 +1,4 @@
+VariableDeclarationNoType{
+var test = 1
+[Float] list = [1.2, 2, 3.5]
+}

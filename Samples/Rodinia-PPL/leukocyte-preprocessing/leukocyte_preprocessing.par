@@ -1,0 +1,698 @@
+leukocyte_preprocessing {
+
+include "../math"
+
+var Int RADIUS = 10
+
+var Int MIN_RAD = RADIUS - 2
+var Int MAX_RAD = RADIUS * 2
+
+var Int TOP = 110
+var Int BOTTOM = 328
+
+var Float threshold = 1.8
+var Float radius = 10.0
+var Float delta = 3.0
+var Float dt = 0.01
+var Float b = 5.0
+
+var Int Iter = 20
+var Int ns = 4
+
+seq gradient_x([[Float]] frame) : [[Float]]  {
+	var [[Float]] result = init_List([1280,720])
+	for var Int i = 0; i < #result; i++ {
+		for var Int j = 0; j < #result[0]; j++ {
+			if j == 0 {
+				result[i][j] = frame[i][j + 1] - frame[i][j]
+			} else if j == #result[0] - 1 {
+				result[i][j] = frame[i][j] - frame[i][j - 1]
+			} else {
+				result[i][j] = (frame[i][j + 1] - frame[i][j - 1])/2
+			}
+		}
+	}	
+	return result
+}
+
+seq gradient_y([[Float]] frame) : [[Float]]  {
+	var [[Float]] result = init_List([1280,720])
+	for var Int i = 0; i < #result; i++ {
+		for var Int j = 0; j < #result[0]; j++ {
+			if i == 0 {
+				result[i][j] = frame[i + 1][j] - frame[i][j]
+			} else if i == #result - 1 {
+				result[i][j] = frame[i][j] - frame[i - 1][j]
+			} else {
+				result[i][j] = (frame[i + 1][j] - frame[i - 1][j])/2
+			}
+		}
+	}
+	return result
+}
+
+seq ellipsematching([[Float]] grad_x, [[Float]] grad_y) : [[Float]] {
+	var [Float] sin_angle = init_List([150])
+	var [Float] cos_angle = init_List([150])
+	var [Float] theta = init_List([150])
+	
+	for var Int i = 0; i < 150; i++ {
+		theta[i] = i * 2 * pi / #theta
+		sin_angle[i] = sin(theta[i])
+		cos_angle[i] = cos(theta[i])
+	}
+	
+	var [[Int]] tX = init_List([7,150])
+	var [[Int]] tY = init_List([7,150])
+	
+	for var Int k = 0; k < #tX; k++ {
+		var Float rad = (MIN_RAD + 2 * k)
+		for var Int n = 0; n < #tX[0]; n++ {
+			tX[k][n] = (cos(theta[n]) * rad)
+			tY[k][n] = (sin(theta[n]) * rad)
+		}
+	}
+	
+	var Int MaxR = MAX_RAD + 2
+	
+	var [[Float]] gicov = init_List([1280,720])
+	
+	gicov = gicov_computation<<<>>>(grad_x, grad_y, tX, tY, sin_angle, cos_angle)
+	
+	return gicov
+	
+}
+
+stencil gicov_computation([[Float]] grad_x, [[Float]] grad_y, [[Float]] tX, [[Float]] tY, [Float] sin_angle, [Float] cos_angle) : [[Float]] gicov {
+	var Float dummy1 = grad_x[INDEX0 + 22][INDEX1 + 22]
+	var Float dummy2 = grad_x[INDEX0 - 22][INDEX1 - 22]
+	
+	var Float max_GICOV = 0
+	
+	for var Int k = 0; k < #tY; k++ {
+		var [Float] Grad = init_List([150])
+		Grad = gradient(grad_x, grad_y, tX, tY, sin_angle, cos_angle, INDEX0, INDEX1, k)
+		
+		var [Float] sum = 0
+		
+		sum = sum<<<>>>(Grad)
+		
+		var Float mean = sum / #Grad
+		
+		var Float variance = variance(Grad)
+		
+		variance = variance / (#Grad - 1)
+		
+		if mean * mean / variance > max_GICOV {
+			gicov[INDEX0][INDEX1] = mean / sqrt(variance)
+			max_GICOV = mean * mean / variance
+		}
+	}
+}
+
+seq gradient([[Float]] grad_x, [[Float]] grad_y, [[Float]] tX, [[Float]] tY, [Float] sin_angle, [Float] cos_angle, Int i, Int j, Int k) : [Float] {
+	var [Float] Grad = init_List([150])
+	for var Int n = 0; n < #sin_angle; n++ {
+		var Int y = j + tY[k][n]
+		var Int x = i + tX[k][n]
+		
+		Grad[n] = grad_x[x][y] * cos_angle[n] + grad_y[x][y] * sin_angle[n]
+		
+	}
+	return Grad
+}
+
+reduction sum([Float] input) : Float result {
+	result += input[INDEX]
+}
+
+stencil sqr_elements([[Float]] input) : [[Float]] output {
+	output[INDEX0][INDEX1] = input[INDEX0][INDEX1] * input[INDEX0][INDEX1]
+}
+
+stencil dilate12([[Float]] image) : [[Float]] result {
+	var Float dummy = image[INDEX0 + 12][INDEX1 + 12] + image[INDEX0 - 12][INDEX1 - 12]
+	
+	result[INDEX0][INDEX1] = element_dilation(image, INDEX0, INDEX1, 12, 12)
+}	
+
+seq element_dilation([[Float]] image, Int center_x, Int center_y ,Int x_stride, Int y_stride) : Float {
+	var Float max = 0
+	for var Int x = center_x - x_stride; x < center_x + x_stride; x++ {
+		for var Int y = center_y - y_stride; y < center_y + y_stride; y++ {
+			if image[x][y] > max {
+				max = image[x][y]
+			}
+		}
+	}
+	return max
+}
+
+seq v_max([[Float]] m) : Float {
+	var Float res = MIN_FLOAT
+	for var Int i = 0; i < #m; i++ {
+			if res < m[i] {
+				res = m[i]
+			}
+	}
+	return res
+}
+
+seq v_min([Float] m) : Float {
+	var Float res = MAX_FLOAT
+	for var Int i = 0; i < #m; i++ {
+			if res > m[i] {
+				res = m[i]
+			}
+	}
+	return res
+}
+
+map MxV([[Float]] m, [Float] v) : [Float] res {
+	res[INDEX] = dot<<<>>>(m[INDEX], v)
+}
+
+reduction dot([Float] v1, [Float] v2) : Float res {
+	res += v1[INDEX] * v2[INDEX]
+}
+
+map mmtr_mlt([[Float]] m1, [[Float]] m2) : [[Float]] res {
+	res[INDEX] = MxV<<<>>>(m1, m2[INDEX])
+}
+
+stencil mtrm_mlt([[Float]] m1, [[Float]] m2) : [[Float]] res{
+	res[INDEX0][INDEX1] = mtrm_red(m1,m2,INDEX0,INDEX1)
+}
+
+seq mtrm_red([[Float]] m1, [[Float]] m2, Int row, Int col) : Float {
+	var Float res = 0
+	for var Int i = 0; i < min(#m1,#m2); i++ {
+		res += m1[row][col] * m2[row][col]
+	}
+	return res
+}
+
+stencil transpose([[Float]] m) : [[Float]] res {
+	res [INDEX0][INDEX1] = m[INDEX1][INDEX0]
+}
+
+seq m_inverse([[Float]] m) : [[Float]] {
+	var [[Int]] a = init_List([9,18],0)
+	for var Int i = 0; i<#m;i++ {
+		a[i][i + #m] = 1
+		for var Int j = 0; j < #m; j++{
+			a[i][j] = m[i][j]
+		}
+	}
+	
+	/* Applying Gauss Jordan Elimination */
+	for var Int i=0;i<#m;i++{
+		if a[i][i] == 0{
+			print("Mathematical Error!")
+		}
+		for var Int j=0;j<#m;j++{
+			if i!=j{
+				var Float ratio = a[j][i]/a[i][i]
+				for var Int k=0;k<2*#m;k++{
+					a[j][k] = a[j][k] - ratio*a[i][k]
+				}
+			}
+		}
+	}
+	var [[Float]] res = init_List([9,9])
+	
+	/* Row Operation to Make Principal Diagonal to 1 */
+	for var Int i=0;i<#m;i++{
+		for var Int j=0;j<#m;j++ {
+			   	res[i][j] = a[i][#m+j]/a[i][i]
+		}
+	}
+		
+	return res
+}
+
+
+
+seq TMatrix94() : [[Float]]{
+	var [[Float]] B = init_List([36,9])
+
+	for var Int i = 0; i < 9; i++{
+		var [[Float]] LB = init_List([4,9],0)
+		
+		for var Int j = 0; j < 4; j++{
+			var Float s = j / 4
+
+			var Float a = ((0-1)*s*s*s + 3*s*s - 3*s + 1) / 6
+			var Float b = (3.0*s*s*s - 6*s*s + 4) / 6
+			var Float c = ((0-3)*s*s*s + 3*s*s + 3*s + 1) / 6
+			var Float d = s*s*s / 6
+			
+			LB[j][(i+8)%9] = a
+			LB[j][i] = b
+			LB[j][(i+1)%9] = c
+			LB[j][(i+2)%9] = d
+		}
+
+		for var Int m = i*4; m < (i+1)*4; m++{
+			for var Int n = 0; n < 9; n++{
+				B[m][n] = LB[m%4][n]
+			}
+		}
+	}
+
+	var [[Float]] B_TEMP = init_List([9,9])
+	var [[Float]] B_TEMP_INV = init_List([9,9])
+	var [[Float]] B_RET = init_List([9,36])
+	B_TEMP = mtrm_mlt<<<>>>(B, B)
+	B_TEMP_INV = m_inverse(B_TEMP)
+	B_RET = mmtr_mlt<<<>>>(B_TEMP_INV, B)
+
+	return B_RET
+}
+
+seq getsampling([Float] v) : [Float] {
+	var [Float] res = init_List([144])
+	
+	for var Int i = 0; i < #v; i++ {
+		for var Int j = 0; j < 4; i++ {
+			var Float s = j / 4
+			var Float a = v[(i-1)%#v] * ((0-1)*s*s*s + 3*s*s - 3*s + 1)
+			var Float b = v[i] * (3*s*s*s - 6*s*s + 4)
+			var Float c = v[(i + 1)%#v] * ((0-3)*s*s*s + 3*s*s + 3*s + 1)
+			var Float d = v[(i+2)%#v] * s*s*s
+			
+			res[i*4 + j] = (a+b+c+d)/6
+		}
+	}
+	return res
+}
+
+seq getfdriv([Float] v) : [Float] {
+	var [Float] res = init_List([144])
+	
+	for var Int i = 0; i < #v; i++ {
+		for var Int j = 0; j < 4; i++ {
+			var Float s = j / 4
+			var Float a = v[(i-1)%#v] * ((0-3)*s*s + 6*s - 3)
+			var Float b = v[i] * (9*s*s - 12*s)
+			var Float c = v[(i + 1)%#v] * ((0-9)*s*s + 6*s + 3)
+			var Float d = v[(i+2)%#v] * 3 *s*s
+			
+			res[i*4 + j] = (a+b+c+d)/6
+		}
+	}
+	return res
+}
+
+seq linear_interp2([[Float]] m, [Float] X, [Float] Y) : [Float] {
+	var [Float] res = init_List([144])
+	
+	for var Int i = 0; i < #res; i++ {
+		var Float x_coord = X[i]
+		var Float y_coord = Y[i]
+		
+		var Int l = int(x_coord)
+		var Int k = int(y_coord)
+		
+		var Float a = x_coord - l
+		var Float b = y_coord - k
+
+		var Float val = (1-a)*(1-b)*m[k][l] +
+				  a*(1-b)*m[k][l+1] +
+				  (1-a)*b*m[k+1][l] +
+				  a*b*m[k+1][l+1]
+		
+		res[i] = val
+	}
+	
+	return res
+}
+
+seq splineenergyform01([Float] Cx, [Float] Cy, [[Float]] Ix, [[Float]] Iy, Int ns, Float delta, Float dt, Int typeofcell) : [[Float]] {
+
+	var [Float] X = init_List([144])
+	var [Float] Y = init_List([144])
+	
+	X = getsampling(Cx)
+	Y = getsampling(Cy)
+	
+	var [Float] Xs = init_List([144])
+	var [Float] Ys = init_List([144])
+	
+	Xs = getfdriv(Cx)
+	Ys = getfdriv(Cy)
+	
+	var [Float] Nx = init_List([144])
+	var [Float] Ny = init_List([144])
+	var [Float] X1 = init_List([144])
+	var [Float] Y1 = init_List([144])
+	var [Float] X2 = init_List([144])
+	var [Float] Y2 = init_List([144])
+	
+	for var Int i = 0; i < #Nx; i++ {
+		Nx[i] = Ys[i]/sqrt(Xs[i]*Xs[i] + Ys[i]*Ys[i])
+		Ny[i] = (0-1)*Xs[i]/sqrt(Xs[i]*Xs[i] + Ys[i]*Ys[i])
+		X1[i] = X[i] + delta * Nx[i]
+		Y1[i] = Y[i] + delta * Ny[i]
+		X2[i] = X[i] - delta * Nx[i]
+		Y2[i] = Y[i] + delta * Ny[i]
+ 	}
+	
+	var [Float] Ix1 = init_List([144])
+	var [Float] Iy1 = init_List([144])
+	var [Float] Ix2 = init_List([144])
+	var [Float] Iy2 = init_List([144])
+	
+	Ix1 = linear_interp2(Ix, X1, Y1)
+	Iy1 = linear_interp2(Iy, X1, Y1)
+	Ix2 = linear_interp2(Ix, X2, Y2)
+	Iy2 = linear_interp2(Iy, X2, Y2)
+	
+	var [Float] XY = init_List([144])
+	var [Float] XX = init_List([144])
+	var [Float] YY = init_List([144])
+	
+	for var Int i = 0; i < #Xs; i++ {
+		XY[i] = Xs[i] * Ys[i]
+		XX[i] = Xs[i] * Xs[i]
+		YY[i] = Ys[i] * Ys[i]
+	}
+	
+	var [Float] dCx = init_List([144])
+	var [Float] dCy = init_List([144])
+	
+	for var Int i = 0; i < #Cx; i++ {
+		for var Int j = 0; j < ns; j++ {
+			var Float s = j/ns
+			
+			var Float A1 = ((0-1.0)*(s-1.0)*(s-1.0)*(s-1.0)) / 6.0
+			var Float A2 = (3.0*s*s*s - 6.0*s*s + 4.0) / 6.0
+			var Float A3 = ((0-3.0)*s*s*s + 3.0*s*s + 3.0*s + 1.0) / 6.0
+			var Float A4 = s*s*s / 6.0
+
+			var Float B1 = ((0-3.0)*s*s + 6.0*s - 3.0) / 6.0
+			var Float B2 = (9.0*s*s - 12.0*s) / 6.0
+			var Float B3 = ((0-9.0)*s*s + 6.0*s + 3.0) / 6.0
+			var Float B4 = 3.0*s*s / 6.0
+
+			var Int k = i*ns+j
+			var Float D = sqrt(Xs[k]*Xs[k] + Ys[k]*Ys[k])
+			var Float D_3 = D*D*D
+			
+			//1st control point
+			
+			var Float Tx1 = A1 - delta * XY[k] * B1 / D_3
+			var Float Tx2 = (0-1.0) * delta*(B1/D - XX[k]*B1/D_3)
+			var Float Tx3 = A1 + delta * XY[k] * B1 / D_3
+			var Float Tx4 = delta*(B1/D - XX[k]*B1/D_3)
+
+			var Float Ty1 = delta*(B1/D - YY[k]*B1/D_3)
+			var Float Ty2 = A1 + delta * XY[k] * B1 / D_3
+			var Float Ty3 = (0-1.0) * delta*(B1/D - YY[k]*B1/D_3)
+			var Float Ty4 = A1 - delta * XY[k] * B1 / D_3
+			
+			dCx[(i-1)%#Cx] = dCx[(i-1)%#Cx] + Tx1*Ix1[k] + Tx2*Iy1[k] - Tx3*Ix2[k] - Tx4*Iy2[k]
+			dCy[(i-1)%#Cy] = dCy[(i-1)%#Cx] + Ty1*Ix1[k] + Ty2*Iy1[k] - Ty3*Ix2[k] - Ty4*Iy2[k]
+			
+			
+			//2nd control point
+			
+			Tx1 = A2 - delta * XY[k] * B2 / D_3
+			Tx2 = (0-1.0) * delta*(B1/D - XX[k]*B2/D_3)
+			Tx3 = A2 + delta * XY[k] * B2 / D_3
+			Tx4 = delta*(B2/D - XX[k]*B2/D_3)
+
+			Ty1 = delta*(B2/D - YY[k]*B2/D_3)
+			Ty2 = A2 + delta * XY[k] * B2 / D_3
+			Ty3 = (0-1.0) * delta*(B2/D - YY[k]*B2/D_3)
+			Ty4 = A2 - delta * XY[k] * B2 / D_3
+			
+			dCx[(i)%#Cx] = dCx[(i)%#Cx] + Tx1*Ix1[k] + Tx2*Iy1[k] - Tx3*Ix2[k] - Tx4*Iy2[k]
+			dCy[(i)%#Cy] = dCy[(i)%#Cx] + Ty1*Ix1[k] + Ty2*Iy1[k] - Ty3*Ix2[k] - Ty4*Iy2[k]
+			
+			//3rd control point
+			
+			Tx1 = A3 - delta * XY[k] * B3 / D_3
+			Tx2 = (0-1.0) * delta*(B3/D - XX[k]*B3/D_3)
+			Tx3 = A3 + delta * XY[k] * B3 / D_3
+			Tx4 = delta*(B3/D - XX[k]*B3/D_3)
+
+			Ty1 = delta*(B3/D - YY[k]*B3/D_3)
+			Ty2 = A3 + delta * XY[k] * B3 / D_3
+			Ty3 = (0-1.0) * delta*(B3/D - YY[k]*B3/D_3)
+			Ty4 = A3 - delta * XY[k] * B3 / D_3
+			
+			dCx[(i+1)%#Cx] = dCx[(i+1)%#Cx] + Tx1*Ix1[k] + Tx2*Iy1[k] - Tx3*Ix2[k] - Tx4*Iy2[k]
+			dCy[(i+1)%#Cy] = dCy[(i+1)%#Cx] + Ty1*Ix1[k] + Ty2*Iy1[k] - Ty3*Ix2[k] - Ty4*Iy2[k]
+			
+			//4th control point
+			
+			Tx1 = A4 - delta * XY[k] * B4 / D_3
+			Tx2 = (0-1.0) * delta*(B4/D - XX[k]*B4/D_3)
+			Tx3 = A4 + delta * XY[k] * B4 / D_3
+			Tx4 = delta*(B4/D - XX[k]*B4/D_3)
+
+			Ty1 = delta*(B4/D - YY[k]*B4/D_3)
+			Ty2 = A4 + delta * XY[k] * B4 / D_3
+			Ty3 = (0-1.0) * delta*(B4/D - YY[k]*B4/D_3)
+			Ty4 = A4 - delta * XY[k] * B4 / D_3
+			
+			dCx[(i+2)%#Cx] = dCx[(i+2)%#Cx] + Tx1*Ix1[k] + Tx2*Iy1[k] - Tx3*Ix2[k] - Tx4*Iy2[k]
+			dCy[(i+2)%#Cy] = dCy[(i+2)%#Cx] + Ty1*Ix1[k] + Ty2*Iy1[k] - Ty3*Ix2[k] - Ty4*Iy2[k]
+		}
+	}
+	
+	var [Float] res = init_List([288])
+	if typeofcell == 1 {
+		for var Int i = 0; i < #dCx; i++ {
+			res[i] = Cx[i] - dt*dCx[i]
+			res[i + 144] = Cy[i] - dt*dCy[i]
+		}
+	} else {
+		for var Int i = 0; i < #dCx; i++ {
+			res[i] = Cx[i] + dt*dCx[i]
+			res[i + 144] = Cy[i] + dt*dCy[i]
+		}
+	}
+	
+	return res
+}
+
+seq main(): Int {
+	
+	var [[[Float]]] file = init_List([3600,1280,720])
+	var [[Float]] grad_x = init_List([1280,720])
+	var [[Float]] grad_y = init_List([1280,720])
+	var [[Float]] gicov = init_List([1280,720])
+	
+
+	file = read("video.txt")
+	
+	grad_x = gradient_x(file[0])
+	grad_y = gradient_y(file[0])
+	
+	gicov = ellipsematching(grad_x, grad_y)
+	
+	// gicov squaring
+	var [[Float]] max_gicov = init_List([1280,720])
+	
+	max_gicov = sqr_elements<<<>>>(gicov)
+	
+	// compute dilation
+	var [[Float]] img_dilated = init_List([1280,720])
+	img_dilated = dilate12<<<>>>(max_gicov)
+	
+	// find cell centers based on gicov
+	var [Int] crow = init_List([921600]) //1280 * 720 for each possible element
+	var [Int] ccol = init_List([921600]) //1280 * 720 for each possible element
+	var Int pair_counter = 0
+	for var Int i = 0; i < #img_dilated; i++ {
+		for var Int j = 0; j < #img_dilated[0]; j++ {
+			
+			if not (max_gicov[i][j] == 0) and max_gicov[i][j] == img_dilated[i][j] {
+				crow[pair_counter] = i
+				ccol[pair_counter] = j
+				pair_counter++
+			}
+			
+		}
+	}
+	
+	var [Float] gicov_spots = init_List([2000]) // estimation of the dynamic list allocation, estimation of pair_counter
+	for var Int i = 0; i < pair_counter; i++ {
+		gicov_spots[i] = gicov[crow[i]][ccol[i]]
+	}	
+	
+	var [Float] G = init_List([2000])
+	var [Float] x_result = init_List([2000])
+	var [Float] y_result = init_List([2000])
+	
+	var Int x_result_len = 0
+	for var Int i = 0; i < pair_counter; i++ {
+		if (crow[i] > 29) && (crow[i] < BOTTOM - TOP + 39) {
+			x_result[x_result_len] = ccol[i]
+			y_result[x_result_len] = crow[i] - 40
+			G[x_result_len] = gicov_spots[i]
+			x_result_len++
+		}
+	}
+	
+	// Make an array t which holds each "time step" for the possible cells
+	var [Float] t = init_List([36])
+	for var Int i = 0; i < #t; i++ {
+		t[i] = i * 2 * pi / 36
+	}
+	
+	var [[Float]] cell_x = init_List([1800, 36]) // estimation of x_result_len = 1800
+	var [[Float]] cell_y = init_List([1800, 36]) // estimation of x_result_len = 1800
+	for var Int i = 0; i < #cell_x; i++ {
+		for var Int j = 0; j < #t; j++ {
+			cell_x[i][j] = x_result[i] + radius * cos(t[j])
+			cell_y[i][j] = y_result[i] + radius * sin(t[j])
+		}
+	}
+	
+	var [Float] V = init_List([2000],0)
+	var [Float] QAX_CENTERS  = init_List([2000],0)
+	var [Float] QAY_CENTERS  = init_List([2000],0)
+	
+	var Int k_count = 0
+	
+	var [[Float]] A = init_List([9,36])
+	A = TMatrix94()
+	// For all possible results, find the ones that are feasibly leukocytes and store their centers
+	for var Int n = 0; n < x_result_len; n++ {
+		if (G[n] < (0-1) * threshold) || G[n] > threshold {
+			var [Float] x = init_List([36])
+			var [Float] y = init_List([36])
+			var [Float] x_row = init_List([36])
+			var [Float] y_row = init_List([36])
+			
+			x_row = cell_x[n]
+			y_row = cell_y[n]
+			
+			//permutations and filter legible leukocytes
+			{
+				var [Float] dx = init_List([36])
+				var [Float] dy = init_List([36])
+				var [Float] dsum = init_List([36])
+				var [Float] dist = init_List([36])
+				var Float perm = 0
+				var Float uperm 
+				var [Int] index = init_List([36])
+				
+				for var Int i = 1; i < 37; i++ {
+					dx[i%36] = cell_x[i%36] - cell_x[(i-1)%36]
+					dy[i%36] = cell_y[i%36] - cell_y[(i-1)%36]
+					dist[i%36] = sqrt(dx[i%36]*dx[i%36] + dy[i%36]*dy[i%36])
+					perm+= dist[i%36]
+				}	
+				uperm = perm / 36
+				dsum[0] = dist[0]
+				
+				for var Int i = 1; i < 36; i++ {
+					dsum[i] = dsum[i-1]+dist[i]
+				}
+				
+				for var Int i = 0; i < 36; i++ {
+					var Float minimum=MAX_FLOAT
+					var Float temp
+					var Int min_index = 0
+					for var Int j = 0; j < 36; j++ {
+						temp = abs(dsum[j]- i*uperm)
+						if temp < minimum {
+							minimum = temp
+							min_index = j
+						}
+					}
+					index[i] = min_index
+				}
+				
+				for var Int i = 0; i < 36; i++ {
+					x[i] = cell_x[index[i]]
+					y[i] = cell_y[index[i]]
+				}
+
+			}
+			
+			
+			if (v_min(x) > b) && (v_min(y) > b) && (v_max(x) < #file[0] - b) && (v_max(y) < #file[0][0] - b) {
+			
+				var [Float] Cx = init_List([36])
+				var [Float] Cy = init_List([36])
+				var [Float] Cy_temp = init_List([36])
+				var [Float] Ix1 = init_List([144])
+				var [Float] Iy1 = init_List([144])
+				
+				var [Float] X = init_List([144])
+				var [Float] Y = init_List([144])
+				var [Float] Xs = init_List([144])
+				var [Float] Ys = init_List([144])
+				
+				var [Float] W = init_List([144])
+				
+				Cx = MxV<<<>>>(A, x)
+				Cy = MxV<<<>>>(A, y)
+				
+				for var Int i = 0; i < 9; i++ {
+					Cy[i] = Cy[i] + 40
+				}
+					
+				
+				// Iteratively refine the snake/spline
+				for var Int i = 0; i < Iter; i++ {
+					var Int typeofcell
+					
+					if G[n] > 0.0 {typeofcell = 0}
+					else {typeofcell = 1}
+					
+					var [Float] Cxy = init_List([288])
+					Cxy = splineenergyform01(Cx, Cy, grad_x, grad_y, ns, delta, 2.0 * dt, typeofcell)
+					
+					for var Int c = 0; c < #Cx; c++ {
+						Cx[c] = Cxy[c]
+						Cy[c] = Cxy[c + 144]
+					}					
+				}
+				
+				
+					
+				X = getsampling(Cx)
+				for var Int i = 0; i < #Cy; i++ {
+					Cy_temp[i] =  Cy[i] - 40.0
+				}
+				Y = getsampling(Cy_temp)
+				
+				Ix1 = linear_interp2(grad_x, X, Y)
+				Iy1 = linear_interp2(grad_x, X, Y)
+				Xs = getfdriv(Cx)
+				Ys = getfdriv(Cy)
+				
+				
+				
+	
+				for var Int i = 0; i < #W; i++ {
+					var Float Nx = Ys[i]/sqrt(Xs[i]*Xs[i] + Ys[i]*Ys[i])
+					var Float Ny = Xs[i]/sqrt(Xs[i]*Xs[i] + Ys[i]*Ys[i])				
+					W[i] = Ix1[i] * Nx + Iy1[i] * Ny
+				}
+				
+				V[n] = mean(W) / std_dev(W)
+				
+				//get means of X and Y values for all "snaxels" of the spline contour, thus finding the cell centers
+				QAX_CENTERS[k_count] = mean(X)
+				QAY_CENTERS[k_count] = mean(Y) + TOP
+				
+				k_count++
+			}
+		}
+	}
+	
+	write("YCenter.txt", {QAY_CENTERS})
+	write("XCenter.txt", {QAX_CENTERS})
+	write("count.txt", {k_count})
+	
+    return 0
+}
+
+}

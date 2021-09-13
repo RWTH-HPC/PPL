@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>de.parallelpatterndsl</groupId>
+  <artifactId>PPL-Sources</artifactId>
+  <version>1.0.0</version>
+  <packaging>pom</packaging>
+
+  <modules>
+    <module>PPL-FE</module>
+    <module>PPL-AMT</module>
+    <module>PPL-HL</module>
+    <module>PPL-IR</module>
+    <module>PPL-OPT</module>
+    <module>PPL-Tool</module>
+  </modules>
+
+  <developers>
+    <developer>
+      <name>Adrian Schmitz</name>
+    </developer>
+    <developer>
+      <name>Lukas Trümper</name>
+    </developer>
+    <developer>
+      <name>Julian Miller</name>
+    </developer>
+  </developers>
+
+  <properties>
+
+    <!-- .. Libraries ..................................................... -->
+
+    <monticore.version>5.0.5</monticore.version>
+    <se-library.version>1.0.0</se-library.version>
+
+    <junit.version>4.11</junit.version>
+
+    <guava.version>29.0-jre</guava.version>
+    <jsr305.version>3.0.0</jsr305.version>
+    <junit.jupiter.version>5.0.3</junit.jupiter.version>
+    <junit.vintage.version>4.12.3</junit.vintage.version>
+    <junit.platform.version>1.0.3</junit.platform.version>
+    <assertj.version>3.7.0</assertj.version>
+    <antlr.version>4.7.1</antlr.version>
+    <logback.version>1.1.2</logback.version>
+    <emf.common.version>2.5.0</emf.common.version>
+    <emf.ecore.version>2.5.0</emf.ecore.version>
+    <emf.ecore.xmi.version>2.5.0</emf.ecore.xmi.version>
+
+
+    <!-- .. Plugins ....................................................... -->
+
+    <assembly.plugin>2.5.3</assembly.plugin>
+    <compiler.plugin>3.2</compiler.plugin>
+    <source.plugin>2.4</source.plugin>
+    <release.plugin>2.5.1</release.plugin>
+    <surefire.plugin>2.19.1</surefire.plugin>
+
+    <!-- Classifiers -->
+
+    <grammars.classifier>grammars</grammars.classifier>
+
+    <!-- .. Misc .......................................................... -->
+  
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
+    <java.version>1.8</java.version>
+    <wagon.provider.version>2.6</wagon.provider.version>
+
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+  </properties>
+
+  <!-- == REPOSITORIES ============================================ -->
+
+  <repositories>
+    <repository>
+      <id>se-nexus</id>
+      <url>https://nexus.se.rwth-aachen.de/content/groups/public/</url>
+    </repository>
+  </repositories>
+
+  <pluginRepositories>
+    <pluginRepository>
+      <id>se-nexus</id>
+      <url>https://nexus.se.rwth-aachen.de/content/groups/public/</url>
+    </pluginRepository>
+  </pluginRepositories>
+  
+  <build>
+    <extensions>
+      <extension>
+        <groupId>org.apache.maven.wagon</groupId>
+        <artifactId>wagon-webdav-jackrabbit</artifactId>
+        <version>${wagon.provider.version}</version>
+      </extension>
+    </extensions>
+
+    <pluginManagement>
+      <plugins>
+        <!-- MontiCore Generation -->
+        <plugin>
+          <groupId>de.monticore.mojo</groupId>
+          <artifactId>monticore-maven-plugin</artifactId>
+          <version>${monticore.version}</version>
+          <executions>
+            <execution>
+              <configuration>
+                <script>de/monticore/monticore_noemf.groovy</script>
+              </configuration>
+              <goals>
+                <goal>generate</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+
+        <!-- Other Configuration -->
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>${compiler.plugin}</version>
+          <configuration>
+            <source>${java.version}</source>
+            <target>${java.version}</target>
+          </configuration>
+        </plugin>
+
+        <!-- Unit Tests -->
+        <!-- default folder is src/test/java/ -->
+        <!-- default incl. are "**/Test*.java", "**/*Test.java", "**/*TestCase.java" -->
+        <plugin>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <version>${surefire.plugin}</version>
+          <configuration>
+            <useSystemClassLoader>false</useSystemClassLoader>
+            <classpathDependencyExcludes>
+              <classpathDependencyExclude>de.monticore:monticore-cli</classpathDependencyExclude>
+            </classpathDependencyExcludes>
+            <forkMode>always</forkMode>
+          </configuration>
+          <dependencies>
+            <dependency>
+              <groupId>org.junit.platform</groupId>
+              <artifactId>junit-platform-surefire-provider</artifactId>
+              <version>${junit.platform.version}</version>
+            </dependency>
+          </dependencies>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+  </build>
+
+  <dependencyManagement>
+    <dependencies>
+      
+      <dependency>
+        <groupId>com.google.guava</groupId>
+        <artifactId>guava</artifactId>
+        <version>${guava.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.google.code.findbugs</groupId>
+        <artifactId>jsr305</artifactId>
+        <version>${jsr305.version}</version>
+      </dependency>
+    
+      <dependency>
+        <groupId>org.antlr</groupId>
+        <artifactId>antlr4-runtime</artifactId>
+        <version>${antlr.version}</version>
+      </dependency>
+    
+      <!-- MontiCore Dependencies -->
+      <dependency>
+        <groupId>de.monticore</groupId>
+        <artifactId>monticore-runtime</artifactId>
+        <version>${monticore.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>de.monticore</groupId>
+        <artifactId>monticore-grammar</artifactId>
+        <version>${monticore.version}</version>
+      </dependency>
+    
+      <dependency>
+        <groupId>de.monticore</groupId>
+        <artifactId>monticore-grammar</artifactId>
+        <version>${monticore.version}</version>
+        <classifier>${grammars.classifier}</classifier>
+        <scope>provided</scope>
+      </dependency>
+  
+      <dependency>
+        <groupId>de.monticore</groupId>
+        <artifactId>monticore-generator</artifactId>
+        <version>${monticore.version}</version>
+      </dependency>
+      
+      <!-- Test Libraries -->
+      <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>${junit.version}</version>
+        <scope>test</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>org.junit.vintage</groupId>
+        <artifactId>junit-vintage-engine</artifactId>
+        <version>${junit.vintage.version}</version>
+        <scope>test</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>org.junit.jupiter</groupId>
+        <artifactId>junit-jupiter-engine</artifactId>
+        <version>${junit.jupiter.version}</version>
+        <scope>test</scope>
+        <!-- doc: http://junit.org/junit5/ -->
+      </dependency>
+
+      <dependency>
+        <groupId>org.junit.jupiter</groupId>
+        <artifactId>junit-jupiter-params</artifactId>
+        <version>${junit.jupiter.version}</version>
+        <scope>test</scope>
+        <!-- doc: http://junit.org/junit5/docs/current/user-guide/#writing-tests-parameterized-tests -->
+      </dependency>
+
+      <dependency>
+        <groupId>org.assertj</groupId>
+        <artifactId>assertj-core</artifactId>
+        <version>${assertj.version}</version>
+        <!-- doc: http://joel-costigliola.github.io/assertj/ -->
+      </dependency>
+    
+      <dependency>
+        <groupId>de.monticore</groupId>
+        <artifactId>monticore-runtime</artifactId>
+        <version>${monticore.version}</version>
+        <type>test-jar</type>
+        <scope>test</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>ch.qos.logback</groupId>
+        <artifactId>logback-classic</artifactId>
+        <version>${logback.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.json</groupId>
+        <artifactId>json</artifactId>
+        <version>20180130</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+
+  <reporting>
+    <plugins>
+      <plugin>
+        <groupId>de.monticore.mojo</groupId>
+        <artifactId>monticore-maven-plugin</artifactId>
+        <version>${monticore.version}</version>
+        <inherited>false</inherited>
+        <reportSets>
+          <reportSet>
+            <reports>
+              <report>reporting-report</report>
+            </reports>
+          </reportSet>
+        </reportSets>
+      </plugin>
+    </plugins>
+  </reporting>
+
+</project>

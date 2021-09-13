@@ -1,0 +1,14 @@
+HelloWorld {
+
+    seq main() : Int {
+        
+        var [String] hello_world = init_List([2], "")
+        hello_world[0] = "hello"
+        hello_world[1] = "world"
+        
+        print({hello_world}) 
+
+        return 0
+    }
+
+}

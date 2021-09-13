@@ -1,0 +1,26 @@
+ReductionStatementAtLastPosition {
+var Int test = 0
+reduction add([Int] input) : Int res {
+    res += input[INDEX]
+}
+reduction sub([Int] input) : Int res {
+    res -= input[INDEX]
+}
+reduction mul([Int] input) : Int res {
+    res *= input[INDEX]
+}
+reduction minimum([Int] input) : Int res {
+    res = min(input[INDEX], res)
+}
+seq min(Int a, Int b) : Int {
+    if a < b {
+        return a
+    } else {
+        return b
+    }
+}
+seq main() : Void {
+    test = add<<<>>>([1,2,3])
+
+}
+}

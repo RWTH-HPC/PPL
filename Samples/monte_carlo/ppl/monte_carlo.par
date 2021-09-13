@@ -1,0 +1,57 @@
+monte_carlo {
+
+    seq lehmer_random_number_generator(Int x) : Int {
+        return 16807 * x mod 2147483647
+    }
+
+    seq uniform(Int x) : Double {
+        return x / 2147483647
+    }
+
+    map monte_carlo([[Int]] seeds) : [Float] res {
+        // Workaround
+        var Int s = seeds[INDEX]
+
+        var Int sx = INDEX * 2133
+        var Int sy = INDEX * 33
+
+        var Int inside = 0
+        var Int outside = 0
+        for var Int i = 0; i < 1000000000; i++ {
+            sx = lehmer_random_number_generator(sx)
+            sy = lehmer_random_number_generator(sy)
+            var Int x = uniform(sx)
+            var Int y = uniform(sy)
+
+            var Int k = x * x + y * y
+            if k <= 1 {
+                inside = inside + 1
+            } else {
+                outside = outside + 1
+            }
+        }
+
+        res[INDEX] = 4 * inside / (inside + outside)
+    }
+
+    reduction sum([Float] values) : Float res {
+        res += values[INDEX]
+    }
+
+    seq main() : Int {
+        // Seeds only necessary for length of map.
+        var [Int] seeds = init_List([96])
+        var [Int] pis = init_List([96])
+
+        seeds = read("seeds.txt")
+
+        pis = monte_carlo<<<>>>(seeds)
+
+        var Int pi = 0
+        pi = sum<<<>>>(pis)
+        pi = pi / 96
+
+        return 0
+    }
+
+}

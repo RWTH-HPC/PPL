@@ -1,0 +1,10 @@
+NoForEachLoopAssignment {
+seq main() : Void {
+   var [Int] test = init_List([2])
+
+   for var Int element in test {
+        element++
+   }
+   return
+}
+}

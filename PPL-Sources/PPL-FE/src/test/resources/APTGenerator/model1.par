@@ -1,0 +1,46 @@
+model1{
+map add([Int] input1, [Int] input2) : [Int] res {
+    res[INDEX] = input1[INDEX] + input2[INDEX]
+}
+
+map matrixAdd([[Int]] input1, [[Int]] input2) : [[Int]] res {
+    res[INDEX] = add<<<1,0>>>(input1[INDEX],input2[INDEX])
+}
+
+reduction sum([Int] input) : Int res {
+    res += input[INDEX]
+}
+
+seq test([Int] input1, [Int] input2) : [Int] {
+    var [Int] res = [0,0,0]
+    res = add<<<>>>(input1, input2)
+    return res
+}
+
+seq main() : Int {
+    var Float F = 1.5
+    var Float F2 = 0
+    var [Int] V1 = [1, 2, 3]
+    var [Int] V2 = [4, 5, 6]
+    var [Int] V3 = [7, 8, 9]
+    var [[Int]] M1 = init_List([3,3])
+    var [Int] erg = [0, 0, 0]
+    var [[Int]] M2 = init_List([3,3])
+    var Int result = 0
+
+    var [Int] testRes = [0,0,0]
+    testRes = test(V1, V2)
+
+    M1[0][0]
+
+    erg = add<<<1,2>>>( V1, V2)
+    V1 = add<<<>>>(erg, V2)
+    V1 = add<<<>>>(erg, V1)
+
+    M2 = matrixAdd<<<>>>(M1,M1)
+
+    M1 = matrixAdd<<<>>>(M2,M2)
+
+    result = sum<<<>>>(V1)
+    return 0
+}}

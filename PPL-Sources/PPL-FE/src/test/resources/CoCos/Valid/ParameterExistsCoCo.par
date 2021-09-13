@@ -1,0 +1,9 @@
+ParameterExistsCoCo {
+var Int test = 0
+seq add(Int input) : Int {
+    return input + 1
+}
+seq main() : Void {
+    test = 2
+}
+}

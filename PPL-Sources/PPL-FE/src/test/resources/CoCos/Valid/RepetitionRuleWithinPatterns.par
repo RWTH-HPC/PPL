@@ -1,0 +1,8 @@
+RepetitionRuleWithinPatterns {
+map three([Int] input) : [Int] res {
+    res[INDEX] = input[INDEX]
+}
+seq main() : Void {
+
+}
+}

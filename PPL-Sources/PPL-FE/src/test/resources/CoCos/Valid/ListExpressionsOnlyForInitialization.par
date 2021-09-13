@@ -1,0 +1,8 @@
+ListExpressionsOnlyForInitialization {
+
+var [Int] test = [1,2,3]
+
+seq main() : Int {
+    return 1
+}
+}

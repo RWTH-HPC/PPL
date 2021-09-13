@@ -1,0 +1,39 @@
+{
+  "topology": "fully",
+  "connectivity-bandwidth": [
+    ["0", "100", "200", "300"],
+    ["0", "100", "200", "300"],
+    ["0", "100", "200", "300"],
+    ["0", "100", "200", "300"]
+  ],
+  "connectivity-latency": [
+    ["0", "100", "200", "300"],
+    ["0", "100", "200", "300"],
+    ["0", "100", "200", "300"],
+    ["0", "100", "200", "300"]
+  ],
+
+  "nodes": [
+    {
+      "identifier": "Node1",
+      "address": "192.165.0.1.125",
+      "template": "Templates/NodeTest.json"
+    },
+    {
+      "identifier": "Node2",
+      "address": "192.165.0.1.125",
+      "template": "Templates/NodeTest.json"
+    },
+    {
+      "identifier": "Node3",
+      "address": "192.165.0.1.125",
+      "template": "Templates/NodeTest.json"
+    },
+    {
+      "identifier": "Node4",
+      "address": "192.165.0.1.125",
+      "template": "Templates/NodeTest.json"
+
+    }
+  ]
+}

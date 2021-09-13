@@ -1,0 +1,11 @@
+ReductionStatementAtLastPosition {
+var Int test = 0
+reduction add([Int] input) : Int res {
+    res = input[INDEX]
+}
+
+seq main() : Void {
+    test = add<<<>>>([1,2,3])
+
+}
+}

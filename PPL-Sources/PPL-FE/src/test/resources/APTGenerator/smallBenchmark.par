@@ -1,0 +1,24 @@
+smallBenchmark {
+
+    map patternA([Float] input) : [Float] res {
+        res[INDEX] = 2 * input[INDEX] + 1
+    }
+
+    map patternB([Float] input1, [Float] input2) : [Float] res {
+        res[INDEX] = input1[INDEX] + input2[INDEX]
+    }
+
+    seq main() : Int {
+        var [Float] A = [1, 2, 3]
+        var [Float] B = [4, 5, 6]
+        var [Float] C = [1, 2, 3]
+        var [Float] D = [1, 2, 3]
+
+        C = patternA<<<>>>(A)
+        C = patternB<<<>>>(A, B)
+        B = patternA<<<>>>(D)
+
+        return 0
+    }
+
+}

@@ -1,0 +1,25 @@
+ControlStatements{
+var [Float] list = [1.2, 2, 3.5]
+seq main() : Void {
+    for var Int i = 0; i < 3; i++  {
+        list[i] += 2
+        if list[i] >= 5   {
+            list[i]--
+        } else if list[i] == 4 {
+            list[i] *= list[i]
+        } else {
+            list[i] = 2.5
+        }
+    }
+
+    var Int res = 0
+
+    for var Float x in list {
+        res++
+    }
+
+    while True {
+        res++
+    }
+
+}}

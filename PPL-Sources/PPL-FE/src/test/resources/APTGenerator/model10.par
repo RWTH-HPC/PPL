@@ -1,0 +1,10 @@
+model10{
+
+seq main():Int {
+    var [[[Int]]] A = init_List([4,5,6])
+    var [Int] B = init_List([6])
+    B = A[1][2]
+
+    return 0
+}
+}

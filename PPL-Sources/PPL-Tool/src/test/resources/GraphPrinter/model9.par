@@ -1,0 +1,19 @@
+model9{
+
+seq identity([Int] input):[Int] {
+    return input
+}
+
+map test([Int] input): [Int] res {
+    res[INDEX] = input[INDEX] * 2
+}
+
+seq main():Int {
+    var [Int] input = [1,2,3]
+    var [Int] result = [0,0,0]
+
+    result = test<<<>>>(identity(input))
+
+    return 0
+}
+}

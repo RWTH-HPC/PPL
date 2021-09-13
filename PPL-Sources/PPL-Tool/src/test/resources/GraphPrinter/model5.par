@@ -1,0 +1,28 @@
+model5{
+
+const dsf = 1
+const list = [dsf, dsf, dsf, dsf]
+
+stencil oneDimensional([Int] Input):[Int] res {
+    res[INDEX0] = Input[INDEX0 + 1] + Input[INDEX0 - 1]
+}
+
+stencil twoDimensional([[Int]] Input):[[Int]] res {
+    res[INDEX0-2][2*INDEX1] = Input[2*INDEX0 + 1][INDEX1] + Input[ 2*INDEX0 - 1][INDEX1] + Input[INDEX0][INDEX1 + 1] + Input[INDEX0][INDEX1 + 1]
+}
+
+seq main():Int {
+
+    var [Int] Array = init_List([4])
+    var [[Int]] Matrix = init_List([4,5])
+
+    var [Int] ArrayOut = init_List([4])
+    var [[Int]] MatrixOut = init_List([4,5])
+
+    ArrayOut = oneDimensional<<<1,1>>>(Array)
+
+    MatrixOut = twoDimensional<<<1,2>>>(Matrix)
+
+    return dsf
+}
+}

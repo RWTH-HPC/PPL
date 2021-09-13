@@ -1,0 +1,82 @@
+batch_classification_loop {
+
+    var [Double] classifier_thresh = init_List([4096])
+    var [Double] classifier_weights = init_List([4096])
+    var Double mu = 0.4
+    var Double variance = 0.3
+
+    map normalize([[Double]] data) : [[Double]] normalized {
+        var [Double] temp = init_List([4096])
+        temp = data[INDEX]
+
+        for var Int j = 0; j < 4096; j++ {
+            var Double value = temp[j]
+            temp[j] = (value - mu) / variance
+        }
+
+        normalized[INDEX] = temp
+    }
+
+    map extract([[Double]] data) : [Double] features {
+        var [Double] temp = init_List([4096])
+        temp = data[INDEX]
+
+        var Double sum = 0.0
+        for var Int j = 0; j < 4096; j++ {
+            var Double value = temp[j]
+            if value < 0 {
+                sum = sum - value
+            } else {
+                sum = sum + value
+            }
+        }
+
+        sum = sum / 4096
+        features[INDEX] = sum
+    }
+
+    map classify([Double] integrals) : [Int] classes {
+        var Int integral = 0
+        integral = integrals[INDEX]
+
+        var Double vote = 0.0
+        for var Int j = 0; j < 4096; j++ {
+            var Double thresh = 0.0
+            var Double weight = 0.0
+
+            thresh = classifier_thresh[j]
+            weight = classifier_weights[j]
+
+            if integral > thresh {
+                vote = vote + weight
+            } else {
+                vote = vote - weight
+            }
+        }
+
+        var Int class_result = 0
+        if vote >= 0.0 {
+            class_result = 2 - 1
+        } else {
+            class_result = 0 - 1
+        }
+
+        classes[INDEX] = class_result
+    }
+
+    seq main() : Int {
+        var [[Double]] data = init_List([524288, 4096])
+        var [[Double]] normalized = init_List([524288, 4096])
+        var [Double] features = init_List([524288])
+        var [Int] classes = init_List([524288])
+
+        data = read("data.txt")
+        
+        normalized = normalize<<<>>>(data)
+        features = extract<<<>>>(normalized)
+        classes = classify<<<>>>(features)
+
+        return 0
+    }
+
+}

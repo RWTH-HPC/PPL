@@ -1,0 +1,20 @@
+Expressions{
+var Int test = 1
+var [Float] list = [1.2, 2, 3.5]
+
+seq main() : Void {
+
+    /* Print values */
+    print({test})
+
+    /* logical and */
+    var Bool v1 = true and (false && true)
+
+    /* logical or, logical not*/
+    var Bool v2 = false or (!true || not false)
+
+    /* Modulo */
+    var Int i1 = 12 mod 3
+    var Int i2 = 12 % 3
+
+}}

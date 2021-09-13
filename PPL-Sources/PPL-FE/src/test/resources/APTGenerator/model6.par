@@ -1,0 +1,23 @@
+model6{
+
+const dsf = 1
+
+seq getList() : [Int] {
+    return [1,2,3,4]
+}
+
+seq identity( [Int] Input) : [Int] {
+    return Input
+}
+
+seq main():Int {
+
+    for var Int i = 0; i < 2; i++ {
+        print()
+    }
+
+    var [Int] test = identity(getList())
+
+    return dsf
+}
+}

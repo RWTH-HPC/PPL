@@ -1,0 +1,568 @@
+heartwall {
+
+	include "../math"
+
+	var Int frames = 450
+	var Int epi_points = 31
+	var Int endo_points = 20
+	
+	var Int public_tSize = 25
+	var Int public_sSize = 40
+	var Int public_maxMove = 10
+	var Float public_alpha = 0.87
+	var Int ioffset = 0
+	var Int joffset = 0
+	
+	var Int ROW = 0
+	var Int COL = 1
+	var Int ROWLOC = 2
+	var Int COLLOC = ROWLOC + 450
+	var Int D_T = COLLOC + 450
+	
+	var [Int] public_d_endoRow = [369, 400, 429, 452, 476, 486, 479, 458, 433, 404, 374, 346, 318, 294, 277, 269, 275, 287, 311, 339]
+	var [Int] public_d_endoCol = [408, 406, 397, 383, 354, 322, 294, 270, 250, 237, 235, 241, 254, 273, 300, 328, 356, 383, 401, 411]
+	
+	var [Int] public_d_epiRow = [390, 419, 448, 474, 501, 519, 535, 542, 543, 538, 528, 511, 491, 466, 438, 406, 376, 347, 318, 291, 275, 259, 256, 252, 252, 257, 266, 283, 305, 331, 360] 
+	var [Int] public_d_epiCol = [457, 454, 446, 431, 411, 388, 361, 331, 301, 273, 243, 218, 196, 178, 166, 157, 155, 165, 177, 197, 218, 248, 276, 304, 333, 361, 391, 415, 434, 448, 455]
+	
+	var Int public_in2_rows = 2 * public_sSize + 1
+	var Int public_in2_cols = 2 * public_sSize + 1
+	var Int public_in2_elem = public_in2_rows * public_in2_cols // 81 * 81 = 6561
+	
+	var Int public_in_mod_rows = public_tSize+1+public_tSize
+	var Int public_in_mod_cols = public_in_mod_rows
+	var Int public_in_mod_elem = public_in_mod_rows * public_in_mod_cols // 51 * 51 = 2601
+	
+	var Int public_conv_rows = public_in_mod_rows + public_in2_rows - 1
+	var Int public_conv_cols = public_in_mod_cols + public_in2_cols - 1
+	var Int public_conv_elem = public_conv_rows * public_conv_cols
+	
+	var Int public_in2_pad_add_rows = public_in_mod_rows
+	var Int public_in2_pad_add_cols = public_in_mod_cols
+	var Int public_in2_pad_rows = public_in2_rows + 2*public_in2_pad_add_rows
+	var Int public_in2_pad_cols = public_in2_cols + 2*public_in2_pad_add_cols
+	var Int public_in2_pad_elem = public_in2_pad_rows * public_in2_pad_cols
+	
+	var Int public_in2_pad_cumv_sel_rowlow = 1 + public_in_mod_rows
+	var Int public_in2_pad_cumv_sel_rowhig = public_in2_pad_rows - 1
+	var Int public_in2_pad_cumv_sel_collow = 1
+	var Int public_in2_pad_cumv_sel_colhig = public_in2_pad_cols
+	var Int public_in2_pad_cumv_sel2_rowlow = 1
+	var Int public_in2_pad_cumv_sel2_rowhig = public_in2_pad_rows - public_in_mod_rows - 1
+	var Int public_in2_pad_cumv_sel2_collow = 1
+	var Int public_in2_pad_cumv_sel2_colhig = public_in2_pad_cols
+	var Int public_in2_sub_rows = public_in2_pad_cumv_sel_rowhig - public_in2_pad_cumv_sel_rowlow + 1
+	var Int public_in2_sub_cols = public_in2_pad_cumv_sel_colhig - public_in2_pad_cumv_sel_collow + 1
+	var Int public_in2_sub_elem = public_in2_sub_rows * public_in2_sub_cols
+	
+	var Int public_in2_sub_cumh_sel_rowlow = 1
+	var Int public_in2_sub_cumh_sel_rowhig = public_in2_sub_rows
+	var Int public_in2_sub_cumh_sel_collow = 1 + public_in_mod_cols
+	var Int public_in2_sub_cumh_sel_colhig = public_in2_sub_cols - 1
+	var Int public_in2_sub_cumh_sel2_rowlow = 1
+	var Int public_in2_sub_cumh_sel2_rowhig = public_in2_sub_rows
+	var Int public_in2_sub_cumh_sel2_collow = 1
+	var Int public_in2_sub_cumh_sel2_colhig = public_in2_sub_cols - public_in_mod_cols - 1
+	var Int public_in2_sub2_sqr_rows = public_in2_sub_cumh_sel_rowhig - public_in2_sub_cumh_sel_rowlow + 1
+	var Int public_in2_sub2_sqr_cols = public_in2_sub_cumh_sel_colhig - public_in2_sub_cumh_sel_collow + 1
+	var Int public_in2_sub2_sqr_elem = public_in2_sub2_sqr_rows * public_in2_sub2_sqr_cols
+	
+	var Int public_tMask_rows = public_in_mod_rows + (public_sSize+1+public_sSize) - 1
+	var Int public_tMask_cols = public_tMask_rows
+	var Int public_tMask_elem = public_tMask_rows * public_tMask_cols
+	
+	var Int public_mask_rows = public_maxMove
+	var Int public_mask_cols = public_mask_rows
+	var Int public_mask_elem = public_mask_rows * public_mask_cols
+	
+	var Int public_mask_conv_rows = public_tMask_rows
+	var Int public_mask_conv_cols = public_tMask_cols
+	var Int public_mask_conv_elem = public_mask_conv_rows * public_mask_conv_cols
+	
+	map copy([Int] input) : [Int] output {
+		output[INDEX] = input[INDEX]
+	}
+	
+	map kernel([[Int]] old_data, Int frame_no, [[Float]] frame, Int public_mask_conv_ioffset, Int public_mask_conv_joffset) : [[Int]] exchange_data {
+		exchange_data[INDEX] = kernel_func(old_data[INDEX], frame_no, frame, public_mask_conv_ioffset, public_mask_conv_joffset)
+	}
+	
+	seq kernel_func([Int] exchange_data, Int frame_no, [[Float]] frame, Int public_mask_conv_ioffset, Int public_mask_conv_joffset) : [Int] {
+		var [Int] result = init_List([3503])
+		
+		
+		
+		result = copy<<<>>>(exchange_data)
+		if frame_no == 0 {
+			result[ROWLOC + frame_no] = exchange_data[ROW]
+			result[COLLOC + frame_no] = exchange_data[COL]
+			
+			for var Int row = 0; row < public_in_mod_rows; row++ {
+				for var Int col = 0; col < public_in_mod_cols; col++ {
+				
+					var Int ori_row = exchange_data[ROW] - 25 + row - 1
+					var Int ori_col = exchange_data[COL] - 25 + col - 1
+					result[col * public_in_mod_rows + row + D_T] = frame[ori_col][ori_row]
+				}
+			}			
+		}
+		
+		if frame_no != 0 {
+		
+			var [[Float]] private_d_in2 = init_List([1280,720])
+			var [[Float]] private_d_in2_sqr = init_List([1280,720])
+			var [Float] private_d_in_mod = init_List([2601])
+			var [Float] private_d_in_sqr = init_List([2601])
+			
+			var [[Float]] private_d_conv = init_List([131,131])
+			
+			var [[Float]] private_d_in2_pad = init_List([1280,720])
+			var [[Float]] private_d_in2_sub = init_List([1280,720])
+			
+			var [[Float]] private_d_in2_sub2_sqr = init_List([1280,720]) 
+			var [[Float]] private_d_tMask = init_List([1280,720],0) 
+			
+			var [[Float]] private_d_mask_conv = init_List([131,131])
+			
+			var Float mean = 0										
+			var Float mean_sqr = 0
+			var Float variance  = 0
+			var Float deviation = 0
+	
+			var Float denomT = 0
+			
+			var Int in2_rowlow = exchange_data[ROW] - public_sSize
+			var Int in2_collow = exchange_data[COL] - public_sSize
+			
+			
+			//==================================================
+		//	1) SETUP POINTER TO POINT TO CURRENT FRAME FROM BATCH
+		//	2) SELECT INPUT 2 (SAMPLE AROUND POINT) FROM FRAME			SAVE IN d_in2			(NOT LINEAR IN MEMORY, SO NEED TO SAVE OUTPUT FOR LATER EASY USE)
+		//	3) SQUARE INPUT 2									SAVE IN d_in2_sqr
+		//==================================================
+			for var Int row = 0; row < public_in2_rows; i++ {
+				for var Int col = 0; col < public_in2_cols; i++ {
+				
+					var Int ori_row = row + in2_rowlow - 1
+					var Int ori_col = col + in2_collow - 1
+					var Int temp = frame[ori_col][ori_row]
+					
+					private_d_in2[col][row] = temp
+					private_d_in2_sqr[col][row] = temp * temp
+					
+				}
+			}
+			
+			//==================================================
+		//	1) GET POINTER TO INPUT 1 (TEMPLATE FOR THIS POINT) IN TEMPLATE ARRAY				(LINEAR IN MEMORY, SO DONT NEED TO SAVE, JUST GET POINTER)
+		//	2) ROTATE INPUT 1									SAVE IN d_in_mod
+		//	3) SQUARE INPUT 1									SAVE IN d_in_sqr
+		//==================================================
+			
+			//work
+			for var Int row = 0; row < public_in_mod_rows; i++ {
+				for var Int col = 0; col < public_in_mod_cols; i++ {
+				
+					var Int ori_row = public_in_mod_rows - 1 - row
+					var Int ori_col = public_in_mod_rows - 1 - col
+					var Int pointer = ori_col * public_in_mod_rows + ori_row
+					
+					var Int temp = exchange_data[pointer + D_T]
+					
+					private_d_in_mod[col * public_in_mod_rows + row] = temp
+					private_d_in_sqr[pointer] = temp * temp
+					
+				}
+			}
+			
+			
+			//==================================================
+			//	1) GET SUM OF INPUT 1
+			//	2) GET SUM OF INPUT 1 SQUARED
+			//==================================================
+	
+			var Int in_final_sum = 0
+			for var Int i = 0; i<public_in_mod_elem; i++{
+				in_final_sum += exchange_data[i + D_T]
+			}
+	
+			var Int in_sqr_final_sum = 0
+			for var Int i = 0; i<public_in_mod_elem; i++ {
+				in_sqr_final_sum += private_d_in_sqr[i]
+			}
+			
+			//==================================================
+			//	3) DO STATISTICAL CALCULATIONS
+			//	4) GET DENOMINATOR T
+			//==================================================
+	
+			var Float mean = in_final_sum / public_in_mod_elem											// gets mean (average) value of element in ROI
+			var Float mean_sqr = mean * mean
+			var Float variance  = (in_sqr_final_sum / public_in_mod_elem) - mean_sqr							// gets variance of ROI
+			var Float deviation = sqrt(variance)																// gets standard deviation of ROI
+
+			var Float denomT = sqrt((public_in_mod_elem-1))*deviation
+	
+			//====================================================================================================
+			//	1) CONVOLVE INPUT 2 WITH ROTATED INPUT 1					SAVE IN d_conv
+			//====================================================================================================
+	
+			// work
+			for var Int col=1; col<=public_conv_cols; col++ {
+	
+				// column setup
+				var Int j = col + joffset
+				var Int jp1 = j + 1
+				var Int ja1
+				var Int ja2
+				if(public_in2_cols < jp1){
+					ja1 = jp1 - public_in2_cols
+				}
+				else{
+					ja1 = 1
+				}
+				if(public_in_mod_cols < j){
+					ja2 = public_in_mod_cols
+				}
+				else{
+				ja2 = j
+				}
+	
+				for var Int row=1; row<=public_conv_rows; row++ {
+
+					// row range setup
+					var Int i = row + ioffset
+					var Int ip1 = i + 1
+					var Int ia1
+					var Int ia2
+					
+					if(public_in2_rows < ip1){
+						ia1 = ip1 - public_in2_rows
+					}
+					else{
+						ia1 = 1
+					}
+					if(public_in_mod_rows < i){
+						ia2 = public_in_mod_rows
+					}
+					else{
+						ia2 = i
+					}
+
+					var Float s = 0
+
+					// getting data
+					for var Int ja=ja1; ja<=ja2; ja++ {
+						var Int jb = jp1 - ja
+						for var Int ia=ia1; ia<=ia2; ia++ {
+							var Int ib = ip1 - ia
+							s = s + private_d_in_mod[public_in_mod_rows*(ja-1)+ia-1] * private_d_in2[jb-1][ib-1]
+						}
+					}
+	
+					private_d_conv[col-1][row-1] = s
+				}
+				
+			}
+			//====================================================================================================
+			//	LOCAL SUM 1
+			//====================================================================================================
+	
+			//==================================================
+			//	1) PADD ARRAY										SAVE IN d_in2_pad
+			//==================================================
+	
+			// work
+			for var Int col=0; col<public_in2_pad_cols; col++{
+				for var Int row=0; row<public_in2_pad_rows; row++{
+	
+				// execution
+				if(	row > (public_in2_pad_add_rows-1) &&														// do if has numbers in original array
+					row < (public_in2_pad_add_rows+public_in2_rows) && 
+					col > (public_in2_pad_add_cols-1) && 
+					col < (public_in2_pad_add_cols+public_in2_cols)){
+					var Int ori_row = row - public_in2_pad_add_rows
+					var Int ori_col = col - public_in2_pad_add_cols
+					private_d_in2_pad[col][row] = private_d_in2[ori_col][ori_row]
+				}
+				else{																			// do if otherwise
+					private_d_in2_pad[col][row] = 0
+				}
+	
+				}
+			}
+			
+			//==================================================
+			//	1) GET VERTICAL CUMULATIVE SUM						SAVE IN d_in2_pad
+			//==================================================
+			for var Int col = 0; col < public_in2_pad_cols; col++ {
+	
+				// loop through all rows
+				var Float sum = 0
+				for var Int row = 0; row < public_in2_pad_rows; row++ {
+					private_d_in2_pad[col][row] = private_d_in2_pad[col][row] + sum
+					sum = private_d_in2_pad[col][row]
+				}	
+			}
+			
+			//==================================================
+			//	1) MAKE 1st SELECTION FROM VERTICAL CUMULATIVE SUM
+			//	2) MAKE 2nd SELECTION FROM VERTICAL CUMULATIVE SUM
+			//	3) SUBTRACT THE TWO SELECTIONS						SAVE IN d_in2_sub
+			//==================================================
+	
+			// work
+			for var Int col=0; col<public_in2_sub_cols; col++ {
+				for var Int row=0; row<public_in2_sub_rows; row++ {
+	
+				// figure out corresponding location in old matrix and copy values to new matrix
+				var Int ori_row = row + public_in2_pad_cumv_sel_rowlow - 1
+				var Int ori_col = col + public_in2_pad_cumv_sel_collow - 1
+				var Float temp = private_d_in2_pad[ori_col][ori_row]
+	
+				// figure out corresponding location in old matrix and copy values to new matrix
+				ori_row = row + public_in2_pad_cumv_sel2_rowlow - 1
+				ori_col = col + public_in2_pad_cumv_sel2_collow - 1
+				var Float temp2 = private_d_in2_pad[ori_col][ori_row]
+	
+				// subtraction
+				private_d_in2_sub[col][row] = temp - temp2
+
+				}
+			}
+			
+			//==================================================
+			//	1) GET HORIZONTAL CUMULATIVE SUM						SAVE IN d_in2_sub
+			//==================================================
+	
+			for var Int row = 0; row < public_in2_sub_rows; row++ {
+	
+				// loop through all cols
+				var Float sum = 0
+				for var Int col = 0; col < public_in2_sub_cols; col++ {
+					private_d_in2_sub[col][row] = private_d_in2_sub[col][row] + sum
+					sum = private_d_in2_sub[col][row]
+				}	
+			}
+			
+			//==================================================
+			//	1) MAKE 1st SELECTION FROM HORIZONTAL CUMULATIVE SUM
+			//	2) MAKE 2nd SELECTION FROM HORIZONTAL CUMULATIVE SUM
+			//	3) SUBTRACT THE TWO SELECTIONS TO GET LOCAL SUM 1
+			//	4) GET CUMULATIVE SUM 1 SQUARED						SAVE IN d_in2_sub2_sqr
+			//	5) GET NUMERATOR									SAVE IN d_conv
+			//==================================================
+	
+			// work
+			for var Int col=0; col<public_in2_sub2_sqr_cols; col++ {
+				for var Int row=0; row<public_in2_sub2_sqr_rows; row++ {
+	
+				// figure out corresponding location in old matrix and copy values to new matrix
+				var Int ori_row = row + public_in2_sub_cumh_sel_rowlow - 1
+				var Int ori_col = col + public_in2_sub_cumh_sel_collow - 1
+				var Float temp = private_d_in2_sub[ori_col][ori_row]
+	
+				// figure out corresponding location in old matrix and copy values to new matrix
+				ori_row = row + public_in2_sub_cumh_sel2_rowlow - 1
+				ori_col = col + public_in2_sub_cumh_sel2_collow - 1
+				var Float temp2 = private_d_in2_sub[ori_col][ori_row]
+				
+				// subtraction
+				temp2 = temp - temp2
+	
+				// squaring
+				private_d_in2_sub2_sqr[col][row] = temp2 * temp2
+	
+				// numerator
+				private_d_conv[col][row] = private_d_conv[col][row] - temp2 * in_final_sum / public_in_mod_elem
+	
+				}
+			}
+			
+			//====================================================================================================
+			//	TEMPLATE MASK CREATE
+			//====================================================================================================
+	
+			// parameters
+			var Int cent = public_sSize + public_tSize + 1
+			var Int tMask_row = cent + exchange_data[frame_no - 1 + ROWLOC] - exchange_data[ROW] - 1
+			var Int tMask_col = cent + exchange_data[frame_no - 1 + COLLOC] - exchange_data[COL] - 1
+	
+			private_d_tMask[tMask_col][tMask_row] = 1
+			
+			
+			//====================================================================================================
+			//	1) MASK CONVOLUTION
+			//	2) MULTIPLICATION
+			//====================================================================================================
+	
+			// work
+			for var Int col=1; col<=public_mask_conv_cols; col++ {
+	
+				// col setup
+				var Int j = col + public_mask_conv_joffset
+				var Int jp1 = j + 1
+				var Int ja1 = 0
+				var Int ja2 = 0
+				if(public_mask_cols < jp1){
+					ja1 = jp1 - public_mask_cols
+				}
+				else{
+					ja1 = 1
+				}
+				if(public_tMask_cols < j){
+					ja2 = public_tMask_cols
+				}
+				else{
+					ja2 = j
+				}
+	
+				for var Int row=1; row<=public_mask_conv_rows; row++ {
+	
+					// row setup
+					var Int i = row + public_mask_conv_ioffset
+					var Int ip1 = i + 1
+					var Int ia1 = 0
+					var Int ia2 = 0
+					
+					if(public_mask_rows < ip1){
+						ia1 = ip1 - public_mask_rows
+					}
+					else{
+						ia1 = 1
+					}
+					if(public_tMask_rows < i){
+						ia2 = public_tMask_rows
+					}
+					else{
+						ia2 = i
+					}
+	
+					var Float s = 0
+	
+					// get data
+					for var Int ja=ja1; ja<=ja2; ja++ {
+						var Int jb = jp1 - ja
+						for var Int ia=ia1; ia<=ia2; ia++ {
+							var Int ib = ip1 - ia
+							s = s + private_d_tMask[(ja-1)][ia-1] * 1
+						}
+					}
+	
+					private_d_mask_conv[(col-1)][(row-1)] = private_d_conv[(col-1)][(row-1)] * s
+	
+				}
+	
+			}
+			
+			
+			//====================================================================================================
+			//	MAXIMUM VALUE
+			//====================================================================================================
+	
+			//==================================================
+			//	SEARCH
+			//==================================================
+	
+			var Float fin_max_val = 0
+			var Float fin_max_row = 0
+			var Float fin_max_col = 0
+			for var Int i=0; i<public_mask_conv_cols; i++ {
+				for var Int j=0; i<public_mask_conv_rows; i++ {
+					if(private_d_mask_conv[i][j]>fin_max_val){
+						fin_max_val = private_d_mask_conv[i][j]
+						fin_max_row = j
+						fin_max_col = i
+					}
+				}
+			}
+	
+			//==================================================
+			//	OFFSET
+			//==================================================
+
+	
+			// calculate offset
+			var Int largest_row = fin_max_row + 1																	// compensate to match MATLAB format (1-n)
+			var Int largest_col = fin_max_col + 1																	// compensate to match MATLAB format (1-n)
+			var Int offset_row = largest_row - public_in_mod_rows - (public_sSize - public_tSize)
+			var Int offset_col = largest_col - public_in_mod_cols - (public_sSize - public_tSize)
+			result[frame_no + ROWLOC] = exchange_data[ROW] + offset_row
+			result[frame_no + COLLOC] = exchange_data[COL] + offset_col
+			
+		}
+		
+		//======================================================================================================================================================
+		//	COORDINATE AND TEMPLATE UPDATE
+		//======================================================================================================================================================
+	
+		// if the last frame in the bath, update template
+		if(frame_no != 0 && (frame_no)%10 == 0){
+	
+			// update coordinate
+			result[ROW] = result[frame_no + ROWLOC]
+			result[COL] = result[frame_no + COLLOC]
+	
+			// update template, limit the number of working threads to the size of template
+			for var Int col=0; col<public_in_mod_cols; col++ {
+				for var Int row=0; row<public_in_mod_rows; row++ {
+	
+				// figure out row/col location in corresponding new template area in image and give to every thread (get top left corner and progress down and right)
+				var Int ori_row = result[ROW] - 25 + row - 1
+				var Int ori_col = result[COL] - 25 + col - 1
+	
+				// update template
+				result[col][row] = public_alpha*exchange_data[col][row] + (1.00-public_alpha)*frame[ori_col][ori_row]
+	
+				}
+			}
+	
+		}
+		return result
+	}
+	
+	stencil multi_copy([[Float]] input) : [[Float]] out{
+		out[INDEX0][INDEX1] = input[INDEX0][INDEX1]
+	}
+	
+	
+	seq main () : Int{
+	
+		var [[[Float]]] d_frames = init_List([450, 1280, 720])
+		
+		d_frames = read("videofile_txt")		
+		
+		var [[Int]] private_exchange_data = init_List([51,3503]) // Row + Col + RowLoc(450) + ColLoc(450) + D_T(2601)
+		var [[Int]] private_old_exchange_data = init_List([51,3503])
+		
+		for var Int i = 0; i < endo_points; i++ {
+			private_exchange_data[i][ROW] = public_d_endoRow[i]
+			private_exchange_data[i][COL] = public_d_endoCol[i]			
+		}
+		for var Int i = endo_points; i < endo_points + epi_points; i++ {
+			private_exchange_data[i][ROW] = public_d_epiRow[i - endo_points]
+			private_exchange_data[i][COL] = public_d_epiCol[i - endo_points]			
+		}
+		
+		var Int public_mask_conv_ioffset = (public_mask_rows-1)/2 
+		var Int public_mask_conv_joffset = (public_mask_cols-1)/2 
+		
+		if((public_mask_rows-1) % 2 > 0.5){
+			public_mask_conv_ioffset = public_mask_conv_ioffset + 1
+		}
+		if((public_mask_cols-1) % 2 > 0.5){
+			public_mask_conv_joffset = public_mask_conv_joffset + 1
+		}
+		
+		for var Int i = 0; i < #d_frames; i++ {
+			private_old_exchange_data = multi_copy<<<>>>(private_exchange_data)
+			private_exchange_data = kernel<<<>>>(private_old_exchange_data, i, d_frames[i], public_mask_conv_ioffset, public_mask_conv_joffset)
+		}
+		
+		// provide final results
+		write("res.txt", {private_exchange_data})
+	
+			
+		return 0
+	}
+}
