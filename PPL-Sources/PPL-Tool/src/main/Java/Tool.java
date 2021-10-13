@@ -175,7 +175,7 @@ public class Tool{
         if ((Boolean) ToolOptions.options.get(ToolOptions.BASEMAPPING).getValue()) {
             base = baseMapping(flatAPT, model, network);
             try {
-                base.a.toJSONFile(((String) ToolOptions.options.get(ToolOptions.OUTPUTPATH).getValue()).split(".")[0] + ".json", modelName, cluster.getName(), base.b);
+                base.a.toJSONFile(((String) ToolOptions.options.get(ToolOptions.OUTPUTPATH).getValue()) + ".json", modelName, cluster.getName(), base.b);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -186,7 +186,7 @@ public class Tool{
          */
         if ((Boolean) ToolOptions.options.get(ToolOptions.OPTREPORT).getValue()) {
             try {
-                mapping.a.toJSONFile(((String) ToolOptions.options.get(ToolOptions.OUTPUTPATH).getValue()).split(".")[0] + ".json", modelName, cluster.getName(), mapping.b);
+                mapping.a.toJSONFile(((String) ToolOptions.options.get(ToolOptions.OUTPUTPATH).getValue()) + ".json", modelName, cluster.getName(), mapping.b);
             } catch (IOException e) {
                 e.printStackTrace();
             }
