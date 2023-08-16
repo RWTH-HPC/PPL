@@ -99,7 +99,7 @@
         <dependency>
             <groupId>com.gurobi</groupId>
             <artifactId>gurobi</artifactId>
-            <version>4.0</version>
+            <version>9.5</version>
         </dependency>
     </dependencies>
 

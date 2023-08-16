@@ -1,0 +1,13 @@
+NoIndexAccessInIndexAccess {
+
+
+seq main() : Void {
+    var [Int] test = init_List([10])
+    var [Int] meta = [3, 3, 2, 4, 0]
+
+    var Int access = meta[2]
+
+    test[access] = test[0]
+
+}
+}

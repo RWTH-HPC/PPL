@@ -1,6 +1,9 @@
 package de.parallelpatterndsl.patterndsl.printer.Helper;
 
+/**
 import de.monticore.expressions.commonexpressions._ast.ASTNameExpression;
+ **/
+import de.parallelpatterndsl.patterndsl._ast.ASTNameExpression;
 import de.parallelpatterndsl.patterndsl._ast.*;
 import de.parallelpatterndsl.patterndsl._symboltable.ConstantSymbol;
 import de.parallelpatterndsl.patterndsl._visitor.PatternDSLVisitor;

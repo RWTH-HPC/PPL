@@ -1,0 +1,146 @@
+hotspot {
+
+
+	var Int STR_SIZE = 256
+
+	/* maximum power density possible (say 300W for a 10mm x 10mm chip)	*/
+	var Float MAX_PD = (3.0e6)
+	/* required precision in degrees	*/
+	var Float PRECISION = 0.001
+	var Float SPEC_HEAT_SI =  1.75e6
+	var Int K_SI = 100
+	/* capacitance fitting factor	*/
+	var Float FACTOR_CHIP = 0.5
+
+	/* chip parameters	*/
+	var Float t_chip = 0.0005
+	var Float chip_height = 0.016
+	var Float chip_width = 0.016
+
+	/* ambient temperature, assuming no package at all	*/
+	var Float amb_temp = 80.0
+	
+	var Int row = 1024
+	var Int col = 1024
+	
+	stencil copy_2D([[Float]] org) : [[Float]] res {
+		res[INDEX0][INDEX1] = org[INDEX0][INDEX1]
+	}
+	
+	stencil single_iteration([[Float]] temp, [[Float]] power, Float Rx_1, Float Ry_1, Float Rz_1, Float Cap_1) : [[Float]] result {	
+		result[INDEX0][INDEX1] =temp[INDEX0][INDEX1]+ 
+                     ( Cap_1 * (power[INDEX0][INDEX1] + 
+                    (temp[INDEX0 + 1][INDEX1] + temp[INDEX0 - 1][INDEX1] - 2*temp[INDEX0][INDEX1]) * Ry_1 + 
+                    (temp[INDEX0][INDEX1 + 1] + temp[INDEX0][INDEX1 - 1] - 2*temp[INDEX0][INDEX1]) * Rx_1 + 
+                    (amb_temp - temp[INDEX0][INDEX1]) * Rz_1))
+		
+	}
+	
+	stencil edge1([[Float]] temp, [[Float]] power, Float Rx_1, Float Ry_1, Float Rz_1, Float Cap_1) : [[Float]] result {		
+		result[INDEX0 - 1023][INDEX1] = temp[INDEX0 - 1023][INDEX1] + (Cap_1) * (power[INDEX0 - 1023][INDEX1] + 
+                    (temp[INDEX0 - 1023][INDEX1 - 1] + temp[INDEX0 - 1023][INDEX1 + 1] - 2.0*temp[INDEX0 - 1023][INDEX1]) * Rx_1 + 
+                    (temp[INDEX0 - 1022][INDEX1] - temp[INDEX0 - 1023][INDEX1]) * Ry_1 + 
+                    (amb_temp - temp[INDEX0 - 1023][INDEX1]) * Rz_1)
+	}
+	
+	stencil edge2([[Float]] temp, [[Float]] power, Float Rx_1, Float Ry_1, Float Rz_1, Float Cap_1) : [[Float]] result {		
+		result[INDEX0][INDEX1 + 1023] = temp[INDEX0][INDEX1 + 1023] + (Cap_1) * (power[INDEX0][INDEX1 + 1023] + 
+                    (temp[INDEX0][INDEX1 + 1022] - temp[INDEX0][INDEX1 + 1023]) * Rx_1 + 
+                    (temp[INDEX0 + 1][INDEX1 + 1023] + temp[INDEX0 - 1][INDEX1 + 1023] - 2*temp[INDEX0][INDEX1 + 1023]) * Ry_1 + 
+                    (amb_temp - temp[INDEX0][INDEX1 + 1023]) * Rz_1)
+	}
+	
+	stencil edge3([[Float]] temp, [[Float]] power, Float Rx_1, Float Ry_1, Float Rz_1, Float Cap_1) : [[Float]] result {		
+		result[INDEX0 + 1023][INDEX1] = temp[INDEX0 + 1023][INDEX1] + (Cap_1) * (power[INDEX0 + 1023][INDEX1] + 
+                    (temp[INDEX0 + 1023][INDEX1 - 1] + temp[INDEX0 + 1023][INDEX1 + 1] - 2.0*temp[INDEX0 + 1023][INDEX1]) * Rx_1 + 
+                    (temp[INDEX0 + 1022][INDEX1] - temp[INDEX0 + 1023][INDEX1]) * Ry_1 + 
+                    (amb_temp - temp[INDEX0 + 1023][INDEX1]) * Rz_1)
+	}
+	
+	stencil edge4([[Float]] temp, [[Float]] power, Float Rx_1, Float Ry_1, Float Rz_1, Float Cap_1) : [[Float]] result {		
+		result[INDEX0][INDEX1 - 1023] = temp[INDEX0][INDEX1 - 1023] + (Cap_1) * (power[INDEX0][INDEX1 - 1023] + 
+                    (temp[INDEX0][INDEX1 - 1022] - temp[INDEX0][INDEX1 - 1023]) * Rx_1 + 
+                    (temp[INDEX0 + 1][INDEX1 - 1023] + temp[INDEX0 - 1][INDEX1 - 1023] - 2*temp[INDEX0][INDEX1 - 1023]) * Ry_1 + 
+                    (amb_temp - temp[INDEX0][INDEX1 - 1023]) * Rz_1)
+	}
+	
+	seq compute_tran_temp(Int iterations, [[Float]] temp, [[Float]] power):[[Float]] {
+		var [[Float]] result = init_List([1024,1024],0)
+		var [[Float]] result_old = init_List([1024,1024],0)
+		result_old = copy_2D<<<>>>(temp)
+		
+		var Float grid_height = chip_height / row
+		var Float grid_width = chip_width / col
+
+		var Float Cap = FACTOR_CHIP * SPEC_HEAT_SI * t_chip * grid_width * grid_height
+		var Float Rx = grid_width / (2.0 * K_SI * t_chip * grid_height)
+		var Float Ry = grid_height / (2.0 * K_SI * t_chip * grid_width)
+		var Float Rz = t_chip / (K_SI * grid_height * grid_width)
+		
+		var Float max_slope = MAX_PD / (FACTOR_CHIP * t_chip * SPEC_HEAT_SI)
+		var Float step = PRECISION / max_slope / 1000.0
+		
+		var Float Rx_1=1/Rx
+		var Float Ry_1=1/Ry
+		var Float Rz_1=1/Rz
+		var Float Cap_1 = step/Cap
+		
+		for var Int i = 0; i < iterations; i++ {
+			/* Corner 1 */
+            result[0][0] = result_old[0][0] + (Cap_1) * (power[0][0] +
+                    (result_old[0][1] - result_old[0][0]) * Rx_1 +
+                    (result_old[1][0] - result_old[0][0]) * Ry_1 +
+                    (amb_temp - result_old[0][0]) * Rz_1)
+            /* Corner 2 */
+			result[0][col - 1] = result_old[0][col - 1] + (Cap_1) * (power[0][col - 1] +
+					(result_old[0][col - 2] - result_old[0][col - 1]) * Rx_1 +
+					(result_old[1][col - 2] - result_old[0][col - 1]) * Ry_1 +
+                    (   amb_temp - result_old[0][col - 1]) * Rz_1)
+            /* Corner 3 */
+            result[row - 1][col - 1] = result_old[row - 1][col - 1] + (Cap_1) * (power[row - 1][col - 1] + 
+                    (result_old[row - 1][col - 2] - result_old[row - 1][col - 1]) * Rx_1 + 
+                    (result_old[row - 2][col - 1] - result_old[row - 1][col - 1]) * Ry_1 + 
+                    (   amb_temp - result_old[row - 1][col - 1]) * Rz_1)					
+            /* Corner 4	*/
+            result[row - 1][0] = result_old[row - 1][0] + (Cap_1) * (power[row - 1][0] + 
+                    (result_old[row - 1][1] - result_old[row - 1][0]) * Rx_1 + 
+                    (result_old[row - 2][0] - result_old[row - 1][0]) * Ry_1 + 
+                    (amb_temp - result_old[row - 1][0]) * Rz_1)
+            
+			
+			result = edge1<<<>>>(result_old, power, Rx_1, Ry_1, Rz_1, Cap_1) 
+			result = edge2<<<>>>(result_old, power, Rx_1, Ry_1, Rz_1, Cap_1) 
+			result = edge3<<<>>>(result_old, power, Rx_1, Ry_1, Rz_1, Cap_1) 
+			result = edge4<<<>>>(result_old, power, Rx_1, Ry_1, Rz_1, Cap_1) 
+			result = single_iteration<<<>>>(result_old, power, Rx_1, Ry_1, Rz_1, Cap_1) 
+			
+			result_old = copy_2D<<<>>>(result)
+		}
+		
+		return result
+		
+	}
+	
+	seq main () : Int{
+	
+		var [[Float]] temperature = init_List([1024,1024])
+		var [[Float]] power = init_List([1024,1024])
+		var [[Float]] result = init_List([1024,1024],0)
+		var Int iter = 2
+		
+		temperature = read("temp_1024")
+		power = read("power_1024")
+		
+		//var Long time = get_time()
+		
+		result = compute_tran_temp(iter, temperature, power)
+		
+		//time = get_time() - time
+		
+		//print("Kernel took:" {time} "us")
+		
+		write("result.txt", {result})
+			
+		return 0
+	}
+}

@@ -1,0 +1,6 @@
+dummy {
+seq main() : Int {
+result[INDEX0][INDEX1][INDEX2][INDEX3] = 0
+       
+    }
+}

@@ -2,10 +2,8 @@ package de.parallelpatterndsl.patterndsl.MappingTree.DataMovementGenerator;
 
 import de.parallelpatterndsl.patterndsl.MappingTree.Nodes.DataControl.DataPlacement;
 import de.parallelpatterndsl.patterndsl.MappingTree.Nodes.Function.MainMapping;
-import de.parallelpatterndsl.patterndsl.MappingTree.Nodes.ParallelCalls.ParallelCallMapping;
 import de.parallelpatterndsl.patterndsl.MappingTree.Nodes.Plain.SimpleExpressionBlockMapping;
 import de.parallelpatterndsl.patterndsl.abstractPatternTree.DataElements.Data;
-import de.parallelpatterndsl.patterndsl.hardwareDescription.Device;
 import de.parallelpatterndsl.patterndsl.hardwareDescription.Processor;
 
 import java.util.ArrayList;

@@ -1,0 +1,47 @@
+model1{
+
+/**
+* Fills a radius x radius matrix representing the disk
+* @return disk The pointer to the disk to be made
+* @param radius  The radius of the disk to be made
+*/
+seq strelDisk(Int radius): [[Int]]{
+	var Int diameter = radius*2 - 1
+	var [[Int]] disk = init_List([9,9],0)
+	for var Int x = 0; x < diameter; x++ {
+		for var Int y = 0; y < diameter; y++ {
+			var Float distance = sqrt(pow((x-radius+1),2) + pow((y-radius+1),2))
+			if(distance < radius) {
+				disk[x][y] = 1
+			}
+		}
+	}
+	return disk
+}
+
+seq main() : Int {
+
+    var [Int] small = [1,2,3,4,5]
+    var [[Int]] big = [[1,2,3,4,5],[1,2,3,4,5]]
+
+    var Int summation = 0
+
+    var Int test1 = 0
+
+    var Int ja = 9
+
+    var Int ia = 2
+
+    summation = 1 + 2 * (3 + (4 * 5)) + 6
+
+    summation = small[test1*(ja-1)+ia-1]
+
+    summation = big[(ja-1)][ia]
+
+    summation = ((test1 * small[ja] * small[ia]) + (test1 * big[ia][ja]))
+
+    strelDisk(2)
+
+
+    return 0
+}}

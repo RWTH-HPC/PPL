@@ -5,6 +5,7 @@ import de.parallelpatterndsl.patterndsl.abstractPatternTree.Nodes.Plain.ComplexE
 import de.parallelpatterndsl.patterndsl.abstractPatternTree.Nodes.Plain.ParallelCallNode;
 import de.parallelpatterndsl.patterndsl.abstractPatternTree.Nodes.Plain.SimpleExpressionBlockNode;
 import de.parallelpatterndsl.patterndsl.dataSplits.DataSplit;
+import de.parallelpatterndsl.patterndsl.dataSplits.SyncDataSplit;
 import de.parallelpatterndsl.patterndsl.dataSplits.TempDataSplit;
 import de.parallelpatterndsl.patterndsl.expressions.IRLExpression;
 import de.parallelpatterndsl.patterndsl.patternSplits.*;
@@ -51,6 +52,7 @@ public class FlatAPT{
     //================================================================================
 
     private enum DataDependency {
+        SYNCHRONIZATION,
         READ_AFTER_WRITE,
         WRITE_AFTER_READ,
         WRITE_AFTER_WRITE;
@@ -118,11 +120,11 @@ public class FlatAPT{
         }
 
         int step = this.table.size();
-        while(step > 0) {
+        while(step > 0 ) {
             HashMap<DataSplit, DataDependency> relation = happensBefore(step - 1, job.getInputDataSplits(), job.getOutputDataSplits());
             resolveDependencies(relation, node);
 
-            if (!relation.isEmpty()) {
+            if (!relation.isEmpty() || node.containsSynchronization()) {
                 break;
             } else {
                 --step;
@@ -164,16 +166,19 @@ public class FlatAPT{
                 .filter(outputData::contains)
                 .collect(Collectors.toSet());
 
-        for (DataSplit data : readAfterWrite) {
-            relation.put(data, DataDependency.READ_AFTER_WRITE);
-        }
-
         for (DataSplit data : writeAfterRead) {
             relation.put(data, DataDependency.WRITE_AFTER_READ);
         }
 
         for (DataSplit data : writeAfterWrite) {
             relation.put(data, DataDependency.WRITE_AFTER_WRITE);
+        }
+
+        for (DataSplit data : readAfterWrite) {
+            relation.put(data, DataDependency.READ_AFTER_WRITE);
+        }
+        if (patternSplits.stream().filter(x -> x instanceof SerialPatternSplit).anyMatch(x -> ((SerialPatternSplit) x).getNode().containsSynchronization())) {
+            relation.put(new SyncDataSplit(), DataDependency.SYNCHRONIZATION);
         }
 
         return relation;
@@ -192,6 +197,9 @@ public class FlatAPT{
             if (dependency.getKey() instanceof TempDataSplit) {
                 continue;
             }
+            if (dependency.getKey() instanceof SyncDataSplit) {
+                break;
+            }
             switch (dependency.getValue()) {
                 case READ_AFTER_WRITE:
                     break;
@@ -202,7 +210,7 @@ public class FlatAPT{
                         dependency.getKey().getData().createCopy(index);
                     }
 
-                    iter.remove();
+                    //iter.remove();
                     break;
             }
         }

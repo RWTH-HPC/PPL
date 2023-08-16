@@ -1,7 +1,10 @@
 package de.parallelpatterndsl.patterndsl.printer;
 
+/**
 import de.monticore.expressions.commonexpressions._ast.*;
 import de.monticore.expressions.expressionsbasis._ast.ASTExpression;
+
+ **/
 import de.parallelpatterndsl.patterndsl._ast.*;
 
 /**
@@ -12,6 +15,50 @@ public class PPLExpressionPrinter extends AbstractExpressionPrinter <String> {
     private static PPLExpressionPrinter printer;
 
     private PPLExpressionPrinter() { }
+
+    @Override
+    protected String doPrintAssignmentByBitwiseOrExpression(ASTAssignmentByBitwiseOrExpression exp) {
+        String erg = "";
+        erg += this.doPrintExpression(exp.getLeft());
+        erg += " |= ";
+        erg += this.doPrintExpression(exp.getRight());
+        return erg;
+    }
+
+    @Override
+    protected String doPrintAssignmentByBitwiseAndExpression(ASTAssignmentByBitwiseAndExpression exp) {
+        String erg = "";
+        erg += this.doPrintExpression(exp.getLeft());
+        erg += " &= ";
+        erg += this.doPrintExpression(exp.getRight());
+        return erg;
+    }
+
+    @Override
+    protected String doPrintBitwiseOrExpression(ASTBitwiseOrExpression exp) {
+        String erg = "";
+        erg += this.doPrintExpression(exp.getLeft());
+        erg += " | ";
+        erg += this.doPrintExpression(exp.getRight());
+        return erg;
+    }
+
+    @Override
+    protected String doPrintBitwiseNotExpression(ASTBitwiseNotExpression exp) {
+        String erg = "";
+        erg += " ~";
+        erg += this.doPrintExpression(exp.getExpression());
+        return erg;
+    }
+
+    @Override
+    protected String doPrintBitwiseAndExpression(ASTBitwiseAndExpression exp) {
+        String erg = "";
+        erg += this.doPrintExpression(exp.getLeft());
+        erg += " & ";
+        erg += this.doPrintExpression(exp.getRight());
+        return erg;
+    }
 
     @Override
     protected String doPrintWriteExpression(ASTWriteExpression exp) {
@@ -166,7 +213,8 @@ public class PPLExpressionPrinter extends AbstractExpressionPrinter <String> {
     @Override
     protected String doPrintIndexAccessExpression(ASTIndexAccessExpression exp) {
         String erg = "";
-        erg += this.doPrintExpression(exp.getExpression());
+        if(exp == null){System.out.println(5);}
+        erg += this.doPrintExpression(exp.getIndexAccess());
         erg += "[";
         erg += this.doPrintExpression(exp.getIndex());
         erg += "]";
@@ -184,7 +232,7 @@ public class PPLExpressionPrinter extends AbstractExpressionPrinter <String> {
     @Override
     protected String doPrintCallExpression(ASTCallExpression exp) {
         String erg = "";
-        erg += this.doPrintExpression(exp.getExpression());
+        erg += this.doPrintExpression(exp.getCall());
         erg += "(";
         for (int i = 0; i < exp.getArguments().sizeExpressions(); i++) {
             erg += this.doPrintExpression(exp.getArguments().getExpression(i));
@@ -208,7 +256,7 @@ public class PPLExpressionPrinter extends AbstractExpressionPrinter <String> {
         erg += this.doPrintExpression(exp.getRight());
         return erg;
     }
-
+    /**
     @Override
     protected String doPrintQualifiedNameExpression(ASTQualifiedNameExpression exp) {
         String erg = this.doPrintExpression(exp.getExpression());
@@ -217,7 +265,7 @@ public class PPLExpressionPrinter extends AbstractExpressionPrinter <String> {
         erg += "()";
         return erg;
     }
-
+    **/
     @Override
     protected String doPrintLogicalNotExpression(ASTLogicalNotExpression exp) {
         return "!" + this.doPrintExpression(exp.getExpression());
@@ -229,7 +277,7 @@ public class PPLExpressionPrinter extends AbstractExpressionPrinter <String> {
     }
 
     @Override
-    protected String doPrintLitExpression(ASTLitExpression exp) {
+    protected String doPrintLiteralExpression(ASTLiteralExpression exp) {
         return LiteralPrinter.printLiteral(exp.getLiteral());
     }
 
@@ -266,7 +314,7 @@ public class PPLExpressionPrinter extends AbstractExpressionPrinter <String> {
         erg += ")";
         return erg;
     }
-
+    /**
     @Override
     protected String doPrintSimpleAssignmentExpression(ASTSimpleAssignmentExpression exp) {
         String erg = this.doPrintExpression(exp.getLeft());
@@ -274,7 +322,7 @@ public class PPLExpressionPrinter extends AbstractExpressionPrinter <String> {
         erg += this.doPrintExpression(exp.getRight());
         return erg;
     }
-
+    **/
     @Override
     protected String doPrintConditionalExpression(ASTConditionalExpression exp) {
         String erg = this.doPrintExpression(exp.getCondition());

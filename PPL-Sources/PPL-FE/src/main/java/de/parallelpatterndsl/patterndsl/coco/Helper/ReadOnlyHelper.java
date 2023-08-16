@@ -1,7 +1,9 @@
 package de.parallelpatterndsl.patterndsl.coco.Helper;
-
+/**
 import de.monticore.expressions.commonexpressions._ast.ASTNameExpression;
 import de.monticore.expressions.expressionsbasis._ast.ASTExpression;
+**/
+
 import de.parallelpatterndsl.patterndsl._ast.*;
 import de.parallelpatterndsl.patterndsl._visitor.PatternDSLVisitor;
 import de.se_rwth.commons.logging.Log;
@@ -60,6 +62,11 @@ public class ReadOnlyHelper implements PatternDSLVisitor {
     }
 
     @Override
+    public void traverse(ASTIfStatement node) {
+        node.getThenStatement().accept(getRealThis());
+    }
+
+    @Override
     public void traverse(ASTIncrementExpression node) {
         node.getLeft().accept(getRealThis());
     }
@@ -69,7 +76,10 @@ public class ReadOnlyHelper implements PatternDSLVisitor {
         node.getLeft().accept(getRealThis());
     }
 
-
+    @Override
+    public void traverse(ASTIndexAccessExpression node) {
+        node.getIndexAccess().accept(getRealThis());
+    }
 
     @Override
     public void traverse(ASTAssignmentByIncreaseExpression node) {

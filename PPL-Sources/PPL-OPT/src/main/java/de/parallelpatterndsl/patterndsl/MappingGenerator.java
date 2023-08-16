@@ -3,6 +3,7 @@ package de.parallelpatterndsl.patterndsl;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Sets;
 import com.google.common.collect.Table;
+import de.parallelpatterndsl.patterndsl.MappingTree.AbstractMappingTree;
 import de.parallelpatterndsl.patterndsl.abstractPatternTree.AbstractPatternTree;
 import de.parallelpatterndsl.patterndsl.abstractPatternTree.Nodes.Functions.MapNode;
 import de.parallelpatterndsl.patterndsl.abstractPatternTree.Nodes.Functions.ReduceNode;
@@ -61,7 +62,7 @@ public class MappingGenerator {
         try {
             this.grbEnv = new GRBEnv(true);
             this.grbEnv.set(GRB.IntParam.Method, 4);
-            this.grbEnv.set(GRB.DoubleParam.TimeLimit, 240.0);
+            //this.grbEnv.set(GRB.DoubleParam.TimeLimit, 300.0);
 
             this.grbEnv.start();
         } catch (GRBException e) {
@@ -105,8 +106,13 @@ public class MappingGenerator {
         Triple<StepMapping, Double, Double> firstStepMapping = stairClimbing(mapping, firstTeams, Integer.min(lookahead, flatAPT.size() - 1));
         mapping.push(firstStepMapping.a);
         score += firstStepMapping.b;
-
+        long duration = System.currentTimeMillis();
         for (int step = 1; step < this.flatAPT.size(); step++) {
+            if (step%20 == 0) {
+                System.out.print("Optimized step " + step + " of " + this.flatAPT.size() + ": ");
+                System.out.println(((double) step)/this.flatAPT.size() * 100);
+                System.out.println("Took " + ((double) (System.currentTimeMillis() - duration)/1000) + "s");
+            }
             Set<Team> initialTeams = mapping.current().teams().stream().map(Team::new).collect(Collectors.toSet());
 
             Triple<StepMapping, Double, Double> stepMapping = stairClimbing(mapping, initialTeams, Integer.min(lookahead, flatAPT.size() - 1 - step));
@@ -139,6 +145,9 @@ public class MappingGenerator {
 
             // Generate new java objects for teams. Otherwise scale move changes cores.
             Set<Team> lookaheadTeams = stepMapping.teams().stream().map(Team::new).collect(Collectors.toSet());
+            if (lookaheadTeams.isEmpty()) {
+                lookaheadTeams = initialTeams.stream().map(Team::new).collect(Collectors.toSet());
+            }
             bestCostsLookahead += stairClimbing(lookaheadMapping, lookaheadTeams, lookahead - 1).c;
         }
 
@@ -380,7 +389,24 @@ public class MappingGenerator {
         for (PatternSplit patternSplit : patternSplits.stream().filter(t -> t instanceof ParallelPatternSplit).collect(Collectors.toSet())) {
             Team bestTeam = null;
             double bestUpperScore = Double.POSITIVE_INFINITY;
-            for (Team team : teams) {
+
+            Set<Team> initialTeams = teams;
+            if (teams.isEmpty()) {
+                Set<Team> localTeams = new HashSet<>();
+                for (int i = mapping.currentStep() - 1; i > 0; i--) {
+                    localTeams = mapping.assignmentOf(i).teams().stream().map(Team::new).collect(Collectors.toSet());
+                    if (!localTeams.isEmpty()) {
+                        break;
+                    }
+                }
+                if (localTeams.isEmpty()) {
+                    Device defaultTarget = AbstractMappingTree.getDefaultDevice();
+                    localTeams.add(new Team(defaultTarget, defaultTarget.getProcessor().get(0), 1));
+                }
+                initialTeams = localTeams;
+            }
+
+            for (Team team : initialTeams) {
                 greedyStepMapping.assign(patternSplit, team);
                 double upperScore = modelWithoutOverlap.evaluate(greedyStepMapping, mapping);
                 greedyStepMapping.free(patternSplit);
@@ -457,7 +483,7 @@ public class MappingGenerator {
                 for (PatternSplit activePipe : active_.get(team)) {
                     for (PatternSplit patternSplit : patternSplits) {
                         if (team.getProcessor().equals(stepMapping.get(patternSplit).getProcessor())
-                                && activePipe.getOutputDataSplits().containsAll(patternSplit.getInputDataSplits())) {
+                                && activePipe.getOutputDataSplits().containsAll(patternSplit.getInputDataSplits()) && !(activePipe instanceof IOPatternSplit)) {
                             FusedPatternSplit pipe;
                             if (activePipe instanceof FusedPatternSplit) {
                                 pipe = (FusedPatternSplit) activePipe;

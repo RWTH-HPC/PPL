@@ -27,14 +27,14 @@ public class DataSplitTable implements ExtendedShapeAPTVisitor {
 
     private static Map<Data, ArrayList<DataSplit>> networkPackageTable = new HashMap<>();
 
-    private static int dataSplitSize = 0;
+    private static long dataSplitSize = 0;
 
     /**
      * Creates the DataSplitTable for the provided AbstractPatternTree.
      * @param apt - AbstractPatternTree to be analyzed.
      * @param dataSplitSize - split size.
      */
-    public static void create(AbstractPatternTree apt, int dataSplitSize) {
+    public static void create(AbstractPatternTree apt, long dataSplitSize) {
         networkPackageTable.clear();
         DataSplitTable.dataSplitSize = dataSplitSize;
 
@@ -63,35 +63,35 @@ public class DataSplitTable implements ExtendedShapeAPTVisitor {
         networkPackageTable.put(data, Lists.newArrayList(pkg));
     }
 
-    private static void create(ArrayData data, int dataSplitSize) {
+    private static void create(ArrayData data, long dataSplitSize) {
         if (networkPackageTable.containsKey(data)) { return; }
         ArrayList<DataSplit> pkgs = new ArrayList<>();
         int dataLength = data.getShape().get(0);
-        for (int i = 0; i < dataLength; i += dataSplitSize) {
-            int length = Integer.min(dataSplitSize, dataLength - i);
+        for (long i = 0; i < dataLength; i += dataSplitSize) {
+            long length = Long.min(dataSplitSize, dataLength - i);
             ArrayDataSplit pkg = new ArrayDataSplit(data, i, length);
             pkgs.add(pkg);
         }
         networkPackageTable.put(data, pkgs);
     }
 
-    public static Set<DataSplit> get(ArrayData data, int startIndex, int length) {
+    public static Set<DataSplit> get(ArrayData data, long startIndex, long length) {
         if (!networkPackageTable.containsKey(data)) {
             return null;
         }
 
         ArrayList<DataSplit> pkgs = networkPackageTable.get(data);
-        int startPackage = startIndex / dataSplitSize;
+        int startPackage = (int) (startIndex / dataSplitSize);
         int n = (int) Math.ceil((double) length / (double) dataSplitSize);
         return new HashSet<>(pkgs.subList(startPackage, startPackage + n));
     }
 
-    public static DataSplit get(ArrayData data, int index) {
+    public static DataSplit get(ArrayData data, long index) {
         if (!networkPackageTable.containsKey(data)) {
             return null;
         }
 
-        int i = index / dataSplitSize;
+        int i = (int) (index / dataSplitSize);
         return networkPackageTable.get(data).get(i);
     }
 

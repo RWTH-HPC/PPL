@@ -2,7 +2,7 @@ package APTGenerator;
 
 import de.monticore.io.paths.ModelPath;
 import de.monticore.symboltable.GlobalScope;
-import de.parallelpatterndsl.patterndsl.APTInlineHandler;
+import de.parallelpatterndsl.patterndsl.Preprocessing.APTInlineHandler;
 import de.parallelpatterndsl.patterndsl.AST2APTGenerator.AST2APT;
 import de.parallelpatterndsl.patterndsl._ast.ASTModule;
 import de.parallelpatterndsl.patterndsl._symboltable.ModuleSymbol;

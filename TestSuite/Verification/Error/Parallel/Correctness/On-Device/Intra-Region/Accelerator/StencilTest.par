@@ -1,0 +1,32 @@
+StencilTest{
+
+stencil sum([[[Int]]] input): [[[Int]]] res{
+    res[INDEX0][INDEX1][INDEX2] = input[INDEX0 + 1][INDEX1][INDEX2] + input[INDEX0][INDEX1 + 1][INDEX2] + input[INDEX0][INDEX1][INDEX2 + 1] + 
+                                    input[INDEX0 - 1][INDEX1][INDEX2] + input[INDEX0][INDEX1 - 1][INDEX2] + input[INDEX0][INDEX1][INDEX2 - 1] + input[INDEX0][INDEX1][INDEX2]
+}
+
+seq main() : Int {
+    var [[[Int]]] initial = init_List([200,100,100],1)
+    var [[[Int]]] result = init_List([200,100,100])
+    var [[[Int]]] result_seq = init_List([200,100,100])
+    
+    /*execute the pattern on node 0 device 0 */
+    result = sum<<<[0,2,0]>>>(initial)
+    
+    
+    for var Int i = 1; i < 199; i++ {
+        for var Int j = 1; j < 99; j++ {
+            for var Int k = 1; k < 99; k++ {
+                result_seq[i][j][k] = initial[i + 1][j][k] + initial[i][j + 1][k] + initial[i][j][k + 1] + 
+                                    initial[i - 1][j][k] + initial[i][j - 1][k] + initial[i][j][k - 1] + initial[i][j][k]
+                                    
+                if result[i][j][k] != result_seq[i][j][k] {
+                    print("Result at cell (" {i} "," {j} "," {k} ") not correct!")
+                    exit(1)
+                }
+            }
+        }
+    }
+    
+return 0 
+}}

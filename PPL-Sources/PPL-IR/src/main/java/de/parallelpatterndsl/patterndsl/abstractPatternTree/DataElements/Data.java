@@ -15,6 +15,11 @@ public abstract class Data{
     private String identifier;
 
     /**
+     * The identifier added when used within a parallel call
+     */
+    private String inlineIdentifier = "";
+
+    /**
      * The data type of the variable.
      */
     private final PrimitiveDataTypes typeName;
@@ -23,6 +28,11 @@ public abstract class Data{
      * True, iff it does not need to be initialized.
      */
     private boolean isInitialized;
+
+    /**
+     * True, iff this original parameter was inlined.
+     */
+    private boolean isInlinedParameter;
 
     /**
      * True, iff the data element is used as the result of the computation.
@@ -41,18 +51,50 @@ public abstract class Data{
      */
     private ArrayList<Integer> copyIndices = new ArrayList<>();
 
+    /**
+     * True, iff the variable has been deallocated.
+     */
+    private boolean closed;
+
+
+    /**
+     * True, iff the data element was a return value of an inlined function.
+     */
+    private boolean inlinedReturnValue;
+
     public Data(String identifier, PrimitiveDataTypes typeName, boolean isInitialized) {
         this.identifier = identifier;
         this.typeName = typeName;
         this.isInitialized = isInitialized;
         this.isReturnData = false;
+        this.closed = false;
+        this.inlinedReturnValue = false;
     }
+
 
     public Data(String identifier, PrimitiveDataTypes typeName, boolean isInitialized, boolean isReturnData) {
         this.identifier = identifier;
         this.typeName = typeName;
         this.isInitialized = isInitialized;
         this.isReturnData = isReturnData;
+        this.closed = false;
+        this.inlinedReturnValue = false;
+    }
+
+    public boolean isClosed() {
+        return closed;
+    }
+
+    public void setClosed() {
+        this.closed = true;
+    }
+
+    public boolean isInlinedReturnValue() {
+        return inlinedReturnValue;
+    }
+
+    public void setInlinedReturnValue(boolean inlinedReturnValue) {
+        this.inlinedReturnValue = inlinedReturnValue;
     }
 
     /**
@@ -75,11 +117,47 @@ public abstract class Data{
      * @return
      */
     public String getIdentifier() {
-        return identifier;
+        if (inlineIdentifier.length() == 0 || identifier.endsWith("]")) {
+            return identifier;
+        } else {
+            return identifier + "_" + inlineIdentifier;
+        }
+    }
+
+    /**
+     * Returns an identifier without inline information for a data item.
+     * @return
+     */
+    public String getBaseIdentifier() {
+            return identifier;
     }
 
     public void setIdentifier(String identifier) {
         this.identifier = identifier;
+    }
+
+    public boolean isInlinedParameter() {
+        return isInlinedParameter;
+    }
+
+    public void setInlinedParameter(boolean inlinedParameter) {
+        isInlinedParameter = inlinedParameter;
+    }
+
+    public String getInlineIdentifier() {
+        return inlineIdentifier;
+    }
+
+    public void setInlineIdentifier(String inlineIdentifier) {
+        this.inlineIdentifier = inlineIdentifier;
+    }
+
+    public void resetInlineIdentifier() {
+        this.inlineIdentifier = "";
+    }
+
+    public boolean hasInlineIdentifier() {
+        return inlineIdentifier.length() != 0;
     }
 
     /**
@@ -151,4 +229,10 @@ public abstract class Data{
      * @return
      */
     public abstract Data createInlineCopy(String inlineIdentifier);
+
+    /**
+     * creates an identical copy of a data element, including all sub elements.
+     * @return
+     */
+    public abstract Data deepCopy();
 }

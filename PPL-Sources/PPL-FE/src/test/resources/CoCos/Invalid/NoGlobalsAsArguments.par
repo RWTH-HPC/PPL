@@ -1,0 +1,15 @@
+NoGlobalsAsArguments {
+
+var Int i = 0
+
+map test([Int] a, Int v) : [Int] res {
+    res[INDEX] = a[INDEX] + v
+}
+
+seq main() : Void {
+    var [Float] a = init_List([10])
+    var [Float] b = init_List([10])
+    b = test<<<>>>(a, i)
+
+}
+}

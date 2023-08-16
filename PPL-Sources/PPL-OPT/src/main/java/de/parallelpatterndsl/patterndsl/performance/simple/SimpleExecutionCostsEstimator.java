@@ -135,6 +135,9 @@ public class SimpleExecutionCostsEstimator implements ExecutionCostsEstimator {
 
     @Override
     public void endVisit(ForLoopNode node) {
+        if (node.getNumIterations() == 0) {
+            int a = 0;
+        }
         multiplier = multiplier / node.getNumIterations();
     }
 

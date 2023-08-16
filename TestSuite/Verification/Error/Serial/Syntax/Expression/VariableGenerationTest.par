@@ -1,0 +1,38 @@
+VariableGenerationTest{
+
+    var Bool GT = true
+    var Int GI = 11
+    var Double GD = 1.2
+    var Float GF = 1.2
+    var Char GC = 'C'
+    var String GS = "Hello World!" 
+    var Int8 GI8 = 1
+    var Int16 GI16 = 1
+    var Int32 GI32 = 1
+    var Int64 GI64 = 1
+    var UInt8 GUI8 = 1
+    var UInt16 GUI16 = 1
+    var UInt32 GUI32 = 1
+    var UInt64 GUI64 = 1
+    var Long GL = 1
+
+seq main() : Int {
+    var Bool T = true
+    var Int I = 11
+    var Double D = 1.2
+    var Float F = 1.2
+    var Char C = 'C'
+    var String S = "Hello World!" 
+    var Int8 I8 = 1
+    var Int16 I16 = 1
+    var Int32 I32 = 1
+    var Int64 I64 = 1
+    var UInt8 UI8 = 1
+    var UInt16 UI16 = 1
+    var UInt32 UI32 = 1
+    var UInt64 UI64 = 1
+    var Long L = 1
+    
+    
+return 0 
+}}

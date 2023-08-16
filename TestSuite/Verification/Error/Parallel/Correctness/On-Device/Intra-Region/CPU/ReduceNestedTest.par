@@ -1,0 +1,31 @@
+ReduceNestedTest{
+
+reduction sum([Int] input): Int res{
+    res += input[INDEX] + 1
+}
+
+map rowSum([[Int]] input) : [Int] res{
+	res[INDEX] = sum<<<>>>(input[INDEX])
+}
+
+seq main() : Int {
+    var [[Int]] initial = init_List([200,200], 1)
+    var [Int] result = init_List([200], 0)
+    var [Int] result_seq = init_List([200], 0)
+    
+    /*execute the pattern on node 0 device 0 */
+    result = rowSum<<<[0,0,0]>>>(initial)
+    
+    
+    for var Int i = 0; i < 200; i++ {
+        for var Int j = 0; j < 200; j++ {        
+            result_seq[i] += initial[i][j] + 1         
+        }
+        if result_seq[i] != result[i] {
+            print("value at element " {i} " is wrong!")
+            exit(1)
+        }
+    }
+    
+return 0 
+}}

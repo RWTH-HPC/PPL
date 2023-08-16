@@ -1,6 +1,6 @@
 model2{
 
-    var [Int] Test = [1, 2, 3, 4]
+    var [Int] PerformanceTest = [1, 2, 3, 4]
     var String name = "init"
     include "test/test"
     const ast = 42

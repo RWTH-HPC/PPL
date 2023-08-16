@@ -60,10 +60,6 @@ public class ArrayData extends Data{
 
     @Override
     public long getBytes() {
-        if (this.isParameter()) {
-            Log.error(this.getIdentifier() + " is a parameter and does not need memory space!");
-            return 0;
-        }
         long result = PrimitiveDataTypes.GetPrimitiveSize(this.getTypeName());
         for (Integer dim : shape) {
             result *= dim;
@@ -90,5 +86,10 @@ public class ArrayData extends Data{
 
     public boolean isOnStack() {
         return onStack;
+    }
+
+    @Override
+    public ArrayData deepCopy() {
+        return new ArrayData(getIdentifier(), getTypeName(), isInitialized(), isReturnData(), getShape(), onStack);
     }
 }

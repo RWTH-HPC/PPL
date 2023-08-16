@@ -1,8 +1,8 @@
 package de.parallelpatterndsl.patterndsl.coco;
 
-import de.monticore.expressions.commonexpressions._ast.ASTCallExpression;
+import de.parallelpatterndsl.patterndsl._ast.ASTCallExpression;
 import de.monticore.expressions.commonexpressions._ast.ASTSimpleAssignmentExpression;
-import de.monticore.expressions.expressionsbasis._ast.ASTExpression;
+import de.parallelpatterndsl.patterndsl._ast.ASTExpression;
 import de.parallelpatterndsl.patterndsl._ast.*;
 import de.parallelpatterndsl.patterndsl._cocos.PatternDSLASTFunctionCoCo;
 import de.se_rwth.commons.logging.Log;

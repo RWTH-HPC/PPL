@@ -4,6 +4,7 @@ import de.parallelpatterndsl.patterndsl.abstractPatternTree.AbstractPatternTree;
 import de.parallelpatterndsl.patterndsl.abstractPatternTree.DataElements.Data;
 import de.parallelpatterndsl.patterndsl.abstractPatternTree.DataElements.DataAccess.DataAccess;
 import de.parallelpatterndsl.patterndsl.abstractPatternTree.Visitor.APTVisitor;
+import de.parallelpatterndsl.patterndsl.helperLibrary.HasParallelDescendants;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -47,6 +48,22 @@ public abstract class PatternNode {
      * A list of the access patterns for all output patterns.
      */
     protected ArrayList<DataAccess> outputAccesses;
+
+    /**
+     * True, iff this node does have a parallel pattern node as one of its ancestors.
+     */
+    private boolean hasParallelDescendants;
+
+    private boolean descendantsInit;
+
+    public boolean isHasParallelDescendants() {
+        if (!descendantsInit) {
+            descendantsInit = true;
+            HasParallelDescendants testing = new HasParallelDescendants();
+            hasParallelDescendants = testing.getResult(this);
+        }
+        return hasParallelDescendants;
+    }
 
     public ArrayList<PatternNode> getChildren() {
         return children;
@@ -109,7 +126,31 @@ public abstract class PatternNode {
         inputElements = new ArrayList<>();
         outputAccesses = new ArrayList<>();
         outputElements = new ArrayList<>();
+        descendantsInit = false;
     }
+
+    public long getCost() {
+        long cost = 0;
+        for (PatternNode child: getChildren() ) {
+            cost += child.getCost();
+        }
+        return cost;
+    }
+
+    public long getLoadStore() {
+        long cost = 0;
+        for (PatternNode child: getChildren() ) {
+            cost += child.getLoadStore();
+        }
+        return cost;
+    }
+
+    // True, iff the node requires global synchronization
+    public boolean containsSynchronization() {
+        return false;
+    }
+
+    public abstract PatternNode deepCopy();
 
     /**
      * Visitor functions.

@@ -1,0 +1,25 @@
+RecursionTest{
+
+recursion counter(Int input):Int res {
+	res = input
+    if input < 4 {
+        res = counter<<<>>>(input + 1)
+    } 
+	return res
+}
+
+seq main() : Int {
+    var Int initial = 0
+    var Int result = 0
+    
+    /*execute the pattern on node 0 device 0 */
+    result = counter<<<[0,2,0]>>>(initial)
+    
+    
+    if result != 4 {
+        print("Recursion not correct!")
+        exit(1)
+    }
+    
+return 0 
+}}

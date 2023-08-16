@@ -1,0 +1,5 @@
+ShadowVariableExistsCoCo {
+seq main() : Void {
+    var Int test = 2
+}
+}

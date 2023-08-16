@@ -1,0 +1,14 @@
+ListMustBeInitialized2 {
+
+seq main() : Void {
+    var [Int] a = [1]
+}
+
+seq test(): [Int]  {
+  return [1]
+}
+
+seq test2(): Void  {
+  var [Int] a = test()
+}
+}

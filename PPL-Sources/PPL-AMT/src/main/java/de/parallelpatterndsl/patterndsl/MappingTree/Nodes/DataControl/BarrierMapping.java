@@ -24,7 +24,7 @@ public class BarrierMapping extends MappingNode {
     /**
      * The set of processors which need to wait for each other.
      */
-    private ArrayList<Processor> barrierProc;
+    private HashSet<Processor> barrierProc;
 
     /**
      * True, iff the barrier is defined by a set of call groups.
@@ -36,9 +36,13 @@ public class BarrierMapping extends MappingNode {
         this.barrier = barrier;
         children = new ArrayList<>();
         groupBased = true;
+        barrierProc = new HashSet<>();
+        for (ParallelGroup group: barrier ) {
+            barrierProc.addAll(group.getProcessors());
+        }
     }
 
-    public BarrierMapping(Optional<MappingNode> parent, HashMap<String, Data> variableTable, ArrayList<Processor> barrierProc) {
+    public BarrierMapping(Optional<MappingNode> parent, HashMap<String, Data> variableTable, HashSet<Processor> barrierProc) {
         super(parent, variableTable, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
         this.barrierProc = barrierProc;
         children = new ArrayList<>();
@@ -49,7 +53,7 @@ public class BarrierMapping extends MappingNode {
         return barrier;
     }
 
-    public ArrayList<Processor> getBarrierProc() {
+    public HashSet<Processor> getBarrierProc() {
         return barrierProc;
     }
 

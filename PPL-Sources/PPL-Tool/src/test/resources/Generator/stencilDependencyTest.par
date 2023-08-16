@@ -1,0 +1,29 @@
+stencilDependencyTest {
+ 
+	
+	stencil laplacian([[Double]] input) : [[Double]] res {
+            var Double outer = input[INDEX1 - 1][INDEX0] + input[INDEX1][INDEX0 - 1] + input[INDEX1][INDEX0 + 1] + input[INDEX1 + 1][INDEX0]
+            res[INDEX1][INDEX0] = outer - 4 * input[INDEX1][INDEX0]
+    }
+
+    map add([Double] input) : [Double] res {
+        res[INDEX] = input[INDEX - 1]
+    }
+
+    seq main() : Int {
+
+		var [[Double]] array = init_List([20000,20])
+		var [[Double]] array2 = init_List([20000,20])
+		var [Double] array3 = init_List([20])
+		var [Double] array4 = init_List([20])
+		array4 = array[0]
+
+
+		array2 = laplacian<<<>>>(array)
+
+		array3 = add<<<>>>(array[0])
+
+        return 0
+    }
+
+}

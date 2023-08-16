@@ -1,0 +1,461 @@
+particle {
+include "../math"
+
+// A value for LCG
+var Int A = 1103515245
+
+// C value for LCG
+var Int C = 12345
+
+var Int IszX = 1024
+var Int IszY = 1024
+var Int Nfr = 10
+
+/** 
+* Takes in a double and returns an integer that approximates to that double
+* @return if the mantissa < .5 => return value < input value; else return value > input value
+*/
+seq roundDouble(Double value) : Int{
+	var Int newValue = Cast2Int(value)
+	if(value - newValue < 0.5){
+		return newValue
+	} else {
+		return newValue+1
+	}
+}
+
+/**
+* Set values of the 3D array to a newValue if that value is equal to the testValue
+* @param testValue The value to be replaced
+* @param newValue The value to replace testValue with
+* @param array3D The image vector
+* @param dimX The x dimension of the frame
+* @param dimY The y dimension of the frame
+* @param dimZ The number of frames
+* @return 
+*/
+seq setIf(Int testValue, Int newValue, [[[Int]]] array3D, Int dimX, Int dimY, Int dimZ) : [[[Int]]]{
+	var [[[Int]]] result = init_List([1024,1024,10])
+	for var Int x = 0; x < dimX; x++ {
+		for var Int y = 0; y < dimY; y++ {
+			for var Int z = 0; z < dimZ; z++ {
+				if(array3D[x][y][z] == testValue) {
+					result[x][y][z] = newValue
+				} else {
+					result[x][y][z] = array3D[x][y][z]
+				}
+			}
+		}
+	}
+	return result
+}
+
+/**
+* Generates a uniformly distributed random number using the provided seed and GCC's settings for the Linear Congruential Generator (LCG)
+* @see http://en.wikipedia.org/wiki/Linear_congruential_generator
+* @note This function is thread-safe
+* @param seed The seed array
+* @param index The specific index of the seed to be advanced
+* @return a uniformly distributed number [0, 1)
+*/
+seq randu([Int] seed, Int index):Double{
+	var Int num = A*seed[index] + C
+	var Int maximum = MAX_INT
+	var Double maximumDBL = MAX_INT
+	var Double res = abs((num % maximum)/maximumDBL)
+	return res
+}
+/**
+* Generates a normally distributed random number using the Box-Muller transformation
+* @note This function is thread-safe
+* @param seed The seed array
+* @param index The specific index of the seed to be advanced
+* @return a double representing random number generated using the Box-Muller algorithm
+* @see http://en.wikipedia.org/wiki/Normal_distribution, section computing value for normal random distribution
+*/
+seq randn([Int] seed, Int index):Double{
+	/*Box-Muller algorithm*/
+	var Double u = randu(seed, index)
+	var Double v = randu(seed, index+1)
+	var Double pi2 = pi
+	var Double cosine = cos(2*pi2*v)
+	var Double rt = (0-2)*log(u)
+	var Double res = sqrt(rt)*cosine
+	return res
+}
+/**
+* Sets values of 3D matrix using randomly generated numbers from a normal distribution
+* @param array3D The video to be modified
+* @param dimX The x dimension of the frame
+* @param dimY The y dimension of the frame
+* @param dimZ The number of frames
+* @param seed The seed array
+*/
+seq addNoise([[[Int]]] array3D, Int dimX, Int dimY, Int dimZ, [Int] seed):[[[Int]]]{
+	var [[[Int]]] array = init_List([1024,1024,10])
+	for var Int x = 0; x < dimX; x++{
+		for var Int y = 0; y < dimY; y++ {
+			for var Int z = 0; z < dimZ; z++{
+				array[x][y][z] = array3D[x][y][z] + Cast2Int(5*randn(seed, 0))
+			}
+		}
+	}
+	return array
+}
+
+/**
+* Dilates the provided video
+* @param matrix The video to be dilated
+* @param posX The x location of the pixel to be dilated
+* @param posY The y location of the pixel to be dilated
+* @param poxZ The z location of the pixel to be dilated
+* @param dimX The x dimension of the frame
+* @param dimY The y dimension of the frame
+* @param dimZ The number of frames
+* @param error The error radius
+* @return The dilated matrix
+*/
+seq dilate_matrix([[[Int]]] matrix, Int posX, Int posY, Int posZ, Int dimX, Int dimY, Int dimZ, Int error):[[[Int]]]{
+	var [[[Int]]] newMatrix = init_List([1024,1024,10])
+	newMatrix = matrix
+	var Int startX = posX - error
+	while(startX < 0) {
+		startX++
+	}
+	var Int startY = posY - error
+	while(startY < 0){
+		startY++
+	}
+	var Int endX = posX + error
+	while(endX > dimX) {
+		endX--
+	}
+	var Int endY = posY + error
+	while(endY > dimY) {
+		endY--
+	}
+	for var Int x = startX; x < endX; x++{
+		for var Int y = startY; y < endY; y++ {
+			var Double distance = sqrt( powi((x-posX),2) + powi((y-posY),2) )
+			if(distance < error) {
+				newMatrix[x][y][posZ] = 1
+			}
+		}
+	}
+	return newMatrix
+}
+
+/**
+* Dilates the target matrix using the radius as a guide
+* @param matrix The reference matrix
+* @param dimX The x dimension of the video
+* @param dimY The y dimension of the video
+* @param dimZ The z dimension of the video
+* @param error The error radius to be dilated
+* @return newMatrix The target matrix
+*/
+seq imdilate_disk([[[Int]]] matrix, Int dimX, Int dimY, Int dimZ, Int error): [[[Int]]]{
+	var [[[Int]]] newMatrix = init_List([1024,1024,10],0)
+	for var Int z = 0; z < dimZ; z++{
+		for var Int x = 0; x < dimX; x++{
+			for var Int y = 0; y < dimY; y++{
+				if(matrix[x][y][z] == 1){
+					newMatrix = dilate_matrix(newMatrix, x, y, z, dimX, dimY, dimZ, error)
+				}
+			}
+		}
+	}
+	return newMatrix
+}
+
+/**
+* The synthetic video sequence we will work with here is composed of a
+* single moving object, circular in shape (fixed radius)
+* The motion here is a linear motion
+* the foreground intensity and the backgrounf intensity is known
+* the image is corrupted with zero mean Gaussian noise
+* @param seed The seed array used for number generation
+* @return The Video as an 3Darray
+*/
+seq videoSequence([Int] seed):[[[Int]]]{
+	var Int max_size = IszX*IszY*Nfr
+	
+	var Int IszX2 = IszX
+	var Int IszY2 = IszY
+	var Int Nfr2 = Nfr
+	
+	var [[[Int]]] I = init_List([1024,1024,10])
+	/*get object centers*/
+	var Int x0 = roundDouble(IszY2/2.0)
+	var Int y0 = roundDouble(IszX2/2.0)
+	I[x0][y0][0] = 1
+	
+	/*move point*/
+	var Int xk
+	var Int yk
+	var Int pos
+	for var Int k = 1; k < Nfr; k++{
+		xk = abs(x0 + (k-1))
+		yk = abs(y0 - 2*(k-1))
+		if !(xk >= IszX || yk >= IszY){		
+			I[yk][xk][k] = 1
+		}
+	}
+	
+	/*dilate matrix*/
+	I = imdilate_disk(I, IszX2, IszY2, Nfr2, 5)
+	
+	/*define background, add noise*/
+	I = setIf(0, 100, I, IszX2, IszY2, Nfr2)
+	I = setIf(1, 228, I, IszX2, IszY2, Nfr2)
+	/*add noise*/
+	I = addNoise(I, IszX2, IszY2, Nfr2, seed)
+	
+	return I
+}
+
+/**
+* Fills a radius x radius matrix representing the disk
+* @return disk The pointer to the disk to be made
+* @param radius  The radius of the disk to be made
+*/
+seq strelDisk(Int radius): [[Int]]{
+	var Int diameter = radius*2 - 1
+	var [[Int]] disk = init_List([9,9],0)
+	for var Int x = 0; x < diameter; x++ {
+		for var Int y = 0; y < diameter; y++ {
+			var Double distance = sqrt(pow(Cast2Double(x-radius+1),2) + pow(Cast2Double(y-radius+1),2))
+			if(distance < radius) {
+				disk[x][y] = 1
+			}
+		}
+	}
+	return disk
+}
+
+/**
+* Fills a 2D array describing the offsets of the disk object
+* @param se The disk object
+* @param numOnes The number of ones in the disk
+* @return neighbors The array that will contain the offsets
+* @param radius The radius used for dilation
+*/
+seq getneighbors([[Int]] se, Int numOnes, Int radius):[[Double]]{
+	var [[Double]] neighbors = init_List([69,2])
+	var Int neighY = 0
+	var Int center = radius - 1
+	var Int diameter = radius*2 -1
+	for var Int x = 0; x < diameter; x++{
+		for var Int y = 0; y < diameter; y++{
+			if(se[x][y]){
+				neighbors[neighY][0] = (y - center)
+				neighbors[neighY][1] = (x - center)
+				neighY++
+			}
+		}
+	}
+	return neighbors
+}
+
+/**
+* Finds the first element in the CDF that is greater than or equal to the provided value and returns that index
+* @note This function uses sequential search
+* @param CDF The CDF
+* @param lengthCDF The length of CDF
+* @param value The value to be found
+* @return The index of value in the CDF; if value is never found, returns the last index
+*/
+seq findIndex([Double] CDF, Int lengthCDF, Double value):Int{
+	var Int index = 0-1
+	for var Int x = 0; x < lengthCDF; x++{
+		if CDF[x] >= value{
+			index = x
+			x = lengthCDF
+		}
+	}
+	if(index == 0-1){
+		return lengthCDF-1
+	}
+	return index
+}
+
+map init(Double value): [Double] res{
+	res[INDEX] = value
+}
+
+map addRand([Double] array, Double add, Double mult, [Double] seed):[Double] res{
+	res[INDEX] = array[INDEX] + add+ mult*randn(seed, INDEX)
+}
+
+seq partialLikelihood([[[Int]]] I, Int k, Double arrayX, Double arrayY, [[Double]] objxy, Int countOnes) : Double {
+	var Double result = 0
+	var Int z = k
+	for var Int y = 0; y < countOnes; y++{
+		var Int indX = roundDouble(arrayX) + objxy[y][1]
+		var Int indY = roundDouble(arrayY) + objxy[y][0]
+		if(indX >= 1024 || indY >= 1024){
+			indX = 0
+			indY = 0
+			z = 0
+		}
+		result += (((I[indX][indY][z] - 100) * (I[indX][indY][z] - 100)) - ((I[indX][indY][z]-228) * (I[indX][indY][z]-228)))/50.0
+	}
+	return result
+	
+}
+
+map compLikelihood([[[Int]]] I, Int k, [Double] arrayX, [Double] arrayY, [[Double]] objxy, Int countOnes):[Double] likelihood {	
+	//compute the likelihood: remember our assumption is that you know
+	// foreground and the background image intensity distribution.
+	// Notice that we consider here a likelihood ratio, instead of
+	// p(z|x). It is possible in this case. why? a hometask for you.		
+	//calc ind
+	likelihood[INDEX] = partialLikelihood(I, k, arrayX[INDEX], arrayY[INDEX], objxy, countOnes)/countOnes
+}
+
+map updateWeights([Double] weights, [Double] likelihood) : [Double] res {
+	res[INDEX] = weights[INDEX] * exp(likelihood[INDEX])
+}
+
+reduction sum([Double] array) : Double res {
+	res += array[INDEX]
+}
+
+map normalize([Double] weights, Double sum) : [Double] res {
+	res[INDEX] = weights[INDEX]/sum
+}
+
+reduction location_estimation([Double] array, [Double] weights) : Double loc {
+	loc += array[INDEX] * weights[INDEX]
+}
+
+map u_init(Double u1, Int Nparticles) : [Double] u {
+	u[INDEX] = u1 + INDEX/Nparticles
+}
+
+seq single_particle([Double] array, [Double] CDF, Int Nparticles, Double u):Double{
+	var Int i = findIndex(CDF, Nparticles, u)
+	if i == 0-1 {
+		i = Nparticles-1
+	}
+	return array[i]
+}
+
+map find_particle([Double] array, [Double] u, [Double] CDF, Int Nparticles): [Double] res {
+	res[INDEX] = single_particle(array, CDF, Nparticles, u[INDEX])
+}
+
+map set([Double] input):[Double] res {
+	res[INDEX] = input[INDEX]
+}
+
+seq main(): Int {
+	var [Int] seed = init_List([10000])
+	for var Int i = 0; i < #seed; i++ {
+		seed[i] = i * (9283 + i)
+	}
+	var Int IszX2 = IszX
+	var Int IszY2 = IszY
+	
+    var Int Nparticles = 10000
+    var Double reverseNparticles = 1/Cast2Double(Nparticles)
+	var [[[Int]]] I = init_List([1024,1024,10], 0)
+	
+	I = videoSequence(seed)
+	
+	//var Long time = get_time()
+	
+	var Double xe = roundDouble(IszY2/2.0)
+	var Double ye = roundDouble(IszX2/2.0)
+	
+	//expected object locations, compared to center
+	var Int radius = 5
+	var Int diameter = radius*2 - 1
+	var [[Int]] disk = init_List([9,9])
+	disk = strelDisk( radius)
+	
+	var Int countOnes = 0
+	for var Int x = 0; x < diameter; x++{
+		for var Int y = 0; y < diameter; y++{
+			if(disk[x][y] == 1){
+				countOnes++
+			}
+		}
+	}
+	var [[Double]] objxy = init_List([69,2])
+	objxy = getneighbors(disk, countOnes, radius)
+	
+	//initial weights are all equal (1/Nparticles)
+	var [Double] weights = init_List([10000])
+	weights = init<<<>>>(reverseNparticles)
+	
+	//initial likelihood to 0.0
+	var [Double] likelihood = init_List([10000],0.0)
+	var [Double] arrayX = init_List([10000])
+	var [Double] arrayY = init_List([10000])
+	var [Double] xj = init_List([10000])
+	var [Double] yj = init_List([10000])
+	var [Double] CDF = init_List([10000])
+	var [Double] u = init_List([10000])
+	
+	arrayX = init<<<>>>(xe)
+	arrayY = init<<<>>>(ye)
+	
+	for var Int k = 1; k < 10; k++{
+		//apply motion model
+		//draws sample from motion model (random walk). The only prior information
+		//is that the object moves 2x as fast as in the y direction
+		arrayX = addRand<<<>>>(arrayX,1 , 5,seed)
+		arrayY = addRand<<<>>>(arrayY,0-2,2,seed)
+		
+		
+		//particle filter likelihood
+		likelihood = compLikelihood<<<>>>(I, k, arrayX, arrayY, objxy, countOnes)
+		
+		// update & normalize weights
+		// using equation (63) of Arulampalam Tutorial
+		weights = updateWeights<<<>>>(weights, likelihood)
+		
+		var Double sumWeights = 0
+		sumWeights = sum<<<>>>(weights)
+		
+		weights = normalize<<<>>>(weights, sumWeights)
+		
+		
+		xe = 0
+		ye = 0
+		xe = location_estimation<<<>>>(arrayX, weights)
+		ye = location_estimation<<<>>>(arrayY, weights)
+		
+		print(" XE: " {xe})
+		print(" YE: " {ye})
+		
+		var Double distance = sqrt( powi((xe-roundDouble(IszY2/2.0)),2) + powi((ye-roundDouble(IszX2/2.0)),2) )
+		print({distance})
+		
+		
+		CDF[0] = weights[0]
+		for var Int x = 1; x < Nparticles; x++{
+			CDF[x] = weights[x] + CDF[x-1]
+		}
+		
+		var Double u1 = (1/((Nparticles)))*randu(seed, 0)
+		
+		u = u_init<<<>>>(u1, Nparticles)
+		
+		
+		xj = find_particle<<<>>>(arrayX, u, CDF, Nparticles)
+		yj = find_particle<<<>>>(arrayY, u, CDF, Nparticles)
+		
+		arrayX = set<<<>>>(xj)
+		arrayY = set<<<>>>(yj)
+		weights = init<<<>>>(reverseNparticles)
+		
+	}
+	//time = get_time() - time
+	//print("Kernel took" {time} "us")
+	
+	return 0
+}
+
+}

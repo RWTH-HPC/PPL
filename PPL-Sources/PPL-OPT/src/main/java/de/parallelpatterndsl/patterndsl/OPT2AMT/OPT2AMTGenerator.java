@@ -2,15 +2,12 @@ package de.parallelpatterndsl.patterndsl.OPT2AMT;
 
 import de.parallelpatterndsl.patterndsl.FlatAPT;
 import de.parallelpatterndsl.patterndsl.MappingTree.AbstractMappingTree;
-import de.parallelpatterndsl.patterndsl.MappingTree.Nodes.DataControl.BarrierMapping;
-import de.parallelpatterndsl.patterndsl.MappingTree.Nodes.DataControl.DataMovementMapping;
 import de.parallelpatterndsl.patterndsl.MappingTree.Nodes.Function.*;
 import de.parallelpatterndsl.patterndsl.MappingTree.Nodes.FunctionMapping;
 import de.parallelpatterndsl.patterndsl.MappingTree.Nodes.MappingNode;
 import de.parallelpatterndsl.patterndsl.MappingTree.Nodes.ParallelCalls.*;
 import de.parallelpatterndsl.patterndsl.MappingTree.Nodes.Plain.*;
 import de.parallelpatterndsl.patterndsl.abstractPatternTree.AbstractPatternTree;
-import de.parallelpatterndsl.patterndsl.abstractPatternTree.DataElements.Data;
 import de.parallelpatterndsl.patterndsl.abstractPatternTree.DataElements.TempData;
 import de.parallelpatterndsl.patterndsl.abstractPatternTree.Nodes.FunctionNode;
 import de.parallelpatterndsl.patterndsl.abstractPatternTree.Nodes.Functions.*;
@@ -44,7 +41,7 @@ public class OPT2AMTGenerator {
         this.APT = APT;
         this.flatRoot = flatRoot;
         this.parallelMapping = parallelMapping;
-        currentParallelStep = 0;
+        currentParallelStep = 1;
         functionTable = new HashMap<>();
     }
 
@@ -53,7 +50,9 @@ public class OPT2AMTGenerator {
             if (node.getIdentifier().equals("main")) {
                 functionTable.put(node.getIdentifier(), generateAMT(flatRoot, Optional.of(parallelMapping), true, node));
             } else {
-                functionTable.put(node.getIdentifier(), generateAMT(flatRoot, Optional.empty(), false, node));
+                if (node.isAvailableAfterInlining()) {
+                    functionTable.put(node.getIdentifier(), generateAMT(flatRoot, Optional.empty(), false, node));
+                }
             }
         }
         AbstractMappingTree.setFunctionTable(functionTable);
@@ -264,7 +263,8 @@ public class OPT2AMTGenerator {
 
         ArrayList<ParallelCallMapping> res = new ArrayList<>();
 
-        for (ParallelPatternSplit call: split) {
+        //for (ParallelPatternSplit call: split) {
+        ParallelPatternSplit call = split.get(0);
             ParallelCallMapping result;
             Team execute = executorOPT.orElseGet(() -> step.get(call));
             result = new ParallelCallMapping(Optional.of(parent), parent.getVariableTable(), call.getNode(), starts, iterations, execute.getProcessor(), execute.getCores(), Optional.empty(), new HashSet<>());
@@ -272,7 +272,7 @@ public class OPT2AMTGenerator {
             result.setDefinition(generateComplexExpressionMapping((ComplexExpressionNode) call.getNode().getChildren().get(0), result));
             result.setChildren(new ArrayList<>());
             res.add(result);
-        }
+        //}
 
         return res;
     }
@@ -287,20 +287,19 @@ public class OPT2AMTGenerator {
      */
     private ArrayList<ReductionCallMapping> generateReductionMapping (StepMapping step, ArrayList<ParallelPatternSplit> split, MappingNode parent, Optional<Team> executorOPT) {
         ArrayList<Long> iterations = new ArrayList<>();
-        int length = split.get(0).getLengths().length;
-        for (int i = 0; i < length; i++) {
-            long numIterations = split.get(split.size() - 1).getStartIndices()[i] + split.get(split.size() - 1).getLengths()[i] - split.get(0).getStartIndices()[i];
-            iterations.add(numIterations);
-        }
         ArrayList<Long> starts = new ArrayList<>();
-        for (long start: split.get(0).getStartIndices() ) {
-            starts.add(start);
-        }
-
         Team execute = executorOPT.orElseGet(() -> step.get(split.get(0)));
         ArrayList<ReductionCallMapping> res = new ArrayList<>();
 
         if (execute.getDevice().getType().equals("GPU")) {
+            int length = split.get(0).getLengths().length;
+            for (int i = 0; i < length; i++) {
+                long numIterations = split.get(split.size() - 1).getStartIndices()[i] + split.get(split.size() - 1).getLengths()[i] - split.get(0).getStartIndices()[i];
+                iterations.add(numIterations);
+            }
+            for (long start: split.get(0).getStartIndices() ) {
+                starts.add(start);
+            }
             ReductionCallMapping result;
             HashSet<TempData> inputs = new HashSet<>();
             HashSet<TempData> outputs = new HashSet<>();
@@ -322,7 +321,17 @@ public class OPT2AMTGenerator {
             result.setChildren(new ArrayList<>());
             res.add(result);
         } else {
-            for (ParallelPatternSplit call: split) {
+            for (int j = 0; j < split.size(); j++) {
+                ParallelPatternSplit call = split.get(j);
+                iterations = new ArrayList<>();
+                starts = new ArrayList<>();
+                int length = split.get(j).getLengths().length;
+                for (long numIterations: call.getLengths()) {
+                    iterations.add(numIterations);
+                }
+                for (long start: call.getStartIndices() ) {
+                    starts.add(start);
+                }
                 ReductionCallMapping result;
                 HashSet<TempData> inputs = new HashSet<>();
                 HashSet<TempData> outputs = new HashSet<>();
@@ -476,7 +485,7 @@ public class OPT2AMTGenerator {
         ArrayList<PatternSplit> remainder = new ArrayList<>();
         PatternSplit representative = splits.get(0);
         subArray.add(representative);
-        for (int i = 1; i < subArray.size(); i++) {
+        for (int i = 1; i < splits.size(); i++) {
             PatternSplit toTest = splits.get(i);
             // Test for identical Parallel Pattern Splits
             if ( representative instanceof ParallelPatternSplit && toTest instanceof ParallelPatternSplit) {
@@ -580,7 +589,7 @@ public class OPT2AMTGenerator {
      * @param second
      * @return
      */
-    private boolean isGreater(int[] first, int[] second) {
+    private boolean isGreater(long[] first, long[] second) {
         for (int i = 0; i < first.length; i++) {
             if (first[i] > second[i]) {
                 return true;
@@ -613,10 +622,38 @@ public class OPT2AMTGenerator {
             return generateSimpleExpressionBlockMapping((SimpleExpressionBlockNode) node, parent);
         } else if (node instanceof WhileLoopNode) {
             return generateWhileLoopMapping((WhileLoopNode) node, parent);
+        } else if (node instanceof LoopSkipNode) {
+            return generateLoopSkipMapping((LoopSkipNode) node, parent);
+        } else if (node instanceof JumpStatementNode) {
+            return generateJumpStatementMapping((JumpStatementNode) node, parent);
+        } else if (node instanceof JumpLabelNode) {
+            return generateJumpLabelMapping((JumpLabelNode) node, parent);
         } else {
             Log.error("Pattern type not recognized");
             throw new RuntimeException("Critical error!");
         }
+    }
+
+    private JumpStatementMapping generateJumpStatementMapping(JumpStatementNode node, MappingNode parent) {
+        JumpStatementMapping result = new JumpStatementMapping(Optional.of(parent), node.getVariableTable(), node, node.getClosingVars(), node.getLabel(), node.getOutputData(), AbstractMappingTree.getDefaultDevice().getParent());
+        ComplexExpressionMapping resultExpression = generateComplexExpressionMapping(node.getResultExpression(), result);
+        result.setResultExpression(resultExpression);
+        return result;
+    }
+
+    private JumpLabelMapping generateJumpLabelMapping(JumpLabelNode node, MappingNode parent) {
+        JumpLabelMapping result = new JumpLabelMapping(Optional.of(parent), node.getVariableTable(), node, node.getLabel(), AbstractMappingTree.getDefaultDevice().getParent());
+        return result;
+    }
+
+    /**
+     * Generates the AMT node for the LoopSkip
+     * @param node
+     * @param parent
+     * @return
+     */
+    private LoopSkipMapping generateLoopSkipMapping(LoopSkipNode node, MappingNode parent) {
+        return new LoopSkipMapping(Optional.of(parent), node.getVariableTable(), node, AbstractMappingTree.getDefaultDevice().getParent());
     }
 
     /**
@@ -659,7 +696,7 @@ public class OPT2AMTGenerator {
                 iterations.add(((MetaValue<Long>) node.getAdditionalArguments().get(1)).getValue());
             }
         }
-        SerializedParallelCallMapping result = new SerializedParallelCallMapping(Optional.of(parent), node.getVariableTable(), node, starts, iterations, null, 0);
+        SerializedParallelCallMapping result = new SerializedParallelCallMapping(Optional.of(parent), node.getVariableTable(), node, starts, iterations, AbstractMappingTree.getDefaultDevice().getProcessor().get(0), 0);
         result.setChildren(new ArrayList<>());
         result.setDefinition(generateComplexExpressionMapping((ComplexExpressionNode) node.getChildren().get(0), result));
 
@@ -668,7 +705,7 @@ public class OPT2AMTGenerator {
 
 
     private ComplexExpressionMapping generateComplexExpressionMapping(ComplexExpressionNode node, MappingNode parent) {
-        ComplexExpressionMapping mapping = new ComplexExpressionMapping(Optional.of(parent), node.getVariableTable(), node);
+        ComplexExpressionMapping mapping = new ComplexExpressionMapping(Optional.of(parent), node.getVariableTable(), node, AbstractMappingTree.getDefaultDevice().getParent());
         ArrayList<MappingNode> children = new ArrayList<>();
         for (PatternNode child: node.getChildren() ) {
             children.add(generateMappingNode(child, parent, Optional.empty()));
@@ -679,15 +716,15 @@ public class OPT2AMTGenerator {
 
 
     private CallMapping generateCallMapping(CallNode node, MappingNode parent) {
-        return new CallMapping(Optional.of(parent), node.getVariableTable(), node);
+        return new CallMapping(Optional.of(parent), node.getVariableTable(), node, AbstractMappingTree.getDefaultDevice().getParent());
     }
 
     private SimpleExpressionBlockMapping generateSimpleExpressionBlockMapping(SimpleExpressionBlockNode node, MappingNode parent) {
-        return new SimpleExpressionBlockMapping(Optional.of(parent), node.getVariableTable(), node);
+        return new SimpleExpressionBlockMapping(Optional.of(parent), node.getVariableTable(), node, AbstractMappingTree.getDefaultDevice().getParent());
     }
 
     private WhileLoopMapping generateWhileLoopMapping(WhileLoopNode node, MappingNode parent) {
-        WhileLoopMapping mapping = new WhileLoopMapping(Optional.of(parent), node.getVariableTable(), node);
+        WhileLoopMapping mapping = new WhileLoopMapping(Optional.of(parent), node.getVariableTable(), node, AbstractMappingTree.getDefaultDevice().getParent());
         ArrayList<MappingNode> children = new ArrayList<>();
         for (int i = 1; i < node.getChildren().size(); i++) {
             children.add(generateMappingNode(node.getChildren().get(i), mapping, Optional.empty()));
@@ -698,14 +735,16 @@ public class OPT2AMTGenerator {
     }
 
     private ReturnMapping generateReturnMapping(ReturnNode node, MappingNode parent) {
-        ReturnMapping mapping = new ReturnMapping(Optional.of(parent), node.getVariableTable(), node);
-        mapping.setResult(generateComplexExpressionMapping((ComplexExpressionNode) node.getChildren().get(0), mapping));
+        ReturnMapping mapping = new ReturnMapping(Optional.of(parent), node.getVariableTable(), node, AbstractMappingTree.getDefaultDevice().getParent());
+        if (node.getChildren().size() == 1) {
+            mapping.setResult(generateComplexExpressionMapping((ComplexExpressionNode) node.getChildren().get(0), mapping));
+        }
         mapping.setChildren(new ArrayList<>());
         return mapping;
     }
 
     private ForLoopMapping generateForLoopMapping(ForLoopNode node, MappingNode parent) {
-        ForLoopMapping mapping = new ForLoopMapping(Optional.of(parent), node.getVariableTable(), node);
+        ForLoopMapping mapping = new ForLoopMapping(Optional.of(parent), node.getVariableTable(), node, AbstractMappingTree.getDefaultDevice().getParent());
         mapping.setInitExpression(generateComplexExpressionMapping((ComplexExpressionNode) node.getChildren().get(0), mapping));
         mapping.setControlExpression(generateComplexExpressionMapping((ComplexExpressionNode) node.getChildren().get(1), mapping));
         mapping.setUpdateExpression(generateComplexExpressionMapping((ComplexExpressionNode) node.getChildren().get(2), mapping));
@@ -721,7 +760,7 @@ public class OPT2AMTGenerator {
 
 
     private ForEachLoopMapping generateForEachLoopMapping(ForEachLoopNode node, MappingNode parent) {
-        ForEachLoopMapping mapping = new ForEachLoopMapping(Optional.of(parent), node.getVariableTable(), node);
+        ForEachLoopMapping mapping = new ForEachLoopMapping(Optional.of(parent), node.getVariableTable(), node, AbstractMappingTree.getDefaultDevice().getParent());
 
         mapping.setParsedList(generateComplexExpressionMapping((ComplexExpressionNode) node.getChildren().get(0), mapping));
 
@@ -735,17 +774,17 @@ public class OPT2AMTGenerator {
     }
 
     private BranchMapping generateBranchMapping(BranchNode node, MappingNode parent) {
-        BranchMapping mapping = new BranchMapping(Optional.of(parent), node.getVariableTable(), node);
+        BranchMapping mapping = new BranchMapping(Optional.of(parent), node.getVariableTable(), node, AbstractMappingTree.getDefaultDevice().getParent());
         ArrayList<MappingNode> children = new ArrayList<>();
         for (PatternNode child: node.getChildren() ) {
-            children.add(generateMappingNode(child, parent, Optional.empty()));
+            children.add(generateMappingNode(child, mapping, Optional.empty()));
         }
         mapping.setChildren(children);
         return mapping;
     }
 
     private BranchCaseMapping generateBranchCaseMapping(BranchCaseNode node, MappingNode parent) {
-        BranchCaseMapping mapping = new BranchCaseMapping(Optional.of(parent), node.getVariableTable(), node);
+        BranchCaseMapping mapping = new BranchCaseMapping(Optional.of(parent), node.getVariableTable(), node, AbstractMappingTree.getDefaultDevice().getParent());
         ArrayList<MappingNode> children = new ArrayList<>();
         if (node.isHasCondition()) {
             mapping.setCondition(Optional.of(generateComplexExpressionMapping((ComplexExpressionNode) node.getChildren().get(0), mapping)));

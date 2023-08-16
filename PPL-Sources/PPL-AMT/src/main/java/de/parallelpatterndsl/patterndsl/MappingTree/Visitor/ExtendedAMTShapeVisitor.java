@@ -11,6 +11,7 @@ import de.parallelpatterndsl.patterndsl.abstractPatternTree.AbstractPatternTree;
 import de.parallelpatterndsl.patterndsl.abstractPatternTree.DataElements.ArrayData;
 import de.parallelpatterndsl.patterndsl.abstractPatternTree.DataElements.Data;
 import de.parallelpatterndsl.patterndsl.expressions.OperationExpression;
+import de.parallelpatterndsl.patterndsl.helperLibrary.PredefinedFunctions;
 
 import java.util.ArrayList;
 
@@ -40,7 +41,7 @@ public interface ExtendedAMTShapeVisitor extends AMTVisitor{
     @Override
     default public void handle(CallMapping node){
 
-        if (node.getFunctionIdentifier().equals("init_List")) {
+        if (PredefinedFunctions.contains(node.getFunctionIdentifier())) {
             return;
         }
 

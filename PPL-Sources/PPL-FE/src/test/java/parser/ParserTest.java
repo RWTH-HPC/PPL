@@ -29,7 +29,9 @@ public class ParserTest extends AbstractTest {
             "Valid/VariableDeclaration.par",
             "Valid/ListOperator.par",
             "Valid/ControlStatements.par",
-            "Valid/Expressions.par"
+            "Valid/Expressions.par",
+            "Stencil/stencil_3.par",
+            "Stencil/dummy.par"
     })
     public void testValid(String modelStringPath){
         parseModel(MODEL_SOURCE_PATH + modelStringPath);

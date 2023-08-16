@@ -4,6 +4,7 @@ import de.parallelpatterndsl.patterndsl.abstractPatternTree.Nodes.PatternNode;
 import de.parallelpatterndsl.patterndsl.abstractPatternTree.Visitor.APTVisitor;
 import de.parallelpatterndsl.patterndsl.abstractPatternTree.Visitor.CallCountResetter;
 import de.parallelpatterndsl.patterndsl.abstractPatternTree.Visitor.ExtendedShapeAPTVisitor;
+import de.parallelpatterndsl.patterndsl.helperLibrary.DeepCopyHelper;
 
 import java.util.ArrayList;
 
@@ -25,6 +26,20 @@ public class JumpLabelNode extends PatternNode {
     public JumpLabelNode(String label) {
         this.label = label;
         children = new ArrayList<>();
+    }
+
+    @Override
+    public JumpLabelNode deepCopy() {
+        JumpLabelNode result = new JumpLabelNode(label);
+
+        DeepCopyHelper.basicSetup(this, result);
+
+        return result;
+    }
+
+    @Override
+    public boolean containsSynchronization() {
+        return true;
     }
 
     /**

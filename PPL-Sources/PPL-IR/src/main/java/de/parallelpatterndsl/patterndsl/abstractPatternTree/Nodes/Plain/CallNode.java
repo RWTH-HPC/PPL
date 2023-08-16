@@ -4,6 +4,7 @@ import de.parallelpatterndsl.patterndsl.abstractPatternTree.AbstractPatternTree;
 import de.parallelpatterndsl.patterndsl.abstractPatternTree.DataElements.Data;
 import de.parallelpatterndsl.patterndsl.abstractPatternTree.DataElements.DataAccess.DataAccess;
 import de.parallelpatterndsl.patterndsl.abstractPatternTree.DataElements.FunctionInlineData;
+import de.parallelpatterndsl.patterndsl.abstractPatternTree.DataElements.FunctionReturnData;
 import de.parallelpatterndsl.patterndsl.abstractPatternTree.Nodes.FunctionNode;
 import de.parallelpatterndsl.patterndsl.abstractPatternTree.Nodes.PatternNode;
 import de.parallelpatterndsl.patterndsl.abstractPatternTree.Visitor.APTVisitor;
@@ -11,7 +12,9 @@ import de.parallelpatterndsl.patterndsl.abstractPatternTree.Visitor.CallCountRes
 import de.parallelpatterndsl.patterndsl.abstractPatternTree.Visitor.ExtendedShapeAPTVisitor;
 import de.parallelpatterndsl.patterndsl.expressions.OperationExpression;
 import de.parallelpatterndsl.patterndsl.expressions.Operator;
+import de.parallelpatterndsl.patterndsl.helperLibrary.DeepCopyHelper;
 import de.parallelpatterndsl.patterndsl.helperLibrary.PredefinedFunctions;
+import de.parallelpatterndsl.patterndsl.helperLibrary.RandomStringGenerator;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -70,6 +73,15 @@ public class CallNode extends PatternNode{
         } else {
             return super.getOutputAccesses();
         }
+    }
+
+    @Override
+    public CallNode deepCopy() {
+        CallNode result = new CallNode(parameterCount, functionIdentifier);
+
+        DeepCopyHelper.basicCallSetup(this, result);
+
+        return result;
     }
 
     public int getParameterCount() {
@@ -160,7 +172,14 @@ public class CallNode extends PatternNode{
         return arguments;
     }
 
-
+    /**
+     * Adds the identifier to the Function node, used when unrolling the APT
+     * @param unrollIdentifier
+     */
+    public void addUnrollIdentifier(String unrollIdentifier) {
+        functionIdentifier = functionIdentifier + "_" + unrollIdentifier;
+        ((FunctionReturnData) callExpression.getCall().getOperands().get(0)).setIdentifier(functionIdentifier);
+    }
 
     /**
      * Visitor accept function.

@@ -3,6 +3,7 @@ package de.parallelpatterndsl.patterndsl.patternSplits;
 import de.parallelpatterndsl.patterndsl.abstractPatternTree.DataElements.ArrayData;
 import de.parallelpatterndsl.patterndsl.abstractPatternTree.DataElements.PrimitiveData;
 import de.parallelpatterndsl.patterndsl.abstractPatternTree.Nodes.PatternNode;
+import de.parallelpatterndsl.patterndsl.abstractPatternTree.Nodes.Plain.ReturnNode;
 import de.parallelpatterndsl.patterndsl.dataSplits.DataSplit;
 import de.parallelpatterndsl.patterndsl.dataSplits.DataSplitTable;
 
@@ -31,7 +32,9 @@ public class SerialPatternSplit implements PatternSplit {
                 this.inputDataSplits.add(DataSplitTable.get((PrimitiveData) d));
             } else if (d instanceof ArrayData) {
                 ArrayData array = (ArrayData) d;
-                this.inputDataSplits.addAll(DataSplitTable.get(array, 0, array.getShape().get(0) - 1));
+                if(DataSplitTable.get(array, 0, array.getShape().get(0) - 1) != null) {
+                    this.inputDataSplits.addAll(DataSplitTable.get(array, 0, array.getShape().get(0) - 1));
+                }
             }
         });
 
@@ -51,8 +54,8 @@ public class SerialPatternSplit implements PatternSplit {
     }
 
     @Override
-    public int[] getStartIndices() {
-        return new int[] {0};
+    public long[] getStartIndices() {
+        return new long[] {0};
     }
 
     @Override

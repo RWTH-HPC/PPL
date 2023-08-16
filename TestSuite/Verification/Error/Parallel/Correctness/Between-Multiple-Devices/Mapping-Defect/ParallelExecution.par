@@ -1,0 +1,34 @@
+ParallelExecution{
+
+map increment([Int] input): [Int] res{
+    res[INDEX] = input[INDEX] + 1
+}
+
+seq main() : Int {
+    var [Int] initial = init_List([200],1)
+    var [Int] initial2 = init_List([200],1)
+    var [Int] result = init_List([200])
+    var [Int] result2 = init_List([200])
+    var [Int] result_seq = init_List([200])
+    var [Int] result_seq2 = init_List([200])
+    
+    /*execute the pattern on node 0 device 0 */
+    result = increment<<<[0,0,0]>>>(initial)
+    
+    result2 = increment<<<[0,0,0]>>>(initial2)
+    
+    for var Int i = 0; i < 200; i++ {
+        result_seq[i] = initial[i] + 1
+        result_seq2[i] = initial[i] + 1
+        if result_seq[i] != result[i] {
+            print("value at element " {i} " is wrong!")
+            exit(1)
+        }
+        if result_seq2[i] != result2[i] {
+            print("value at element " {i} " is wrong!")
+            exit(1)
+        }
+    }
+    
+return 0 
+}}

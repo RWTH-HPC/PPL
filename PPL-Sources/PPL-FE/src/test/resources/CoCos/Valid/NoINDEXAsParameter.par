@@ -1,0 +1,11 @@
+NoINDEXAsParameter {
+
+seq test (Int index, Int INDEx) : Int {
+    return 0
+}
+
+seq main() : Void {
+
+
+}
+}

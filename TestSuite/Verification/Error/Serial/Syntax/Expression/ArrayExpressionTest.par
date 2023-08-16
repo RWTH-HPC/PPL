@@ -1,0 +1,26 @@
+ArrayExpressionTest{
+
+var [Int] I = [0,1,2,3,4,5,6,7]
+
+seq main() : Int {
+    var [Float] F = init_List([5],1.5)
+    var [[Bool]] T = init_List([5,5])
+    var [[Int]] M = [[0,1,2,3,4,5,6,7],[0,1,2,3,4,5,6,7]]
+    
+    var Int size = #F
+    
+    var Int element = I[2 + 2]
+    
+    var Bool has = 4 in I
+    
+    var Bool access = T[2*2][2+2]
+	
+	F = read("test.txt")
+	
+	print("Hello World! " {element})
+	
+	write("test2.txt", {M})
+	
+	write("test3.txt", "start" {12})
+return 0 
+}}

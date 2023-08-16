@@ -1,8 +1,11 @@
 package de.parallelpatterndsl.patterndsl.expressions;
 
 import de.parallelpatterndsl.patterndsl.PatternTypes;
+import de.parallelpatterndsl.patterndsl.Preprocessing.VariableReplacementStack;
 import de.parallelpatterndsl.patterndsl.abstractPatternTree.DataElements.*;
 import de.parallelpatterndsl.patterndsl.abstractPatternTree.DataElements.DataAccess.*;
+import de.parallelpatterndsl.patterndsl.helperLibrary.DeepCopyHelper;
+import de.parallelpatterndsl.patterndsl.helperLibrary.PredefinedFunctions;
 import de.se_rwth.commons.logging.Log;
 
 import java.util.ArrayList;
@@ -61,12 +64,32 @@ public class OperationExpression extends IRLExpression{
             if (globalVars.contains(operand)) {
                 newOperands.add(operand);
             } else if (operand instanceof FunctionInlineData) {
-                ((FunctionInlineData) operand).createInlineCopies(globalVars, inlineIdentifier, variableTable);
-                newOperands.add(operand);
+                FunctionInlineData newData;
+                if (operand.getIdentifier().startsWith("inlineFunctionValue") && variableTable.containsKey(operand.getIdentifier() + "_" + operand.getIdentifier())) {
+                    newData = (FunctionInlineData) variableTable.get(operand.getIdentifier());
+                } else {
+                    newData = (FunctionInlineData) operand;
+                }
+                ((FunctionInlineData) newData).createInlineCopies(globalVars, inlineIdentifier, variableTable);
+                newData.setInlineEnding(((FunctionInlineData) operand).getInlineEnding());
+                newOperands.add(newData);
             } else if (operand instanceof LiteralData){
                 newOperands.add(operand.createInlineCopy(inlineIdentifier));
+            } else if (PredefinedFunctions.contains(operand.getIdentifier())){
+                newOperands.add(operand.createInlineCopy(operand.getIdentifier()));
+            } else if (operand instanceof FunctionReturnData){
+                newOperands.add(operand.createInlineCopy(operand.getIdentifier()));
+            } else if (operand instanceof IOData){
+                newOperands.add(operand.createInlineCopy(operand.getIdentifier()));
             } else {
-                newOperands.add(variableTable.get(operand.getIdentifier()+ "_" + inlineIdentifier).createInlineCopy(inlineIdentifier));
+                if (VariableReplacementStack.getCurrentTable().containsKey(operand)) {
+                    newOperands.add(VariableReplacementStack.getCurrentTable().get(operand));
+                } else if (variableTable.containsValue(operand)){
+                    newOperands.add(operand);
+                } else {
+                    VariableReplacementStack.getCurrentTable();
+                    Log.error("Variable: " + operand.getIdentifier() + " unknown.");
+                }
             }
         }
 
@@ -87,8 +110,42 @@ public class OperationExpression extends IRLExpression{
     }
 
     @Override
+    public int getLoadStores() {
+        int sum = 0;
+        for (Data operand: operands) {
+            if (operand instanceof PrimitiveData || operand instanceof ArrayData) {
+                sum ++;
+            }
+        }
+        return sum;
+    }
+
+    @Override
+    public OperationExpression deepCopy() {
+
+        ArrayList<Operator> newOperators = new ArrayList<>(operators);
+
+        ArrayList<Data> newOperands = new ArrayList<>();
+
+        for (Data data: operands ) {
+            if (data instanceof PrimitiveData || data instanceof ArrayData || data instanceof FunctionInlineData) {
+                if (data.getIdentifier().equals("Element_Exists_In_Vector") || data.getIdentifier().equals("Get_Size_Of_Vector")) {
+                    newOperands.add(data.deepCopy());
+                } else {
+                    newOperands.add(DeepCopyHelper.currentScope().get(data.getIdentifier()));
+                }
+            } else {
+                newOperands.add(data.deepCopy());
+            }
+        }
+
+        return new OperationExpression(newOperands, newOperators);
+    }
+
+    @Override
     public ArrayList<DataAccess> getDataAccesses(PatternTypes patternType) {
         ArrayList<DataAccess> result = new ArrayList<>();
+
         // handle special IO accesses
         if (hasIOData) {
             for (Data dataElement: operands ) {
@@ -312,6 +369,16 @@ public class OperationExpression extends IRLExpression{
     }
 
     @Override
+    public boolean hasProfilingInfo() {
+        return operands.stream().filter(x -> x instanceof FunctionInlineData).anyMatch(x -> ((FunctionInlineData) x).getCall().getOperands().stream().anyMatch(y -> (y instanceof FunctionReturnData && (y.getIdentifier().startsWith("get_time") || y.getIdentifier().startsWith("get_maxRusage")))));
+    }
+
+    @Override
+    public boolean hasExit() {
+        return operands.stream().filter(x -> x instanceof FunctionInlineData).anyMatch(x -> ((FunctionInlineData) x).getCall().getOperands().stream().anyMatch(y -> (y instanceof FunctionReturnData && y.getIdentifier().equals("exit"))));
+    }
+
+    @Override
     public int getOperationCount() {
         int result = 0;
 
@@ -423,14 +490,14 @@ public class OperationExpression extends IRLExpression{
             //The current definition does not allow for nested index accesses.
             if (operands.get(i) instanceof ArrayData) {
                 ArrayData data = (ArrayData) operands.get(i);
-                int nextOperator = newContext + 1;
+                int nextOperator = newContext;
                 //handle single/last element
                 if (newContext == -1) {
                     return data.getShape();
                 }
                 if (operators.get(newContext) == Operator.LEFT_ARRAY_ACCESS) {
                     int count = 1;
-                    while (operators.get( nextOperator ) != Operator.RIGHT_ARRAY_ACCESS) {
+                    while (true) {
                         if (operators.size() - nextOperator < 2) {
                             break;
                         }

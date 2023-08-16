@@ -12,12 +12,23 @@ public class FunctionSymbol extends FunctionSymbolTOP {
      */
     ASTPatternType pattern;
 
+    /**
+     * The number of parameters the function accepts
+     */
+    int parameterCount;
+
     public FunctionSymbol(String name) {
         super(name);
     }
-    public FunctionSymbol(String name, ASTPatternType pattern) {
+
+    public FunctionSymbol(String name, ASTPatternType pattern, int parameterCount) {
         super(name);
         this.pattern = pattern;
+        this.parameterCount = parameterCount;
+    }
+
+    public int getParameterCount() {
+        return parameterCount;
     }
 
     public ASTPatternType getPattern() {

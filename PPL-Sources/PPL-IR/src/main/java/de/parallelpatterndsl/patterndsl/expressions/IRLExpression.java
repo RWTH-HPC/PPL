@@ -56,4 +56,28 @@ public abstract class IRLExpression {
      * @param newData
      */
     public abstract void replaceDataElement(Data oldData, Data newData);
+
+    /**
+     * Returns true, iff the call contains get_time()
+     * @return
+     */
+    public abstract boolean hasProfilingInfo();
+
+    /**
+     * Returns true, iff the call contains exit()
+     * @return
+     */
+    public abstract boolean hasExit();
+
+    /**
+     * Returns the number of load and store operations within the sub tree
+     * @return
+     */
+    public abstract int getLoadStores();
+
+    /**
+     * Creates a deep copy of the expression
+     * @return
+     */
+    public abstract IRLExpression deepCopy();
 }

@@ -15,6 +15,11 @@ public class FunctionReturnData extends Data{
     }
 
     public Data createInlineCopy(String inlineIdentifier) {
-        return new FunctionReturnData(getIdentifier() + "_" + inlineIdentifier, getTypeName());
+        return new FunctionReturnData(getIdentifier(), getTypeName());
+    }
+
+    @Override
+    public Data deepCopy() {
+        return new FunctionReturnData(getIdentifier(), getTypeName());
     }
 }

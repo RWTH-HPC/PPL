@@ -1,0 +1,7 @@
+PredefinedFunctionParameterCount2 {
+
+seq main() : Void {
+    var Bool test = isnan()
+
+}
+}

@@ -14,7 +14,11 @@ public class FunctionReturnTypeExistsCoCo implements PatternDSLASTFunctionCoCo {
         if (node.isPresentType() || !node.getPatternType().isPresentSerial()) {
             return;
         }
-        Log.error(node.get_SourcePositionStart() + " No return type defined or redundant return variable defined: " + node.getName());
+        if (node.isPresentFunctionParameter()) {
+            Log.error(node.get_SourcePositionStart() + " Redundant return variable defined: " + node.getName());
+        } else {
+            Log.error(node.get_SourcePositionStart() + " No return type defined: " + node.getName());
+        }
     }
 
 }

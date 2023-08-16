@@ -1,0 +1,13 @@
+DoNotInlineTest{
+
+seq toInline(Int input) : Int {
+    return input
+}
+
+seq main() : Int {
+    var Int a = 2
+    
+    toInline(a)
+    
+return 0 
+}}

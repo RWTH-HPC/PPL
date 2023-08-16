@@ -37,7 +37,7 @@ public class ParserTest{
 
     @Test
     public void parsing() {
-        String[] args = {"-i", "../../../rodinia-ppl/lud/lud.par", "-APT", "--network=test.json", "-s", "12"};
+        String[] args = {"-i", "../../../rodinia-ppl/lud/lud.par", "-APT", "--network=test.json", "-s", "12", "-opt"};
         HandleComandLine.parse(args);
         run();
     }

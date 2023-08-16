@@ -1,0 +1,18 @@
+cmdOpts {
+    //Constants
+
+    // Indices for cmdOpts
+    var Int8 its = 0 // -i //number of iterations of main loop
+    // following three are actually only a flag (boolean)
+    var Int8 showProg = 1 // -p // ensured additional printing while execution 
+    var Int8 quiet = 2 // -q // quiet printing 
+    var Int8 help = 3 // -h 
+
+    //var Int8 nx =  // -s implemented through preprocessing 
+    //no support for viz and regions
+    //var Int8 numFiles =  // -f
+    //var Int8 numReg =  // -r 
+    //var Int8 viz =  // -v  // actually only a flag (boolean)
+    //var Int8 cost =  // -c
+    //var Int8 balance =  // -b
+}

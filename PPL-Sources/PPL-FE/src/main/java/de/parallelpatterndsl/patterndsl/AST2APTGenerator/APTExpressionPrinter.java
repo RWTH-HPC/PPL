@@ -1,8 +1,10 @@
 package de.parallelpatterndsl.patterndsl.AST2APTGenerator;
-
+/**
 import de.monticore.expressions.commonexpressions._ast.*;
 import de.monticore.expressions.expressionsbasis._ast.ASTExpression;
+ **/
 import de.parallelpatterndsl.patterndsl._ast.*;
+import de.parallelpatterndsl.patterndsl._parser.PatternDSLAntlrParser;
 import de.parallelpatterndsl.patterndsl.abstractPatternTree.DataElements.*;
 import de.parallelpatterndsl.patterndsl.expressions.AssignmentExpression;
 import de.parallelpatterndsl.patterndsl.expressions.IRLExpression;
@@ -13,6 +15,8 @@ import de.parallelpatterndsl.patterndsl.helperLibrary.RandomStringGenerator;
 import de.parallelpatterndsl.patterndsl.printer.AbstractExpressionPrinter;
 import de.se_rwth.commons.logging.Log;
 
+import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -31,7 +35,10 @@ public class APTExpressionPrinter extends AbstractExpressionPrinter<IRLExpressio
      */
     private HashMap<String, ASTFunction> astFunctionTable;
 
+
+
     public APTExpressionPrinter() {
+
     }
 
 
@@ -44,11 +51,12 @@ public class APTExpressionPrinter extends AbstractExpressionPrinter<IRLExpressio
     }
 
     private AssignmentExpression generateAssignmentExpression(ASTExpression expression) {
+
         if (expression instanceof ASTAssignmentExpression) {
             return (AssignmentExpression) this.doPrintAssignmentExpression((ASTAssignmentExpression) expression);
-        } else if (expression instanceof ASTSimpleAssignmentExpression) {
+        } /**else if (expression instanceof ASTSimpleAssignmentExpression) {
             return (AssignmentExpression) this.doPrintSimpleAssignmentExpression((ASTSimpleAssignmentExpression) expression);
-        } else if (expression instanceof ASTAssignmentByIncreaseExpression) {
+        }**/ else if (expression instanceof ASTAssignmentByIncreaseExpression) {
             return (AssignmentExpression) this.doPrintAssignmentByIncreaseExpression((ASTAssignmentByIncreaseExpression) expression);
         } else if (expression instanceof ASTAssignmentByDecreaseExpression) {
             return (AssignmentExpression) this.doPrintAssignmentByDecreaseExpression((ASTAssignmentByDecreaseExpression) expression);
@@ -58,6 +66,10 @@ public class APTExpressionPrinter extends AbstractExpressionPrinter<IRLExpressio
             return (AssignmentExpression) this.doPrintDecrementExpression((ASTDecrementExpression) expression);
         } else if (expression instanceof ASTIncrementExpression) {
             return (AssignmentExpression) this.doPrintIncrementExpression((ASTIncrementExpression) expression);
+        } else if (expression instanceof ASTAssignmentByBitwiseAndExpression) {
+            return (AssignmentExpression) this.doPrintAssignmentByBitwiseAndExpression((ASTAssignmentByBitwiseAndExpression) expression);
+        } else if (expression instanceof ASTAssignmentByBitwiseOrExpression) {
+            return (AssignmentExpression) this.doPrintAssignmentByBitwiseOrExpression((ASTAssignmentByBitwiseOrExpression) expression);
         }
         throw new RuntimeException("Critical error!");
     }
@@ -85,8 +97,9 @@ public class APTExpressionPrinter extends AbstractExpressionPrinter<IRLExpressio
             return (OperationExpression) this.doPrintNameExpression((ASTNameExpression) expression);
         } else if (expression instanceof ASTPlusExpression) {
             return (OperationExpression) this.doPrintPlusExpression((ASTPlusExpression) expression);
-        } else if (expression instanceof ASTLitExpression) {
-            return (OperationExpression) this.doPrintLitExpression((ASTLitExpression) expression);
+        } else if (expression instanceof ASTLiteralExpression) {
+            /** #TODO Literal fehlt **/
+            return (OperationExpression) this.doPrintLiteralExpression((ASTLiteralExpression) expression);
         } else if (expression instanceof ASTBooleanNotExpression) {
             return (OperationExpression) this.doPrintBooleanNotExpression((ASTBooleanNotExpression) expression);
         } else if (expression instanceof ASTLogicalNotExpression) {
@@ -115,9 +128,9 @@ public class APTExpressionPrinter extends AbstractExpressionPrinter<IRLExpressio
             return (OperationExpression) this.doPrintBracketExpression((ASTBracketExpression) expression);
         } else if (expression instanceof  ASTRemainderExpressionDiff) {
             return (OperationExpression) this.doPrintRemainderExpressionDiff((ASTRemainderExpressionDiff) expression);
-        } else if (expression instanceof ASTQualifiedNameExpression) {
+        } /**else if (expression instanceof ASTQualifiedNameExpression) {
             return (OperationExpression) this.doPrintQualifiedNameExpression((ASTQualifiedNameExpression) expression);
-        } else if (expression instanceof ASTConditionalExpression) {
+        } **/else if (expression instanceof ASTConditionalExpression) {
             return (OperationExpression) this.doPrintConditionalExpression((ASTConditionalExpression) expression);
         } else if (expression instanceof  ASTPrintExpression) {
             return (OperationExpression) this.doPrintPrintExpression((ASTPrintExpression) expression);
@@ -125,11 +138,97 @@ public class APTExpressionPrinter extends AbstractExpressionPrinter<IRLExpressio
             return (OperationExpression) this.doPrintReadExpression((ASTReadExpression) expression);
         } else if (expression instanceof ASTBooleanNotOpExpressionDiff) {
             return (OperationExpression) this.doPrintBooleanNotExpressionDiff((ASTBooleanNotOpExpressionDiff) expression);
+        } else if (expression instanceof ASTBitwiseAndExpression) {
+            return (OperationExpression) this.doPrintBitwiseAndExpression((ASTBitwiseAndExpression) expression);
+        } else if (expression instanceof ASTBitwiseNotExpression) {
+            return (OperationExpression) this.doPrintBitwiseNotExpression((ASTBitwiseNotExpression) expression);
+        } else if (expression instanceof ASTBitwiseOrExpression) {
+            return (OperationExpression) this.doPrintBitwiseOrExpression((ASTBitwiseOrExpression) expression);
         }
         Log.error("Error in expression",expression.get_SourcePositionStart());
         throw new RuntimeException("Critical error!");
     }
 
+    @Override
+    protected IRLExpression doPrintAssignmentByBitwiseOrExpression(ASTAssignmentByBitwiseOrExpression exp) {
+        ASTExpression left = exp.getLeft();
+        ArrayList<OperationExpression> accessScheme = new ArrayList<>();
+        Data data;
+        if (left instanceof ASTIndexAccessExpression) {
+            accessScheme = getAccessScheme((ASTIndexAccessExpression) left,variableData,astFunctionTable);
+            while(left instanceof ASTIndexAccessExpression) {
+                left = ((ASTIndexAccessExpression) left).getIndexAccess();
+            }
+        }
+        if (left instanceof ASTNameExpression) {
+            data = variableData.get(((ASTNameExpression) left).getName());
+            return new AssignmentExpression(data,accessScheme,generateOperationExpression(exp.getRight()), Operator.BIT_OR_ASSIGNMENT);
+        }
+        Log.error("No assignment to variable possible, not a variable:" + left.toString() + " at:" + left.get_SourcePositionStart());
+        throw new RuntimeException("Critical error!");
+    }
+
+    @Override
+    protected IRLExpression doPrintAssignmentByBitwiseAndExpression(ASTAssignmentByBitwiseAndExpression exp) {
+        ASTExpression left = exp.getLeft();
+        ArrayList<OperationExpression> accessScheme = new ArrayList<>();
+        Data data;
+        if (left instanceof ASTIndexAccessExpression) {
+            accessScheme = getAccessScheme((ASTIndexAccessExpression) left,variableData,astFunctionTable);
+            while(left instanceof ASTIndexAccessExpression) {
+                left = ((ASTIndexAccessExpression) left).getIndexAccess();
+            }
+        }
+        if (left instanceof ASTNameExpression) {
+            data = variableData.get(((ASTNameExpression) left).getName());
+            return new AssignmentExpression(data,accessScheme,generateOperationExpression(exp.getRight()), Operator.BIT_AND_ASSIGNMENT);
+        }
+        Log.error("No assignment to variable possible, not a variable:" + left.toString() + " at:" + left.get_SourcePositionStart());
+        throw new RuntimeException("Critical error!");
+    }
+
+    @Override
+    protected IRLExpression doPrintBitwiseOrExpression(ASTBitwiseOrExpression exp) {
+        OperationExpression left = generateOperationExpression(exp.getLeft());
+        OperationExpression right = generateOperationExpression(exp.getRight());
+        ArrayList<Data> operandList = left.getOperands();
+        ArrayList<Operator> operatorList = left.getOperators();
+
+        operatorList.add(Operator.BITWISE_OR);
+
+        operandList.addAll(right.getOperands());
+        operatorList.addAll(right.getOperators());
+
+        return new OperationExpression(operandList,operatorList);
+    }
+
+    @Override
+    protected IRLExpression doPrintBitwiseNotExpression(ASTBitwiseNotExpression exp) {
+        OperationExpression right = generateOperationExpression(exp.getExpression());
+        ArrayList<Operator> operatorList =  new ArrayList<>();
+
+        operatorList.add(Operator.BITWISE_NOT);
+
+        ArrayList<Data> operandList = new ArrayList<>(right.getOperands());
+        operatorList.addAll(right.getOperators());
+
+        return new OperationExpression(operandList,operatorList);
+    }
+
+    @Override
+    protected IRLExpression doPrintBitwiseAndExpression(ASTBitwiseAndExpression exp) {
+        OperationExpression left = generateOperationExpression(exp.getLeft());
+        OperationExpression right = generateOperationExpression(exp.getRight());
+        ArrayList<Data> operandList = left.getOperands();
+        ArrayList<Operator> operatorList = left.getOperators();
+
+        operatorList.add(Operator.BITWISE_AND);
+
+        operandList.addAll(right.getOperands());
+        operatorList.addAll(right.getOperators());
+
+        return new OperationExpression(operandList,operatorList);
+    }
 
 
     @Override
@@ -194,7 +293,7 @@ public class APTExpressionPrinter extends AbstractExpressionPrinter<IRLExpressio
         if (left instanceof ASTIndexAccessExpression) {
             accessScheme = getAccessScheme((ASTIndexAccessExpression) left,variableData,astFunctionTable);
             while(left instanceof ASTIndexAccessExpression) {
-                left = ((ASTIndexAccessExpression) left).getExpression();
+                left = ((ASTIndexAccessExpression) left).getIndexAccess();
             }
         }
         if (left instanceof ASTNameExpression) {
@@ -228,7 +327,7 @@ public class APTExpressionPrinter extends AbstractExpressionPrinter<IRLExpressio
         if (left instanceof ASTIndexAccessExpression) {
             accessScheme = getAccessScheme((ASTIndexAccessExpression) left,variableData,astFunctionTable);
             while(left instanceof ASTIndexAccessExpression) {
-                left = ((ASTIndexAccessExpression) left).getExpression();
+                left = ((ASTIndexAccessExpression) left).getIndexAccess();
             }
         }
         if (left instanceof ASTNameExpression) {
@@ -302,7 +401,7 @@ public class APTExpressionPrinter extends AbstractExpressionPrinter<IRLExpressio
         if (left instanceof ASTIndexAccessExpression) {
             accessScheme = getAccessScheme((ASTIndexAccessExpression) left,variableData,astFunctionTable);
             while(left instanceof ASTIndexAccessExpression) {
-                left = ((ASTIndexAccessExpression) left).getExpression();
+                left = ((ASTIndexAccessExpression) left).getIndexAccess();
             }
         }
         if (left instanceof ASTNameExpression) {
@@ -434,21 +533,21 @@ public class APTExpressionPrinter extends AbstractExpressionPrinter<IRLExpressio
         // recursively iterate over all nested Index Access Expressions
         do {
             exp = (ASTIndexAccessExpression) expression;
-            accesses.add(generateOperationExpression(exp.getIndex()));
-            expression = exp.getExpression();
+            accesses.add(0, generateOperationExpression(exp.getIndex()));
+            expression = exp.getIndexAccess();
         } while(expression instanceof ASTIndexAccessExpression);
-
+        /* NOt needed since insert now at the beginning instead of the end
         // invert the order, ordering the Index Accesses by dimension (Descending)
         ArrayList<OperationExpression> accessesCorrectedOrder = new ArrayList<>();
         for (int i = accesses.size() - 1; i >= 0 ; i--) {
             accessesCorrectedOrder.add(accesses.get(i));
         }
-
+        */
         OperationExpression dataSource = generateOperationExpression(expression);
         ArrayList<Data> operandList = new ArrayList<>(dataSource.getOperands());
         ArrayList<Operator> operatorList = new ArrayList<>(dataSource.getOperators());
 
-        for (OperationExpression operandExpression: accessesCorrectedOrder) {
+        for (OperationExpression operandExpression: accesses) {
             operatorList.add(Operator.LEFT_ARRAY_ACCESS);
             operandList.addAll(operandExpression.getOperands());
             operatorList.addAll((operandExpression.getOperators()));
@@ -467,7 +566,7 @@ public class APTExpressionPrinter extends AbstractExpressionPrinter<IRLExpressio
             if (left instanceof ASTIndexAccessExpression) {
                 accessScheme = getAccessScheme((ASTIndexAccessExpression) left,variableData,astFunctionTable);
                 while(left instanceof ASTIndexAccessExpression) {
-                    left = ((ASTIndexAccessExpression) left).getExpression();
+                    left = ((ASTIndexAccessExpression) left).getIndexAccess();
                 }
             }
             if (left instanceof ASTNameExpression) {
@@ -485,7 +584,7 @@ public class APTExpressionPrinter extends AbstractExpressionPrinter<IRLExpressio
         ArrayList<Data> operandList = new ArrayList<>();
         ArrayList<Operator> operatorList = new ArrayList<>();
 
-        String name = ((ASTNameExpression) callExpression.getExpression()).getName();
+        String name = ((ASTNameExpression) callExpression.getCall()).getName();
         // handle predefined functions
         PrimitiveDataTypes type;
         if (PredefinedFunctions.contains(name)) {
@@ -556,13 +655,13 @@ public class APTExpressionPrinter extends AbstractExpressionPrinter<IRLExpressio
 
         return new OperationExpression(operandList,operatorList);
     }
-
+    /**
     @Override
     protected IRLExpression doPrintQualifiedNameExpression(ASTQualifiedNameExpression exp) {
         //Expression got removed.
         return null;
     }
-
+    **/
     @Override
     protected IRLExpression doPrintLogicalNotExpression(ASTLogicalNotExpression exp) {
         OperationExpression right = generateOperationExpression(exp.getExpression());
@@ -592,7 +691,7 @@ public class APTExpressionPrinter extends AbstractExpressionPrinter<IRLExpressio
     }
 
     @Override
-    protected IRLExpression doPrintLitExpression(ASTLitExpression exp) {
+    protected IRLExpression doPrintLiteralExpression(ASTLiteralExpression exp) {
         ArrayList<Data> operandList = new ArrayList<>();
         operandList.add(APTLiteralPrinter.printLiteral(exp.getLiteral()));
         return new OperationExpression(operandList,new ArrayList<>());
@@ -606,7 +705,7 @@ public class APTExpressionPrinter extends AbstractExpressionPrinter<IRLExpressio
         if (left instanceof ASTIndexAccessExpression) {
             accessScheme = getAccessScheme((ASTIndexAccessExpression) left,variableData,astFunctionTable);
             while(left instanceof ASTIndexAccessExpression) {
-                left = ((ASTIndexAccessExpression) left).getExpression();
+                left = ((ASTIndexAccessExpression) left).getIndexAccess();
             }
         }
         if (left instanceof ASTNameExpression) {
@@ -625,7 +724,7 @@ public class APTExpressionPrinter extends AbstractExpressionPrinter<IRLExpressio
         if (left instanceof ASTIndexAccessExpression) {
             accessScheme = getAccessScheme((ASTIndexAccessExpression) left,variableData,astFunctionTable);
             while(left instanceof ASTIndexAccessExpression) {
-                left = ((ASTIndexAccessExpression) left).getExpression();
+                left = ((ASTIndexAccessExpression) left).getIndexAccess();
             }
         }
         if (left instanceof ASTNameExpression) {
@@ -646,11 +745,11 @@ public class APTExpressionPrinter extends AbstractExpressionPrinter<IRLExpressio
         ArrayList<Data> operandList = new ArrayList<>(right.getOperands());
         operatorList.addAll(right.getOperators());
 
-        operatorList.add(Operator.RIGHT_CALL_PARENTHESIS);
+        operatorList.add(Operator.RIGHT_PARENTHESIS);
 
         return new OperationExpression(operandList,operatorList);
     }
-
+    /**
     @Override
     protected IRLExpression doPrintSimpleAssignmentExpression(ASTSimpleAssignmentExpression exp) {
         ASTExpression left = exp.getLeft();
@@ -676,7 +775,7 @@ public class APTExpressionPrinter extends AbstractExpressionPrinter<IRLExpressio
         Log.error("No assignment to variable possible, not a variable:" + left.toString() + " at:" + left.get_SourcePositionStart());
         throw new RuntimeException("Critical error!");
     }
-
+    **/
     @Override
     protected IRLExpression doPrintConditionalExpression(ASTConditionalExpression exp) {
         // Expression got removed.
@@ -876,7 +975,7 @@ public class APTExpressionPrinter extends AbstractExpressionPrinter<IRLExpressio
         do {
             exp = (ASTIndexAccessExpression) expression;
             result.add(generateOperationExpression(exp.getIndex()));
-            expression = exp.getExpression();
+            expression = exp.getIndexAccess();
         } while(expression instanceof ASTIndexAccessExpression);
 
         // invert the order, ordering the Index Accesses by dimension (Descending)

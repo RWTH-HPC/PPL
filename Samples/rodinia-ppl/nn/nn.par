@@ -1,0 +1,74 @@
+nn {
+include "../math"
+
+map kernel([Float] lon, [Float] lat, Float target_lon, Float target_lat):[Float] res {
+	res[INDEX] = sqrt((lon[INDEX]-target_lon)*(lon[INDEX]-target_lon) + (lat[INDEX]-target_lat)*(lat[INDEX]-target_lat))
+}
+
+seq main():Int {
+	var [Float] lon = init_List([42764])
+	var [Float] lat = init_List([42764])
+	var [Float] neighbor_dist = init_List([5],100000)
+	var [Int] neighbor_id = init_List([5])
+	var [Float] dists  = init_List([42764])
+	//var [Int] names = init_List([42764])
+	
+	var [Long] times = init_List([4])
+	var Float target_lon = 90
+	var Float target_lat = 30
+	
+	for var Int ii = 0; ii<4; ii++ {
+	    if (ii == 0 ) {
+	        lon = read("longitudes_0.txt")
+	        lat = read("latitudes_0.txt")
+	        //names = read("names_0.txt")
+	    } else if ii == 1 {
+	        lon = read("longitudes_1.txt")
+	        lat = read("latitudes_1.txt")
+	        //names = read("names_1.txt")
+	    } else if ii == 2 {
+	        lon = read("longitudes_2.txt")
+	        lat = read("latitudes_2.txt")
+	        //names = read("names_2.txt")
+	    } else {
+	        lon = read("longitudes_3.txt")
+	        lat = read("latitudes_3.txt")
+	        //names = read("names_3.txt")
+	    }
+	
+	    //times[ii] = get_time()
+	    dists = kernel<<<>>>(lon,lat,target_lon,target_lat)
+	
+	    for var Int i = 0; i< #dists; i++ {
+	    	var Int max_id = 0
+	    	var Float max_val = 0-1
+	    	for var Int j = 0; j <#neighbor_id;j++ {
+	    		if neighbor_dist[j] > max_val {
+	    			max_val = neighbor_dist[j]
+	    			max_id = j
+	    		}
+	    	}
+	    	if max_val > dists[i] {
+	    		neighbor_dist[max_id] = dists[i]
+	    		neighbor_id[max_id] = i
+	    	}
+	
+	    }
+	    //times[ii] = get_time() - times[ii]
+		
+	    
+	}
+	//var Double time_sum = 0
+	//for var Int ii = 0; ii<4; ii++ {
+	    //print("Kernel " {ii} " took:" {times[ii]} "us")
+	    //time_sum += times[ii]
+	//}
+	//print("All kernels took:" {time_sum} "us")
+	
+	write("dists.txt", {neighbor_dist})
+	write("canes.txt", {neighbor_id})
+	
+	
+	return 0
+}
+}

@@ -1,0 +1,11 @@
+NoIndexAccessInPatternCalls {
+
+map add([Int] input) : [Int] res{
+    res[INDEX] = input[INDEX] + 1
+}
+seq main() : Void {
+    var [Int] test = init_List([10])
+    test = add<<<>>>(test)
+
+}
+}

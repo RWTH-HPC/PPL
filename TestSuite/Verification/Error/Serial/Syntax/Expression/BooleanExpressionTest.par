@@ -1,0 +1,27 @@
+BooleanExpressionTest{
+
+seq main() : Int {
+    var Bool T = true
+    
+    T = false
+    
+    T = 4 > 2
+    
+    T = 4 <= 2
+    
+    T = 4 == 2
+    
+    T = true and false
+    
+    T = true && false
+    
+    T = true or false
+    
+    T = true || false
+    
+    T = not true
+    
+    T = ~true
+    
+return 0 
+}}

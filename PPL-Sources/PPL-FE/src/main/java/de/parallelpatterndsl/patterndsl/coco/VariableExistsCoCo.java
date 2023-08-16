@@ -1,7 +1,8 @@
 package de.parallelpatterndsl.patterndsl.coco;
 
-import de.monticore.expressions.commonexpressions._ast.ASTNameExpression;
-import de.monticore.expressions.commonexpressions._cocos.CommonExpressionsASTNameExpressionCoCo;
+
+import de.parallelpatterndsl.patterndsl._cocos.PatternDSLASTNameExpressionCoCo;
+import de.parallelpatterndsl.patterndsl._ast.ASTNameExpression;
 import de.parallelpatterndsl.patterndsl._ast.ASTAssignmentExpression;
 import de.parallelpatterndsl.patterndsl._ast.ASTIndexAccessExpression;
 import de.parallelpatterndsl.patterndsl._ast.ASTListType;
@@ -17,7 +18,7 @@ import de.se_rwth.commons.logging.Log;
 /**
  * CoCo that checks, if a variable, parameter, function or constant is defined.
  */
-public class VariableExistsCoCo implements CommonExpressionsASTNameExpressionCoCo {
+public class VariableExistsCoCo implements PatternDSLASTNameExpressionCoCo {
 
     @Override
     public void check(ASTNameExpression node) {
@@ -27,7 +28,7 @@ public class VariableExistsCoCo implements CommonExpressionsASTNameExpressionCoC
         }
         if (node.isPresentEnclosingScope()) {
             if (node.getEnclosingScope().resolveMany(node.getName(), FunctionParameterSymbol.KIND).size() < 1 && node.getEnclosingScope().resolveMany(node.getName(), VariableSymbol.KIND).size() < 1 && node.getEnclosingScope().resolveMany(node.getName(), FunctionSymbol.KIND).size() < 1 && node.getEnclosingScope().resolveMany(node.getName(), ConstantSymbol.KIND).size() < 1) {
-                Log.error(node.get_SourcePositionStart() +" Variable/Function not defined: " + node.getName());
+                Log.error(node.get_SourcePositionStart() +" Variable/Function not defined: " + node.getName() + " (function might be defined as a parallel pattern.)");
             }
 
         }

@@ -2,10 +2,7 @@ package de.parallelpatterndsl.patterndsl.MappingTree.Nodes.ParallelCalls;
 
 import de.parallelpatterndsl.patterndsl.MappingTree.AbstractMappingTree;
 import de.parallelpatterndsl.patterndsl.MappingTree.DataMovementGenerator.ParallelGroup;
-import de.parallelpatterndsl.patterndsl.MappingTree.Nodes.DataControl.BarrierMapping;
-import de.parallelpatterndsl.patterndsl.MappingTree.Nodes.DataControl.DataMovementMapping;
-import de.parallelpatterndsl.patterndsl.MappingTree.Nodes.DataControl.DataPlacement;
-import de.parallelpatterndsl.patterndsl.MappingTree.Nodes.DataControl.EndPoint;
+import de.parallelpatterndsl.patterndsl.MappingTree.Nodes.DataControl.*;
 import de.parallelpatterndsl.patterndsl.MappingTree.Nodes.Function.ParallelMapping;
 import de.parallelpatterndsl.patterndsl.MappingTree.Nodes.FunctionMapping;
 import de.parallelpatterndsl.patterndsl.MappingTree.Nodes.MappingNode;
@@ -65,21 +62,49 @@ public class ParallelCallMapping extends CallMapping {
     /**
      * Set, iff the parallel call executes a dynamic programming recursion. Defines the data transfers necessary after each time-step.
      */
-    private Set<DataMovementMapping> dynamicProgrammingdataTransfers;
+    private Set<AbstractDataMovementMapping> dynamicProgrammingdataTransfers;
+
+    /**
+     * Data movement from GPU to CPU.
+     */
+    private Set<GPUDataMovementMapping> dpPreSwapTransfers;
+
+    /**
+     * Data movement from CPU back to GPU.
+     */
+    private Set<GPUDataMovementMapping> dpPostSwapTransfers;
 
     /**
      * stores the group of call nodes defining the complete pattern execution.
      */
     private ParallelGroup group;
 
-    public ParallelCallMapping(Optional<MappingNode> parent, HashMap<String, Data> variableTable, CallNode aptNode, ArrayList<Long> startIndex, ArrayList<Long> numIterations, Processor executor, int numThreads, Optional<BarrierMapping> dynamicProgrammingBarrier, Set<DataMovementMapping> dynamicProgrammingdataTransfers) {
-        super(parent, variableTable, aptNode);
+    public ParallelCallMapping(Optional<MappingNode> parent, HashMap<String, Data> variableTable, CallNode aptNode, ArrayList<Long> startIndex, ArrayList<Long> numIterations, Processor executor, int numThreads, Optional<BarrierMapping> dynamicProgrammingBarrier, Set<AbstractDataMovementMapping> dynamicProgrammingdataTransfers) {
+        super(parent, variableTable, aptNode, executor.getParent().getParent());
         this.startIndex = startIndex;
         this.numIterations = numIterations;
         this.executor = executor;
         this.numThreads = numThreads;
         this.dynamicProgrammingBarrier = dynamicProgrammingBarrier;
         this.dynamicProgrammingdataTransfers = dynamicProgrammingdataTransfers;
+        this.dpPostSwapTransfers = new HashSet<>();
+        this.dpPreSwapTransfers = new HashSet<>();
+    }
+
+    public Set<GPUDataMovementMapping> getDpPreSwapTransfers() {
+        return dpPreSwapTransfers;
+    }
+
+    public void addDpPreSwapTransfers(GPUDataMovementMapping dpPreSwapTransfer) {
+        this.dpPreSwapTransfers.add(dpPreSwapTransfer);
+    }
+
+    public Set<GPUDataMovementMapping> getDpPostSwapTransfers() {
+        return dpPostSwapTransfers;
+    }
+
+    public void addDpPostSwapTransfers(GPUDataMovementMapping dpPostSwapTransfer) {
+        this.dpPostSwapTransfers.add(dpPostSwapTransfer);
     }
 
     public ArrayList<Long> getStartIndex() {
@@ -118,7 +143,7 @@ public class ParallelCallMapping extends CallMapping {
         return dynamicProgrammingBarrier;
     }
 
-    public Set<DataMovementMapping> getDynamicProgrammingdataTransfers() {
+    public Set<AbstractDataMovementMapping> getDynamicProgrammingdataTransfers() {
         return dynamicProgrammingdataTransfers;
     }
 
@@ -195,7 +220,9 @@ public class ParallelCallMapping extends CallMapping {
                 EndPoint target = new EndPoint(executor.getParent(), 0,1, SupportFunction.getElementSet(group), false);
                 endPoints.add(target);
                 DataPlacement placement = new DataPlacement(endPoints, getArgumentExpressions().get(i).getOperands().get(0));
-                placements.add(placement);
+                if (placement.getDataElement() instanceof ArrayData || placement.getDataElement() instanceof PrimitiveData) {
+                    placements.add(placement);
+                }
             } else if (functionMapping.getArgumentValues().get(i) instanceof ArrayData) {
                 ArrayList<EndPoint> endPoints = new ArrayList<>();
                 ArrayData value = (ArrayData) functionMapping.getArgumentValues().get(i);
@@ -215,25 +242,38 @@ public class ParallelCallMapping extends CallMapping {
                         EndPoint endPoint = new EndPoint(executor.getParent(), ((DynamicProgrammingDataAccess) access).getShiftOffsets().get(0) + startIndex.get(1), numIterations.get(1), SupportFunction.getElementSet(group), false);
                         endPoints.add(endPoint);
                     } else if (access instanceof StencilDataAccess) {
+                        int targetIndex = 0;
+                        for (int j = 0; j < numIterations.size(); j++) {
+                            if (((StencilDataAccess) access).getRuleBaseIndex().get(0).equals("INDEX" + j)) {
+                                targetIndex = j;
+                                break;
+                            }
+                        }
                         if (((StencilDataAccess) access).getScalingFactors().get(0) == 1) {
-                            EndPoint endPoint = new EndPoint(executor.getParent(), ((StencilDataAccess) access).getShiftOffsets().get(0) + startIndex.get(0), numIterations.get(0), SupportFunction.getElementSet(group), false);
+                            EndPoint endPoint = new EndPoint(executor.getParent(), ((StencilDataAccess) access).getShiftOffsets().get(0) + startIndex.get(targetIndex), numIterations.get(targetIndex), SupportFunction.getElementSet(group), false);
                             endPoints.add(endPoint);
                         } else {
-                            for (long j = startIndex.get(0); j < startIndex.get(0) + numIterations.get(0); j++) {
+                            for (long j = startIndex.get(targetIndex); j < startIndex.get(targetIndex) + numIterations.get(targetIndex); j++) {
                                 EndPoint endPoint = new EndPoint(executor.getParent(), ((StencilDataAccess) access).getScalingFactors().get(0) * j + ((StencilDataAccess) access).getShiftOffsets().get(0), 1, SupportFunction.getElementSet(group), false);
                                 endPoints.add(endPoint);
                             }
                         }
                     } else {
-                        EndPoint target = new EndPoint(executor.getParent(), 0,value.getShape().get(0), SupportFunction.getElementSet(group), false);
-                        endPoints.add(target);
+                        ArrayList<Data> inputElements = getInputElements();
+                        if (inputElements.size() > i) {
+                            EndPoint target = new EndPoint(executor.getParent(), 0, ((ArrayData) inputElements.get(i)).getShape().get(0), SupportFunction.getElementSet(group), false);
+                            endPoints.add(target);
+                        }
                     }
                 }
 
                 DataPlacement placement = new DataPlacement(endPoints, getArgumentExpressions().get(i).getOperands().get(0));
-                placements.add(placement);
+                if (placement.getDataElement() instanceof ArrayData || placement.getDataElement() instanceof PrimitiveData) {
+                    placements.add(placement);
+                }
             }
         }
+
         return placements;
     }
 
@@ -246,7 +286,9 @@ public class ParallelCallMapping extends CallMapping {
             EndPoint target = new EndPoint(executor.getParent(), 0,1, SupportFunction.getElementSet(group), true);
             endPoints.add(target);
             DataPlacement placement = new DataPlacement(endPoints, ((AssignmentExpression) definition.getExpression()).getOutputElement());
-            placements.add(placement);
+            if (placement.getDataElement() instanceof ArrayData || placement.getDataElement() instanceof PrimitiveData) {
+                placements.add(placement);
+            }
         } else if (functionMapping.getReturnElement() instanceof ArrayData) {
             ArrayList<EndPoint> endPoints = new ArrayList<>();
             ArrayData value = (ArrayData) functionMapping.getReturnElement();
@@ -266,22 +308,31 @@ public class ParallelCallMapping extends CallMapping {
                     EndPoint endPoint = new EndPoint(executor.getParent(), ((DynamicProgrammingDataAccess) access).getShiftOffsets().get(0) + startIndex.get(1), numIterations.get(1), SupportFunction.getElementSet(group), true);
                     endPoints.add(endPoint);
                 } else if (access instanceof StencilDataAccess) {
+                    int targetIndex = 0;
+                    for (int i = 0; i < numIterations.size(); i++) {
+                        if (((StencilDataAccess) access).getRuleBaseIndex().get(0).equals("INDEX" + i)) {
+                            targetIndex = i;
+                            break;
+                        }
+                    }
                     if (((StencilDataAccess) access).getScalingFactors().get(0) == 1) {
-                        EndPoint endPoint = new EndPoint(executor.getParent(), ((StencilDataAccess) access).getShiftOffsets().get(0) + startIndex.get(0), numIterations.get(0), SupportFunction.getElementSet(group), true);
+                        EndPoint endPoint = new EndPoint(executor.getParent(), ((StencilDataAccess) access).getShiftOffsets().get(0) + startIndex.get(targetIndex), numIterations.get(targetIndex), SupportFunction.getElementSet(group), true);
                         endPoints.add(endPoint);
                     } else {
-                        for (long j = startIndex.get(0); j < startIndex.get(0) + numIterations.get(0); j++) {
+                        for (long j = startIndex.get(targetIndex); j < startIndex.get(targetIndex) + numIterations.get(targetIndex); j++) {
                             EndPoint endPoint = new EndPoint(executor.getParent(), ((StencilDataAccess) access).getScalingFactors().get(0) * j + ((StencilDataAccess) access).getShiftOffsets().get(0), 1, SupportFunction.getElementSet(group), true);
                             endPoints.add(endPoint);
                         }
                     }
                 } else {
-                    EndPoint target = new EndPoint(executor.getParent(), 0,value.getShape().get(0), SupportFunction.getElementSet(group), true);
+                    EndPoint target = new EndPoint(executor.getParent(), 0,((ArrayData) getOutputElements().get(0)).getShape().get(0), SupportFunction.getElementSet(group), true);
                     endPoints.add(target);
                 }
             }
             DataPlacement placement = new DataPlacement(endPoints, ((AssignmentExpression) definition.getExpression()).getOutputElement());
-            placements.add(placement);
+            if (placement.getDataElement() instanceof ArrayData || placement.getDataElement() instanceof PrimitiveData) {
+                placements.add(placement);
+            }
         }
         return placements;
     }
@@ -290,7 +341,7 @@ public class ParallelCallMapping extends CallMapping {
         this.dynamicProgrammingBarrier = dynamicProgrammingBarrier;
     }
 
-    public void setDynamicProgrammingdataTransfers(Set<DataMovementMapping> dynamicProgrammingdataTransfers) {
+    public void setDynamicProgrammingdataTransfers(Set<AbstractDataMovementMapping> dynamicProgrammingdataTransfers) {
         this.dynamicProgrammingdataTransfers = dynamicProgrammingdataTransfers;
     }
 

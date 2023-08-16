@@ -342,4 +342,20 @@ public interface APTVisitor {
         }
     }
 
+    default public void visit(LoopSkipNode node) {}
+
+    default public void endVisit(LoopSkipNode node){}
+
+    default public void handle(LoopSkipNode node) {
+        getRealThis().visit(node);
+        getRealThis().traverse(node);
+        getRealThis().endVisit(node);
+    }
+
+    default public void traverse(LoopSkipNode node){
+        for (PatternNode child: node.getChildren()) {
+            child.accept(getRealThis());
+        }
+    }
+
 }

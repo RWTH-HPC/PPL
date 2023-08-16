@@ -1,0 +1,9 @@
+DimensionToSmallCoCo {
+seq main() : Void {
+
+}
+
+stencil test(): [Int] res{
+    res[INDEX0][INDEX1] = 0
+}
+}

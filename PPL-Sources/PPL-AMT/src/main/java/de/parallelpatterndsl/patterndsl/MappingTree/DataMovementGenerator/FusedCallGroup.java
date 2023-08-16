@@ -1,5 +1,6 @@
 package de.parallelpatterndsl.patterndsl.MappingTree.DataMovementGenerator;
 
+import de.parallelpatterndsl.patterndsl.MappingTree.AbstractMappingTree;
 import de.parallelpatterndsl.patterndsl.MappingTree.Nodes.DataControl.DataPlacement;
 import de.parallelpatterndsl.patterndsl.MappingTree.Nodes.Function.MainMapping;
 import de.parallelpatterndsl.patterndsl.MappingTree.Nodes.ParallelCalls.FusedParallelCallMapping;
@@ -189,7 +190,7 @@ public class FusedCallGroup extends ParallelGroup{
         if (parameterAssignments.isEmpty()) {
             parameterReplacementExpressions = Optional.empty();
         } else {
-            parameterReplacementExpressions = Optional.of(new SimpleExpressionBlockMapping(Optional.of(mainFunction), call.getVariableTable(), new SimpleExpressionBlockNode(parameterAssignments)));
+            parameterReplacementExpressions = Optional.of(new SimpleExpressionBlockMapping(Optional.of(mainFunction), call.getVariableTable(), new SimpleExpressionBlockNode(parameterAssignments), AbstractMappingTree.getDefaultDevice().getParent()));
         }
 
         for (FusedParallelCallMapping fusedNode: group) {
@@ -236,7 +237,7 @@ public class FusedCallGroup extends ParallelGroup{
 
             result.add(replacement);
 
-            resultReplacementExpression = Optional.of(new SimpleExpressionBlockMapping(Optional.of(mainFunction), call.getVariableTable(), new SimpleExpressionBlockNode(result)));
+            resultReplacementExpression = Optional.of(new SimpleExpressionBlockMapping(Optional.of(mainFunction), call.getVariableTable(), new SimpleExpressionBlockNode(result), AbstractMappingTree.getDefaultDevice().getParent()));
 
             for (FusedParallelCallMapping fusedNode : group ) {
                 ((ParallelCallMapping) fusedNode.getChildren().get(group.get(0).getChildren().size() - 1)).getDefinition().setExpression(outputDefinition);

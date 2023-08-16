@@ -5,6 +5,7 @@ import de.parallelpatterndsl.patterndsl.abstractPatternTree.Visitor.CallCountRes
 import de.parallelpatterndsl.patterndsl.abstractPatternTree.Visitor.ExtendedShapeAPTVisitor;
 import de.parallelpatterndsl.patterndsl.expressions.IRLExpression;
 import de.parallelpatterndsl.patterndsl.abstractPatternTree.Nodes.PatternNode;
+import de.parallelpatterndsl.patterndsl.helperLibrary.DeepCopyHelper;
 
 import java.util.ArrayList;
 
@@ -37,5 +38,38 @@ public class SimpleExpressionBlockNode extends PatternNode {
         visitor.handle(this);
         CallCountResetter resetter = new CallCountResetter();
         this.accept(resetter);
+    }
+
+    @Override
+    public long getCost() {
+        long cost = 0;
+        for (IRLExpression exp: getExpressionList() ) {
+            cost += exp.getOperationCount();
+        }
+        return cost;
+    }
+
+    @Override
+    public long getLoadStore() {
+        long cost = 0;
+        for (IRLExpression exp: getExpressionList() ) {
+            cost += exp.getLoadStores();
+        }
+        return cost;
+    }
+
+    @Override
+    public SimpleExpressionBlockNode deepCopy() {
+
+        ArrayList<IRLExpression> newExpressions = new ArrayList<>();
+        for (IRLExpression exp: expressionList ) {
+            newExpressions.add(exp.deepCopy());
+        }
+
+        SimpleExpressionBlockNode result = new SimpleExpressionBlockNode(newExpressions);
+
+        DeepCopyHelper.basicSetup(this, result);
+
+        return result;
     }
 }

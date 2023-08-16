@@ -1,6 +1,7 @@
 package de.parallelpatterndsl.patterndsl.abstractPatternTree.DataElements.DataAccess;
 
 import de.parallelpatterndsl.patterndsl.abstractPatternTree.DataElements.Data;
+import de.parallelpatterndsl.patterndsl.helperLibrary.DeepCopyHelper;
 
 /**
  * Class describing a data access where the data is accessed by IO-operations.
@@ -9,5 +10,20 @@ import de.parallelpatterndsl.patterndsl.abstractPatternTree.DataElements.Data;
 public class IODataAccess extends DataAccess {
     public IODataAccess(Data data, boolean isReadAccess) {
         super(data, isReadAccess);
+    }
+
+    /**
+     * creates a copy of this data access, with a different data element
+     * @param data
+     * @return
+     */
+    @Override
+    public DataAccess getInlineCopy(Data data) {
+        return new IODataAccess(data, super.isReadAccess());
+    }
+
+    @Override
+    public DataAccess deepCopy() {
+        return new IODataAccess(DeepCopyHelper.currentScope().get(getData().deepCopy()), isReadAccess());
     }
 }

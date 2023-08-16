@@ -1,0 +1,1036 @@
+luleshSeq{
+    include "domain"
+    include "constants"
+    include "luleshPar"
+
+seq printListDouble1D(String name, [Double] list): Int32 {
+        var Int32 size = #list 
+        print({name} " size: " {size})
+        for var Int32 i = 0; i < size; i++ {
+            print("i" {i} ": " {list[i]})
+        }
+        print("end of row")
+        print()
+
+        return 0
+    }
+
+    seq printListDouble2D(String name, [[Double]] list): Int32 {
+        var Int32 size0 = #list 
+        var Int32 size1 = #list[0]
+        var Int32 size = size0 * size1 
+        print({name} " size: "{size0} " * " {size1} " = " {size})
+        for var Int32 plane = 0; plane < #list; plane++ {
+            for var Int32 row = 0; row < #list[plane]; row++ {
+                print("p" {plane} " r" {row} ": " {list[plane][row]})
+            }
+        }
+        return 0
+    }
+
+    seq printListDouble3D(String name, [[[Double]]] list): Int32 {
+        var Int32 size0 = #list 
+        var Int32 size1 = #list[0]
+        var Int32 size2 = #list[0][0]
+        var Int32 size = size0 * size1 * size2 
+        print({name} " size: "{size0} " * " {size1} " * " {size2} " = " {size})
+        for var Int32 plane = 0; plane < #list; plane++ {
+            for var Int32 row = 0; row < #list[plane]; row++ {
+                for var Int32 col = 0; col < #list[plane][row]; col++ {
+                    print("p" {plane} " r" {row} " c" {col} ": " {list[plane][row][col]})
+                }
+                print("end of row")
+                print()
+            }
+        }
+        return 0
+    }
+
+    seq printListDouble4D(String name,[[[[Double]]]] list): Int32 {
+        var Int32 size0 = #list 
+        var Int32 size1 = #list[0]
+        var Int32 size2 = #list[0][0]
+        var Int32 size3 = #list[0][0][0]
+        var Int32 size = size0 * size1 * size2  * size3
+        print({name} " size: "{size0} " * " {size1} " * " {size2} " * " {size3} " = " {size})
+        for var Int32 plane = 0; plane < #list; plane++ {
+            for var Int32 row = 0; row < #list[plane]; row++ {
+                for var Int32 col = 0; col < #list[plane][row]; col++ {
+                    for var Int32 comp = 0; comp < #list[plane][row][col]; comp++ {
+                        print("p" {plane} " r" {row} " c" {col} " xyz" {comp} ": " {list[plane][row][col][comp]})
+                    }
+                }
+                print("end of row")
+                print()
+            }
+        }
+        return 0
+    }
+
+      seq printListDouble5D(String name, [[[[[Double]]]]] list): Int32 {
+        var Int32 size0 = #list 
+        var Int32 size1 = #list[0]
+        var Int32 size2 = #list[0][0]
+        var Int32 size3 = #list[0][0][0]
+        var Int32 size4 = #list[0][0][0][0]
+        var Int32 size = size0 * size1 * size2  * size3 * size4
+        print({name} " size: "{size0} " * " {size1} " * " {size2} " * " {size3}  " * " {size4}" = " {size})
+        for var Int32 plane = 0; plane < #list; plane++ {
+            for var Int32 row = 0; row < #list[plane]; row++ {
+                for var Int32 col = 0; col < #list[plane][row]; col++ {
+                    for var Int32 dim3 = 0; dim3 < #list[plane][row][col]; dim3++ {
+                        for var Int32 dim4 = 0; dim4 < #list[plane][row][col][dim3]; dim4++ {
+                          print("p" {plane} " r" {row} " c" {col} " a" {dim3} " b" {dim4} ": " {list[plane][row][col][dim3][dim4]})
+                        }
+                    }
+                }
+                print("end of row")
+                print()
+            }
+        }
+        return 0
+    }
+
+    seq TRIPLE_PRODUCT (Double x1, Double y1, Double z1, Double x2, Double y2, Double z2, Double x3, Double y3, Double z3): Double {
+        return ((x1)*((y2)*(z3) - (z2)*(y3)) + (x2)*((z1)*(y3) - (y1)*(z3)) + (x3)*((y1)*(z2) - (z1)*(y2)))
+    }
+
+
+    seq luleshSeq_replaceDomainNodelist([[[[Double]]]] inputArray, 
+            Int32 index0, Int32 index1, Int32 index2, Int32 dim): [Double]{
+        var [Double] localArray = [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]
+        localArray[0] = inputArray[index0    ][index1    ][index2    ][dim]
+        localArray[1] = inputArray[index0    ][index1    ][index2 + 1][dim]
+        localArray[2] = inputArray[index0    ][index1 + 1][index2 + 1][dim]
+        localArray[3] = inputArray[index0    ][index1 + 1][index2    ][dim]
+        localArray[4] = inputArray[index0 + 1][index1    ][index2    ][dim]
+        localArray[5] = inputArray[index0 + 1][index1    ][index2 + 1][dim]
+        localArray[6] = inputArray[index0 + 1][index1 + 1][index2 + 1][dim]
+        localArray[7] = inputArray[index0 + 1][index1 + 1][index2    ][dim]
+        return localArray
+    }
+
+
+    seq luleshSeq_CollectDomainNodesToElemNodes([[[[Double]]]] inputArray, Int32 index0, Int32 index1, Int32 index2): [[Double]] {
+        var [[Double]] array_local_new = [[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0], [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0], [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]]
+        array_local_new[xIdx] = luleshSeq_replaceDomainNodelist(inputArray, index0, index1, index2, xIdx)
+        array_local_new[yIdx] = luleshSeq_replaceDomainNodelist(inputArray, index0, index1, index2, yIdx)
+        array_local_new[zIdx] = luleshSeq_replaceDomainNodelist(inputArray, index0, index1, index2, zIdx)
+        return array_local_new
+    }
+
+    seq luleshSeq_CalcQForElems([[[Double]]] domain_q, [[[Double]]] domain_volo,
+                [[[Double]]] domain_vnew, [[[[Double]]]] domain_coordinates,
+                [[[[Double]]]] domain_velocities, [[[Double]]] domain_vdov,
+                [[[Double]]] domain_elemMass): [[[[Double]]]] {
+        // Normally the following check is done at the end of the function
+        /* Don't allow excessive artificial viscosity */
+        var Int32 errorCode = checkGreaterThreshold(domain_q, m_qstop) 
+        if (errorCode == QStopError) {
+            print("QStopError in luleshSeq_CalcQForElems")
+            exit(QStopError)
+        }
+
+        // MONOTONIC Q option
+
+        /* allocate Gradients */
+        // Position gradients
+        var [[[[Double]]]] domain_coordGradients = init_List([20, 20, 20, 3])
+        // Velocity gradients
+        var [[[[Double]]]] domain_velocGradients = init_List([20, 20, 20, 3])
+
+        /* Calculate velocity gradients */ // and actually coord gradients
+        var [[[[[Double]]]]] coordANDVelocGradients = init_List([20, 20, 20, 2, 3])
+        coordANDVelocGradients = luleshPar_CalcMonotonicQGradientsForElems<<<>>>(domain_volo,
+                domain_vnew, domain_coordinates, domain_velocities) 
+        domain_coordGradients = luleshPar_getSubArray4D<<<>>>(coordANDVelocGradients, 0)
+        domain_velocGradients = luleshPar_getSubArray4D<<<>>>(coordANDVelocGradients, 1)
+
+        var [[[[Double]]]] qqANDql = init_List([20, 20, 20, 2])
+        qqANDql = CalcMonotonicQForElems(domain_coordGradients, domain_velocGradients,
+                domain_vdov, domain_elemMass, domain_volo, domain_vnew)
+        return qqANDql
+    }
+
+
+
+    seq luleshSeq_CalcFBHourglassForceForElems([[[Double]]] domain_ss, [[[Double]]] domain_elemMass,
+            [[[[Double]]]] domain_velocities, [[[[Double]]]] domain_forces,
+            [[[Double]]] determ, [[[[[Double]]]]] xyz8n,
+            [[[[[Double]]]]] dvd, Double hourg): [[[[Double]]]] {
+        /*************************************************
+        *
+        *     FUNCTION: Calculates the Flanagan-Belytschko anti-hourglass
+        *               force.
+        *
+        *************************************************/
+        var [[Double]] gamma = [[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0], [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0], [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0], [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]]
+        gamma[0][0] =   1.
+        gamma[0][1] =   1.
+        gamma[0][2] = 0-1.
+        gamma[0][3] = 0-1.
+        gamma[0][4] = 0-1.
+        gamma[0][5] = 0-1.
+        gamma[0][6] =   1.
+        gamma[0][7] =   1.
+        gamma[1][0] =   1.
+        gamma[1][1] = 0-1.
+        gamma[1][2] = 0-1.
+        gamma[1][3] =   1.
+        gamma[1][4] = 0-1.
+        gamma[1][5] =   1.
+        gamma[1][6] =   1.
+        gamma[1][7] = 0-1.
+        gamma[2][0] =   1.
+        gamma[2][1] = 0-1.
+        gamma[2][2] =   1.
+        gamma[2][3] = 0-1.
+        gamma[2][4] =   1.
+        gamma[2][5] = 0-1.
+        gamma[2][6] =   1.
+        gamma[2][7] = 0-1.
+        gamma[3][0] = 0-1.
+        gamma[3][1] =   1.
+        gamma[3][2] = 0-1.
+        gamma[3][3] =   1.
+        gamma[3][4] =   1.
+        gamma[3][5] = 0-1.
+        gamma[3][6] =   1.
+        gamma[3][7] = 0-1.
+
+        /*************************************************/
+        /*    compute the hourglass modes */
+
+        var [[[[[Double]]]]] domain_forcesTimes8Reversed = init_List([20, 20, 20, 8, 3])
+        
+        domain_forcesTimes8Reversed = luleshPar_par_calcHourglassModes<<<>>>(domain_ss, 
+                domain_elemMass, domain_velocities, determ, gamma, xyz8n, dvd, hourg)
+                
+        var [[[[Double]]]] domain_forces_copy = init_List([21, 21, 21, 3])
+
+         
+        domain_forces_copy = replaceArrayIndirectionUpdate0<<<>>>(domain_forcesTimes8Reversed, domain_forces)
+        domain_forces_copy = replaceArrayIndirectionUpdate1<<<>>>(domain_forcesTimes8Reversed, domain_forces_copy)
+        domain_forces_copy = replaceArrayIndirectionUpdate2<<<>>>(domain_forcesTimes8Reversed, domain_forces_copy)
+        domain_forces_copy = replaceArrayIndirectionUpdate3<<<>>>(domain_forcesTimes8Reversed, domain_forces_copy)
+        domain_forces_copy = replaceArrayIndirectionUpdate4<<<>>>(domain_forcesTimes8Reversed, domain_forces_copy)
+        domain_forces_copy = replaceArrayIndirectionUpdate5<<<>>>(domain_forcesTimes8Reversed, domain_forces_copy)
+        domain_forces_copy = replaceArrayIndirectionUpdate6<<<>>>(domain_forcesTimes8Reversed, domain_forces_copy)
+        domain_forces_copy = replaceArrayIndirectionUpdate7<<<>>>(domain_forcesTimes8Reversed, domain_forces_copy)
+        
+    /*
+        var [[[[[Double]]]]] domain_forcesTimes8 = init_List([8, 20, 20, 20, 3])
+        domain_forcesTimes8 = luleshPar_reverseDimensions<<<>>>(domain_forcesTimes8Reversed)
+
+        var [[[[[Double]]]]] domain_forcesTimes8_0 = init_List([20, 20, 20, 3])
+        var [[[[[Double]]]]] domain_forcesTimes8_1 = init_List([20, 20, 20, 3])
+        var [[[[[Double]]]]] domain_forcesTimes8_2 = init_List([20, 20, 20, 3])
+        var [[[[[Double]]]]] domain_forcesTimes8_3 = init_List([20, 20, 20, 3])
+        var [[[[[Double]]]]] domain_forcesTimes8_4 = init_List([20, 20, 20, 3])
+        var [[[[[Double]]]]] domain_forcesTimes8_5 = init_List([20, 20, 20, 3])
+        var [[[[[Double]]]]] domain_forcesTimes8_6 = init_List([20, 20, 20, 3])
+        var [[[[[Double]]]]] domain_forcesTimes8_7 = init_List([20, 20, 20, 3])
+        domain_forcesTimes8_0 = domain_forcesTimes8[0]
+        domain_forcesTimes8_1 = domain_forcesTimes8[1]
+        domain_forcesTimes8_2 = domain_forcesTimes8[2]
+        domain_forcesTimes8_3 = domain_forcesTimes8[3]
+        domain_forcesTimes8_4 = domain_forcesTimes8[4]
+        domain_forcesTimes8_5 = domain_forcesTimes8[5]
+        domain_forcesTimes8_6 = domain_forcesTimes8[6]
+        domain_forcesTimes8_7 = domain_forcesTimes8[7]
+
+
+        // copy var is created due to limitation of PPL of not writing to input arrays
+        // although copy-by-value is applied. However here it makes only little overhead
+        // since we do not need direct copying
+        domain_forces_copy = replaceArrayIndirectionUpdate0<<<>>>(domain_forcesTimes8_0, domain_forces)
+        domain_forces_copy = replaceArrayIndirectionUpdate1<<<>>>(domain_forcesTimes8_1, domain_forces_copy)
+        domain_forces_copy = replaceArrayIndirectionUpdate2<<<>>>(domain_forcesTimes8_2, domain_forces_copy)
+        domain_forces_copy = replaceArrayIndirectionUpdate3<<<>>>(domain_forcesTimes8_3, domain_forces_copy)
+        domain_forces_copy = replaceArrayIndirectionUpdate4<<<>>>(domain_forcesTimes8_4, domain_forces_copy)
+        domain_forces_copy = replaceArrayIndirectionUpdate5<<<>>>(domain_forcesTimes8_5, domain_forces_copy)
+        domain_forces_copy = replaceArrayIndirectionUpdate6<<<>>>(domain_forcesTimes8_6, domain_forces_copy)
+        domain_forces_copy = replaceArrayIndirectionUpdate7<<<>>>(domain_forcesTimes8_7, domain_forces_copy)
+    */
+        
+        return domain_forces_copy
+    }
+
+    seq luleshSeq_calcHourgam([[Double]] xyz8n, [[Double]] dvd,  
+             [[Double]] gamma, Double volinv): [[Double]]{
+        var [[Double]] hourgam = [[0.0,0.0,0.0,0.0], [0.0,0.0,0.0,0.0], [0.0,0.0,0.0,0.0], [0.0,0.0,0.0,0.0], [0.0,0.0,0.0,0.0], [0.0,0.0,0.0,0.0], [0.0,0.0,0.0,0.0], [0.0,0.0,0.0,0.0]]
+        for var Int32 i = 0; i < 4; i++ {
+            var Double hourmodx =
+                xyz8n[0][0] * gamma[i][0] + xyz8n[0][1] * gamma[i][1] +
+                xyz8n[0][2] * gamma[i][2] + xyz8n[0][3] * gamma[i][3] +
+                xyz8n[0][4] * gamma[i][4] + xyz8n[0][5] * gamma[i][5] +
+                xyz8n[0][6] * gamma[i][6] + xyz8n[0][7] * gamma[i][7]
+
+            var Double hourmody =
+                xyz8n[1][0] * gamma[i][0] + xyz8n[1][1] * gamma[i][1] +
+                xyz8n[1][2] * gamma[i][2] + xyz8n[1][3] * gamma[i][3] +
+                xyz8n[1][4] * gamma[i][4] + xyz8n[1][5] * gamma[i][5] +
+                xyz8n[1][6] * gamma[i][6] + xyz8n[1][7] * gamma[i][7]
+
+            var Double hourmodz =
+                xyz8n[2][0] * gamma[i][0] + xyz8n[2][1] * gamma[i][1] +
+                xyz8n[2][2] * gamma[i][2] + xyz8n[2][3] * gamma[i][3] +
+                xyz8n[2][4] * gamma[i][4] + xyz8n[2][5] * gamma[i][5] +
+                xyz8n[2][6] * gamma[i][6] + xyz8n[2][7] * gamma[i][7]
+
+            hourgam[0][i] = gamma[i][0] -  volinv*(dvd[0][0] * hourmodx +
+                                                   dvd[0][1] * hourmody +
+                                                   dvd[0][2] * hourmodz )
+
+            hourgam[1][i] = gamma[i][1] -  volinv*(dvd[1][0] * hourmodx +
+                                                   dvd[1][1] * hourmody +
+                                                   dvd[1][2] * hourmodz )
+
+            hourgam[2][i] = gamma[i][2] -  volinv*(dvd[2][0] * hourmodx +
+                                                   dvd[2][1] * hourmody +
+                                                   dvd[2][2] * hourmodz )
+
+            hourgam[3][i] = gamma[i][3] -  volinv*(dvd[3][0] * hourmodx +
+                                                   dvd[3][1] * hourmody +
+                                                   dvd[3][2] * hourmodz )
+
+            hourgam[4][i] = gamma[i][4] -  volinv*(dvd[4][0] * hourmodx +
+                                                   dvd[4][1] * hourmody +
+                                                   dvd[4][2] * hourmodz )
+
+            hourgam[5][i] = gamma[i][5] -  volinv*(dvd[5][0] * hourmodx +
+                                                   dvd[5][1] * hourmody +
+                                                   dvd[5][2] * hourmodz )
+
+            hourgam[6][i] = gamma[i][6] -  volinv*(dvd[6][0] * hourmodx +
+                                                   dvd[6][1] * hourmody +
+                                                   dvd[6][2] * hourmodz )
+
+            hourgam[7][i] = gamma[i][7] -  volinv*(dvd[7][0] * hourmodx +
+                                                   dvd[7][1] * hourmody +
+                                                   dvd[7][2] * hourmodz )
+        }
+        return hourgam
+    }
+
+
+    seq luleshSeq_CalcElemFBHourglassForce([[Double]] d,
+            [[Double]] hourgam, Double coefficient): [[Double]] {
+        // d stands for velocities_local
+        var [[Double]] h = [[0.0,0.0,0.0,0.0], [0.0,0.0,0.0,0.0], [0.0,0.0,0.0,0.0]]
+        var [[Double]] hgf = [[0.0,0.0,0.0], [0.0,0.0,0.0], [0.0,0.0,0.0], [0.0,0.0,0.0], [0.0,0.0,0.0], [0.0,0.0,0.0], [0.0,0.0,0.0], [0.0,0.0,0.0]]
+
+        for var Int32 k = 0; k < 3; k++ {
+            for var Int32 i = 0; i < 4; i++ {
+                h[k][i] = hourgam[0][i] * d[k][0] + hourgam[1][i] * d[k][1] +
+                          hourgam[2][i] * d[k][2] + hourgam[3][i] * d[k][3] +
+                          hourgam[4][i] * d[k][4] + hourgam[5][i] * d[k][5] +
+                          hourgam[6][i] * d[k][6] + hourgam[7][i] * d[k][7]
+            }
+            for var Int32 j = 0; j < 8; j++ {
+                hgf[j][k] = coefficient *
+                    (hourgam[j][0] * h[k][0] + hourgam[j][1] * h[k][1] +
+                     hourgam[j][2] * h[k][2] + hourgam[j][3] * h[k][3])
+            }
+        }
+
+        return hgf
+    }
+
+    seq luleshSeq_CalcElemVolume ([Double] x, [Double] y, [Double] z) : Double {
+        var Double twelveth = 1.0 / 12.0
+
+        var Double dx61 = x[6] - x[1]
+        var Double dy61 = y[6] - y[1]
+        var Double dz61 = z[6] - z[1]
+
+        var Double dx70 = x[7] - x[0]
+        var Double dy70 = y[7] - y[0]
+        var Double dz70 = z[7] - z[0]
+
+        var Double dx63 = x[6] - x[3]
+        var Double dy63 = y[6] - y[3]
+        var Double dz63 = z[6] - z[3]
+
+        var Double dx20 = x[2] - x[0]
+        var Double dy20 = y[2] - y[0]
+        var Double dz20 = z[2] - z[0]
+
+        var Double dx50 = x[5] - x[0]
+        var Double dy50 = y[5] - y[0]
+        var Double dz50 = z[5] - z[0]
+
+        var Double dx64 = x[6] - x[4]
+        var Double dy64 = y[6] - y[4]
+        var Double dz64 = z[6] - z[4]
+
+        var Double dx31 = x[3] - x[1]
+        var Double dy31 = y[3] - y[1]
+        var Double dz31 = z[3] - z[1]
+
+        var Double dx72 = x[7] - x[2]
+        var Double dy72 = y[7] - y[2]
+        var Double dz72 = z[7] - z[2]
+
+        var Double dx43 = x[4] - x[3]
+        var Double dy43 = y[4] - y[3]
+        var Double dz43 = z[4] - z[3]
+
+        var Double dx57 = x[5] - x[7]
+        var Double dy57 = y[5] - y[7]
+        var Double dz57 = z[5] - z[7]
+
+        var Double dx14 = x[1] - x[4]
+        var Double dy14 = y[1] - y[4]
+        var Double dz14 = z[1] - z[4]
+
+        var Double dx25 = x[2] - x[5]
+        var Double dy25 = y[2] - y[5]
+        var Double dz25 = z[2] - z[5] 
+
+        var Double tripleProduct1 = TRIPLE_PRODUCT(dx31 + dx72, dx63, dx20,
+                           dy31 + dy72, dy63, dy20,
+                           dz31 + dz72, dz63, dz20)
+        var Double tripleProduct2 = TRIPLE_PRODUCT(dx43 + dx57, dx64, dx70,
+                           dy43 + dy57, dy64, dy70,
+                           dz43 + dz57, dz64, dz70)
+        var Double tripleProduct3 = TRIPLE_PRODUCT(dx14 + dx25, dx61, dx50,
+                           dy14 + dy25, dy61, dy50,
+                           dz14 + dz25, dz61, dz50)
+
+        var Double volume =
+            TRIPLE_PRODUCT(dx31 + dx72, dx63, dx20,
+                           dy31 + dy72, dy63, dy20,
+                           dz31 + dz72, dz63, dz20) +
+            TRIPLE_PRODUCT(dx43 + dx57, dx64, dx70,
+                           dy43 + dy57, dy64, dy70,
+                           dz43 + dz57, dz64, dz70) +
+            TRIPLE_PRODUCT(dx14 + dx25, dx61, dx50,
+                           dy14 + dy25, dy61, dy50,
+                           dz14 + dz25, dz61, dz50)
+
+        volume *= twelveth
+
+        return volume
+    }
+
+    seq luleshSeq_CalcElemShapeFunctionDerivatives([[Double]] coordinates_local): [[[Double]]]{
+        // result[0][0][0] stands for determ (double)
+        // result[1].. stands for B 
+        var [[[Double]]] result = [[[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0], [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0], [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]], [[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0], [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0], [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]]]
+
+        var Double x0 = coordinates_local[xIdx][0]
+        var Double x1 = coordinates_local[xIdx][1]
+        var Double x2 = coordinates_local[xIdx][2]
+        var Double x3 = coordinates_local[xIdx][3]
+        var Double x4 = coordinates_local[xIdx][4]
+        var Double x5 = coordinates_local[xIdx][5]
+        var Double x6 = coordinates_local[xIdx][6] 
+        var Double x7 = coordinates_local[xIdx][7]
+
+        var Double y0 = coordinates_local[yIdx][0]
+        var Double y1 = coordinates_local[yIdx][1]
+        var Double y2 = coordinates_local[yIdx][2]
+        var Double y3 = coordinates_local[yIdx][3]
+        var Double y4 = coordinates_local[yIdx][4]
+        var Double y5 = coordinates_local[yIdx][5]
+        var Double y6 = coordinates_local[yIdx][6]
+        var Double y7 = coordinates_local[yIdx][7]
+
+        var Double z0 = coordinates_local[zIdx][0]
+        var Double z1 = coordinates_local[zIdx][1]
+        var Double z2 = coordinates_local[zIdx][2]
+        var Double z3 = coordinates_local[zIdx][3]
+        var Double z4 = coordinates_local[zIdx][4]
+        var Double z5 = coordinates_local[zIdx][5]
+        var Double z6 = coordinates_local[zIdx][6]
+        var Double z7 = coordinates_local[zIdx][7]
+
+        var Double fjxxi
+        var Double fjxet
+        var Double fjxze
+        var Double fjyxi
+        var Double fjyet
+        var Double fjyze
+        var Double fjzxi
+        var Double fjzet
+        var Double fjzze
+
+        var Double cjxxi
+        var Double cjxet
+        var Double cjxze
+        var Double cjyxi
+        var Double cjyet
+        var Double cjyze
+        var Double cjzxi
+        var Double cjzet
+        var Double cjzze
+
+        fjxxi = 0.125 * ( (x6-x0) + (x5-x3) - (x7-x1) - (x4-x2) )
+        fjxet = 0.125 * ( (x6-x0) - (x5-x3) + (x7-x1) - (x4-x2) )
+        fjxze = 0.125 * ( (x6-x0) + (x5-x3) + (x7-x1) + (x4-x2) )
+
+        fjyxi = 0.125 * ( (y6-y0) + (y5-y3) - (y7-y1) - (y4-y2) )
+        fjyet = 0.125 * ( (y6-y0) - (y5-y3) + (y7-y1) - (y4-y2) )
+        fjyze = 0.125 * ( (y6-y0) + (y5-y3) + (y7-y1) + (y4-y2) )
+
+        fjzxi = 0.125 * ( (z6-z0) + (z5-z3) - (z7-z1) - (z4-z2) )
+        fjzet = 0.125 * ( (z6-z0) - (z5-z3) + (z7-z1) - (z4-z2) )
+        fjzze = 0.125 * ( (z6-z0) + (z5-z3) + (z7-z1) + (z4-z2) )
+
+        /* compute cofactors */
+        cjxxi =     (fjyet * fjzze) - (fjzet * fjyze)
+        cjxet = 0 - (fjyxi * fjzze) + (fjzxi * fjyze)
+        cjxze =     (fjyxi * fjzet) - (fjzxi * fjyet)
+
+        cjyxi = 0 - (fjxet * fjzze) + (fjzet * fjxze)
+        cjyet =     (fjxxi * fjzze) - (fjzxi * fjxze)
+        cjyze = 0 - (fjxxi * fjzet) + (fjzxi * fjxet)
+
+        cjzxi =     (fjxet * fjyze) - (fjyet * fjxze)
+        cjzet = 0 - (fjxxi * fjyze) + (fjyxi * fjxze)
+        cjzze =     (fjxxi * fjyet) - (fjyxi * fjxet)
+
+        /* calculate partials :
+            this need only be done for l = 0,1,2,3   since , by symmetry ,
+            (6,7,4,5) = - (0,1,2,3) .
+        */
+        result[1][0][0] =  0 -  cjxxi  -  cjxet  -  cjxze
+        result[1][0][1] =       cjxxi  -  cjxet  -  cjxze
+        result[1][0][2] =       cjxxi  +  cjxet  -  cjxze
+        result[1][0][3] =  0 -  cjxxi  +  cjxet  -  cjxze
+        result[1][0][4] =  0 - result[1][0][2]
+        result[1][0][5] =  0 - result[1][0][3]
+        result[1][0][6] =  0 - result[1][0][0]
+        result[1][0][7] =  0 - result[1][0][1]
+
+        result[1][1][0] =  0 -  cjyxi  -  cjyet  -  cjyze
+        result[1][1][1] =       cjyxi  -  cjyet  -  cjyze
+        result[1][1][2] =       cjyxi  +  cjyet  -  cjyze
+        result[1][1][3] =  0 -  cjyxi  +  cjyet  -  cjyze
+        result[1][1][4] =  0 - result[1][1][2]
+        result[1][1][5] =  0 - result[1][1][3]
+        result[1][1][6] =  0 - result[1][1][0]
+        result[1][1][7] =  0 - result[1][1][1]
+
+        result[1][2][0] =  0 - cjzxi  -  cjzet  -  cjzze
+        result[1][2][1] =      cjzxi  -  cjzet  -  cjzze
+        result[1][2][2] =      cjzxi  +  cjzet  -  cjzze
+        result[1][2][3] =  0 - cjzxi  +  cjzet  -  cjzze
+        result[1][2][4] =  0 - result[1][2][2]
+        result[1][2][5] =  0 - result[1][2][3]
+        result[1][2][6] =  0 - result[1][2][0]
+        result[1][2][7] =  0 - result[1][2][1]
+
+        /* calculate jacobian determinant (volume) */
+        result[0][0][0] = 8.0 * ( fjxet * cjxet + fjyet * cjyet + fjzet * cjzet)
+
+        return result
+    }
+
+    seq luleshSeq_CalcElemVolumeDerivative([[Double]] xyz): [[Double]] {
+        var [Double] x = [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]
+        var [Double] y = [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]
+        var [Double] z = [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]
+        x = xyz[0]
+        y = xyz[1]
+        z = xyz[2]
+
+        var [[Double]] volumeDerivatives = [[0.0,0.0,0.0], [0.0,0.0,0.0], [0.0,0.0,0.0], [0.0,0.0,0.0], [0.0,0.0,0.0], [0.0,0.0,0.0], [0.0,0.0,0.0], [0.0,0.0,0.0]]
+        volumeDerivatives[0] = VoluDer(x[1], x[2], x[3], x[4], x[5], x[7],
+                                       y[1], y[2], y[3], y[4], y[5], y[7],
+                                       z[1], z[2], z[3], z[4], z[5], z[7])
+        volumeDerivatives[3] = VoluDer(x[0], x[1], x[2], x[7], x[4], x[6],
+                                       y[0], y[1], y[2], y[7], y[4], y[6],
+                                       z[0], z[1], z[2], z[7], z[4], z[6])
+        volumeDerivatives[2] = VoluDer(x[3], x[0], x[1], x[6], x[7], x[5],
+                                       y[3], y[0], y[1], y[6], y[7], y[5],
+                                       z[3], z[0], z[1], z[6], z[7], z[5])
+        volumeDerivatives[1] = VoluDer(x[2], x[3], x[0], x[5], x[6], x[4],
+                                       y[2], y[3], y[0], y[5], y[6], y[4],
+                                       z[2], z[3], z[0], z[5], z[6], z[4])
+        volumeDerivatives[4] = VoluDer(x[7], x[6], x[5], x[0], x[3], x[1],
+                                       y[7], y[6], y[5], y[0], y[3], y[1],
+                                       z[7], z[6], z[5], z[0], z[3], z[1])
+        volumeDerivatives[5] = VoluDer(x[4], x[7], x[6], x[1], x[0], x[2],
+                                       y[4], y[7], y[6], y[1], y[0], y[2],
+                                       z[4], z[7], z[6], z[1], z[0], z[2])
+        volumeDerivatives[6] = VoluDer(x[5], x[4], x[7], x[2], x[1], x[3],
+                                       y[5], y[4], y[7], y[2], y[1], y[3],
+                                       z[5], z[4], z[7], z[2], z[1], z[3])
+        volumeDerivatives[7] = VoluDer(x[6], x[5], x[4], x[3], x[2], x[0],
+                                       y[6], y[5], y[4], y[3], y[2], y[0],
+                                       z[6], z[5], z[4], z[3], z[2], z[0])
+        return volumeDerivatives
+    }
+
+    seq VoluDer(Double x0, Double x1, Double x2,
+                Double x3, Double x4, Double x5,
+                Double y0, Double y1, Double y2,
+                Double y3, Double y4, Double y5,
+                Double z0, Double z1, Double z2,
+                Double z3, Double z4, Double z5): [Double] {
+        var Double twelfth = 1.0 / 12.0
+        var [Double] dvd = [0.0,0.0,0.0]
+        dvd[xIdx] =
+                (y1 + y2) * (z0 + z1) - (y0 + y1) * (z1 + z2) +
+                (y0 + y4) * (z3 + z4) - (y3 + y4) * (z0 + z4) -
+                (y2 + y5) * (z3 + z5) + (y3 + y5) * (z2 + z5)
+        dvd[yIdx] =
+            0 - (x1 + x2) * (z0 + z1) + (x0 + x1) * (z1 + z2) -
+                (x0 + x4) * (z3 + z4) + (x3 + x4) * (z0 + z4) +
+                (x2 + x5) * (z3 + z5) - (x3 + x5) * (z2 + z5)
+
+        dvd[yIdx] =
+            0 - (y1 + y2) * (x0 + x1) + (y0 + y1) * (x1 + x2) -
+                (y0 + y4) * (x3 + x4) + (y3 + y4) * (x0 + x4) +
+                (y2 + y5) * (x3 + x5) - (y3 + y5) * (x2 + x5)
+
+        dvd[xIdx] *= twelfth
+        dvd[yIdx] *= twelfth
+        dvd[zIdx] *= twelfth
+        
+        return dvd
+    }
+
+    seq luleshSeq_CalcElemVelocityGradient([Double] xvel, [Double] yvel,  [Double] zvel,
+            [[Double]] B, Double detJ): [Double] {
+        var [Double] D = [0.0,0.0,0.0,0.0,0.0,0.0]
+        var Double inv_detJ = 1.0 / detJ
+        var Double dyddx
+        var Double dxddy
+        var Double dzddx
+        var Double dxddz
+        var Double dzddy
+        var Double dyddz
+
+        var [Double] pfx = [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]
+        var [Double] pfy = [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]
+        var [Double] pfz = [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]
+        pfx = B[0]
+        pfy = B[1]
+        pfz = B[2]
+
+        D[0] = inv_detJ *   ( pfx[0] * (xvel[0]-xvel[6])
+                            + pfx[1] * (xvel[1]-xvel[7])
+                            + pfx[2] * (xvel[2]-xvel[4])
+                            + pfx[3] * (xvel[3]-xvel[5]) )
+
+        D[1] = inv_detJ *   ( pfy[0] * (yvel[0]-yvel[6])
+                            + pfy[1] * (yvel[1]-yvel[7])
+                            + pfy[2] * (yvel[2]-yvel[4])
+                            + pfy[3] * (yvel[3]-yvel[5]) )
+
+        D[2] = inv_detJ *   ( pfz[0] * (zvel[0]-zvel[6])
+                            + pfz[1] * (zvel[1]-zvel[7])
+                            + pfz[2] * (zvel[2]-zvel[4])
+                            + pfz[3] * (zvel[3]-zvel[5]) )
+
+        dyddx  = inv_detJ * ( pfx[0] * (yvel[0]-yvel[6])
+                            + pfx[1] * (yvel[1]-yvel[7])
+                            + pfx[2] * (yvel[2]-yvel[4])
+                            + pfx[3] * (yvel[3]-yvel[5]) )
+
+        dxddy  = inv_detJ * ( pfy[0] * (xvel[0]-xvel[6])
+                            + pfy[1] * (xvel[1]-xvel[7])
+                            + pfy[2] * (xvel[2]-xvel[4])
+                            + pfy[3] * (xvel[3]-xvel[5]) )
+
+        dzddx  = inv_detJ * ( pfx[0] * (zvel[0]-zvel[6])
+                            + pfx[1] * (zvel[1]-zvel[7])
+                            + pfx[2] * (zvel[2]-zvel[4])
+                            + pfx[3] * (zvel[3]-zvel[5]) )
+
+        dxddz  = inv_detJ * ( pfz[0] * (xvel[0]-xvel[6])
+                            + pfz[1] * (xvel[1]-xvel[7])
+                            + pfz[2] * (xvel[2]-xvel[4])
+                            + pfz[3] * (xvel[3]-xvel[5]) )
+
+        dzddy  = inv_detJ * ( pfy[0] * (zvel[0]-zvel[6])
+                            + pfy[1] * (zvel[1]-zvel[7])
+                            + pfy[2] * (zvel[2]-zvel[4])
+                            + pfy[3] * (zvel[3]-zvel[5]) )
+
+        dyddz  = inv_detJ * ( pfz[0] * (yvel[0]-yvel[6])
+                            + pfz[1] * (yvel[1]-yvel[7])
+                            + pfz[2] * (yvel[2]-yvel[4])
+                            + pfz[3] * (yvel[3]-yvel[5]) )
+        D[5] = 0.5 * ( dxddy + dyddx )
+        D[4] = 0.5 * ( dxddz + dzddx )
+        D[3] = 0.5 * ( dzddy + dyddz )
+        return D
+    }
+
+    seq luleshSeq_CalcCourantConstraintForElems(Double qqc, Double dtcourant,
+            [[[Double]]] domain_ss, [[[Double]]] domain_arealg,
+            [[[Double]]] domain_vdov): Double { 
+        //courant_All has the dtcourant for each elem. combination
+        var [[[Double]]] courant_All = init_List([20, 20, 20])
+        courant_All = luleshPar_par_CalcCourantConstraintForElems_part1<<<>>>
+                (domain_ss, domain_arealg, domain_vdov, qqc, dtcourant)
+
+        var Double dtcourantMin = courant_All[0][0][0]
+        dtcourantMin =  luleshPar_DimByDimMinReduction3D<<<>>>(courant_All)
+
+        return dtcourant
+    } 
+
+    seq luleshSeq_CalcHydroConstraintForElems([[[Double]]] domain_vdov, Double dthydro): Double{
+        //courant_ALL has the dtcourant for each elem. combination
+        var [[[Double]]] hydro_All = init_List([20, 20, 20])
+
+        hydro_All = luleshPar_par_CalcHydroConstraintForElems<<<>>>(domain_vdov, dthydro)
+
+        var Double dthydroMin = hydro_All[0][0][0]
+        dthydroMin = luleshPar_DimByDimMinReduction3D<<<>>>(hydro_All)
+
+        return dthydro
+    }
+
+    seq CalcMonotonicQForElems([[[[Double]]]] domain_coordGradients,
+            [[[[Double]]]] domain_velocGradients, [[[Double]]] domain_vdov,
+            [[[Double]]] domain_elemMass, [[[Double]]] domain_volo, 
+            [[[Double]]] domain_vnew): [[[[Double]]]] {  
+        // initialize parameters
+        var Double ptiny = 1.e-36
+        
+        // calculate the monotonic q for all regions
+        // - we have only one region, thus no loop
+        var Int32 edgeElems = 20
+
+        var [[[Double]]] delvm_phixi = init_List([20, 20, 20])
+        var [[[Double]]] delvp_phixi = init_List([20, 20, 20])
+        delvm_phixi = luleshPar_CalcMonotonicQRegionForElems_partA_delvm<<<>>>(domain_velocGradients, ptiny)
+        delvp_phixi = luleshPar_CalcMonotonicQRegionForElems_partA_delvp<<<>>>(domain_velocGradients, ptiny, edgeElems)
+
+        var [[[Double]]] phixi = init_List([20, 20, 20])
+        phixi = luleshPar_CalcMonotonicQRegionForElems_partB<<<>>>(delvm_phixi, delvp_phixi)
+
+        var [[[Double]]] delvm_phieta = init_List([20, 20, 20])
+        var [[[Double]]] delvp_phieta= init_List([20, 20, 20])
+        delvm_phieta = luleshPar_CalcMonotonicQRegionForElems_partC_delvm<<<>>>(domain_velocGradients, ptiny)
+        delvp_phieta = luleshPar_CalcMonotonicQRegionForElems_partC_delvp<<<>>>(domain_velocGradients, ptiny, edgeElems)
+
+        var [[[Double]]] phieta = init_List([20, 20, 20])
+        phieta = luleshPar_CalcMonotonicQRegionForElems_partD<<<>>>(delvm_phieta, delvp_phieta)
+
+        var [[[Double]]] delvm_phizeta = init_List([20, 20, 20])
+        var [[[Double]]] delvp_phizeta = init_List([20, 20, 20])
+        delvm_phizeta = luleshPar_CalcMonotonicQRegionForElems_partE_delvm<<<>>>(domain_velocGradients, ptiny)
+        delvp_phizeta = luleshPar_CalcMonotonicQRegionForElems_partE_delvp<<<>>>(domain_velocGradients, ptiny, edgeElems)
+
+        var [[[Double]]] phizeta = init_List([20, 20, 20])
+        phizeta = luleshPar_CalcMonotonicQRegionForElems_partF<<<>>>(delvm_phieta, delvp_phieta)
+
+        var [[[[Double]]]] qqANDql = init_List([20, 20, 20, 2])
+        qqANDql =  luleshPar_CalcMonotonicQRegionForElems_partG<<<>>>(domain_coordGradients, domain_velocGradients,
+                domain_vdov, domain_elemMass, domain_volo, domain_vnew, phixi, phieta, phizeta)
+        return qqANDql
+    }
+    
+    seq luleshSeq_CalcElemNodeNormals([[Double]] B, [[Double]] coordinates_local): [[Double]] {
+        // copy var is created due to limitation of PPL of not writing to input arrays
+        // although copy-by-value is applied. However here it makes only little overhead
+        // since original code is setting B to 0 anyways, therefore we set B_copy directly to 0
+        //for var Int32 i = 0 ; i < 8; i++ {
+        //    B[xIdx][i] = 0.0
+        //    B[yIdx][i] = 0.0
+        //    B[zIdx][i] = 0.0
+        //}   
+        var [[Double]] B_copy = [[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0], [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0], [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]]
+        /* evaluate face one: nodes 0, 1, 2, 3 */
+        B_copy = SumElemFaceNormal(B_copy, coordinates_local, 0, 1, 2, 3)
+
+        /* evaluate face two: nodes 0, 4, 5, 1 */
+        B_copy = SumElemFaceNormal(B_copy, coordinates_local, 0, 4, 5, 1)
+
+        /* evaluate face three: nodes 1, 5, 6, 2 */
+        B_copy = SumElemFaceNormal(B_copy, coordinates_local, 1, 5, 6, 2)
+
+        /* evaluate face four: nodes 2, 6, 7, 3 */
+        B_copy = SumElemFaceNormal(B_copy, coordinates_local, 2, 6, 7, 3)
+
+        /* evaluate face five: nodes 3, 7, 4, 0 */
+        B_copy = SumElemFaceNormal(B_copy, coordinates_local, 3, 7, 4, 0)
+
+        /* evaluate face six: nodes 4, 7, 6, 5 */
+        B_copy = SumElemFaceNormal(B_copy, coordinates_local, 4, 7, 6, 5)
+
+        return B_copy
+    }
+
+    seq SumElemFaceNormal([[Double]] B, [[Double]] c_l, Int32 index0, Int32 index1,
+            Int32 index2, Int32 index3): [[Double]] {
+        // c_l alias for coordinates_local
+        var Int32 x = xIdx
+        var Int32 y = yIdx
+        var Int32 z = zIdx
+        // B is copied to normal due to limitation of PPL of not writing to input arrays
+        // although copy-by-value is applied. Otherwise directly writing and returning b
+        // on the specific values would be enough
+        var [[Double]] normal = [[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0], [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0], [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]]
+        normal[x][0] = B[x][0]
+        normal[x][1] = B[x][1]
+        normal[x][2] = B[x][2]
+        normal[x][3] = B[x][3]
+        normal[x][4] = B[x][4]
+        normal[x][5] = B[x][5]
+        normal[x][6] = B[x][6]
+        normal[x][7] = B[x][7]
+
+        normal[y][0] = B[y][0]
+        normal[y][1] = B[y][1]
+        normal[y][2] = B[y][2]
+        normal[y][3] = B[y][3]
+        normal[y][4] = B[y][4]
+        normal[y][5] = B[y][5]
+        normal[y][6] = B[y][6]
+        normal[y][7] = B[y][7]
+
+        normal[z][0] = B[z][0]
+        normal[z][1] = B[z][1]
+        normal[z][2] = B[z][2]
+        normal[z][3] = B[z][3]
+        normal[z][4] = B[z][4]
+        normal[z][5] = B[z][5]
+        normal[z][6] = B[z][6]
+        normal[z][7] = B[z][7]
+
+        var Double bisectX0 = 0.5 * (c_l[x][index3] + c_l[x][index2] - c_l[x][index1] - c_l[x][index0])
+        var Double bisectY0 = 0.5 * (c_l[y][index3] + c_l[y][index2] - c_l[y][index1] - c_l[y][index0])
+        var Double bisectZ0 = 0.5 * (c_l[z][index3] + c_l[z][index2] - c_l[z][index1] - c_l[z][index0])
+        var Double bisectX1 = 0.5 * (c_l[x][index2] + c_l[x][index1] - c_l[x][index3] - c_l[x][index0])
+        var Double bisectY1 = 0.5 * (c_l[y][index2] + c_l[y][index1] - c_l[y][index3] - c_l[y][index0])
+        var Double bisectZ1 = 0.5 * (c_l[z][index2] + c_l[z][index1] - c_l[z][index3] - c_l[z][index0])
+        var Double areaX = 0.25 * (bisectY0 * bisectZ1 - bisectZ0 * bisectY1)
+        var Double areaY = 0.25 * (bisectZ0 * bisectX1 - bisectX0 * bisectZ1)
+        var Double areaZ = 0.25 * (bisectX0 * bisectY1 - bisectY0 * bisectX1)
+
+        normal[x][index0] += areaX
+        normal[x][index1] += areaX
+        normal[x][index2] += areaX
+        normal[x][index3] += areaX
+
+        normal[y][index0] += areaY
+        normal[y][index1] += areaY
+        normal[y][index2] += areaY
+        normal[y][index3] += areaY
+
+        normal[z][index0] += areaZ
+        normal[z][index1] += areaZ
+        normal[z][index2] += areaZ
+        normal[z][index3] += areaZ
+
+        return normal
+    }
+
+    seq luleshSeq_ApplyMaterialPropertiesForElems(
+            [[[Double]]] domain_vnew, [[[Double]]] domain_v,
+            [[[Double]]] domain_e, [[[Double]]] domain_delv,
+            [[[Double]]] domain_p, [[[Double]]] domain_q,
+            [[[Double]]] domain_qq, [[[Double]]] domain_ql): [[[[Double]]]] {
+        // res_terms[0] stands for domain_p_reversed
+        // res_terms[1] stands for domain_e_reversed
+        // res_terms[2] stands for domain_q_reversed
+        // res_terms[3] stands for domain_ss_reversed
+
+         /* Expose all of the variables needed for material evaluation */
+        var [[[Double]]] vnewc = init_List([20, 20, 20])
+        vnewc = luleshPar_par_ApplyMaterialPropertiesForElems<<<>>>(domain_vnew)
+
+        // Do a check for negative volumes moved from 
+        // luleshPar_par_ApplyMaterialPropertiesForElems due to limitations
+        // This check may not make perfect sense in LULESH, but
+        // it's representative of something in the full code -
+        // just leave it in, please
+        var Int32 errorCode 
+        errorCode = luleshSeq_checkNonPosElem2(domain_v) 
+        if (errorCode == VolumeError) {
+            print("VolumeError in luleshSeq_ApplyMaterialPropertiesForElems")
+            exit(VolumeError)
+        }
+
+        var [[[[Double]]]] res_terms = init_List([20, 20, 20, 4])
+        res_terms = luleshPar_EvalEOSForElems<<<>>>(vnewc, domain_e, domain_delv,
+                domain_p, domain_q, domain_qq, domain_ql)
+        return res_terms
+    }
+
+    seq luleshSeq_CalcPressureForElems(Double vnewc, Double compression,
+            Double e_old): [Double] {
+        // result[0] stands for res_bvc
+        // result[1] stands for res_pbvc
+        // result[2] stands for res_p_new
+
+        var Double c1s = 2.0 / 3.0
+        var Double res_bvc = c1s * (compression + 1.0)
+        var Double res_pbvc = c1s
+
+        var Double res_p_new = res_bvc * e_old
+
+        if (fabs(res_p_new) < m_p_cut) {
+            res_p_new = 0.0
+        }
+            
+        // impossible condition here?
+        if (vnewc >= m_eosvmax) {
+            res_p_new = 0.0
+        }
+         
+        if (res_p_new < m_pmin) {
+         res_p_new = m_pmin
+        }
+
+        var [Double] result = [0.0,0.0,0.0]
+        result[0] = res_bvc
+        result[1] = res_pbvc
+        result[2] = res_p_new
+
+        return result
+    }
+
+    seq luleshSeq_CalcSoundSpeedForElems(Double pbvc, Double bvc, Double enewc,
+            Double pnewc, Double vnewc): Double {
+        var Double ssTmp = (pbvc * enewc + vnewc * vnewc
+                * bvc * pnewc) / m_refdens
+        if (ssTmp <= 0.1111111e-36) {
+            ssTmp = 0.3333333e-18
+        }
+        else {
+            ssTmp = sqrt(ssTmp)
+        }
+        return ssTmp
+    }
+
+
+
+    seq luleshSeq_CalcElemCharacteristicLength([Double] x, [Double] y, [Double] z,
+            Double volume): Double {
+        var Double a = 0.0
+        var Double charLength = 0.0
+
+        a = AreaFace(x[0],x[1],x[2],x[3],
+                     y[0],y[1],y[2],y[3],
+                     z[0],z[1],z[2],z[3])
+        charLength = max(a, charLength)
+
+        a = AreaFace(x[4],x[5],x[6],x[7],
+                     y[4],y[5],y[6],y[7],
+                     z[4],z[5],z[6],z[7])
+        charLength = max(a, charLength)
+
+        a = AreaFace(x[0],x[1],x[5],x[4],
+                     y[0],y[1],y[5],y[4],
+                     z[0],z[1],z[5],z[4])
+        charLength = max(a, charLength)
+
+        a = AreaFace(x[1],x[2],x[6],x[5],
+                     y[1],y[2],y[6],y[5],
+                     z[1],z[2],z[6],z[5])
+        charLength = max(a, charLength)
+
+        a = AreaFace(x[2],x[3],x[7],x[6],
+                     y[2],y[3],y[7],y[6],
+                     z[2],z[3],z[7],z[6])
+        charLength = max(a, charLength)
+
+        a = AreaFace(x[3],x[0],x[4],x[7],
+                     y[3],y[0],y[4],y[7],
+                     z[3],z[0],z[4],z[7])
+        charLength = max(a,charLength)
+
+        charLength = 4.0 * volume / sqrt(charLength)
+
+        return charLength
+    }
+
+    seq AreaFace(Double x0, Double x1,
+                 Double x2, Double x3,
+                 Double y0, Double y1,
+                 Double y2, Double y3,
+                 Double z0, Double z1,
+                 Double z2, Double z3): Double {
+        var Double fx = (x2 - x0) - (x3 - x1)
+        var Double fy = (y2 - y0) - (y3 - y1)
+        var Double fz = (z2 - z0) - (z3 - z1)
+        var Double gx = (x2 - x0) + (x3 - x1)
+        var Double gy = (y2 - y0) + (y3 - y1)
+        var Double gz = (z2 - z0) + (z3 - z1)
+        var Double area =
+            (fx * fx + fy * fy + fz * fz) *
+            (gx * gx + gy * gy + gz * gz) -
+            (fx * gx + fy * gy + fz * gz) *
+            (fx * gx + fy * gy + fz * gz)
+        return area
+    }
+
+    seq luleshSeq_checkNonPosElem([[[Double]]] array1): Int32 {
+        var [[[Int32]]] errorCodes = init_List([20, 20, 20])
+        errorCodes = luleshPar_getNonPosElemErrorCodes<<<>>>(array1)
+        var Int32 errorCode = errorCodes[0][0][0]
+        errorCode = luleshPar_DimByDimMinReduction3DInt<<<>>>(errorCodes)
+        return errorCode
+    }
+
+    seq luleshSeq_checkNonPosElem2([[[Double]]] array2): Int32 {
+        var [[[Int32]]] errorCodes = init_List([20, 20, 20])
+        errorCodes = luleshPar_getNonPosElemErrorCodes2<<<>>>(array2)
+        var Int32 errorCode = errorCodes[0][0][0]
+        errorCode = luleshPar_DimByDimMinReduction3DInt<<<>>>(errorCodes)
+        return errorCode
+    }
+
+    seq checkGreaterThreshold([[[Double]]] array3, Double threshold): Int32 {
+        var [[[Int32]]] errorCodes = init_List([20, 20, 20])
+        errorCodes = luleshPar_getGreaterThanErrorCodes<<<>>>(array3, threshold)
+        var Int32 errorCode = errorCodes[0][0][0]
+        errorCode = luleshPar_DimByDimMinReduction3DInt<<<>>>(errorCodes)
+        return errorCode
+    }
+
+    seq luleshSeq_get3DSum([Double] array4): Double {
+        return array4[0] + array4[1] + array4[2]
+    }
+
+    seq luleshSeq_ApplyAccelerationBoundaryConditionsForNodes_check(
+            [Double] domain_accelerations_old_1d,
+            Int32 idx0, Int32 idx1, Int32 idx2): [Double] {
+        // copy or result var is created due to limitation of PPL of not writing to input arrays
+        // although copy-by-value is applied. Otherwise writing and returning domain_accelerations_old_1d
+        // would be sufficient
+        var [Double] result = [0.0,0.0,0.0]
+        result[xIdx] = domain_accelerations_old_1d[xIdx]
+        result[yIdx] = domain_accelerations_old_1d[yIdx]
+        result[zIdx] = domain_accelerations_old_1d[zIdx]
+
+        if (idx2 == 0) {
+            result[xIdx] = 0.0
+        }
+        if (idx1 == 0) {
+            result[yIdx] = 0.0
+        }
+        if (idx0 == 0) {
+            result[zIdx] = 0.0
+        }
+        return result
+    }
+
+    seq luleshSeq_getWishedValue1D([Double] array5, Int32 wishedIndex): Double {
+        return array5[wishedIndex]
+    }
+
+    seq luleshSeq_getWishedValue2D([[Double]] array6, Int32 wishedIndex): [Double] {
+        return array6[wishedIndex]
+    }
+
+    seq luleshSeq_SumElemStressesToNodeForces([Double] sigXYZ, [[Double]] B): [[Double]] {
+        var [[Double]] f_local = [[0.0,0.0,0.0], [0.0,0.0,0.0], [0.0,0.0,0.0], [0.0,0.0,0.0], [0.0,0.0,0.0], [0.0,0.0,0.0], [0.0,0.0,0.0], [0.0,0.0,0.0]]
+        for var Int32 i = 0; i < 8; i++ {
+            for var Int32 k = 0; k < 3; k++ {
+                f_local[i][k] = 0 - ( sigXYZ[k] * B[k][i] )
+            }
+        }
+        
+        return f_local
+    }   
+}

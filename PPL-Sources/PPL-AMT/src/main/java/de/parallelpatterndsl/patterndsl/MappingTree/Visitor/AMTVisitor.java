@@ -1,15 +1,10 @@
 package de.parallelpatterndsl.patterndsl.MappingTree.Visitor;
 
-import de.parallelpatterndsl.patterndsl.MappingTree.Nodes.DataControl.BarrierMapping;
-import de.parallelpatterndsl.patterndsl.MappingTree.Nodes.DataControl.DataMovementMapping;
+import de.parallelpatterndsl.patterndsl.MappingTree.Nodes.DataControl.*;
 import de.parallelpatterndsl.patterndsl.MappingTree.Nodes.Function.*;
 import de.parallelpatterndsl.patterndsl.MappingTree.Nodes.MappingNode;
-import de.parallelpatterndsl.patterndsl.MappingTree.Nodes.ParallelCalls.FusedParallelCallMapping;
-import de.parallelpatterndsl.patterndsl.MappingTree.Nodes.ParallelCalls.GPUParallelCallMapping;
-import de.parallelpatterndsl.patterndsl.MappingTree.Nodes.ParallelCalls.ParallelCallMapping;
-import de.parallelpatterndsl.patterndsl.MappingTree.Nodes.ParallelCalls.ReductionCallMapping;
+import de.parallelpatterndsl.patterndsl.MappingTree.Nodes.ParallelCalls.*;
 import de.parallelpatterndsl.patterndsl.MappingTree.Nodes.Plain.*;
-import de.parallelpatterndsl.patterndsl.abstractPatternTree.Nodes.Plain.JumpStatementNode;
 
 public interface AMTVisitor {
 
@@ -88,6 +83,12 @@ public interface AMTVisitor {
         endVisit(node);
     }
 
+    public default void handle(ComplexExpressionMapping node) {
+        visit(node);
+        traverse(node);
+        endVisit(node);
+    }
+
     public default void visit(ComplexExpressionMapping node) {}
 
     public default void endVisit(ComplexExpressionMapping node) {}
@@ -98,10 +99,20 @@ public interface AMTVisitor {
         }
     }
 
-    public default void handle(ComplexExpressionMapping node) {
+    public default void handle(LoopSkipMapping node) {
         visit(node);
         traverse(node);
         endVisit(node);
+    }
+
+    public default void visit(LoopSkipMapping node) {}
+
+    public default void endVisit(LoopSkipMapping node) {}
+
+    public default void traverse(LoopSkipMapping node) {
+        for (MappingNode child: node.getChildren() ) {
+            child.accept(getRealThis());
+        }
     }
 
     public default void visit(ForEachLoopMapping node) {}
@@ -146,7 +157,9 @@ public interface AMTVisitor {
     public default void endVisit(ReturnMapping node) {}
 
     public default void traverse(ReturnMapping node) {
-        node.getResult().accept(getRealThis());
+        if (node.getResult().isPresent()) {
+            node.getResult().get().accept(getRealThis());
+        }
         for (MappingNode child: node.getChildren() ) {
             child.accept(getRealThis());
         }
@@ -215,6 +228,7 @@ public interface AMTVisitor {
     public default void endVisit(JumpStatementMapping node) {}
 
     public default void traverse(JumpStatementMapping node) {
+        node.getResultExpression().accept(getRealThis());
         for (MappingNode child: node.getChildren() ) {
             child.accept(getRealThis());
         }
@@ -266,7 +280,15 @@ public interface AMTVisitor {
             node.getDynamicProgrammingBarrier().get().accept(getRealThis());
         }
 
-        for (DataMovementMapping child: node.getDynamicProgrammingdataTransfers() ) {
+        for (AbstractDataMovementMapping child: node.getDpPreSwapTransfers() ) {
+            child.accept(getRealThis());
+        }
+
+        for (AbstractDataMovementMapping child: node.getDynamicProgrammingdataTransfers() ) {
+            child.accept(getRealThis());
+        }
+
+        for (AbstractDataMovementMapping child: node.getDpPostSwapTransfers() ) {
             child.accept(getRealThis());
         }
     }
@@ -292,7 +314,15 @@ public interface AMTVisitor {
             node.getDynamicProgrammingBarrier().get().accept(getRealThis());
         }
 
-        for (DataMovementMapping child: node.getDynamicProgrammingdataTransfers() ) {
+        for (AbstractDataMovementMapping child: node.getDpPreSwapTransfers() ) {
+            child.accept(getRealThis());
+        }
+
+        for (AbstractDataMovementMapping child: node.getDynamicProgrammingdataTransfers() ) {
+            child.accept(getRealThis());
+        }
+
+        for (AbstractDataMovementMapping child: node.getDpPostSwapTransfers() ) {
             child.accept(getRealThis());
         }
     }
@@ -316,6 +346,23 @@ public interface AMTVisitor {
     }
 
     public default void handle(ReductionCallMapping node) {
+        visit(node);
+        traverse(node);
+        endVisit(node);
+    }
+
+    public default void visit(SerializedParallelCallMapping node) {}
+
+    public default void endVisit(SerializedParallelCallMapping node) {}
+
+    public default void traverse(SerializedParallelCallMapping node) {
+        node.getDefinition().accept(getRealThis());
+        for (MappingNode child: node.getChildren() ) {
+            child.accept(getRealThis());
+        }
+    }
+
+    public default void handle(SerializedParallelCallMapping node) {
         visit(node);
         traverse(node);
         endVisit(node);
@@ -492,5 +539,52 @@ public interface AMTVisitor {
     }
 
 
+    public default void visit(GPUDeAllocationMapping node) {}
+
+    public default void endVisit(GPUDeAllocationMapping node) {}
+
+    public default void traverse(GPUDeAllocationMapping node) {
+        for (MappingNode child: node.getChildren() ) {
+            child.accept(getRealThis());
+        }
+    }
+
+    public default void handle(GPUDeAllocationMapping node) {
+        visit(node);
+        traverse(node);
+        endVisit(node);
+    }
+
+    public default void visit(GPUDataMovementMapping node) {}
+
+    public default void endVisit(GPUDataMovementMapping node) {}
+
+    public default void traverse(GPUDataMovementMapping node) {
+        for (MappingNode child: node.getChildren() ) {
+            child.accept(getRealThis());
+        }
+    }
+
+    public default void handle(GPUDataMovementMapping node) {
+        visit(node);
+        traverse(node);
+        endVisit(node);
+    }
+
+    public default void visit(GPUAllocationMapping node) {}
+
+    public default void endVisit(GPUAllocationMapping node) {}
+
+    public default void traverse(GPUAllocationMapping node) {
+        for (MappingNode child: node.getChildren() ) {
+            child.accept(getRealThis());
+        }
+    }
+
+    public default void handle(GPUAllocationMapping node) {
+        visit(node);
+        traverse(node);
+        endVisit(node);
+    }
 
 }

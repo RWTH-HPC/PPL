@@ -20,7 +20,7 @@ public interface PatternSplit {
      * Returns the start indices of the split in every dimension.
      * @return int[]
      */
-    int[] getStartIndices();
+    long[] getStartIndices();
 
     /**
      * Returns the lengths of the split in every dimension.

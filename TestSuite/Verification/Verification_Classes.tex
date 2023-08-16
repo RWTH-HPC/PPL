@@ -1,0 +1,70 @@
+
+\documentclass[10pt]{standalone}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{caption}
+\usepackage{tikz}
+\usepackage{forest}
+\usepackage{booktabs}
+\usepackage{url}
+\usepackage{amsmath}
+\usepackage[hidelinks]{hyperref}
+\usepackage[capitalise,nameinlink,noabbrev]{cleveref}
+
+\usepackage[scaled=0.95]{inconsolata}
+
+\crefname{lstlisting}{Listing}{Listings}
+\usetikzlibrary{positioning,calc,fit}
+\def\UrlBreaks{\do\/\do-}
+\lstset{%
+        language=C,
+        breaklines=true,
+        showstringspaces=false,
+        keywordstyle=\color{blue},
+        commentstyle=\color{gray!100},
+        escapeinside=||,
+        basicstyle=\footnotesize\ttfamily,
+        morecomment=[l][{\color{red!100}}]{\#},
+        backgroundcolor=\color{gray!5},
+        numbers=left,
+        numbersep=8pt,
+        numberstyle=\scriptsize,
+        framexleftmargin=1em,
+        xrightmargin=1em,
+        xleftmargin=2em,
+        frame=lines,
+        tabsize=1,
+        captionpos=b,
+        numberbychapter=false
+}
+
+
+\begin{document}
+\resizebox{2\textwidth}{!}{
+\begin{forest}
+[\textbf{Error},draw,rounded corners,top color=white, bottom color=gray!30, calign=center [\textbf{Serial},draw,rounded corners,top color=white, bottom color=gray!30, calign=center
+	[\textbf{Syntax},draw,rounded corners,top color=white, bottom color=gray!30, calign=center [\textbf{Expression},draw,rounded corners,top color=white, bottom color=gray!30, calign=center] [\textbf{Control Statement},draw,rounded corners,top color=white, bottom color=gray!30, calign=center]] [\textbf{Inlining},draw,rounded corners,top color=white, bottom color=gray!30, calign=center] [\textbf{Data Management},draw,rounded corners,top color=white, bottom color=gray!30, calign=center[\textbf{Allocation},draw,rounded corners,top color=white, bottom color=gray!30, calign=center][\textbf{Memory Leaks},draw,rounded corners,top color=white, bottom color=gray!30, calign=center]]
+][\textbf{Parallel},draw,rounded corners,top color=white, bottom color=gray!30, calign=center, l+=2cm
+[\textbf{Correctness},draw,rounded corners,top color=white, bottom color=gray!30, calign=center
+	[\textbf{On Device},draw,rounded corners,top color=white, bottom color=green!30, calign=first
+		[\textbf{Inter Region},draw,rounded corners,top color=white, bottom color=green!30, calign=center
+			[\textbf{Concurrency Defect:  }\\\textit{-Atomicity Violation}\\\textit{-Order Violation},draw,rounded corners,top color=white, bottom color=green!30,align=left, base=bottom, calign=center]]
+		[\textbf{Intra Region},draw,rounded corners,top color=white, bottom color=green!30, calign=center
+			[\textbf{Concurrency Defect:  }\\\textit{-Atomicity Violation}\\\textit{-Order Violation},draw,rounded corners,top color=white, bottom color=green!30,align=left, base=bottom, calign=center]]
+		]	
+	[\textbf{Between Multiple}\\\textbf{Devices},draw,rounded corners,top color=white, bottom color=red!10,align=left, base=bottom, calign=last
+	[\textbf{Mapping}\\\textbf{Defect},draw,rounded corners,top color=white, bottom color=red!10,align=left, base=bottom, calign=last, l+=3cm
+			[\textbf{Stale Data Access},draw,rounded corners,top color=white, bottom color=red!10, calign=center
+				[\textbf{Outdated}\\ \textbf{Data}:  \\,draw,rounded corners,top color=white, bottom color=red!10,align=left, base=bottom, calign=center]
+				[\textbf{Missing}\\ \textbf{Data}:  \\,draw,rounded corners,top color=white, bottom color=red!10,align=left, base=bottom, calign=center]]
+			[\textbf{Wrong Data}\\\textbf{Allocation},draw,rounded corners,top color=white, bottom color=red!10,align=left, base=bottom, calign=center
+				[\textbf{Missing}\\\textbf{Memory}\\\textbf{Allocation:  }\\,draw,rounded corners,top color=white, bottom color=red!10,align=left, base=bottom, calign=center]
+				[\textbf{Failed}\\\textbf{Allocation:  }\\,draw,rounded corners,top color=white, bottom color=red!10,align=left, base=bottom, calign=center]
+				[\textbf{Out of Bounds}\\ \textbf{Mapping}:  \\,draw,rounded corners,top color=white, bottom color=red!10,align=left, base=bottom, calign=center]
+				[\textbf{Missing}\\\textbf{Memory}\\\textbf{Deallocation:  }\\,draw,rounded corners,top color=white, bottom color=red!10,align=left, base=bottom, calign=center]]][\textbf{Concurrency Defect:  }\\\textit{-Atomicity Violation}\\\textit{-Order Violation}\\,draw,rounded corners,top color=white, bottom color=red!10,align=left, base=bottom, calign=last, l+=3cm]		
+		]]		
+		[\textbf{Performance},draw,rounded corners,top color=white, bottom color=gray!30, calign=center]]]
+\end{forest}
+}
+
+\end{document}

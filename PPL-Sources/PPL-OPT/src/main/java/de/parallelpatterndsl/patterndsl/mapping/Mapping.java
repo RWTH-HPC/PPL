@@ -14,6 +14,7 @@ import de.parallelpatterndsl.patterndsl.patternSplits.PatternSplit;
 import de.parallelpatterndsl.patterndsl.teams.Team;
 import de.parallelpatterndsl.patterndsl.teams.Teams;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
@@ -146,12 +147,12 @@ public class Mapping implements Cloneable {
                 }
 
                 JsonArray assignmentObject = new JsonArray();
-                for (PatternSplit split : groupBy.get(node).stream().sorted(Comparator.comparingInt(s -> s.getStartIndices()[0])).collect(Collectors.toCollection(LinkedHashSet::new))) {
+                for (PatternSplit split : groupBy.get(node).stream().sorted(Comparator.comparingLong(s -> s.getStartIndices()[0])).collect(Collectors.toCollection(LinkedHashSet::new))) {
                     Team team = stepMapping.get(split);
 
                     JsonObject splitObject = new JsonObject();
                     JsonArray indicesObject = new JsonArray();
-                    for (int index : split.getStartIndices()) {
+                    for (long index : split.getStartIndices()) {
                         indicesObject.add(index);
                     }
                     JsonArray lengthObject = new JsonArray();
@@ -177,7 +178,7 @@ public class Mapping implements Cloneable {
                     .stream()
                     .filter(split -> split instanceof FusedPatternSplit)
                     .map(split -> (FusedPatternSplit) split)
-                    .sorted(Comparator.comparingInt(s -> s.getStartIndices()[0]))
+                    .sorted(Comparator.comparingLong(s -> s.getStartIndices()[0]))
                     .collect(Collectors.toCollection(LinkedHashSet::new)))
             {
                 JsonObject pipeNode = new JsonObject();
@@ -191,7 +192,7 @@ public class Mapping implements Cloneable {
                 for (PatternSplit split : pipe.getJobs()) {
                     JsonObject splitObject = new JsonObject();
                     JsonArray indicesObject = new JsonArray();
-                    for (int index : split.getStartIndices()) {
+                    for (long index : split.getStartIndices()) {
                         indicesObject.add(index);
                     }
                     JsonArray lengthObject = new JsonArray();
@@ -213,7 +214,11 @@ public class Mapping implements Cloneable {
         }
         mainObject.add("stepMappings", stepArray);
 
-        FileWriter writer = new FileWriter(path);
+        File file = new File(path);
+        if (file.getParentFile() != null) {
+            file.getParentFile().mkdirs();
+        }
+        FileWriter writer = new FileWriter(file);
         writer.write(mainObject.toString());
         writer.flush();
         writer.close();

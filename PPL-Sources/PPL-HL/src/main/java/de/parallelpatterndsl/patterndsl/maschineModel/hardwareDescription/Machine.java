@@ -68,10 +68,10 @@ public class Machine implements Node {
 
 
             } catch (IOException e) {
-                Log.error("Parsing failure! Not readable!");
+                Log.error("Parsing failure! Not readable! " + path + node.get(ClusterParameter.TEMPLATE).toString());
                 e.printStackTrace();
             } catch (ParseException e) {
-                Log.error("Parsing failure! Not JSON format!");
+                Log.error("Parsing failure! No JSON File in:" + path + node.get(ClusterParameter.TEMPLATE).toString());
                 e.printStackTrace();
             }
         }

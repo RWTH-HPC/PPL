@@ -1,0 +1,415 @@
+cfd {
+	
+	include "../math"
+	
+	var Float deg_angle_of_attack = 0
+	var Float GAMMA = 1.4
+	var Float ff_mach = 1.2
+	var Int iteration = 2000
+	var Int RK = 3
+	
+	seq set_variable(Float density, Float momentum_x, Float momentum_y, Float momentum_z, Float density_energy) : [Float] {
+	    var [Float] variable = init_List([5])
+	    variable[0] = density
+	    variable[1] = momentum_x
+	    variable[2] = momentum_y
+	    variable[3] = momentum_z
+	    variable[4] = density_energy
+	    return variable	
+	}
+	
+	map initialize_vars(Float ff_variable_density, Float ff_variable_momentum_x, Float ff_variable_momentum_y, Float ff_variable_momentum_z, Float ff_variable_density_energy): [[Float]] variables {
+		
+		variables[INDEX] = set_variable(ff_variable_density, ff_variable_momentum_x, ff_variable_momentum_y, ff_variable_momentum_z, ff_variable_density_energy)
+		
+	}
+	
+	stencil copy_map([[Float]] source) : [[Float]] target {
+		target[INDEX0][INDEX1] = source[INDEX0][INDEX1]
+	}
+	
+	seq compute_velocity(Float density, Float momentum):Float {
+		return momentum/density
+	}
+	
+	seq compute_speed_sqd(Float velocity_x, Float velocity_y, Float velocity_z) : Float {
+		return velocity_x*velocity_x + velocity_y*velocity_y + velocity_z*velocity_z
+	}
+	
+	seq compute_pressure(Float density, Float density_energy, Float speed_sqd) : Float {
+		return (GAMMA - 1) * (density_energy - 0.5 * density * speed_sqd)
+	}
+	
+	seq compute_speed_of_sound( Float density, Float pressure): Float  {
+	    var Float gamma2 = GAMMA
+	    var Float res2 = GAMMA * pressure / density
+	    var Float res = sqrt(res2)
+		return res
+	}
+	
+	map compute_step_factor([[Float]] variables, [Float] areas) : [Float] step_factors {
+	    var [Float] local_var = init_List([5])
+	    local_var = variables[INDEX]
+		var Float density = local_var[0]
+		var Float momentum_x = local_var[1]
+		var Float momentum_y = local_var[2]
+		var Float momentum_z = local_var[3]
+		var Float density_energy  = local_var[4]
+		
+		var Float velocity_x = compute_velocity(density, momentum_x)
+		var Float velocity_y = compute_velocity(density, momentum_y)
+		var Float velocity_z = compute_velocity(density, momentum_z)
+		
+		var Float speed_sqd = compute_speed_sqd(velocity_x, velocity_y, velocity_z)
+		var Float pressure = compute_pressure(density, density_energy, speed_sqd)
+		var Float speed_of_sound = compute_speed_of_sound(density, pressure)
+		
+		step_factors[INDEX] = 0.5 / (sqrt(areas[INDEX]) * (sqrt(speed_sqd) + speed_of_sound))
+	}
+	
+	map compute_flux([[Float]] elements_surrounding_elements, [[[Float]]] normals, [[Float]] variables, Float ff_variable_momentum_x
+		, Float ff_variable_momentum_y
+		, Float ff_variable_momentum_z
+		, Float ff_flux_contribution_momentum_x_x
+		, Float ff_flux_contribution_momentum_x_y
+		, Float ff_flux_contribution_momentum_x_z
+		
+		, Float ff_flux_contribution_momentum_y_x
+		, Float ff_flux_contribution_momentum_y_y
+		, Float ff_flux_contribution_momentum_y_z
+		
+		, Float ff_flux_contribution_momentum_z_x
+		, Float ff_flux_contribution_momentum_z_y
+		, Float ff_flux_contribution_momentum_z_z
+		
+		, Float ff_flux_contribution_density_energy_x
+		, Float ff_flux_contribution_density_energy_y
+		, Float ff_flux_contribution_density_energy_z) : [[Float]] fluxes {
+		
+		var [[Float]] local_vars = init_List([232536,5])
+		local_vars = variables
+		
+		var Float smoothing_coefficient = 0.2
+		
+		var [Float] local_var = init_List([5])
+	    local_var = variables[INDEX]
+		var Float density_i = local_var[0]
+		var Float momentum_i_x = local_var[1]
+		var Float momentum_i_y = local_var[2]
+		var Float momentum_i_z = local_var[3]
+		var Float density_energy_i  = local_var[4]
+		
+		var Float velocity_i_x = compute_velocity(density_i, momentum_i_x)
+		var Float velocity_i_y = compute_velocity(density_i, momentum_i_y)
+		var Float velocity_i_z = compute_velocity(density_i, momentum_i_z)
+		
+		var Float speed_sqd_i = compute_speed_sqd(velocity_i_x, velocity_i_y, velocity_i_z)
+		var Float speed_i = sqrt(speed_sqd_i)
+		var Float pressure_i = compute_pressure(density_i, density_energy_i, speed_sqd_i)
+		var Float speed_of_sound_i = compute_speed_of_sound(density_i, pressure_i)
+		
+		var Float flux_contribution_i_momentum_x_x = velocity_i_x * momentum_i_x + pressure_i
+		var Float flux_contribution_i_momentum_x_y = velocity_i_y * momentum_i_y 
+		var Float flux_contribution_i_momentum_x_z = velocity_i_z * momentum_i_z 
+		
+		var Float flux_contribution_i_momentum_y_x = flux_contribution_i_momentum_x_y 
+		var Float flux_contribution_i_momentum_y_y = velocity_i_y * momentum_i_y + pressure_i
+		var Float flux_contribution_i_momentum_y_z = velocity_i_z * momentum_i_z 
+		
+		var Float flux_contribution_i_momentum_z_x = flux_contribution_i_momentum_x_z 
+		var Float flux_contribution_i_momentum_z_y = flux_contribution_i_momentum_y_z
+		var Float flux_contribution_i_momentum_z_z = velocity_i_z * momentum_i_z + pressure_i
+		
+		var Float de_p = density_energy_i + pressure_i
+		
+		var Float flux_contribution_i_density_energy_x = velocity_i_x * de_p
+		var Float flux_contribution_i_density_energy_y = velocity_i_y * de_p
+		var Float flux_contribution_i_density_energy_z = velocity_i_z * de_p			
+	
+		
+		var Float flux_i_density = 0
+		var Float flux_i_momentum_x = 0
+		var Float flux_i_momentum_y = 0
+		var Float flux_i_momentum_z = 0
+		var Float flux_i_density_energy = 0
+		
+		
+		var Float density_nb
+		var Float momentum_nb_x
+		var Float momentum_nb_y
+		var Float momentum_nb_z
+		var Float density_energy_nb
+		
+		var Float velocity_nb_x
+		var Float velocity_nb_y
+		var Float velocity_nb_z
+		
+		var Float speed_sqd_nb
+		var Float pressure_nb
+		var Float speed_of_sound_nb
+		
+		var Float flux_contribution_nb_momentum_x_x
+		var Float flux_contribution_nb_momentum_x_y
+		var Float flux_contribution_nb_momentum_x_z
+		
+		var Float flux_contribution_nb_momentum_y_x
+		var Float flux_contribution_nb_momentum_y_y
+		var Float flux_contribution_nb_momentum_y_z
+		
+		var Float flux_contribution_nb_momentum_z_x
+		var Float flux_contribution_nb_momentum_z_y
+		var Float flux_contribution_nb_momentum_z_z
+		
+		var Float flux_contribution_nb_density_energy_x
+		var Float flux_contribution_nb_density_energy_y
+		var Float flux_contribution_nb_density_energy_z
+		
+		for var Int i = 0; i < 4; i++ {
+		
+			var [Int] neighbors = init_List([4])
+			neighbors = elements_surrounding_elements[INDEX]
+			var Int nb = neighbors[i]
+			
+			var Float factor = 0
+			
+			var [[Float]] normal_nb = init_List([4,3])
+			normal_nb = normals[INDEX]
+			
+			var Float normal_x = normal_nb[i][0]
+			var Float normal_y = normal_nb[i][1]
+			var Float normal_z = normal_nb[i][2]
+			
+			var Float normal_len = sqrt(normal_x*normal_x + normal_y*normal_y + normal_z*normal_z)
+			
+			if(nb >= 0) {
+			
+				density_nb =        local_vars[nb][0]
+				momentum_nb_x =     local_vars[nb][1]
+				momentum_nb_y =     local_vars[nb][2]
+				momentum_nb_z =     local_vars[nb][3]
+				density_energy_nb = local_vars[nb][4]
+				
+				velocity_nb_x = compute_velocity(density_nb, momentum_nb_x)
+				velocity_nb_y = compute_velocity(density_nb, momentum_nb_y)
+				velocity_nb_z = compute_velocity(density_nb, momentum_nb_z)
+				
+				speed_sqd_nb = compute_speed_sqd(velocity_nb_x, velocity_nb_y, velocity_nb_z)
+				pressure_nb = compute_pressure(density_nb, density_energy_nb, speed_sqd_nb)
+				speed_of_sound_nb = compute_speed_of_sound(density_nb, pressure_nb)
+				
+				// compute flux contribution
+				{
+			
+					flux_contribution_nb_momentum_x_x = velocity_nb_x * momentum_nb_x + pressure_nb
+					flux_contribution_nb_momentum_x_y = velocity_nb_y * momentum_nb_y 
+					flux_contribution_nb_momentum_x_z = velocity_nb_z * momentum_nb_z 
+			
+					flux_contribution_nb_momentum_y_x = flux_contribution_nb_momentum_x_y 
+					flux_contribution_nb_momentum_y_y = velocity_nb_y * momentum_nb_y + pressure_nb
+					flux_contribution_nb_momentum_y_z = velocity_nb_z * momentum_nb_z 
+			
+					flux_contribution_nb_momentum_z_x = flux_contribution_nb_momentum_x_z 
+					flux_contribution_nb_momentum_z_y = flux_contribution_nb_momentum_y_z
+					flux_contribution_nb_momentum_z_z = velocity_nb_z * momentum_nb_z + pressure_nb
+				
+					var Float de_p_nb = density_energy_nb + pressure_nb
+				
+					flux_contribution_nb_density_energy_x = velocity_nb_x * de_p_nb
+					flux_contribution_nb_density_energy_y = velocity_nb_y * de_p_nb
+					flux_contribution_nb_density_energy_z = velocity_nb_z * de_p_nb		
+				}
+				
+				factor = (0 - normal_len) * smoothing_coefficient * 0.5 * (speed_i + sqrt(speed_sqd_nb) + speed_of_sound_i + speed_of_sound_nb)
+				flux_i_density += factor * (density_i - density_nb)
+				flux_i_density_energy += factor*(density_energy_i-density_energy_nb)
+				flux_i_momentum_x += factor*(momentum_i_x-momentum_nb_x)
+				flux_i_momentum_y += factor*(momentum_i_y-momentum_nb_y)
+				flux_i_momentum_z += factor*(momentum_i_z-momentum_nb_z)
+				
+				factor = 0.5 * normal_x
+				flux_i_density += factor*(momentum_nb_x+momentum_i_x)
+				flux_i_density_energy += factor*(flux_contribution_nb_density_energy_x+flux_contribution_i_density_energy_x)
+				flux_i_momentum_x += factor*(flux_contribution_nb_momentum_x_x+flux_contribution_i_momentum_x_x)
+				flux_i_momentum_y += factor*(flux_contribution_nb_momentum_y_x+flux_contribution_i_momentum_y_x)
+				flux_i_momentum_z += factor*(flux_contribution_nb_momentum_z_x+flux_contribution_i_momentum_z_x)
+				
+				factor = 0.5*normal_y
+				flux_i_density += factor*(momentum_nb_y+momentum_i_y)
+				flux_i_density_energy += factor*(flux_contribution_nb_density_energy_y+flux_contribution_i_density_energy_y)
+				flux_i_momentum_x += factor*(flux_contribution_nb_momentum_x_y+flux_contribution_i_momentum_x_y)
+				flux_i_momentum_y += factor*(flux_contribution_nb_momentum_y_y+flux_contribution_i_momentum_y_y)
+				flux_i_momentum_z += factor*(flux_contribution_nb_momentum_z_y+flux_contribution_i_momentum_z_y)
+				
+				factor = 0.5*normal_z
+				flux_i_density += factor*(momentum_nb_z+momentum_i_z)
+				flux_i_density_energy += factor*(flux_contribution_nb_density_energy_z+flux_contribution_i_density_energy_z)
+				flux_i_momentum_x += factor*(flux_contribution_nb_momentum_x_z+flux_contribution_i_momentum_x_z)
+				flux_i_momentum_y += factor*(flux_contribution_nb_momentum_y_z+flux_contribution_i_momentum_y_z)
+				flux_i_momentum_z += factor*(flux_contribution_nb_momentum_z_z+flux_contribution_i_momentum_z_z)
+			
+			} else if(nb == 0-1) {
+			
+				flux_i_momentum_x += normal_x*pressure_i
+				flux_i_momentum_y += normal_y*pressure_i
+				flux_i_momentum_z += normal_z*pressure_i
+				
+			} else if(nb == 0-2) {
+			
+				factor = 0.5*normal_x
+				flux_i_density += factor*(ff_variable_momentum_x+momentum_i_x)
+				flux_i_density_energy += factor*(ff_flux_contribution_density_energy_x+flux_contribution_i_density_energy_x)
+				flux_i_momentum_x += factor*(ff_flux_contribution_momentum_x_x + flux_contribution_i_momentum_x_x)
+				flux_i_momentum_y += factor*(ff_flux_contribution_momentum_y_x + flux_contribution_i_momentum_y_x)
+				flux_i_momentum_z += factor*(ff_flux_contribution_momentum_z_x + flux_contribution_i_momentum_z_x)
+
+				factor = 0.5*normal_y
+				flux_i_density += factor*(ff_variable_momentum_y+momentum_i_y)
+				flux_i_density_energy += factor*(ff_flux_contribution_density_energy_y+flux_contribution_i_density_energy_y)
+				flux_i_momentum_x += factor*(ff_flux_contribution_momentum_x_y + flux_contribution_i_momentum_x_y)
+				flux_i_momentum_y += factor*(ff_flux_contribution_momentum_y_y + flux_contribution_i_momentum_y_y)
+				flux_i_momentum_z += factor*(ff_flux_contribution_momentum_z_y + flux_contribution_i_momentum_z_y)
+
+				factor = 0.5*normal_z
+				flux_i_density += factor*(ff_variable_momentum_z+momentum_i_z)
+				flux_i_density_energy += factor*(ff_flux_contribution_density_energy_z+flux_contribution_i_density_energy_z)
+				flux_i_momentum_x += factor*(ff_flux_contribution_momentum_x_z + flux_contribution_i_momentum_x_z)
+				flux_i_momentum_y += factor*(ff_flux_contribution_momentum_y_z + flux_contribution_i_momentum_y_z)
+				flux_i_momentum_z += factor*(ff_flux_contribution_momentum_z_z + flux_contribution_i_momentum_z_z)
+			}
+			
+		}
+		fluxes[INDEX] = set_variable(flux_i_density, flux_i_momentum_x, flux_i_momentum_y, flux_i_momentum_z, flux_i_density_energy)		
+	}
+	
+	stencil time_step(Int j, [[Float]] old_variables, [Float] step_factors, [[Float]] fluxes) : [[Float]] variables {
+		var Float factor = step_factors[INDEX0] / (RK + 1 - j)
+		
+		variables[INDEX0][INDEX1] = old_variables[INDEX0][INDEX1] + factor * fluxes[INDEX0][INDEX1]
+	}
+
+    seq main() : Int {
+        
+		var Float ff_variable_density
+		var Float ff_variable_momentum_x
+		var Float ff_variable_momentum_y
+		var Float ff_variable_momentum_z
+		var Float ff_variable_density_energy
+		
+		var Float ff_flux_contribution_momentum_x_x
+		var Float ff_flux_contribution_momentum_x_y
+		var Float ff_flux_contribution_momentum_x_z
+		
+		var Float ff_flux_contribution_momentum_y_x
+		var Float ff_flux_contribution_momentum_y_y
+		var Float ff_flux_contribution_momentum_y_z
+		
+		var Float ff_flux_contribution_momentum_z_x
+		var Float ff_flux_contribution_momentum_z_y
+		var Float ff_flux_contribution_momentum_z_z
+		
+		var Float ff_flux_contribution_density_energy_x
+		var Float ff_flux_contribution_density_energy_y
+		var Float ff_flux_contribution_density_energy_z
+		
+		{
+			var Float angle_of_attack = (pi / 180) * deg_angle_of_attack
+			ff_variable_density = 1.4
+			
+			var Float ff_pressure = 1
+			var Float ff_speed_of_sound = sqrt(GAMMA * ff_pressure / ff_variable_density)
+			var Float ff_speed = ff_mach * ff_speed_of_sound
+			
+			var Float ff_velocity_x = ff_speed*cos(angle_of_attack)
+			var Float ff_velocity_y = ff_speed*sin(angle_of_attack)
+			var Float ff_velocity_z = 0
+			
+			ff_variable_momentum_x = ff_variable_density * ff_velocity_x
+			ff_variable_momentum_y = ff_variable_density * ff_velocity_y
+			ff_variable_momentum_z = ff_variable_density * ff_velocity_z
+			
+			ff_variable_density_energy = ff_variable_density * (0.5 * ff_speed * ff_speed) + (ff_pressure / (GAMMA-1))
+			
+			// compute flux contribution
+			{
+			
+				ff_flux_contribution_momentum_x_x = ff_velocity_x * ff_variable_momentum_x + ff_pressure
+				ff_flux_contribution_momentum_x_y = ff_velocity_y * ff_variable_momentum_y 
+				ff_flux_contribution_momentum_x_z = ff_velocity_z * ff_variable_momentum_z 
+			
+				ff_flux_contribution_momentum_y_x = ff_flux_contribution_momentum_x_y 
+				ff_flux_contribution_momentum_y_y = ff_velocity_y * ff_variable_momentum_y + ff_pressure
+				ff_flux_contribution_momentum_y_z = ff_velocity_z * ff_variable_momentum_z 
+			
+				ff_flux_contribution_momentum_z_x = ff_flux_contribution_momentum_x_z 
+				ff_flux_contribution_momentum_z_y = ff_flux_contribution_momentum_y_z
+				ff_flux_contribution_momentum_z_z = ff_velocity_z * ff_variable_momentum_z + ff_pressure
+				
+				var Float de_p = ff_variable_density_energy + ff_pressure
+				
+				ff_flux_contribution_density_energy_x = ff_velocity_x * de_p
+				ff_flux_contribution_density_energy_y = ff_velocity_y * de_p
+				ff_flux_contribution_density_energy_z = ff_velocity_z * de_p			
+			}
+		}
+		
+		var [Float] areas = init_List([232536])
+		var [[Int]] elements_surrounding_elements = init_List([232536,4])
+		var [[[Float]]] normals = init_List([232536,4,3])
+		
+		areas = read("areas.txt")
+		elements_surrounding_elements = read("surrounding.txt")
+		normals = read("normals.txt")
+		
+		var [[Float]] variables = init_List([232536,5])
+		
+		variables = initialize_vars<<<>>>( ff_variable_density, ff_variable_momentum_x, ff_variable_momentum_y, ff_variable_momentum_z, ff_variable_density_energy)
+		
+		var [[Float]] old_variables = init_List([232536,5])
+		var [[Float]] fluxes = init_List([232536,5])
+		var [Float] step_factors = init_List([232536])
+		
+		//var Long time = get_time()
+		
+		// Parallel computation iteration = 2000
+		for var Int i = 0; i < iteration; i++ {
+		
+			old_variables = copy_map<<<>>>(variables)
+			
+			step_factors = compute_step_factor<<<>>>(variables, areas)
+			
+			for var Int j = 0; j < 3; j++ {
+				fluxes = compute_flux<<<>>>(elements_surrounding_elements, normals, variables, ff_variable_momentum_x
+					, ff_variable_momentum_y
+					, ff_variable_momentum_z
+					, ff_flux_contribution_momentum_x_x
+					, ff_flux_contribution_momentum_x_y
+					, ff_flux_contribution_momentum_x_z
+		
+					, ff_flux_contribution_momentum_y_x
+					, ff_flux_contribution_momentum_y_y
+					, ff_flux_contribution_momentum_y_z
+		
+					, ff_flux_contribution_momentum_z_x
+					, ff_flux_contribution_momentum_z_y
+					, ff_flux_contribution_momentum_z_z
+		
+					, ff_flux_contribution_density_energy_x
+					, ff_flux_contribution_density_energy_y
+					, ff_flux_contribution_density_energy_z)
+					
+				variables = time_step<<<>>>(j, old_variables, step_factors, fluxes)
+			}
+			
+		
+		}
+		
+		//time = get_time() - time
+		//var Double time_per_iter = time / 20
+		
+		//print("Time per iteration:" {time_per_iter} "us")
+		
+
+        return 0
+    }
+
+}

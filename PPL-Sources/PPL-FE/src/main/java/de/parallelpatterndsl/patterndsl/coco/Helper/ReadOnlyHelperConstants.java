@@ -1,7 +1,8 @@
 package de.parallelpatterndsl.patterndsl.coco.Helper;
-
+/**
 import de.monticore.expressions.commonexpressions._ast.ASTNameExpression;
 import de.monticore.expressions.expressionsbasis._ast.ASTExpression;
+ **/
 import de.parallelpatterndsl.patterndsl._ast.*;
 import de.parallelpatterndsl.patterndsl._symboltable.ConstantSymbol;
 import de.parallelpatterndsl.patterndsl._visitor.PatternDSLVisitor;

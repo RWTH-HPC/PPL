@@ -1,0 +1,11 @@
+ReturnStatementExists2 {
+var Int test = 0
+seq add(Int input) : Int {
+    input + 1
+    return
+}
+seq main() : Void {
+    test = add(1)
+
+}
+}

@@ -1,0 +1,5 @@
+LoopSkipOnlyWithinLoopCoCo {
+seq main() : Void {
+    break
+}
+}

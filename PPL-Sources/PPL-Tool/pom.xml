@@ -18,7 +18,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>Tool</mainClass>
+                            <mainClass>Tooling/Tool</mainClass>
 
                         </manifest>
                     </archive>
@@ -47,6 +47,8 @@
                     <classpathDependencyExcludes>
                         <classpathDependencyExclude>de.monticore:monticore-cli</classpathDependencyExclude>
                     </classpathDependencyExcludes>
+                    <trimStackTrace>false</trimStackTrace>
+                    <forkMode>always</forkMode>
                 </configuration>
                 <dependencies>
                     <dependency>
@@ -103,9 +105,19 @@
             <version>29.0-jre</version>
         </dependency>
         <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+        </dependency>
+        <dependency>
             <groupId>de.parallelpatterndsl</groupId>
             <artifactId>PPL-HL</artifactId>
             <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>de.parallelpatterndsl</groupId>
+            <artifactId>PPL-2CPP</artifactId>
+            <version>1.0.0</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 

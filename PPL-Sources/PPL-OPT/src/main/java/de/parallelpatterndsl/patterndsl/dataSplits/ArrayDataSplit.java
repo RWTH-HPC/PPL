@@ -10,11 +10,11 @@ public class ArrayDataSplit implements DataSplit {
 
     private final ArrayData data;
 
-    private final int startIndex;
+    private final long startIndex;
 
-    private final int length;
+    private final long length;
 
-    public ArrayDataSplit(ArrayData data, int startIndex, int length) {
+    public ArrayDataSplit(ArrayData data, long startIndex, long length) {
         this.data = data;
         this.startIndex = startIndex;
         this.length = length;

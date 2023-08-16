@@ -1,0 +1,10 @@
+UnusedParametersNotAllowed {
+map copy([Int] n, Int m) : [Int] res{
+    res[INDEX] = n[INDEX]
+}
+seq main() : Void {
+    var [Int] n = Init_List([2])
+    var [Int] res = Init_List([2])
+    res = copy<<<>>>(n, 5)
+}
+}

@@ -1,8 +1,15 @@
 ListExpressionsOnlyForInitialization {
 
 var [Int] test = [1,2,3]
+var [Int] test1 = init_List([1])
+
+map testmap() : [Int] res {
+    res[INDEX] = 1
+}
 
 seq main() : Int {
+var [Int] test2 = init_List([1])
+    test2 = testmap<<<[0,0,0]>>>()
     return 1
 }
 }

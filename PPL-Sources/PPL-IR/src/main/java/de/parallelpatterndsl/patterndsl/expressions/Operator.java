@@ -32,6 +32,8 @@ public enum Operator {
     PLUS_ASSIGNMENT,
     MINUS_ASSIGNMENT,
     TIMES_ASSIGNMENT,
+    BIT_AND_ASSIGNMENT,
+    BIT_OR_ASSIGNMENT,
     LEFT_ARRAY_ACCESS,
     RIGHT_ARRAY_ACCESS,
     LEFT_CALL_PARENTHESIS,
@@ -69,6 +71,8 @@ public enum Operator {
         arities.put(PLUS_ASSIGNMENT, 2);
         arities.put(MINUS_ASSIGNMENT, 2);
         arities.put(TIMES_ASSIGNMENT, 2);
+        arities.put(BIT_AND_ASSIGNMENT, 2);
+        arities.put(BIT_OR_ASSIGNMENT, 2);
         arities.put(LEFT_ARRAY_ACCESS,2);
         arities.put(RIGHT_ARRAY_ACCESS,1);
         arities.put(LEFT_CALL_PARENTHESIS,2);
@@ -113,6 +117,8 @@ public enum Operator {
         operationCount.put(PLUS_ASSIGNMENT, 1);
         operationCount.put(MINUS_ASSIGNMENT, 1);
         operationCount.put(TIMES_ASSIGNMENT, 1);
+        operationCount.put(BIT_OR_ASSIGNMENT, 1);
+        operationCount.put(BIT_AND_ASSIGNMENT, 1);
         operationCount.put(LEFT_ARRAY_ACCESS,0);
         operationCount.put(RIGHT_ARRAY_ACCESS,0);
         operationCount.put(LEFT_CALL_PARENTHESIS,0);
@@ -126,6 +132,51 @@ public enum Operator {
 
     public static int getCount(Operator input) {
         return operationCount.get(input);
+    }
+
+    private static final HashMap<Operator, Boolean> doesRead;
+    static {
+        doesRead = new HashMap<>();
+        doesRead.put(PLUS, false);
+        doesRead.put(MINUS, false);
+        doesRead.put(MULTIPLICATION, false);
+        doesRead.put(DIVIDE, false);
+        doesRead.put(MODULO, false);
+        doesRead.put(INCREMENT, true);
+        doesRead.put(DECREMENT, true);
+        doesRead.put(LESS, false);
+        doesRead.put(LESS_OR_EQUAL, false);
+        doesRead.put(EQUAL, false);
+        doesRead.put(NOT_EQUAL, false);
+        doesRead.put(GREATER, false);
+        doesRead.put(GREATER_OR_EQUAL, false);
+        doesRead.put(LOGICAL_NOT, false);
+        doesRead.put(LOGICAL_AND, false);
+        doesRead.put(LOGICAL_OR, false);
+        doesRead.put(BITWISE_NOT, false);
+        doesRead.put(BITWISE_OR, false);
+        doesRead.put(BITWISE_AND, false);
+        doesRead.put(LEFT_PARENTHESIS, false);
+        doesRead.put(RIGHT_PARENTHESIS, false);
+        doesRead.put(ASSIGNMENT, false);
+        doesRead.put(PLUS_ASSIGNMENT, true);
+        doesRead.put(MINUS_ASSIGNMENT, true);
+        doesRead.put(TIMES_ASSIGNMENT, true);
+        doesRead.put(BIT_OR_ASSIGNMENT, true);
+        doesRead.put(BIT_AND_ASSIGNMENT, true);
+        doesRead.put(LEFT_ARRAY_ACCESS,false);
+        doesRead.put(RIGHT_ARRAY_ACCESS,false);
+        doesRead.put(LEFT_CALL_PARENTHESIS,false);
+        doesRead.put(RIGHT_CALL_PARENTHESIS,false);
+        doesRead.put(COMMA,false);
+        doesRead.put(LEFT_ARRAY_DEFINITION,false);
+        doesRead.put(RIGHT_ARRAY_DEFINITION,false);
+
+
+    }
+
+    public static boolean getReadAssignment(Operator input) {
+        return doesRead.get(input);
     }
 
 }

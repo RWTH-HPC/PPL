@@ -1,0 +1,12 @@
+NoExitInPattern {
+
+map add([Int] input) : [Int] res{
+    res[INDEX] = input[INDEX] + 1
+}
+seq main() : Void {
+    var [Int] test = [0,0]
+    test = add(test)
+
+    exit(0)
+}
+}

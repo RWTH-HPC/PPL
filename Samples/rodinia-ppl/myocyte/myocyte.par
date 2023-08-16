@@ -1,0 +1,2047 @@
+myocyte {
+include "../math"
+
+var Int EQUATIONS = 91
+var Int PARAMETERS = 16
+var Int xmax = 300
+var Int workload = 10
+
+var Int ATTEMPTS = 12
+var Float MIN_SCALE_FACTOR = 0.125
+var Float MAX_SCALE_FACTOR = 4.0
+
+map kernel([[[Float]]] y, [[Float]] params) : [[Float]] x {
+	x[INDEX] = single_iteration(y[INDEX],params[INDEX])
+}
+
+seq cam(Float timeinst,
+		[Float] initvalu,
+		Int initvalu_offset,
+		[Float] parameter,
+		Int parameter_offset,
+		Float Ca)
+		:[Float] {
+
+	//=====================================================================
+	//	VARIABLES
+	//=====================================================================
+
+	// output
+	var [Float] res = init_List([16]) //JCa + finavalu
+
+	// input data and output data variable references
+	var Int offset_1
+	var Int offset_2
+	var Int offset_3
+	var Int offset_4
+	var Int offset_5
+	var Int offset_6
+	var Int offset_7
+	var Int offset_8
+	var Int offset_9
+	var Int offset_10
+	var Int offset_11
+	var Int offset_12
+	var Int offset_13
+	var Int offset_14
+	var Int offset_15
+
+	// parameter variable references
+	var Int parameter_offset_1
+	var Int parameter_offset_2
+	var Int parameter_offset_3
+	var Int parameter_offset_4
+	var Int parameter_offset_5
+
+	// decoding input initial values
+	var Float CaM
+	var Float Ca2CaM
+	var Float Ca4CaM
+	var Float CaMB
+	var Float Ca2CaMB
+	var Float Ca4CaMB           
+	var Float Pb2
+	var Float Pb
+	var Float Pt
+	var Float Pt2
+	var Float Pa                            
+	var Float Ca4CaN
+	var Float CaMCa4CaN
+	var Float Ca2CaMCa4CaN
+	var Float Ca4CaMCa4CaN
+
+	// decoding input parameters
+	var Float CaMtot
+	var Float Btot
+	var Float CaMKIItot
+	var Float CaNtot
+	var Float PP1tot
+
+	// constants
+	var Float K																			//
+	var Float Mg																			//
+
+	// Ca/CaM parameters
+	var Float Kd02																		// [uM^2]
+	var Float Kd24																		// [uM^2]
+	var Float k20																			// [s^-1]      
+	var Float k02																			// [uM^-2 s^-1]
+	var Float k42																			// [s^-1]      
+	var Float k24																			// [uM^-2 s^-1]
+
+	// CaM buffering (B) parameters
+	var Float k0Boff																		// [s^-1] 
+	var Float k0Bon																		// [uM^-1 s^-1] kon = koff/Kd
+	var Float k2Boff																		// [s^-1] 
+	var Float k2Bon																		// [uM^-1 s^-1]
+	var Float k4Boff																		// [s^-1]
+	var Float k4Bon																		// [uM^-1 s^-1]
+
+	// using thermodynamic constraints
+	var Float k20B																		// [s^-1] thermo constraint on loop 1
+	var Float k02B																		// [uM^-2 s^-1] 
+	var Float k42B																		// [s^-1] thermo constraint on loop 2
+	var Float k24B																		// [uM^-2 s^-1]
+
+	// Wi Wa Wt Wp
+	var Float kbi																			// [s^-1] (Ca4CaM dissocation from Wb)
+	var Float kib																			// [uM^-1 s^-1]
+	var Float kpp1																		// [s^-1] (PP1-dep dephosphorylation rates)
+	var Float Kmpp1																		// [uM]
+	var Float kib2
+	var Float kb2i
+	var Float kb24
+	var Float kb42
+	var Float kta																			// [s^-1] (Ca4CaM dissociation from Wt)
+	var Float kat																			// [uM^-1 s^-1] (Ca4CaM reassociation with Wa)
+	var Float kt42
+	var Float kt24
+	var Float kat2
+	var Float kt2a
+
+	// CaN parameters
+	var Float kcanCaoff																	// [s^-1] 
+	var Float kcanCaon																	// [uM^-1 s^-1] 
+	var Float kcanCaM4on																	// [uM^-1 s^-1]
+	var Float kcanCaM4off																	// [s^-1]
+	var Float kcanCaM2on
+	var Float kcanCaM2off
+	var Float kcanCaM0on
+	var Float kcanCaM0off
+	var Float k02can
+	var Float k20can
+	var Float k24can
+	var Float k42can
+
+	// CaM Reaction fluxes
+	var Float rcn02
+	var Float rcn24
+
+	// CaM buffer fluxes
+	var Float B
+	var Float rcn02B
+	var Float rcn24B
+	var Float rcn0B
+	var Float rcn2B
+	var Float rcn4B
+
+	// CaN reaction fluxes 
+	var Float Ca2CaN
+	var Float rcnCa4CaN
+	var Float rcn02CaN 
+	var Float rcn24CaN
+	var Float rcn0CaN
+	var Float rcn2CaN
+	var Float rcn4CaN
+
+	// CaMKII reaction fluxes
+	var Float Pix
+	var Float rcnCKib2
+	var Float rcnCKb2b
+	var Float rcnCKib
+	var Float T
+	var Float kbt
+	var Float rcnCKbt
+	var Float rcnCKtt2
+	var Float rcnCKta
+	var Float rcnCKt2a
+	var Float rcnCKt2b2
+	var Float rcnCKai
+
+	// CaM equations
+	var Float dCaM
+	var Float dCa2CaM
+	var Float dCa4CaM
+	var Float dCaMB
+	var Float dCa2CaMB
+	var Float dCa4CaMB
+
+	// CaMKII equations
+	var Float dPb2																		// Pb2
+	var Float dPb																			// Pb
+	var Float dPt																			// Pt
+	var Float dPt2																		// Pt2
+	var Float dPa																			// Pa
+
+	// CaN equations
+	var Float dCa4CaN																		// Ca4CaN
+	var Float dCaMCa4CaN																	// CaMCa4CaN
+	var Float dCa2CaMCa4CaN																// Ca2CaMCa4CaN
+	var Float dCa4CaMCa4CaN																// Ca4CaMCa4CaN
+
+	//=====================================================================
+	//	COMPUTATION
+	//=====================================================================
+
+	// input data and output data variable references
+	offset_1  = initvalu_offset
+	offset_2  = initvalu_offset+1
+	offset_3  = initvalu_offset+2
+	offset_4  = initvalu_offset+3
+	offset_5  = initvalu_offset+4
+	offset_6  = initvalu_offset+5
+	offset_7  = initvalu_offset+6
+	offset_8  = initvalu_offset+7
+	offset_9  = initvalu_offset+8
+	offset_10 = initvalu_offset+9
+	offset_11 = initvalu_offset+10
+	offset_12 = initvalu_offset+11
+	offset_13 = initvalu_offset+12
+	offset_14 = initvalu_offset+13
+	offset_15 = initvalu_offset+14
+	
+	// input parameters variable references
+	parameter_offset_1  = parameter_offset
+	parameter_offset_2  = parameter_offset+1
+	parameter_offset_3  = parameter_offset+2
+	parameter_offset_4  = parameter_offset+3
+	parameter_offset_5  = parameter_offset+4
+
+	// decoding input array
+	CaM				= initvalu[offset_1]
+	Ca2CaM			= initvalu[offset_2]
+	Ca4CaM			= initvalu[offset_3]
+	CaMB			= initvalu[offset_4]
+	Ca2CaMB			= initvalu[offset_5]
+	Ca4CaMB			= initvalu[offset_6]           
+	Pb2				= initvalu[offset_7]
+	Pb				= initvalu[offset_8]
+	Pt				= initvalu[offset_9]
+	Pt2				= initvalu[offset_10]
+	Pa				= initvalu[offset_11]                            
+	Ca4CaN			= initvalu[offset_12]
+	CaMCa4CaN		= initvalu[offset_13]
+	Ca2CaMCa4CaN	= initvalu[offset_14]
+	Ca4CaMCa4CaN	= initvalu[offset_15]
+
+	// decoding input parameters
+	CaMtot			= parameter[parameter_offset_1]
+	Btot			= parameter[parameter_offset_2]
+	CaMKIItot		= parameter[parameter_offset_3]
+	CaNtot			= parameter[parameter_offset_4]
+	PP1tot			= parameter[parameter_offset_5]
+
+	// values [CONSTANTS FOR ALL THREADS]
+	K = 135																			//
+	Mg = 1																				//
+
+	// Ca/CaM parameters
+	if (Mg <= 1){
+		Kd02 = 0.0025*(1+K/0.94-Mg/0.012)*(1+K/8.1+Mg/0.022)							// [uM^2]
+		Kd24 = 0.128*(1+K/0.64+Mg/0.0014)*(1+K/13.0-Mg/0.153)							// [uM^2]
+	}
+	else{
+		Kd02 = 0.0025*(1+K/0.94-1/0.012+(Mg-1)/0.060)*(1+K/8.1+1/0.022+(Mg-1)/0.068)   // [uM^2]
+		Kd24 = 0.128*(1+K/0.64+1/0.0014+(Mg-1)/0.005)*(1+K/13.0-1/0.153+(Mg-1)/0.150)  // [uM^2]
+	}
+	k20 = 10																			// [s^-1]      
+	k02 = k20/Kd02																		// [uM^-2 s^-1]
+	k42 = 500																			// [s^-1]      
+	k24 = k42/Kd24																		// [uM^-2 s^-1]
+
+	// CaM buffering (B) parameters
+	k0Boff = 0.0014																	// [s^-1] 
+	k0Bon = k0Boff/0.2																	// [uM^-1 s^-1] kon = koff/Kd
+	k2Boff = k0Boff/100																// [s^-1] 
+	k2Bon = k0Bon																		// [uM^-1 s^-1]
+	k4Boff = k2Boff																	// [s^-1]
+	k4Bon = k0Bon																		// [uM^-1 s^-1]
+
+	// using thermodynamic constraints
+	k20B = k20/100																		// [s^-1] thermo constraint on loop 1
+	k02B = k02																			// [uM^-2 s^-1] 
+	k42B = k42																			// [s^-1] thermo constraint on loop 2
+	k24B = k24																			// [uM^-2 s^-1]
+
+	// Wi Wa Wt Wp
+	kbi = 2.2																			// [s^-1] (Ca4CaM dissocation from Wb)
+	kib = kbi/33.5e-3																	// [uM^-1 s^-1]
+	kpp1 = 1.72																		// [s^-1] (PP1-dep dephosphorylation rates)
+	Kmpp1 = 11.5																		// [uM]
+	kib2 = kib
+	kb2i = kib2*5
+	kb24 = k24
+	kb42 = k42*33.5e-3/5
+	kta = kbi/1000																		// [s^-1] (Ca4CaM dissociation from Wt)
+	kat = kib																			// [uM^-1 s^-1] (Ca4CaM reassociation with Wa)
+	kt42 = k42*33.5e-6/5
+	kt24 = k24
+	kat2 = kib
+	kt2a = kib*5
+
+	// CaN parameters
+	kcanCaoff = 1																		// [s^-1] 
+	kcanCaon = kcanCaoff/0.5															// [uM^-1 s^-1] 
+	kcanCaM4on = 46																	// [uM^-1 s^-1]
+	kcanCaM4off = 0.0013																// [s^-1]
+	kcanCaM2on = kcanCaM4on
+	kcanCaM2off = 2508*kcanCaM4off
+	kcanCaM0on = kcanCaM4on
+	kcanCaM0off = 165*kcanCaM2off
+	k02can = k02
+	k20can = k20/165
+	k24can = k24
+	k42can = k20/2508
+
+	// CaM Reaction fluxes
+	rcn02 = k02*pow(Ca,2)*CaM - k20*Ca2CaM
+	rcn24 = k24*pow(Ca,2)*Ca2CaM - k42*Ca4CaM
+	
+	// CaM buffer fluxes
+	B = Btot - CaMB - Ca2CaMB - Ca4CaMB
+	rcn02B = k02B*pow(Ca,2)*CaMB - k20B*Ca2CaMB
+	rcn24B = k24B*pow(Ca,2)*Ca2CaMB - k42B*Ca4CaMB
+	rcn0B = k0Bon*CaM*B - k0Boff*CaMB
+	rcn2B = k2Bon*Ca2CaM*B - k2Boff*Ca2CaMB
+	rcn4B = k4Bon*Ca4CaM*B - k4Boff*Ca4CaMB
+	
+	// CaN reaction fluxes 
+	Ca2CaN = CaNtot - Ca4CaN - CaMCa4CaN - Ca2CaMCa4CaN - Ca4CaMCa4CaN
+	rcnCa4CaN = kcanCaon*pow(Ca,2)*Ca2CaN - kcanCaoff*Ca4CaN
+	rcn02CaN = k02can*pow(Ca,2)*CaMCa4CaN - k20can*Ca2CaMCa4CaN 
+	rcn24CaN = k24can*pow(Ca,2)*Ca2CaMCa4CaN - k42can*Ca4CaMCa4CaN
+	rcn0CaN = kcanCaM0on*CaM*Ca4CaN - kcanCaM0off*CaMCa4CaN
+	rcn2CaN = kcanCaM2on*Ca2CaM*Ca4CaN - kcanCaM2off*Ca2CaMCa4CaN
+	rcn4CaN = kcanCaM4on*Ca4CaM*Ca4CaN - kcanCaM4off*Ca4CaMCa4CaN
+
+	// CaMKII reaction fluxes
+	Pix = 1 - Pb2 - Pb - Pt - Pt2 - Pa
+	rcnCKib2 = kib2*Ca2CaM*Pix - kb2i*Pb2
+	rcnCKb2b = kb24*pow(Ca,2)*Pb2 - kb42*Pb
+	rcnCKib = kib*Ca4CaM*Pix - kbi*Pb
+	T = Pb + Pt + Pt2 + Pa
+	kbt = 0.055*T + 0.0074*pow(T,2) + 0.015*pow(T,3)
+	rcnCKbt = kbt*Pb - kpp1*PP1tot*Pt/(Kmpp1+CaMKIItot*Pt)
+	rcnCKtt2 = kt42*Pt - kt24*pow(Ca,2)*Pt2
+	rcnCKta = kta*Pt - kat*Ca4CaM*Pa
+	rcnCKt2a = kt2a*Pt2 - kat2*Ca2CaM*Pa
+	rcnCKt2b2 = kpp1*PP1tot*Pt2/(Kmpp1+CaMKIItot*Pt2)
+	rcnCKai = kpp1*PP1tot*Pa/(Kmpp1+CaMKIItot*Pa)
+
+	// CaM equations
+	dCaM = 1e-3*(0-rcn02 - rcn0B - rcn0CaN)
+	dCa2CaM = 1e-3*(rcn02 - rcn24 - rcn2B - rcn2CaN + CaMKIItot*(0-rcnCKib2 + rcnCKt2a) )
+	dCa4CaM = 1e-3*(rcn24 - rcn4B - rcn4CaN + CaMKIItot*(0-rcnCKib+rcnCKta) )
+	dCaMB = 1e-3*(rcn0B-rcn02B)
+	dCa2CaMB = 1e-3*(rcn02B + rcn2B - rcn24B)
+	dCa4CaMB = 1e-3*(rcn24B + rcn4B)
+
+	// CaMKII equations
+	dPb2 = 1e-3*(rcnCKib2 - rcnCKb2b + rcnCKt2b2)										// Pb2
+	dPb = 1e-3*(rcnCKib + rcnCKb2b - rcnCKbt)											// Pb
+	dPt = 1e-3*(rcnCKbt-rcnCKta-rcnCKtt2)												// Pt
+	dPt2 = 1e-3*(rcnCKtt2-rcnCKt2a-rcnCKt2b2)											// Pt2
+	dPa = 1e-3*(rcnCKta+rcnCKt2a-rcnCKai)												// Pa
+
+	// CaN equations
+	dCa4CaN = 1e-3*(rcnCa4CaN - rcn0CaN - rcn2CaN - rcn4CaN)							// Ca4CaN
+	dCaMCa4CaN = 1e-3*(rcn0CaN - rcn02CaN)												// CaMCa4CaN
+	dCa2CaMCa4CaN = 1e-3*(rcn2CaN+rcn02CaN-rcn24CaN)									// Ca2CaMCa4CaN
+	dCa4CaMCa4CaN = 1e-3*(rcn4CaN+rcn24CaN)											// Ca4CaMCa4CaN
+
+	// encode output array
+	res[0] = dCaM
+	res[1] = dCa2CaM
+	res[2] = dCa4CaM
+	res[3] = dCaMB
+	res[4] = dCa2CaMB
+	res[5] = dCa4CaMB
+	res[6] = dPb2
+	res[7] = dPb
+	res[8] = dPt
+	res[9] = dPt2
+	res[10] = dPa
+	res[11] = dCa4CaN
+	res[12] = dCaMCa4CaN
+	res[13] = dCa2CaMCa4CaN
+	res[14] = dCa4CaMCa4CaN
+
+	// write to global variables for adjusting Ca buffering in EC coupling model
+	res[15] = 1e-3*(2*CaMKIItot*(rcnCKtt2-rcnCKb2b) - 2*(rcn02+rcn24+rcn02B+rcn24B+rcnCa4CaN+rcn02CaN+rcn24CaN)) // [uM/msec]
+//	print("cam call")
+	// return
+	return res
+
+}
+
+seq ecc(Float timeinst,
+		[Float] initvalu,
+		Int initvalu_offset,
+		[Float] parameter,
+		Int parameter_offset)
+		: [Float] {
+//	print("ecc call")
+	//=====================================================================
+	//	VARIABLES
+	//=====================================================================
+	var [Float] finavalu = init_List([91])
+
+	// initial data and output data variable references
+	var Int offset_1
+	var Int offset_2
+	var Int offset_3
+	var Int offset_4
+	var Int offset_5
+	var Int offset_6
+	var Int offset_7
+	var Int offset_8
+	var Int offset_9
+	var Int offset_10
+	var Int offset_11
+	var Int offset_12
+	var Int offset_13
+	var Int offset_14
+	var Int offset_15
+	var Int offset_16
+	var Int offset_17
+	var Int offset_18
+	var Int offset_19
+	var Int offset_20
+	var Int offset_21
+	var Int offset_22
+	var Int offset_23
+	var Int offset_24
+	var Int offset_25
+	var Int offset_26
+	var Int offset_27
+	var Int offset_28
+	var Int offset_29
+	var Int offset_30
+	var Int offset_31
+	var Int offset_32
+	var Int offset_33
+	var Int offset_34
+	var Int offset_35
+	var Int offset_36
+	var Int offset_37
+	var Int offset_38
+	var Int offset_39
+	var Int offset_40
+	var Int offset_41
+	var Int offset_42
+	var Int offset_43
+	var Int offset_44
+	var Int offset_45
+	var Int offset_46
+
+	// initial data variable references
+	var Int parameter_offset_1
+
+	// decoded input initial data			// GET VARIABLES FROM MEMORY AND SAVE LOCALLY !!!!!!!!!!!!!!!!!!
+	var Float initvalu_1
+	var Float initvalu_2
+	var Float initvalu_3
+	var Float initvalu_4
+	var Float initvalu_5
+	var Float initvalu_6
+	var Float initvalu_7
+	var Float initvalu_8
+	var Float initvalu_9
+	var Float initvalu_10
+	var Float initvalu_11
+	var Float initvalu_12
+	var Float initvalu_13
+	var Float initvalu_14
+	var Float initvalu_15
+	var Float initvalu_16
+	var Float initvalu_17
+	var Float initvalu_18
+	var Float initvalu_19
+	var Float initvalu_20
+	var Float initvalu_21
+	var Float initvalu_22
+	var Float initvalu_23
+	var Float initvalu_24
+	var Float initvalu_25
+	var Float initvalu_26
+	var Float initvalu_27
+	var Float initvalu_28
+	var Float initvalu_29
+	var Float initvalu_30
+	var Float initvalu_31
+	var Float initvalu_32
+	var Float initvalu_33
+	var Float initvalu_34
+	var Float initvalu_35
+	var Float initvalu_36
+	var Float initvalu_37
+	var Float initvalu_38
+	var Float initvalu_39
+	var Float initvalu_40
+	var Float initvalu_41
+	var Float initvalu_42
+	var Float initvalu_43
+	var Float initvalu_44
+	var Float initvalu_45
+	var Float initvalu_46
+
+	// decoded input parameters
+	var Float parameter_1
+
+	// Constants
+	var Float R																			// [J/kmol*K]  
+	var Float Frdy																		// [C/mol]  
+	var Float Temp																		// [K] 310
+	var Float FoRT																		//
+	var Float Cmem																		// [F] membrane capacitance
+	var Float Qpow
+
+	// Cell geometry
+	var Float cellLength																	// cell length [um]
+	var Float cellRadius																	// cell radius [um]
+	var Float junctionLength																// junc length [um]
+	var Float junctionRadius																// junc radius [um]
+	var Float distSLcyto																	// dist. SL to cytosol [um]
+	var Float distJuncSL																	// dist. junc to SL [um]
+	var Float DcaJuncSL																	// Dca junc to SL [cm^2/sec]
+	var Float DcaSLcyto																	// Dca SL to cyto [cm^2/sec]
+	var Float DnaJuncSL																	// Dna junc to SL [cm^2/sec]
+	var Float DnaSLcyto																	// Dna SL to cyto [cm^2/sec] 
+	var Float Vcell																		// [L]
+	var Float Vmyo 
+	var Float Vsr 
+	var Float Vsl 
+	var Float Vjunc 
+	var Float SAjunc																		// [um^2]
+	var Float SAsl																		// [um^2]
+	var Float J_ca_juncsl																	// [L/msec]
+	var Float J_ca_slmyo																	// [L/msec]
+	var Float J_na_juncsl																	// [L/msec] 
+	var Float J_na_slmyo																	// [L/msec] 
+
+	// Fractional currents in compartments
+	var Float Fjunc   
+	var Float Fsl
+	var Float Fjunc_CaL 
+	var Float Fsl_CaL
+
+	// Fixed ion concentrations     
+	var Float Cli																			// Intracellular Cl  [mM]
+	var Float Clo																			// Extracellular Cl  [mM]
+	var Float Ko																			// Extracellular K   [mM]
+	var Float Nao																			// Extracellular Na  [mM]
+	var Float Cao																			// Extracellular Ca  [mM]
+	var Float Mgi																			// Intracellular Mg  [mM]
+
+	// Nernst Potentials
+	var Float ena_junc																	// [mV]
+	var Float ena_sl																		// [mV]
+	var Float ek																			// [mV]
+	var Float eca_junc																	// [mV]
+	var Float eca_sl																		// [mV]
+	var Float ecl																			// [mV]
+
+	// Na transport parameters
+	var Float GNa																			// [mS/uF]
+	var Float GNaB																		// [mS/uF] 
+	var Float IbarNaK																		// [uA/uF]
+	var Float KmNaip																		// [mM]
+	var Float KmKo																		// [mM]
+	var Float Q10NaK  
+	var Float Q10KmNai
+
+	// K current parameters
+	var Float pNaK      
+	var Float GtoSlow																		// [mS/uF] 
+	var Float GtoFast																		// [mS/uF] 
+	var Float gkp
+
+	// Cl current parameters
+	var Float GClCa																		// [mS/uF]
+	var Float GClB																		// [mS/uF]
+	var Float KdClCa																		// [mM]																// [mM]
+
+	// I_Ca parameters
+	var Float pNa																			// [cm/sec]
+	var Float pCa																			// [cm/sec]
+	var Float pK																			// [cm/sec]
+	var Float KmCa																		// [mM]
+	var Float Q10CaL       
+
+	// Ca transport parameters
+	var Float IbarNCX																		// [uA/uF]
+	var Float KmCai																		// [mM]
+	var Float KmCao																		// [mM]
+	var Float KmNai																		// [mM]
+	var Float KmNao																		// [mM]
+	var Float ksat																			// [none]  
+	var Float nu																			// [none]
+	var Float Kdact																		// [mM] 
+	var Float Q10NCX																		// [none]
+	var Float IbarSLCaP																	// [uA/uF]
+	var Float KmPCa																		// [mM] 
+	var Float GCaB																		// [uA/uF] 
+	var Float Q10SLCaP																	// [none]																	// [none]
+
+	// SR flux parameters
+	var Float Q10SRCaP																	// [none]
+	var Float Vmax_SRCaP																	// [mM/msec] (mmol/L cytosol/msec)
+	var Float Kmf																			// [mM]
+	var Float Kmr																			// [mM]L cytosol
+	var Float hillSRCaP																	// [mM]
+	var Float ks																			// [1/ms]      
+	var Float koCa																		// [mM^-2 1/ms]      
+	var Float kom																			// [1/ms]     
+	var Float kiCa																		// [1/mM/ms]
+	var Float kim																			// [1/ms]
+	var Float ec50SR																		// [mM]
+
+	// Buffering parameters
+	var Float Bmax_Naj																	// [mM] 
+	var Float Bmax_Nasl																	// [mM]
+	var Float koff_na																		// [1/ms]
+	var Float kon_na																		// [1/mM/ms]
+	var Float Bmax_TnClow																	// [mM], TnC low affinity
+	var Float koff_tncl																	// [1/ms] 
+	var Float kon_tncl																	// [1/mM/ms]
+	var Float Bmax_TnChigh																// [mM], TnC high affinity 
+	var Float koff_tnchca																	// [1/ms] 
+	var Float kon_tnchca																	// [1/mM/ms]
+	var Float koff_tnchmg																	// [1/ms] 
+	var Float kon_tnchmg																	// [1/mM/ms]
+	var Float Bmax_CaM																	// [mM], CaM buffering
+	var Float koff_cam																	// [1/ms] 
+	var Float kon_cam																		// [1/mM/ms]
+	var Float Bmax_myosin																	// [mM], Myosin buffering
+	var Float koff_myoca																	// [1/ms]
+	var Float kon_myoca																	// [1/mM/ms]
+	var Float koff_myomg																	// [1/ms]
+	var Float kon_myomg																	// [1/mM/ms]
+	var Float Bmax_SR																		// [mM] 
+	var Float koff_sr																		// [1/ms]
+	var Float kon_sr																		// [1/mM/ms]
+	var Float Bmax_SLlowsl																// [mM], SL buffering
+	var Float Bmax_SLlowj																	// [mM]    
+	var Float koff_sll																	// [1/ms]
+	var Float kon_sll																		// [1/mM/ms]
+	var Float Bmax_SLhighsl																// [mM] 
+	var Float Bmax_SLhighj																// [mM] 
+	var Float koff_slh																	// [1/ms]
+	var Float kon_slh																		// [1/mM/ms]
+	var Float Bmax_Csqn																	// 140e-3*Vmyo/Vsr [mM] 
+	var Float koff_csqn																	// [1/ms] 
+	var Float kon_csqn																	// [1/mM/ms] 
+
+	// I_Na: Fast Na Current
+	var Float am
+	var Float bm
+	var Float ah
+	var Float bh
+	var Float aj
+	var Float bj
+	var Float I_Na_junc
+	var Float I_Na_sl
+	var Float I_Na
+
+	// I_nabk: Na Background Current
+	var Float I_nabk_junc
+	var Float I_nabk_sl
+	var Float I_nabk
+
+	// I_nak: Na/K Pump Current
+	var Float sigma
+	var Float fnak
+	var Float I_nak_junc
+	var Float I_nak_sl
+	var Float I_nak
+
+	// I_kr: Rapidly Activating K Current
+	var Float gkr
+	var Float xrss
+	var Float tauxr
+	var Float rkr
+	var Float I_kr
+
+	// I_ks: Slowly Activating K Current
+	var Float pcaks_junc 
+	var Float pcaks_sl  
+	var Float gks_junc
+	var Float gks_sl 
+	var Float eks	
+	var Float xsss
+	var Float tauxs 
+	var Float I_ks_junc
+	var Float I_ks_sl
+	var Float I_ks
+
+	// I_kp: Plateau K current
+	var Float kp_kp
+	var Float I_kp_junc
+	var Float I_kp_sl
+	var Float I_kp
+
+	// I_to: Transient Outward K Current (slow and fast components)
+	var Float xtoss
+	var Float ytoss
+	var Float rtoss
+	var Float tauxtos
+	var Float tauytos
+	var Float taurtos 
+	var Float I_tos	
+
+	//
+	var Float tauxtof
+	var Float tauytof
+	var Float I_tof
+	var Float I_to
+
+	// I_ki: Time-Independent K Current
+	var Float aki
+	var Float bki
+	var Float kiss
+	var Float I_ki
+
+	// I_ClCa: Ca-activated Cl Current, I_Clbk: background Cl Current
+	var Float I_ClCa_junc
+	var Float I_ClCa_sl
+	var Float I_ClCa
+	var Float I_Clbk
+
+	// I_Ca: L-type Calcium Current
+	var Float dss
+	var Float taud
+	var Float fss
+	var Float tauf
+
+	//
+	var Float ibarca_j
+	var Float ibarca_sl
+	var Float ibark
+	var Float ibarna_j
+	var Float ibarna_sl
+	var Float I_Ca_junc
+	var Float I_Ca_sl
+	var Float I_Ca
+	var Float I_CaK
+	var Float I_CaNa_junc
+	var Float I_CaNa_sl
+	var Float I_CaNa
+	var Float I_Catot
+
+	// I_ncx: Na/Ca Exchanger flux
+	var Float Ka_junc
+	var Float Ka_sl
+	var Float s1_junc
+	var Float s1_sl
+	var Float s2_junc
+	var Float s3_junc
+	var Float s2_sl
+	var Float s3_sl
+	var Float I_ncx_junc
+	var Float I_ncx_sl
+	var Float I_ncx
+
+	// I_pca: Sarcolemmal Ca Pump Current
+	var Float I_pca_junc
+	var Float I_pca_sl
+	var Float I_pca
+
+	// I_cabk: Ca Background Current
+	var Float I_cabk_junc
+	var Float I_cabk_sl
+	var Float I_cabk
+	
+	// SR fluxes: Calcium Release, SR Ca pump, SR Ca leak														
+	var Float MaxSR
+	var Float MinSR
+	var Float kCaSR
+	var Float koSRCa
+	var Float kiSRCa
+	var Float RI
+	var Float J_SRCarel																	// [mM/ms]
+	var Float J_serca
+	var Float J_SRleak																		//   [mM/ms]
+
+	// Cytosolic Ca Buffers
+	var Float J_CaB_cytosol
+
+	// Junctional and SL Ca Buffers
+	var Float J_CaB_junction
+	var Float J_CaB_sl
+
+	// SR Ca Concentrations
+	var Float oneovervsr
+
+	// Sodium Concentrations
+	var Float I_Na_tot_junc																// [uA/uF]
+	var Float I_Na_tot_sl																	// [uA/uF]
+	var Float oneovervsl
+
+	// Potassium Concentration
+	var Float I_K_tot
+
+	// Calcium Concentrations
+	var Float I_Ca_tot_junc																// [uA/uF]
+	var Float I_Ca_tot_sl																	// [uA/uF]
+	var Float junc_sl
+	var Float sl_junc
+	var Float sl_myo
+	var Float myo_sl
+
+	//	Simulation type													
+	var Int state																			// 0-none 1-pace 2-vclamp
+	var Float I_app
+	var Float V_hold
+	var Float V_test
+	var Float V_clamp
+	var Float R_clamp
+	
+	//	Membrane Potential
+	var Float I_Na_tot																		// [uA/uF]
+	var Float I_Cl_tot																		// [uA/uF]
+	var Float I_Ca_tot
+	var Float I_tot
+
+	//=====================================================================
+	//	EXECUTION
+	//=====================================================================
+
+	// variable references
+	offset_1  = initvalu_offset
+	offset_2  = initvalu_offset+1
+	offset_3  = initvalu_offset+2
+	offset_4  = initvalu_offset+3
+	offset_5  = initvalu_offset+4
+	offset_6  = initvalu_offset+5
+	offset_7  = initvalu_offset+6
+	offset_8  = initvalu_offset+7
+	offset_9  = initvalu_offset+8
+	offset_10 = initvalu_offset+9
+	offset_11 = initvalu_offset+10
+	offset_12 = initvalu_offset+11
+	offset_13 = initvalu_offset+12
+	offset_14 = initvalu_offset+13
+	offset_15 = initvalu_offset+14
+	offset_16 = initvalu_offset+15
+	offset_17 = initvalu_offset+16
+	offset_18 = initvalu_offset+17
+	offset_19 = initvalu_offset+18
+	offset_20 = initvalu_offset+19
+	offset_21 = initvalu_offset+20
+	offset_22 = initvalu_offset+21
+	offset_23 = initvalu_offset+22
+	offset_24 = initvalu_offset+23
+	offset_25 = initvalu_offset+24
+	offset_26 = initvalu_offset+25
+	offset_27 = initvalu_offset+26
+	offset_28 = initvalu_offset+27
+	offset_29 = initvalu_offset+28
+	offset_30 = initvalu_offset+29
+	offset_31 = initvalu_offset+30
+	offset_32 = initvalu_offset+31
+	offset_33 = initvalu_offset+32
+	offset_34 = initvalu_offset+33
+	offset_35 = initvalu_offset+34
+	offset_36 = initvalu_offset+35
+	offset_37 = initvalu_offset+36
+	offset_38 = initvalu_offset+37
+	offset_39 = initvalu_offset+38
+	offset_40 = initvalu_offset+39
+	offset_41 = initvalu_offset+40
+	offset_42 = initvalu_offset+41
+	offset_43 = initvalu_offset+42
+	offset_44 = initvalu_offset+43
+	offset_45 = initvalu_offset+44
+	offset_46 = initvalu_offset+45
+	
+	// variable references
+	parameter_offset_1  = parameter_offset
+
+	// decoded input initial data
+	initvalu_1  = initvalu[offset_1 ]
+	initvalu_2  = initvalu[offset_2 ]
+	initvalu_3  = initvalu[offset_3 ]
+	initvalu_4  = initvalu[offset_4 ]
+	initvalu_5  = initvalu[offset_5 ]
+	initvalu_6  = initvalu[offset_6 ]
+	initvalu_7  = initvalu[offset_7 ]
+	initvalu_8  = initvalu[offset_8 ]
+	initvalu_9  = initvalu[offset_9 ]
+	initvalu_10 = initvalu[offset_10]
+	initvalu_11 = initvalu[offset_11]
+	initvalu_12 = initvalu[offset_12]
+	initvalu_13 = initvalu[offset_13]
+	initvalu_14 = initvalu[offset_14]
+	initvalu_15 = initvalu[offset_15]
+	initvalu_16 = initvalu[offset_16]
+	initvalu_17 = initvalu[offset_17]
+	initvalu_18 = initvalu[offset_18]
+	initvalu_19 = initvalu[offset_19]
+	initvalu_20 = initvalu[offset_20]
+	initvalu_21 = initvalu[offset_21]
+	initvalu_22 = initvalu[offset_22]
+	initvalu_23 = initvalu[offset_23]
+	initvalu_24 = initvalu[offset_24]
+	initvalu_25 = initvalu[offset_25]
+	initvalu_26 = initvalu[offset_26]
+	initvalu_27 = initvalu[offset_27]
+	initvalu_28 = initvalu[offset_28]
+	initvalu_29 = initvalu[offset_29]
+	initvalu_30 = initvalu[offset_30]
+	initvalu_31 = initvalu[offset_31]
+	initvalu_32 = initvalu[offset_32]
+	initvalu_33 = initvalu[offset_33]
+	initvalu_34 = initvalu[offset_34]
+	initvalu_35 = initvalu[offset_35]
+	initvalu_36 = initvalu[offset_36]
+	initvalu_37 = initvalu[offset_37]
+	initvalu_38 = initvalu[offset_38]
+	initvalu_39 = initvalu[offset_39]
+	initvalu_40 = initvalu[offset_40]
+	initvalu_41 = initvalu[offset_41]
+	initvalu_42 = initvalu[offset_42]
+	initvalu_43 = initvalu[offset_43]
+	initvalu_44 = initvalu[offset_44]
+	initvalu_45 = initvalu[offset_45]
+	initvalu_46 = initvalu[offset_46]
+
+	// decoded input parameters
+	parameter_1 = parameter[parameter_offset_1]
+
+	// Constants
+	R = 8314																			// [J/kmol*K]  
+	Frdy = 96485																		// [C/mol]  
+	Temp = 310																			// [K] 310
+	FoRT = Frdy/R/Temp																	//
+	Cmem = 1.3810e-10																	// [F] membrane capacitance
+	Qpow = (Temp-310)/10
+
+	// Cell geometry
+	cellLength = 100																	// cell length [um]
+	cellRadius = 10.25																	// cell radius [um]
+	junctionLength = 160e-3															// junc length [um]
+	junctionRadius = 15e-3																// junc radius [um]
+	distSLcyto = 0.45																	// dist. SL to cytosol [um]
+	distJuncSL = 0.5																	// dist. junc to SL [um]
+	DcaJuncSL = 1.64e-6																// Dca junc to SL [cm^2/sec]
+	DcaSLcyto = 1.22e-6																// Dca SL to cyto [cm^2/sec]
+	DnaJuncSL = 1.09e-5																// Dna junc to SL [cm^2/sec]
+	DnaSLcyto = 1.79e-5																// Dna SL to cyto [cm^2/sec] 
+	Vcell = pi*pow(cellRadius,2)*cellLength*1e-15											// [L]
+	Vmyo = 0.65*Vcell 
+	Vsr = 0.035*Vcell 
+	Vsl = 0.02*Vcell 
+	Vjunc = 0.0539*0.01*Vcell 
+	SAjunc = 20150*pi*2*junctionLength*junctionRadius									// [um^2]
+	SAsl = pi*2*cellRadius*cellLength													// [um^2]
+	J_ca_juncsl = 1/1.2134e12															// [L/msec]
+	J_ca_slmyo = 1/2.68510e11															// [L/msec]
+	J_na_juncsl = 1/(1.6382e12/3*100)													// [L/msec] 
+	J_na_slmyo = 1/(1.8308e10/3*100)													// [L/msec] 
+
+	// Fractional currents in compartments
+	Fjunc = 0.11   
+	Fsl = 1-Fjunc
+	Fjunc_CaL = 0.9 
+	Fsl_CaL = 1-Fjunc_CaL
+
+	// Fixed ion concentrations     
+	Cli = 15																			// Intracellular Cl  [mM]
+	Clo = 150																			// Extracellular Cl  [mM]
+	Ko = 5.4																			// Extracellular K   [mM]
+	Nao = 140																			// Extracellular Na  [mM]
+	Cao = 1.8																			// Extracellular Ca  [mM]
+	Mgi = 1																			// Intracellular Mg  [mM]
+
+	// Nernst Potentials
+	ena_junc = (1/FoRT)*log(Nao/initvalu_32)													// [mV]
+	ena_sl = (1/FoRT)*log(Nao/initvalu_33)													// [mV]
+	ek = (1/FoRT)*log(Ko/initvalu_35)														// [mV]
+	eca_junc = (1/FoRT/2)*log(Cao/initvalu_36)												// [mV]
+	eca_sl = (1/FoRT/2)*log(Cao/initvalu_37)													// [mV]
+	ecl = (1/FoRT)*log(Cli/Clo)														// [mV]
+
+	// Na transport parameters
+	GNa =  16.0																		// [mS/uF]
+	GNaB = 0.297e-3																	// [mS/uF] 
+	IbarNaK = 1.90719																	// [uA/uF]
+	KmNaip = 11																		// [mM]
+	KmKo = 1.5																			// [mM]
+	Q10NaK = 1.63  
+	Q10KmNai = 1.39
+
+	// K current parameters
+	pNaK = 0.01833      
+	GtoSlow = 0.06																		// [mS/uF] 
+	GtoFast = 0.02																		// [mS/uF] 
+	gkp = 0.001
+
+	// Cl current parameters
+	GClCa = 0.109625																	// [mS/uF]
+	GClB = 9e-3																		// [mS/uF]
+	KdClCa = 100e-3																	// [mM]
+
+	// I_Ca parameters
+	pNa = 1.5e-8																		// [cm/sec]
+	pCa = 5.4e-4																		// [cm/sec]
+	pK = 2.7e-7																		// [cm/sec]
+	KmCa = 0.6e-3																		// [mM]
+	Q10CaL = 1.8       
+
+	// Ca transport parameters
+	IbarNCX = 9.0																		// [uA/uF]
+	KmCai = 3.59e-3																	// [mM]
+	KmCao = 1.3																		// [mM]
+	KmNai = 12.29																		// [mM]
+	KmNao = 87.5																		// [mM]
+	ksat = 0.27																		// [none]  
+	nu = 0.35																			// [none]
+	Kdact = 0.256e-3																	// [mM] 
+	Q10NCX = 1.57																		// [none]
+	IbarSLCaP = 0.0673																	// [uA/uF]
+	KmPCa = 0.5e-3																		// [mM] 
+	GCaB = 2.513e-4																	// [uA/uF] 
+	Q10SLCaP = 2.35																	// [none]
+
+	// SR flux parameters
+	Q10SRCaP = 2.6																		// [none]
+	Vmax_SRCaP = 2.86e-4																// [mM/msec] (mmol/L cytosol/msec)
+	Kmf = 0.246e-3																		// [mM]
+	Kmr = 1.7																			// [mM]L cytosol
+	hillSRCaP = 1.787																	// [mM]
+	ks = 25																			// [1/ms]      
+	koCa = 10																			// [mM^-2 1/ms]      
+	kom = 0.06																			// [1/ms]     
+	kiCa = 0.5																			// [1/mM/ms]
+	kim = 0.005																		// [1/ms]
+	ec50SR = 0.45																		// [mM]
+
+	// Buffering parameters
+	Bmax_Naj = 7.561																	// [mM] 
+	Bmax_Nasl = 1.65																	// [mM]
+	koff_na = 1e-3																		// [1/ms]
+	kon_na = 0.1e-3																	// [1/mM/ms]
+	Bmax_TnClow = 70e-3																// [mM], TnC low affinity
+	koff_tncl = 19.6e-3																// [1/ms] 
+	kon_tncl = 32.7																	// [1/mM/ms]
+	Bmax_TnChigh = 140e-3																// [mM], TnC high affinity 
+	koff_tnchca = 0.032e-3																// [1/ms] 
+	kon_tnchca = 2.37																	// [1/mM/ms]
+	koff_tnchmg = 3.33e-3																// [1/ms] 
+	kon_tnchmg = 3e-3																	// [1/mM/ms]
+	Bmax_CaM = 24e-3																	// [mM], CaM buffering
+	koff_cam = 238e-3																	// [1/ms] 
+	kon_cam = 34																		// [1/mM/ms]
+	Bmax_myosin = 140e-3																// [mM], Myosin buffering
+	koff_myoca = 0.46e-3																// [1/ms]
+	kon_myoca = 13.8																	// [1/mM/ms]
+	koff_myomg = 0.057e-3																// [1/ms]
+	kon_myomg = 0.0157																	// [1/mM/ms]
+	Bmax_SR = 19*0.9e-3																	// [mM] 
+	koff_sr = 60e-3																	// [1/ms]
+	kon_sr = 100																		// [1/mM/ms]
+	Bmax_SLlowsl = 37.38e-3*Vmyo/Vsl													// [mM], SL buffering
+	Bmax_SLlowj = 4.62e-3*Vmyo/Vjunc*0.1												// [mM]    
+	koff_sll = 1300e-3																	// [1/ms]
+	kon_sll = 100																		// [1/mM/ms]
+	Bmax_SLhighsl = 13.35e-3*Vmyo/Vsl													// [mM] 
+	Bmax_SLhighj = 1.65e-3*Vmyo/Vjunc*0.1												// [mM] 
+	koff_slh = 30e-3																	// [1/ms]
+	kon_slh = 100																		// [1/mM/ms]
+	Bmax_Csqn = 2.7																	// 140e-3*Vmyo/Vsr [mM] 
+	koff_csqn = 65																		// [1/ms] 
+	kon_csqn = 100																		// [1/mM/ms] 
+
+	// I_Na: Fast Na Current
+	am = 0.32*(initvalu_39+47.13)/(1-exp(0-0.1*(initvalu_39+47.13)))
+	bm = 0.08*exp((0-initvalu_39)/11)
+	if(initvalu_39 >= 0-40){
+		ah = 0 aj = 0
+		bh = 1/(0.13*(1+exp(0-(initvalu_39+10.66)/11.1)))
+		bj = 0.3*exp(0-2.535e-7*initvalu_39)/(1+exp(0-0.1*(initvalu_39+32)))
+	}
+	else{
+		ah = 0.135*exp((80+initvalu_39)/(0-6.8))
+		bh = 3.56*exp(0.079*initvalu_39)+3.1e5*exp(0.35*initvalu_39)
+		aj = ((0-127140)*exp(0.2444*initvalu_39)-3.474e-5*exp((0-0.04391)*initvalu_39))*(initvalu_39+37.78)/(1+exp(0.311*(initvalu_39+79.23)))
+		bj = 0.1212*exp((0-0.01052)*initvalu_39)/(1+exp((0-0.1378)*(initvalu_39+40.14)))
+	}
+	finavalu[offset_1] = am*(1-initvalu_1)-bm*initvalu_1
+	finavalu[offset_2] = ah*(1-initvalu_2)-bh*initvalu_2
+	finavalu[offset_3] = aj*(1-initvalu_3)-bj*initvalu_3
+	I_Na_junc = Fjunc*GNa*pow(initvalu_1,3)*initvalu_2*initvalu_3*(initvalu_39-ena_junc)
+	I_Na_sl = Fsl*GNa*pow(initvalu_1,3)*initvalu_2*initvalu_3*(initvalu_39-ena_sl)
+	I_Na = I_Na_junc+I_Na_sl
+
+	// I_nabk: Na Background Current
+	I_nabk_junc = Fjunc*GNaB*(initvalu_39-ena_junc)
+	I_nabk_sl = Fsl*GNaB*(initvalu_39-ena_sl)
+	I_nabk = I_nabk_junc+I_nabk_sl
+
+	// I_nak: Na/K Pump Current
+	sigma = (exp(Nao/67.3)-1)/7
+	fnak = 1/(1+0.1245*exp((0-0.1)*initvalu_39*FoRT)+0.0365*sigma*exp((0-initvalu_39)*FoRT))
+	I_nak_junc = Fjunc*IbarNaK*fnak*Ko /(1+pow((KmNaip/initvalu_32),4)) /(Ko+KmKo)
+	I_nak_sl = Fsl*IbarNaK*fnak*Ko /(1+pow((KmNaip/initvalu_33),4)) /(Ko+KmKo)
+	I_nak = I_nak_junc+I_nak_sl
+
+	// I_kr: Rapidly Activating K Current
+	gkr = 0.03*sqrt(Ko/5.4)
+	xrss = 1/(1+exp(0-(initvalu_39+50)/7.5))
+	tauxr = 1/(0.00138*(initvalu_39+7)/(1-exp((0-0.123)*(initvalu_39+7)))+6.1e-4*(initvalu_39+10)/(exp(0.145*(initvalu_39+10))-1))
+	finavalu[offset_12] = (xrss-initvalu_12)/tauxr
+	rkr = 1/(1+exp((initvalu_39+33)/22.4))
+	I_kr = gkr*initvalu_12*rkr*(initvalu_39-ek)
+
+	// I_ks: Slowly Activating K Current
+	pcaks_junc = 0-log10(initvalu_36)+3.0 
+	pcaks_sl = 0-log10(initvalu_37)+3.0  
+	gks_junc = 0.07*(0.057 +0.19/(1+ exp((0-7.2+pcaks_junc)/0.6)))
+	gks_sl = 0.07*(0.057 +0.19/(1+ exp((0-7.2+pcaks_sl)/0.6))) 
+	eks = (1/FoRT)*log((Ko+pNaK*Nao)/(initvalu_35+pNaK*initvalu_34))	
+	xsss = 1/(1+exp(0-(initvalu_39-1.5)/16.7))
+	tauxs = 1/(7.19e-5*(initvalu_39+30)/(1-exp((0-0.148)*(initvalu_39+30)))+1.31e-4*(initvalu_39+30)/(exp(0.0687*(initvalu_39+30))-1)) 
+	finavalu[offset_13] = (xsss-initvalu_13)/tauxs
+	I_ks_junc = Fjunc*gks_junc*pow(initvalu_12,2)*(initvalu_39-eks)
+	I_ks_sl = Fsl*gks_sl*pow(initvalu_13,2)*(initvalu_39-eks)
+	I_ks = I_ks_junc+I_ks_sl
+
+	// I_kp: Plateau K current
+	kp_kp = 1/(1+exp(7.488-initvalu_39/5.98))
+	I_kp_junc = Fjunc*gkp*kp_kp*(initvalu_39-ek)
+	I_kp_sl = Fsl*gkp*kp_kp*(initvalu_39-ek)
+	I_kp = I_kp_junc+I_kp_sl
+
+	// I_to: Transient Outward K Current (slow and fast components)
+	xtoss = 1/(1+exp(0-(initvalu_39+3.0)/15))
+	ytoss = 1/(1+exp((initvalu_39+33.5)/10))
+	rtoss = 1/(1+exp((initvalu_39+33.5)/10))
+	tauxtos = 9/(1+exp((initvalu_39+3.0)/15))+0.5
+	tauytos = 3e3/(1+exp((initvalu_39+60.0)/10))+30
+	taurtos = 2800/(1+exp((initvalu_39+60.0)/10))+220 
+	finavalu[offset_8] = (xtoss-initvalu_8)/tauxtos
+	finavalu[offset_9] = (ytoss-initvalu_9)/tauytos
+	finavalu[offset_40]= (rtoss-initvalu_40)/taurtos 
+	I_tos = GtoSlow*initvalu_8*(initvalu_9+0.5*initvalu_40)*(initvalu_39-ek)									// [uA/uF]
+
+	//
+	tauxtof = 3.5*exp((0-initvalu_39)*initvalu_39/30/30)+1.5
+	tauytof = 20.0/(1+exp((initvalu_39+33.5)/10))+20.0
+	finavalu[offset_10] = (xtoss-initvalu_10)/tauxtof
+	finavalu[offset_11] = (ytoss-initvalu_11)/tauytof
+	I_tof = GtoFast*initvalu_10*initvalu_11*(initvalu_39-ek)
+	I_to = I_tos + I_tof
+
+	// I_ki: Time-Independent K Current
+	aki = 1.02/(1+exp(0.2385*(initvalu_39-ek-59.215)))
+	bki =(0.49124*exp(0.08032*(initvalu_39+5.476-ek)) + exp(0.06175*(initvalu_39-ek-594.31))) /(1 + exp((0-0.5143)*(initvalu_39-ek+4.753)))
+	kiss = aki/(aki+bki)
+	I_ki = 0.9*sqrt(Ko/5.4)*kiss*(initvalu_39-ek)
+
+	// I_ClCa: Ca-activated Cl Current, I_Clbk: background Cl Current
+	I_ClCa_junc = Fjunc*GClCa/(1+KdClCa/initvalu_36)*(initvalu_39-ecl)
+	I_ClCa_sl = Fsl*GClCa/(1+KdClCa/initvalu_37)*(initvalu_39-ecl)
+	I_ClCa = I_ClCa_junc+I_ClCa_sl
+	I_Clbk = GClB*(initvalu_39-ecl)
+
+	// I_Ca: L-type Calcium Current
+	dss = 1/(1+exp(0-(initvalu_39+14.5)/6.0))
+	taud = dss*(1-exp(0-(initvalu_39+14.5)/6.0))/(0.035*(initvalu_39+14.5))
+	fss = 1/(1+exp((initvalu_39+35.06)/3.6))+0.6/(1+exp((50-initvalu_39)/20))
+	tauf = 1/(0.0197*exp(0-pow(0.0337*(initvalu_39+14.5),2))+0.02)
+	finavalu[offset_4] = (dss-initvalu_4)/taud
+	finavalu[offset_5] = (fss-initvalu_5)/tauf
+	finavalu[offset_6] = 1.7*initvalu_36*(1-initvalu_6)-11.9e-3*initvalu_6											// fCa_junc  
+	finavalu[offset_7] = 1.7*initvalu_37*(1-initvalu_7)-11.9e-3*initvalu_7											// fCa_sl
+
+	//
+	ibarca_j = pCa*4*(initvalu_39*Frdy*FoRT) * (0.341*initvalu_36*exp(2*initvalu_39*FoRT)-0.341*Cao) /(exp(2*initvalu_39*FoRT)-1)
+	ibarca_sl = pCa*4*(initvalu_39*Frdy*FoRT) * (0.341*initvalu_37*exp(2*initvalu_39*FoRT)-0.341*Cao) /(exp(2*initvalu_39*FoRT)-1)
+	ibark = pK*(initvalu_39*Frdy*FoRT)*(0.75*initvalu_35*exp(initvalu_39*FoRT)-0.75*Ko) /(exp(initvalu_39*FoRT)-1)
+	ibarna_j = pNa*(initvalu_39*Frdy*FoRT) *(0.75*initvalu_32*exp(initvalu_39*FoRT)-0.75*Nao)  /(exp(initvalu_39*FoRT)-1)
+	ibarna_sl = pNa*(initvalu_39*Frdy*FoRT) *(0.75*initvalu_33*exp(initvalu_39*FoRT)-0.75*Nao)  /(exp(initvalu_39*FoRT)-1)
+	I_Ca_junc = (Fjunc_CaL*ibarca_j*initvalu_4*initvalu_5*(1-initvalu_6)*pow(Q10CaL,Qpow))*0.45
+	I_Ca_sl = (Fsl_CaL*ibarca_sl*initvalu_4*initvalu_5*(1-initvalu_7)*pow(Q10CaL,Qpow))*0.45
+	I_Ca = I_Ca_junc+I_Ca_sl
+	finavalu[offset_43]=0-I_Ca*Cmem/(Vmyo*2*Frdy)*1e3
+	I_CaK = (ibark*initvalu_4*initvalu_5*(Fjunc_CaL*(1-initvalu_6)+Fsl_CaL*(1-initvalu_7))*pow(Q10CaL,Qpow))*0.45
+	I_CaNa_junc = (Fjunc_CaL*ibarna_j*initvalu_4*initvalu_5*(1-initvalu_6)*pow(Q10CaL,Qpow))*0.45
+	I_CaNa_sl = (Fsl_CaL*ibarna_sl*initvalu_4*initvalu_5*(1-initvalu_7)*pow(Q10CaL,Qpow))*0.45
+	I_CaNa = I_CaNa_junc+I_CaNa_sl
+	I_Catot = I_Ca+I_CaK+I_CaNa
+
+	// I_ncx: Na/Ca Exchanger flux
+	Ka_junc = 1/(1+pow((Kdact/initvalu_36),3))
+	Ka_sl = 1/(1+pow((Kdact/initvalu_37),3))
+	s1_junc = exp(nu*initvalu_39*FoRT)*pow(initvalu_32,3)*Cao
+	s1_sl = exp(nu*initvalu_39*FoRT)*pow(initvalu_33,3)*Cao
+	s2_junc = exp((nu-1)*initvalu_39*FoRT)*pow(Nao,3)*initvalu_36
+	s3_junc = (KmCai*pow(Nao,3)*(1+pow((initvalu_32/KmNai),3))+pow(KmNao,3)*initvalu_36+ pow(KmNai,3)*Cao*(1+initvalu_36/KmCai)+KmCao*pow(initvalu_32,3)+pow(initvalu_32,3)*Cao+pow(Nao,3)*initvalu_36)*(1+ksat*exp((nu-1)*initvalu_39*FoRT))
+	s2_sl = exp((nu-1)*initvalu_39*FoRT)*pow(Nao,3)*initvalu_37
+	s3_sl = (KmCai*pow(Nao,3)*(1+pow((initvalu_33/KmNai),3)) + pow(KmNao,3)*initvalu_37+pow(KmNai,3)*Cao*(1+initvalu_37/KmCai)+KmCao*pow(initvalu_33,3)+pow(initvalu_33,3)*Cao+pow(Nao,3)*initvalu_37)*(1+ksat*exp((nu-1)*initvalu_39*FoRT))
+	I_ncx_junc = Fjunc*IbarNCX*pow(Q10NCX,Qpow)*Ka_junc*(s1_junc-s2_junc)/s3_junc
+	I_ncx_sl = Fsl*IbarNCX*pow(Q10NCX,Qpow)*Ka_sl*(s1_sl-s2_sl)/s3_sl
+	I_ncx = I_ncx_junc+I_ncx_sl
+	finavalu[offset_45]=2*I_ncx*Cmem/(Vmyo*2*Frdy)*1e3
+
+	// I_pca: Sarcolemmal Ca Pump Current
+	I_pca_junc = 	Fjunc * 
+					pow(Q10SLCaP,Qpow) * 
+					IbarSLCaP * 
+					pow(initvalu_36,1.6) /
+					(pow(KmPCa,1.6) + pow(initvalu_36,1.6))
+	I_pca_sl = 	Fsl * 
+				pow(Q10SLCaP,Qpow) * 
+				IbarSLCaP * 
+				pow(initvalu_37,1.6) / 
+				(pow(KmPCa,1.6) + pow(initvalu_37,1.6))
+	I_pca = I_pca_junc+I_pca_sl
+	finavalu[offset_44]=0-I_pca*Cmem/(Vmyo*2*Frdy)*1e3
+
+	// I_cabk: Ca Background Current
+	I_cabk_junc = Fjunc*GCaB*(initvalu_39-eca_junc)
+	I_cabk_sl = Fsl*GCaB*(initvalu_39-eca_sl)
+	I_cabk = I_cabk_junc+I_cabk_sl
+	finavalu[offset_46]=0-I_cabk*Cmem/(Vmyo*2*Frdy)*1e3
+	
+	// SR fluxes: Calcium Release, SR Ca pump, SR Ca leak														
+	MaxSR = 15 
+	MinSR = 1
+	kCaSR = MaxSR - (MaxSR-MinSR)/(1+pow(ec50SR/initvalu_31,2.5))
+	koSRCa = koCa/kCaSR
+	kiSRCa = kiCa*kCaSR
+	RI = 1-initvalu_14-initvalu_15-initvalu_16
+	finavalu[offset_14] = (kim*RI-kiSRCa*initvalu_36*initvalu_14)-(koSRCa*pow(initvalu_36,2)*initvalu_14-kom*initvalu_15)			// R
+	finavalu[offset_15] = (koSRCa*pow(initvalu_36,2)*initvalu_14-kom*initvalu_15)-(kiSRCa*initvalu_36*initvalu_15-kim*initvalu_16)			// O
+	finavalu[offset_16] = (kiSRCa*initvalu_36*initvalu_15-kim*initvalu_16)-(kom*initvalu_16-koSRCa*pow(initvalu_36,2)*RI)			// I
+	J_SRCarel = ks*initvalu_15*(initvalu_31-initvalu_36)													// [mM/ms]
+	J_serca = pow(Q10SRCaP,Qpow)*Vmax_SRCaP*(pow((initvalu_38/Kmf),hillSRCaP)-pow((initvalu_31/Kmr),hillSRCaP))
+										 /(1+pow((initvalu_38/Kmf),hillSRCaP)+pow((initvalu_31/Kmr),hillSRCaP))
+	J_SRleak = 5.348e-6*(initvalu_31-initvalu_36)													//   [mM/ms]
+
+	// Sodium and Calcium Buffering														
+	finavalu[offset_17] = kon_na*initvalu_32*(Bmax_Naj-initvalu_17)-koff_na*initvalu_17								// NaBj      [mM/ms]
+	finavalu[offset_18] = kon_na*initvalu_33*(Bmax_Nasl-initvalu_18)-koff_na*initvalu_18							// NaBsl     [mM/ms]
+
+	// Cytosolic Ca Buffers
+	finavalu[offset_19] = kon_tncl*initvalu_38*(Bmax_TnClow-initvalu_19)-koff_tncl*initvalu_19						// TnCL      [mM/ms]
+	finavalu[offset_20] = kon_tnchca*initvalu_38*(Bmax_TnChigh-initvalu_20-initvalu_21)-koff_tnchca*initvalu_20			// TnCHc     [mM/ms]
+	finavalu[offset_21] = kon_tnchmg*Mgi*(Bmax_TnChigh-initvalu_20-initvalu_21)-koff_tnchmg*initvalu_21				// TnCHm     [mM/ms]
+	finavalu[offset_22] = 0																		// CaM       [mM/ms]
+	finavalu[offset_23] = kon_myoca*initvalu_38*(Bmax_myosin-initvalu_23-initvalu_24)-koff_myoca*initvalu_23				// Myosin_ca [mM/ms]
+	finavalu[offset_24] = kon_myomg*Mgi*(Bmax_myosin-initvalu_23-initvalu_24)-koff_myomg*initvalu_24				// Myosin_mg [mM/ms]
+	finavalu[offset_25] = kon_sr*initvalu_38*(Bmax_SR-initvalu_25)-koff_sr*initvalu_25								// SRB       [mM/ms]
+	J_CaB_cytosol = finavalu[offset_19] + finavalu[offset_20] + finavalu[offset_21] + finavalu[offset_22] + finavalu[offset_23] + finavalu[offset_24] + finavalu[offset_25]
+
+	// Junctional and SL Ca Buffers
+	finavalu[offset_26] = kon_sll*initvalu_36*(Bmax_SLlowj-initvalu_26)-koff_sll*initvalu_26						// SLLj      [mM/ms]
+	finavalu[offset_27] = kon_sll*initvalu_37*(Bmax_SLlowsl-initvalu_27)-koff_sll*initvalu_27						// SLLsl     [mM/ms]
+	finavalu[offset_28] = kon_slh*initvalu_36*(Bmax_SLhighj-initvalu_28)-koff_slh*initvalu_28						// SLHj      [mM/ms]
+	finavalu[offset_29] = kon_slh*initvalu_37*(Bmax_SLhighsl-initvalu_29)-koff_slh*initvalu_29						// SLHsl     [mM/ms]
+	J_CaB_junction = finavalu[offset_26]+finavalu[offset_28]
+	J_CaB_sl = finavalu[offset_27]+finavalu[offset_29]
+
+	// SR Ca Concentrations
+	finavalu[offset_30] = kon_csqn*initvalu_31*(Bmax_Csqn-initvalu_30)-koff_csqn*initvalu_30						// Csqn      [mM/ms]
+	oneovervsr = 1/Vsr
+	finavalu[offset_31] = J_serca*Vmyo*oneovervsr-(J_SRleak*Vmyo*oneovervsr+J_SRCarel)-finavalu[offset_30]   // Ca_sr     [mM/ms] %Ratio 3 leak current
+
+	// Sodium Concentrations
+	I_Na_tot_junc = I_Na_junc+I_nabk_junc+3*I_ncx_junc+3*I_nak_junc+I_CaNa_junc		// [uA/uF]
+	I_Na_tot_sl = I_Na_sl+I_nabk_sl+3*I_ncx_sl+3*I_nak_sl+I_CaNa_sl					// [uA/uF]
+	finavalu[offset_32] = 0-I_Na_tot_junc*Cmem/(Vjunc*Frdy)+J_na_juncsl/Vjunc*(initvalu_33-initvalu_32)-finavalu[offset_17]
+	oneovervsl = 1/Vsl
+	finavalu[offset_33] = 0-I_Na_tot_sl*Cmem*oneovervsl/Frdy+J_na_juncsl*oneovervsl*(initvalu_32-initvalu_33)+J_na_slmyo*oneovervsl*(initvalu_34-initvalu_33)-finavalu[offset_18]
+	finavalu[offset_34] = J_na_slmyo/Vmyo*(initvalu_33-initvalu_34)											// [mM/msec] 
+
+	// Potassium Concentration
+	I_K_tot = I_to+I_kr+I_ks+I_ki-2*I_nak+I_CaK+I_kp									// [uA/uF]
+	finavalu[offset_35] = 0															// [mM/msec]
+
+	// Calcium Concentrations
+	I_Ca_tot_junc = I_Ca_junc+I_cabk_junc+I_pca_junc-2*I_ncx_junc						// [uA/uF]
+	I_Ca_tot_sl = I_Ca_sl+I_cabk_sl+I_pca_sl-2*I_ncx_sl								// [uA/uF]
+	finavalu[offset_36] = 0-I_Ca_tot_junc*Cmem/(Vjunc*2*Frdy)+J_ca_juncsl/Vjunc*(initvalu_37-initvalu_36)
+	         - J_CaB_junction+(J_SRCarel)*Vsr/Vjunc+J_SRleak*Vmyo/Vjunc				// Ca_j
+	finavalu[offset_37] = 0-I_Ca_tot_sl*Cmem/(Vsl*2*Frdy)+J_ca_juncsl/Vsl*(initvalu_36-initvalu_37)
+	         + J_ca_slmyo/Vsl*(initvalu_38-initvalu_37)-J_CaB_sl									// Ca_sl
+	finavalu[offset_38] = 0-J_serca-J_CaB_cytosol +J_ca_slmyo/Vmyo*(initvalu_37-initvalu_38)
+	junc_sl=J_ca_juncsl/Vsl*(initvalu_36-initvalu_37)
+	sl_junc=J_ca_juncsl/Vjunc*(initvalu_37-initvalu_36)
+	sl_myo=J_ca_slmyo/Vsl*(initvalu_38-initvalu_37)
+	myo_sl=J_ca_slmyo/Vmyo*(initvalu_37-initvalu_38)
+
+	// Simulation type													
+	state = 1																			
+	if state == 0 {
+		I_app = 0
+	} else if state == 1 {															// pace w/ current injection at cycleLength 'cycleLength'
+		if(fmod(timeinst, parameter_1) <= 5){
+			I_app = 9.5
+		}
+		else{
+			I_app = 0.0
+		}
+	} else if state == 2 {  
+		V_hold = 0-55
+		V_test = 0
+		if(timeinst>0.5 && timeinst<200.5){
+			V_clamp = V_test
+		}
+		else{
+			V_clamp = V_hold
+		}
+		R_clamp = 0.04
+		I_app = (V_clamp-initvalu_39)/R_clamp	
+	} 
+
+	// Membrane Potential												
+	I_Na_tot = I_Na_tot_junc + I_Na_tot_sl												// [uA/uF]
+	I_Cl_tot = I_ClCa+I_Clbk															// [uA/uF]
+	I_Ca_tot = I_Ca_tot_junc+I_Ca_tot_sl
+	I_tot = I_Na_tot+I_Cl_tot+I_Ca_tot+I_K_tot
+	finavalu[offset_39] = 0-(I_tot-I_app)
+
+	// Set unused output values to 0 (MATLAB does it by default)
+	finavalu[offset_41] = 0
+	finavalu[offset_42] = 0
+	
+	return finavalu
+}
+
+seq fin(	[Float] initvalu,
+			Int initvalu_offset_ecc,
+			Int initvalu_offset_Dyad,
+			Int initvalu_offset_SL,
+			Int initvalu_offset_Cyt,
+			[Float] parameter,
+			[Float] finavalu,
+			Float JCaDyad,
+			Float JCaSL,
+			Float JCaCyt)
+			: [Float] {
+//	print("fin call")
+//=====================================================================
+//	VARIABLES
+//=====================================================================
+	var [Float] result = init_List([91])
+	// decoded input parameters
+	var Float BtotDyad																	//
+	var Float CaMKIItotDyad																	//
+
+	// compute variables
+	var Float Vmyo																			// [L]
+	var Float Vdyad																			// [L]
+	var Float VSL																				// [L]
+	var Float kDyadSL																			// [L/msec]
+	var Float kSLmyo																			// [L/msec]
+	var Float k0Boff																			// [s^-1] 
+	var Float k0Bon																			// [uM^-1 s^-1] kon = koff/Kd
+	var Float k2Boff																			// [s^-1] 
+	var Float k2Bon																			// [uM^-1 s^-1]
+	var Float k4Boff																			// [s^-1]
+	var Float k4Bon																			// [uM^-1 s^-1]
+	var Float CaMtotDyad
+	var Float Bdyad																			// [uM dyad]
+	var Float J_cam_dyadSL																// [uM/msec dyad]
+	var Float J_ca2cam_dyadSL																	// [uM/msec dyad]
+	var Float J_ca4cam_dyadSL																	// [uM/msec dyad]
+	var Float J_cam_SLmyo																		// [umol/msec]
+	var Float J_ca2cam_SLmyo																	// [umol/msec]
+	var Float J_ca4cam_SLmyo																	// [umol/msec]
+
+//=====================================================================
+//	COMPUTATION
+//=====================================================================
+
+	// decoded input parameters
+	BtotDyad      = parameter[2]														//
+	CaMKIItotDyad = parameter[3]														//
+
+	// set variables
+	Vmyo = 2.1454e-11																	// [L]
+	Vdyad = 1.7790e-14																	// [L]
+	VSL = 6.6013e-13																	// [L]
+	kDyadSL = 3.6363e-16																// [L/msec]
+	kSLmyo = 8.587e-15																	// [L/msec]
+	k0Boff = 0.0014																	// [s^-1] 
+	k0Bon = k0Boff/0.2																	// [uM^-1 s^-1] kon = koff/Kd
+	k2Boff = k0Boff/100																// [s^-1] 
+	k2Bon = k0Bon																		// [uM^-1 s^-1]
+	k4Boff = k2Boff																	// [s^-1]
+	k4Bon = k0Bon																		// [uM^-1 s^-1]
+
+	// ADJUST ECC incorporate Ca buffering from CaM, convert JCaCyt from uM/msec to mM/msec
+	result[initvalu_offset_ecc+35] = finavalu[initvalu_offset_ecc+35] + 1e-3*JCaDyad
+	result[initvalu_offset_ecc+36] = finavalu[initvalu_offset_ecc+36] + 1e-3*JCaSL
+	result[initvalu_offset_ecc+37] = finavalu[initvalu_offset_ecc+37] + 1e-3*JCaCyt
+
+	// incorporate CaM diffusion between compartments
+	CaMtotDyad = initvalu[initvalu_offset_Dyad+0]
+			   + initvalu[initvalu_offset_Dyad+1]
+			   + initvalu[initvalu_offset_Dyad+2]
+			   + initvalu[initvalu_offset_Dyad+3]
+			   + initvalu[initvalu_offset_Dyad+4]
+			   + initvalu[initvalu_offset_Dyad+5]
+			   + CaMKIItotDyad * (  initvalu[initvalu_offset_Dyad+6]
+								  + initvalu[initvalu_offset_Dyad+7]
+								  + initvalu[initvalu_offset_Dyad+8]
+								  + initvalu[initvalu_offset_Dyad+9])
+			   + initvalu[initvalu_offset_Dyad+12]
+			   + initvalu[initvalu_offset_Dyad+13]
+			   + initvalu[initvalu_offset_Dyad+14]
+	Bdyad = BtotDyad - CaMtotDyad																				// [uM dyad]
+	J_cam_dyadSL = 1e-3 * (  k0Boff*initvalu[initvalu_offset_Dyad+0] - k0Bon*Bdyad*initvalu[initvalu_offset_SL+0])			// [uM/msec dyad]
+	J_ca2cam_dyadSL = 1e-3 * (  k2Boff*initvalu[initvalu_offset_Dyad+1] - k2Bon*Bdyad*initvalu[initvalu_offset_SL+1])		// [uM/msec dyad]
+	J_ca4cam_dyadSL = 1e-3 * (  k2Boff*initvalu[initvalu_offset_Dyad+2] - k4Bon*Bdyad*initvalu[initvalu_offset_SL+2])		// [uM/msec dyad]
+	
+	J_cam_SLmyo = kSLmyo * (  initvalu[initvalu_offset_SL+0] - initvalu[initvalu_offset_Cyt+0])								// [umol/msec]
+	J_ca2cam_SLmyo = kSLmyo * (  initvalu[initvalu_offset_SL+1] - initvalu[initvalu_offset_Cyt+1])							// [umol/msec]
+	J_ca4cam_SLmyo = kSLmyo * (  initvalu[initvalu_offset_SL+2] - initvalu[initvalu_offset_Cyt+2])							// [umol/msec]
+	
+	// ADJUST CAM Dyad 
+	result[initvalu_offset_Dyad+0] = finavalu[initvalu_offset_Dyad+0] - J_cam_dyadSL
+	result[initvalu_offset_Dyad+1] = finavalu[initvalu_offset_Dyad+1] - J_ca2cam_dyadSL
+	result[initvalu_offset_Dyad+2] = finavalu[initvalu_offset_Dyad+2] - J_ca4cam_dyadSL
+	
+	// ADJUST CAM Sl
+	result[initvalu_offset_SL+0] = finavalu[initvalu_offset_SL+0] + J_cam_dyadSL*Vdyad/VSL - J_cam_SLmyo/VSL
+	result[initvalu_offset_SL+1] = finavalu[initvalu_offset_SL+1] + J_ca2cam_dyadSL*Vdyad/VSL - J_ca2cam_SLmyo/VSL
+	result[initvalu_offset_SL+2] = finavalu[initvalu_offset_SL+2] + J_ca4cam_dyadSL*Vdyad/VSL - J_ca4cam_SLmyo/VSL
+
+	// ADJUST CAM Cyt 
+	result[initvalu_offset_Cyt+0] = finavalu[initvalu_offset_Cyt+0] + J_cam_SLmyo/Vmyo
+	result[initvalu_offset_Cyt+1] = finavalu[initvalu_offset_Cyt+1] + J_ca2cam_SLmyo/Vmyo
+	result[initvalu_offset_Cyt+2] = finavalu[initvalu_offset_Cyt+2] + J_ca4cam_SLmyo/Vmyo
+
+	return result
+}
+
+seq master(	Float timeinst,
+			[Float] initvalu,
+			[Float] parameter)
+			: [Float] {
+	//print("master call")
+	//=====================================================================
+	//	VARIABLES
+	//=====================================================================
+	var [Float] result = init_List([91])
+
+	// intermediate output on host
+	var Float JCaDyad
+	var Float JCaSL
+	var Float JCaCyt
+
+	// offset pointers
+	var Int initvalu_offset_batch														//
+	var Int initvalu_offset_ecc																// 46 points
+	var Int parameter_offset_ecc
+	var Int initvalu_offset_Dyad															// 15 points
+	var Int parameter_offset_Dyad
+	var Int initvalu_offset_SL																// 15 points
+	var Int parameter_offset_SL
+	var Int initvalu_offset_Cyt																// 15 poitns
+	var Int parameter_offset_Cyt
+
+	// module parameters
+	var Float CaDyad																					// from ECC model, *** Converting from [mM] to [uM] ***
+	var Float CaSL																						// from ECC model, *** Converting from [mM] to [uM] ***
+	var Float CaCyt																						// from ECC model, *** Converting from [mM] to [uM] ***
+
+
+	//=====================================================================
+	//	KERNELS FOR 1 WORKLOAD
+	//=====================================================================
+	
+	
+
+	// ecc function
+	initvalu_offset_ecc = 0												// 46 points
+	parameter_offset_ecc = 0
+	
+	var [Float] ecc_res = init_List([91])
+	ecc_res = ecc(				timeinst,
+								initvalu,
+								initvalu_offset_ecc,
+								parameter,
+								parameter_offset_ecc)
+								
+	for var Int i = initvalu_offset_ecc; i < initvalu_offset_ecc + 46; i ++ {
+		result[i] = ecc_res[i]
+	}
+	
+	// cam function for Dyad
+	initvalu_offset_Dyad = 46											// 15 points
+	parameter_offset_Dyad = 1
+	CaDyad = initvalu[35]*1e3											// from ECC model, *** Converting from [mM] to [uM] ***
+	var [Float] cam_res = init_List([16])
+	cam_res = cam(timeinst,
+								initvalu,
+								initvalu_offset_Dyad,
+								parameter,
+								parameter_offset_Dyad,
+								CaDyad)
+	for var Int i = 0; i < 15; i ++ {
+		result[i + initvalu_offset_Dyad] = cam_res[i]
+	}					
+	JCaDyad = cam_res[15]
+	
+	
+	// cam function for SL
+	initvalu_offset_SL = 61											// 15 points
+	parameter_offset_SL = 6
+	CaSL = initvalu[36]*1e3											// from ECC model, *** Converting from [mM] to [uM] ***
+	cam_res = cam(		timeinst,
+								initvalu,
+								initvalu_offset_SL,
+								parameter,
+								parameter_offset_SL,
+								CaSL)								
+	for var Int i = 0; i < 15; i ++ {
+		result[i + initvalu_offset_SL] = cam_res[i]
+	}					
+	JCaSL = cam_res[15]
+	
+	// cam function for Cyt
+	initvalu_offset_Cyt = 76												// 15 poitns
+	parameter_offset_Cyt = 11
+	CaCyt = initvalu[37]*1e3											// from ECC model, *** Converting from [mM] to [uM] ***
+	cam_res = cam(	timeinst,
+								initvalu,
+								initvalu_offset_Cyt,
+								parameter,
+								parameter_offset_Cyt,
+								CaCyt)
+	for var Int i = 0; i < 15; i ++ {
+		result[i + initvalu_offset_Cyt] = cam_res[i]
+	}					
+	JCaCyt = cam_res[15]
+
+	//=====================================================================
+	//	FINAL KERNEL
+	//=====================================================================
+	
+	// final adjustments
+	var [Float] fin_res = init_List([91])
+	fin_res = fin(				initvalu,
+								initvalu_offset_ecc,
+								initvalu_offset_Dyad,
+								initvalu_offset_SL,
+								initvalu_offset_Cyt,
+								parameter,
+								result,
+								JCaDyad,
+								JCaSL,
+								JCaCyt)
+	
+	for var Int i = 0; i < 3; i++ {
+		result[initvalu_offset_ecc + i + 35] = fin_res[initvalu_offset_ecc + i + 35]
+		result[initvalu_offset_Dyad + i] = fin_res[initvalu_offset_Dyad + i]
+		result[initvalu_offset_SL + i] = fin_res[initvalu_offset_SL + i]
+		result[initvalu_offset_Cyt + i] = fin_res[initvalu_offset_Cyt + i]
+	}
+
+	//=====================================================================
+	//	COMPENSATION FOR NANs and INFs
+	//=====================================================================
+
+	// make sure function does not return NANs and INFs
+	for var Int i=0; i<EQUATIONS; i++{
+		if (isnan(result[i]) == 1){ 
+			result[i] = 0.0001												// for NAN set rate of change to 0.0001
+		}
+		else if (isinf(result[i]) == 1){ 
+			result[i] = 0.0001												// for INF set rate of change to 0.0001
+		}
+	}
+	
+	return result
+
+}
+seq embedded_fehlberg_7_8(	Float timeinst,
+							Float h,
+							[Float] initvalu,
+							[Float] parameter)
+							: [[Float]] {
+
+	var [[Float]] result = init_List([2,91])
+
+	//======================================================================================================================================================
+	//	VARIABLES
+	//======================================================================================================================================================
+
+	var Float c_1_11 = 41.0 / 840.0
+	var Float c6 = 34.0 / 105.0
+	var Float c_7_8= 9.0 / 35.0
+	var Float c_9_10 = 9.0 / 280.0
+
+	var Float a2 = 2.0 / 27.0
+	var Float a3 = 1.0 / 9.0
+	var Float a4 = 1.0 / 6.0
+	var Float a5 = 5.0 / 12.0
+	var Float a6 = 1.0 / 2.0
+	var Float a7 = 5.0 / 6.0
+	var Float a8 = 1.0 / 6.0
+	var Float a9 = 2.0 / 3.0
+	var Float a10 = 1.0 / 3.0
+
+	var Float b31 = 1.0 / 36.0
+	var Float b32 = 3.0 / 36.0
+	var Float b41 = 1.0 / 24.0
+	var Float b43 = 3.0 / 24.0
+	var Float b51 = 20.0 / 48.0
+	var Float b53 = (0-75.0) / 48.0
+	var Float b54 = 75.0 / 48.0
+	var Float b61 = 1.0 / 20.0
+	var Float b64 = 5.0 / 20.0
+	var Float b65 = 4.0 / 20.0
+	var Float b71 = (0-25.0) / 108.0
+	var Float b74 =  125.0 / 108.0
+	var Float b75 = (0-260.0) / 108.0
+	var Float b76 =  250.0 / 108.0
+	var Float b81 = 31.0/300.0
+	var Float b85 = 61.0/225.0
+	var Float b86 = (0-2.0)/9.0
+	var Float b87 = 13.0/900.0
+	var Float b91 = 2.0
+	var Float b94 = (0-53.0)/6.0
+	var Float b95 = 704.0 / 45.0
+	var Float b96 = (0-107.0) / 9.0
+	var Float b97 = 67.0 / 90.0
+	var Float b98 = 3.0
+	var Float b10_1 = (0-91.0) / 108.0
+	var Float b10_4 = 23.0 / 108.0
+	var Float b10_5 = (0-976.0) / 135.0
+	var Float b10_6 = 311.0 / 54.0
+	var Float b10_7 = (0-19.0) / 60.0
+	var Float b10_8 = 17.0 / 6.0
+	var Float b10_9 = (0-1.0) / 12.0
+	var Float b11_1 = 2383.0 / 4100.0
+	var Float b11_4 = (0-341.0) / 164.0
+	var Float b11_5 = 4496.0 / 1025.0
+	var Float b11_6 = (0-301.0) / 82.0
+	var Float b11_7 = 2133.0 / 4100.0
+	var Float b11_8 = 45.0 / 82.0
+	var Float b11_9 = 45.0 / 164.0
+	var Float b11_10 = 18.0 / 41.0
+	var Float b12_1 = 3.0 / 205.0
+	var Float b12_6 = (0- 6.0 )/ 41.0
+	var Float b12_7 = (0- 3.0 )/ 205.0
+	var Float b12_8 = (0- 3.0) / 41.0
+	var Float b12_9 = 3.0 / 41.0
+	var Float b12_10 = 6.0 / 41.0
+	var Float b13_1 = (0-1777.0) / 4100.0
+	var Float b13_4 = (0-341.0) / 164.0
+	var Float b13_5 = 4496.0 / 1025.0
+	var Float b13_6 = (0-289.0) / 82.0
+	var Float b13_7 = 2193.0 / 4100.0
+	var Float b13_8 = 51.0 / 82.0
+	var Float b13_9 = 33.0 / 164.0
+	var Float b13_10 = 12.0 / 41.0
+
+	var Float err_factor  = (0-41.0) / 840.0
+
+	var Float h2_7 = a2 * h
+
+	var Float timeinst_temp
+	var [Float] initvalu_temp = init_List([91])
+	var [[Float]] finavalu_temp = init_List([13,91])
+
+	//======================================================================================================================================================
+	//		EVALUATIONS
+	//======================================================================================================================================================
+
+	//===================================================================================================
+	//		1
+	//===================================================================================================
+
+	timeinst_temp = timeinst
+	initvalu_temp = initvalu
+
+	finavalu_temp[0] = master(	timeinst_temp,
+					initvalu_temp,
+					parameter)
+
+	//===================================================================================================
+	//		2
+	//===================================================================================================
+
+	timeinst_temp = timeinst+h2_7
+	for var Int i=0; i<EQUATIONS; i++{
+		initvalu_temp[i] = initvalu[i] + h2_7 * (finavalu_temp[0][i])
+	}
+
+	finavalu_temp[1] = master(	timeinst_temp,
+					initvalu_temp,
+					parameter)
+
+	//===================================================================================================
+	//		3
+	//===================================================================================================
+
+	timeinst_temp = timeinst+a3*h
+	for var Int i=0; i<EQUATIONS; i++{
+		initvalu_temp[i] = initvalu[i] + h * ( b31*finavalu_temp[0][i] + b32*finavalu_temp[1][i])
+	}
+
+	finavalu_temp[2] = master(	timeinst_temp,
+					initvalu_temp,
+					parameter)
+
+	//===================================================================================================
+	//		4
+	//===================================================================================================
+
+	timeinst_temp = timeinst+a4*h
+	for var Int i=0; i<EQUATIONS; i++{
+		initvalu_temp[i] = initvalu[i] + h * ( b41*finavalu_temp[0][i] + b43*finavalu_temp[2][i]) 
+	}
+
+	finavalu_temp[3] = master(	timeinst_temp,
+					initvalu_temp,
+					parameter)
+	//===================================================================================================
+	//		5
+	//===================================================================================================
+
+	timeinst_temp = timeinst+a5*h
+	for var Int i=0; i<EQUATIONS; i++{
+		initvalu_temp[i] = initvalu[i] + h * ( b51*finavalu_temp[0][i] + b53*finavalu_temp[2][i] + b54*finavalu_temp[3][i]) 
+	}
+
+	finavalu_temp[4] = master(	timeinst_temp,
+					initvalu_temp,
+					parameter)
+
+	//===================================================================================================
+	//		6
+	//===================================================================================================
+
+	timeinst_temp = timeinst+a6*h
+	for var Int i=0; i<EQUATIONS; i++{
+		initvalu_temp[i] = initvalu[i] + h * ( b61*finavalu_temp[0][i] + b64*finavalu_temp[3][i] + b65*finavalu_temp[4][i]) 
+	}
+
+	finavalu_temp[5] = master(	timeinst_temp,
+					initvalu_temp,
+					parameter)
+
+	//===================================================================================================
+	//		7
+	//===================================================================================================
+
+	timeinst_temp = timeinst+a7*h
+	for var Int i=0; i<EQUATIONS; i++{
+		initvalu_temp[i] = initvalu[i] + h * ( b71*finavalu_temp[0][i] + b74*finavalu_temp[3][i] + b75*finavalu_temp[4][i] + b76*finavalu_temp[5][i])
+	}
+
+	finavalu_temp[6] = master(	timeinst_temp,
+					initvalu_temp,
+					parameter)
+
+	//===================================================================================================
+	//		8
+	//===================================================================================================
+
+	timeinst_temp = timeinst+a8*h
+	for var Int i=0; i<EQUATIONS; i++{
+		initvalu_temp[i] = initvalu[i] + h * ( b81*finavalu_temp[0][i] + b85*finavalu_temp[4][i] + b86*finavalu_temp[5][i] + b87*finavalu_temp[6][i])
+	}
+
+	finavalu_temp[7] = master(	timeinst_temp,
+					initvalu_temp,
+					parameter)
+
+	//===================================================================================================
+	//		9
+	//===================================================================================================
+
+	timeinst_temp = timeinst+a9*h
+	for var Int i=0; i<EQUATIONS; i++{
+		initvalu_temp[i] = initvalu[i] + h * ( b91*finavalu_temp[0][i] + b94*finavalu_temp[3][i] + b95*finavalu_temp[4][i] + b96*finavalu_temp[5][i] + b97*finavalu_temp[6][i]+ b98*finavalu_temp[7][i]) 
+	}
+
+	finavalu_temp[8] = master(	timeinst_temp,
+					initvalu_temp,
+					parameter)
+
+	//===================================================================================================
+	//		10
+	//===================================================================================================
+
+	timeinst_temp = timeinst+a10*h
+	for var Int i=0; i<EQUATIONS; i++{
+		initvalu_temp[i] = initvalu[i] + h * ( b10_1*finavalu_temp[0][i] + b10_4*finavalu_temp[3][i] + b10_5*finavalu_temp[4][i] + b10_6*finavalu_temp[5][i] + b10_7*finavalu_temp[6][i] + b10_8*finavalu_temp[7][i] + b10_9*finavalu_temp[8] [i]) 
+	}
+
+	finavalu_temp[9] = master(	timeinst_temp,
+					initvalu_temp,
+					parameter)
+
+	//===================================================================================================
+	//		11
+	//===================================================================================================
+
+	timeinst_temp = timeinst+h
+	for var Int i=0; i<EQUATIONS; i++{
+		initvalu_temp[i] = initvalu[i] + h * ( b11_1*finavalu_temp[0][i] + b11_4*finavalu_temp[3][i] + b11_5*finavalu_temp[4][i] + b11_6*finavalu_temp[5][i] + b11_7*finavalu_temp[6][i] + b11_8*finavalu_temp[7][i] + b11_9*finavalu_temp[8][i]+ b11_10 * finavalu_temp[9][i])
+	}
+
+	finavalu_temp[10] = master(	timeinst_temp,
+					initvalu_temp,
+					parameter)
+
+	//===================================================================================================
+	//		12
+	//===================================================================================================
+
+	timeinst_temp = timeinst
+	for var Int i=0; i<EQUATIONS; i++{
+		initvalu_temp[i] = initvalu[i] + h * ( b12_1*finavalu_temp[0][i] + b12_6*finavalu_temp[5][i] + b12_7*finavalu_temp[6][i] + b12_8*finavalu_temp[7][i] + b12_9*finavalu_temp[8][i] + b12_10 * finavalu_temp[9][i]) 
+	}
+
+	finavalu_temp[11] = master(	timeinst_temp,
+					initvalu_temp,
+					parameter)
+
+	//===================================================================================================
+	//		13
+	//===================================================================================================
+
+	timeinst_temp = timeinst+h
+	for var Int i=0; i<EQUATIONS; i++{
+		initvalu_temp[i] = initvalu[i] + h * ( b13_1*finavalu_temp[0][i] + b13_4*finavalu_temp[3][i] + b13_5*finavalu_temp[4][i] + b13_6*finavalu_temp[5][i] + b13_7*finavalu_temp[6][i] + b13_8*finavalu_temp[7][i] + b13_9*finavalu_temp[8][i] + b13_10*finavalu_temp[9][i] + finavalu_temp[11][i]) 
+	}
+
+	finavalu_temp[12] = master(	timeinst_temp,
+					initvalu_temp,
+					parameter)
+
+	//======================================================================================================================================================
+	//		FINAL VALUE
+	//======================================================================================================================================================
+
+	for var Int i=0; i<EQUATIONS; i++{
+		result[0][i]= initvalu[i] +  h * (c_1_11 * (finavalu_temp[0][i] + finavalu_temp[10][i])  + c6 * finavalu_temp[5][i] + c_7_8 * (finavalu_temp[6][i] + finavalu_temp[7][i]) + c_9_10 * (finavalu_temp[8][i] + finavalu_temp[9][i]) )
+	}
+
+	//======================================================================================================================================================
+	//		RETURN
+	//======================================================================================================================================================
+
+	for var Int i=0; i<EQUATIONS; i++{
+		result[1][i] = abs(err_factor * (finavalu_temp[0][i] + finavalu_temp[10][i] - finavalu_temp[11][i] - finavalu_temp[12][i]))
+	}
+	
+	return result
+}
+
+seq single_iteration([[Float]] y, [Float] params) : [Float] {
+	var [Float] x = init_List([302]) // x[xmax+1] will be storing the status of the computation
+	//print("start single iteration")	
+	// solver parameters
+	var Float err_exponent = 1.0 / 7.0
+	var Float last_interval = 0
+	var Int error
+	var Int outside
+	var Float h = 1
+	var Float h_init = 1
+	var Int xmin = 0
+	var Float tolerance = 10/(xmax-xmin)
+	
+	var [[Float]] y_local = init_List([300,91])
+	y_local = y
+
+	// memory
+	var Float scale_min
+	var Float scale_fina
+	var [Float] err = init_List([91])
+	var [Float] scale = init_List([91])
+	var [Float] yy = init_List([91])
+	
+	var Int j_count = 0
+
+	// save value for initial time instance
+	x[xmin] = 0
+
+	// Verify that the step size is positive and that the upper endpoint of integration is greater than the initial enpoint.               //
+	if xmax < xmin || h <= 0.0{
+		x[xmax+1] = 0-2
+		print("Abort iteration")
+		return x
+	}
+
+	// If the upper endpoint of the independent variable agrees with the initial value of the independent variable.  Set the value of the dependent variable and return success. //
+	if xmax == xmin{
+		x[xmax+1] = 0                
+		print("Abort iteration")
+		return x
+	}
+
+	// Insure that the step size h is not larger than the length of the integration interval.                                            //
+	if h > (xmax - xmin)  { 
+		h = xmax - xmin
+		last_interval = 1
+	}
+	
+	for var Int k=xmin+1; k<=xmax; k++ {											// start after initial value
+
+		x[k] = k-1
+		h = h_init
+
+		scale_fina = 1.0
+
+		//==========================================================================================
+		//		MAKE ATTEMPTS TO MINIMIZE ERROR
+		//==========================================================================================
+
+		// make attempts to minimize error
+		j_count = 0
+		for var Int j = 0; j < ATTEMPTS; j++ {
+			j_count++
+			//============================================================
+			//		REINITIALIZE VARIABLES
+			//============================================================
+
+			error = 0
+			outside = 0
+			scale_min = MAX_SCALE_FACTOR
+
+			//============================================================
+			//		EVALUATE ALL EQUATIONS
+			//============================================================
+			var [[Float]] fehlberg_result = init_List([2,91])
+			//print("do fehlberg")
+			fehlberg_result = embedded_fehlberg_7_8(x[k],
+													h,
+													y_local[k-1],
+													params)
+													
+			y_local[k] = fehlberg_result[0]
+			err = fehlberg_result[1]
+			//============================================================
+			//		IF THERE WAS NO ERROR FOR ANY OF EQUATIONS, SET SCALE AND LEAVE THE LOOP
+			//============================================================
+
+			for var Int i=0; i<EQUATIONS; i++{
+				if err[i] > 0{
+					error = 1
+				}
+			}
+			if error != 1 {
+				scale_fina = MAX_SCALE_FACTOR 
+				break //j = ATTEMPTS //approximate break
+			} else {
+
+				//============================================================
+				//		FIGURE OUT SCALE AS THE MINIMUM OF COMPONENT SCALES
+				//============================================================
+
+				for var Int i=0; i<EQUATIONS; i++{
+					if(y_local[k-1][i] == 0.0){
+						yy[i] = tolerance
+					}
+					else{
+						yy[i] = abs(y_local[k-1][i])
+					}
+					scale[i] = 0.8 * pow( tolerance * yy[i] / err[i] , err_exponent )
+					if(scale[i]<scale_min){
+						scale_min = scale[i]
+					}
+				}
+				scale_fina = min( max(scale_min,0.125f), 4.0f)
+
+				//============================================================
+				//		IF WITHIN TOLERANCE, FINISH ATTEMPTS...
+				//============================================================
+
+				for var Int i=0; i<EQUATIONS; i++{
+					if ( err[i] > ( tolerance * yy[i] ) ){
+						outside = 1
+					}
+				}
+				if (outside == 0){
+					break
+					//j = ATTEMPTS //approximate break
+				} else {
+
+					//============================================================
+					//		...OTHERWISE, ADJUST STEP FOR NEXT ATTEMPT
+					//============================================================
+
+					// scale next step in a default way
+					h = h * scale_fina
+
+					// limit step to 0.9, because when it gets close to 1, it no longer makes sense, as 1 is already the next time instance (added to original algorithm)
+					if (h >= 0.9) {
+						h = 0.9
+					}
+
+					// if instance+step exceeds range limit, limit to that range
+					if  x[k] + h > xmax {
+						h = xmax - x[k]
+					} else if ((x[k] + 1.5 * h) > xmax) {// if getting closer to range limit, decrease step
+						h = 0.5 * h
+					}
+				}
+			}
+
+		}
+
+		//==========================================================================================
+		//		SAVE TIME INSTANCE THAT SOLVER ENDED UP USING
+		//==========================================================================================
+
+		x[k] = x[k] + h
+
+		//==========================================================================================
+		//		IF MAXIMUM NUMBER OF ATTEMPTS REACHED AND CANNOT GIVE SOLUTION, EXIT PROGRAM WITH ERROR
+		//==========================================================================================
+
+		if  j_count >= ATTEMPTS {
+			x[xmax+1] = 0-1
+			//print("error " {error} " outside " {outside})
+			//print("iteration error" {k})
+			return x
+		}
+
+	}
+	x[xmax+1] = 0
+	//print("finish iteration")
+	return x
+}
+
+seq main(): Int {
+	var [[[Float]]] y = init_List([10,300,91])
+	var [[Float]] x = init_List([10,302])
+	var [[Float]] params = init_List([10,16])
+	
+	for var Int i = 0; i < workload; i++ {
+	    y[i][0] = read("y.txt")
+	    params[i] = read("params.txt")
+	}
+	//print("start Kernel")
+	//var Long time = get_time()
+	x = kernel<<<>>>(y,params)
+	//time = get_time() - time
+	
+	//print("Kernel duration:" {time} "us")
+	var Int status = x[0][xmax+1]
+	
+	write("x.txt", {x})
+	
+	return 0
+	
+}
+
+}

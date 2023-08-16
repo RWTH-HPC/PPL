@@ -1,6 +1,7 @@
 package de.parallelpatterndsl.patterndsl.abstractPatternTree.Nodes;
 
 import de.parallelpatterndsl.patterndsl.abstractPatternTree.DataElements.Data;
+import de.parallelpatterndsl.patterndsl.abstractPatternTree.DataElements.PrimitiveDataTypes;
 import de.se_rwth.commons.logging.Log;
 
 import java.util.ArrayList;
@@ -38,9 +39,10 @@ public abstract class FunctionNode extends PatternNode {
     private ArrayList<Data> argumentValues = new ArrayList<>();
 
     /**
-     * True, iff this function does have a parallel pattern node as one of its ancestors.
+     * True, iff the function is still traversed after the inlining process.
      */
-    private boolean hasParallelDescendants;
+    private boolean availableAfterInlining = false;
+
 
     public FunctionNode(String identifier) {
         this.identifier = identifier;
@@ -69,14 +71,6 @@ public abstract class FunctionNode extends PatternNode {
         return argumentValues;
     }
 
-    public boolean isHasParallelDescendants() {
-        return hasParallelDescendants;
-    }
-
-    public void setHasParallelDescendants(boolean hasParallelDescendants) {
-        this.hasParallelDescendants = hasParallelDescendants;
-    }
-
     @Override
     public PatternNode getParent() {
         Log.error("Parent does not exist in function nodes!");
@@ -102,4 +96,27 @@ public abstract class FunctionNode extends PatternNode {
     public void addParameterShapes(ArrayList<ArrayList<Integer>> shapes) {
         this.parameterShapes.add(shapes);
     }
+
+    public boolean isAvailableAfterInlining() {
+        return availableAfterInlining;
+    }
+
+    public void setAvailableAfterInlining(boolean availableAfterInlining) {
+        this.availableAfterInlining = availableAfterInlining;
+    }
+
+    public abstract PrimitiveDataTypes getReturnType();
+
+    public abstract boolean returnsArray();
+
+    /**
+     * Adds the identifier to the Function node, used when unrolling the APT
+     * @param unrollIdentifier
+     */
+    public void addUnrollIdentifier(String unrollIdentifier) {
+        identifier = identifier + "_" + unrollIdentifier;
+    }
+
+    @Override
+    public abstract FunctionNode deepCopy();
 }

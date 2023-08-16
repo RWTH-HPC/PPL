@@ -75,4 +75,10 @@ public interface Processor {
      * @return
      */
     public int getRank();
+
+    /**
+     * Tests if this Processor is the first in the parent device
+     * @return
+     */
+    public boolean isFirstCG();
 }

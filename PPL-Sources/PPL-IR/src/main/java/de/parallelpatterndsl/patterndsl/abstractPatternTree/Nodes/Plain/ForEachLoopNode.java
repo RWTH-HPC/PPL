@@ -1,9 +1,13 @@
 package de.parallelpatterndsl.patterndsl.abstractPatternTree.Nodes.Plain;
 
 import de.parallelpatterndsl.patterndsl.abstractPatternTree.DataElements.Data;
+import de.parallelpatterndsl.patterndsl.abstractPatternTree.Nodes.PatternNode;
 import de.parallelpatterndsl.patterndsl.abstractPatternTree.Visitor.APTVisitor;
 import de.parallelpatterndsl.patterndsl.abstractPatternTree.Visitor.CallCountResetter;
 import de.parallelpatterndsl.patterndsl.abstractPatternTree.Visitor.ExtendedShapeAPTVisitor;
+import de.parallelpatterndsl.patterndsl.helperLibrary.DeepCopyHelper;
+
+import java.util.ArrayList;
 
 /**
  * Definition of a for-loop of the abstract pattern tree.
@@ -44,6 +48,28 @@ public class ForEachLoopNode extends LoopNode {
 
     public void setGenerationRandomIndex(String generationRandomIndex) {
         this.generationRandomIndex = generationRandomIndex;
+    }
+
+    @Override
+    public ForEachLoopNode deepCopy() {
+        DeepCopyHelper.addScope(this.getVariableTable());
+        ForEachLoopNode result = new ForEachLoopNode(DeepCopyHelper.currentScope().get(loopControlVariable.getIdentifier()));
+        result.setVariableTable(DeepCopyHelper.currentScope());
+
+        DeepCopyHelper.DataTraceUpdate(result);
+
+        ArrayList<PatternNode> newChildren = new ArrayList<>();
+        for (PatternNode node: this.getChildren()) {
+            PatternNode newNode = node.deepCopy();
+            newChildren.add(newNode);
+            newNode.setParent(result);
+        }
+
+        result.setChildren(newChildren);
+
+        DeepCopyHelper.removeScope();
+
+        return result;
     }
 
     /**

@@ -1,0 +1,13 @@
+{
+    "cores": "64",
+    "frequency": "1380",
+    "arithmetic-units": "1",
+    "vectorization": "",
+    "caches": [
+      {
+        "latency": "20.3",
+        "bandwidth": "150600.0",
+        "size": "0.128"
+      }
+    ]
+}

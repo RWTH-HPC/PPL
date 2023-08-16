@@ -1,0 +1,54 @@
+pathfinder {
+include "../math"
+
+map kernel([Int] src, [Int] wall):[Int] dst {
+	var Int minimum = src[INDEX]
+	minimum = min(minimum, src[INDEX-1])
+	minimum = min(minimum, src[INDEX+1])
+	dst[INDEX] = wall[INDEX] + minimum
+}
+
+seq main(): Int {
+	var Int rows = 100000
+	var Int cols = 100000
+	
+	var [[Int]] wall = init_List([100000,100000])
+	var [[Int]] data = init_List([100000,100000])
+	
+	var [Int] result = init_List([100000])
+	
+	
+	for var Int i = 0; i < cols; i++ {
+		for var Int j = 0; j < rows;j++ {
+			wall[j][i] = rand() % 10
+			data[j][i] = wall[j][i]
+		}
+		result[i] = wall[0][i]
+	}
+	
+	var [Int] src = init_List([100000])
+	var [Int] dst = init_List([100000])
+	var [Int] temp = init_List([100000])
+	
+	dst = result
+	//var Long time = get_time()
+	for var Int t = 0; t < rows-1; t++ {
+        temp = src
+        src = dst
+        dst = temp
+		var [Int] wall_n = init_List([100000])
+		wall_n = wall[t+1]
+		dst = kernel<<<>>>(src,wall_n)
+		
+		dst[0] = wall_n[0] + min(src[0], src[1])
+		dst[cols-1] = wall_n[cols-1] + min(src[cols-1], src[cols-2])
+    }
+    //time = get_time() - time
+    //print("Kernel took: " {time} " us")
+	
+	write("result.txt", {dst})
+	
+	return 0
+}
+
+}

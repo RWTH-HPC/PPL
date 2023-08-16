@@ -1,0 +1,588 @@
+leukocyte {
+include "../math"
+var Float radius = 10
+
+var Int xc_shift = 0
+var Int yc_shift = xc_shift + 1
+var Int x_shift = yc_shift + 1
+var Int y_shift = x_shift + 20
+var Int r_shift = y_shift + 20
+
+// Regularized version of the Heaviside step function,
+//  parameterized by a small positive number 'eps'
+stencil heaviside([[Float]] z, Float v, Float e) : [[Float]] H{	
+	// Precompute constants to avoid division in the for loops below
+	/* var Float one_over_pi = 1.0 / pi
+	var Float one_over_e = 1.0 / e
+	
+	// Compute H = (1 / pi) * atan((z * v) / eps) + 0.5
+	var Float z_val = z[INDEX0][INDEX1] * v
+	var Float H_val = one_over_pi * atan(z_val * one_over_e) + 0.5
+	H[INDEX0][INDEX1] = H_val
+	*/
+	
+	// A simpler, faster approximation of the Heaviside function
+
+	var Float z_val = z[INDEX0][INDEX1] * v + e * 0
+	var Float H_val = 0.5
+	if z_val < 0-0.0001 {H_val = 0.0}
+	else if z_val > 0.0001 {H_val = 1.0}
+	H[INDEX0][INDEX1] = H_val
+}
+
+seq MGVF([[Float]] I, Int vx, Int vy, Int x_offset, Int x_end, Int y_offset, Int y_end) : [[Float]] {
+
+	// Constants
+	var Float converge = 0.00001
+	var Float mu = 0.5
+	var Float epsilon = 0.0000000001
+	var Float lambda = 8.0 * mu + 1.0
+	// Smallest positive value expressable in single-precision
+	var Float eps = MIN_FLOAT
+	// Maximum number of iterations to compute the MGVF matrix
+	var Int iterations = 500
+	
+	// Find the maximum and minimum values in I
+	var Float Imax = I[0][0]
+	var Float Imin = I[0][0]
+	for var Int i = x_offset; i < x_end; i++ {
+		for var Int j = y_offset; j < y_end; j++ {
+			var Float temp = I[i][j]
+			if (temp > Imax) {Imax = temp}
+			else if (temp < Imin) {Imin = temp}
+		}
+	}
+	
+	// Normalize the image I
+	var Float scale = 1.0 / (Imax - Imin + eps)
+	var [[Float]] I_upd = init_List([81,81], 0)
+	for var Int i = x_offset; i < x_end; i++ {
+		for var Int j = y_offset; j < y_end; j++ {
+			var Float old_val = I[i][j]
+			I_upd[i][j] = (old_val - Imin) * scale
+		}
+	}
+
+	// Initialize the output matrix IMGVF with values from I
+	var [[Float]] IMGVF = init_List([81,81])
+	for var Int i = x_offset; i < x_end; i++ {
+		for var Int j = y_offset; j < y_end; j++ {
+			IMGVF[i][j] = I_upd[i][j]
+		}
+	}
+	
+	// Precompute row and column indices for the
+	//  neighbor difference computation below
+	var [Int] rowU = init_List([81])
+	var [Int] rowD = init_List([81])
+	var [Int] colL = init_List([81])
+	var [Int] colR = init_List([81])
+	rowU[y_offset] = 0
+	rowD[y_end - 1] = y_end - 1
+	for var Int i = y_offset + 1; i < y_end; i++ {
+		rowU[i] = i - 1
+		rowD[i - 1] = i
+	}
+	colL[x_offset] = 0
+	colR[x_end - 1] = x_end - 1
+	for var Int j = x_offset; j < x_end - 1 ; j++ {
+		colL[j] = j - 1
+		colR[j - 1] = j
+	}
+	
+	// Allocate matrices used in the while loop below
+	var [[Float]] U = init_List([81,81])
+	var [[Float]] UR = init_List([81,81])
+	var [[Float]] UHe = init_List([81,81])
+	var [[Float]] URHe = init_List([81,81])
+	
+	var [[Float]] D = init_List([81,81])
+	var [[Float]] DR = init_List([81,81])
+	var [[Float]] DHe = init_List([81,81])
+	var [[Float]] DRHe = init_List([81,81])
+	
+	var [[Float]] L = init_List([81,81])
+	var [[Float]] UL = init_List([81,81])
+	var [[Float]] LHe = init_List([81,81])
+	var [[Float]] ULHe = init_List([81,81])
+	
+	var [[Float]] R = init_List([81,81])
+	var [[Float]] DL = init_List([81,81])
+	var [[Float]] RHe = init_List([81,81])
+	var [[Float]] DLHe = init_List([81,81])
+
+	
+	// Precompute constants to avoid division in the for loops below
+	var Float mu_over_lambda = mu / lambda
+	var Float one_over_lambda = 1.0 / lambda
+	
+	// Compute the MGVF
+	var Int iter = 0
+	var Float mean_diff = 1.0
+	while ((iter < iterations) && (mean_diff > converge)) { 
+	    
+	    // Compute the difference between each pixel and its eight neighbors
+		for var Int i = x_offset; i < x_end; i++ {
+			var Int rowU_i = rowU[i]
+			var Int rowD_i = rowD[i]
+			for var Int j = y_offset; j < y_end; j++ {
+			var Int colL_j = colL[j]
+			var Int colR_j = colR[j]
+				var Float subtrahend = IMGVF[i][j]
+				U[i][j] = IMGVF[rowU_i][ j] - subtrahend
+				D[i][j] = IMGVF[rowD_i][j] - subtrahend
+				L[i][j] = IMGVF[i][colL_j] - subtrahend
+				R[i][j] = IMGVF[i][colR_j] - subtrahend
+				UR[i][j] = IMGVF[rowU_i][colR_j] - subtrahend
+				DR[i][j] = IMGVF[rowD_i][colR_j] - subtrahend
+				UL[i][j] = IMGVF[rowU_i][colL_j] - subtrahend
+				DL[i][j] = IMGVF[rowD_i][colL_j] - subtrahend
+			}
+		}
+		
+	    // Compute the regularized heaviside version of the matrices above
+		UHe = heaviside<<<>>>( U,  0-vy,      epsilon)
+		DHe = heaviside<<<>>>( D,   vy,      epsilon)
+		LHe = heaviside<<<>>>( L,  0-vx,      epsilon)
+		RHe = heaviside<<<>>>( R,   vx,      epsilon)
+		URHe = heaviside<<<>>>(UR,  vx - vy, epsilon)
+		DRHe = heaviside<<<>>>(DR,  vx + vy, epsilon)
+		ULHe = heaviside<<<>>>(UL, 0-vx - vy, epsilon)
+		DLHe = heaviside<<<>>>(DL,  vy - vx, epsilon)
+		
+		// Update the IMGVF matrix
+		var Float total_diff = 0.0
+		for var Int i = x_offset; i < x_end; i++ {
+			for var Int j = y_offset; j < y_end; j++ {
+				// Store the old value so we can compute the difference later
+				var Float old_val = IMGVF[i][j]
+				
+				// Compute IMGVF += (mu / lambda)(UHe .*U  + DHe .*D  + LHe .*L  + RHe .*R +
+				//                                URHe.*UR + DRHe.*DR + ULHe.*UL + DLHe.*DL);
+				var Float vU  = UHe[i][j] * U[i][j]
+				var Float vD  = DHe[i][j] * D[i][j]
+				var Float vL  = LHe[i][j] * L[i][j]
+				var Float vR  = RHe[i][j] * R[i][j]
+				var Float vUR = URHe[i][j] * UR[i][j]
+				var Float vDR = DRHe[i][j] * DR[i][j]
+				var Float vUL = ULHe[i][j] * UL[i][j]
+				var Float vDL = DLHe[i][j] * DL[i][j]				
+				var Float vHe = old_val + mu_over_lambda * (vU + vD + vL + vR + vUR + vDR + vUL + vDL)
+				
+				// Compute IMGVF -= (1 / lambda)(I .* (IMGVF - I))
+				var Float vI = I[i][j]
+				var Float new_val = vHe - (one_over_lambda * vI * (vHe - vI))
+				IMGVF[i][j] = new_val
+				
+				// Keep track of the absolute value of the differences
+				//  between this iteration and the previous one
+				total_diff += abs(new_val - old_val)
+			}
+		}
+		
+		// Compute the mean absolute difference between this iteration
+		//  and the previous one to check for convergence
+		mean_diff = total_diff / ((x_end - x_offset) * (y_end - y_offset))
+	    
+		iter++
+	}
+
+	return IMGVF
+}
+
+seq gradient_x([[Float]] frame, Int x_offset, Int x_end, Int y_offset, Int y_end) : [[Float]]  {
+	var [[Float]] result = init_List([81,81])
+	for var Int i = x_offset; i < x_end; i++ {
+		for var Int j = y_offset; j < y_end; j++ {
+			if j == 0 {
+				result[i][j] = frame[i][j + 1] - frame[i][j]
+			} else if j == #result[0] - 1 {
+				result[i][j] = frame[i][j] - frame[i][j - 1]
+			} else {
+				result[i][j] = (frame[i][j + 1] - frame[i][j - 1])/2
+			}
+		}
+	}	
+	return result
+}
+
+seq gradient_y([[Float]] frame, Int x_offset, Int x_end, Int y_offset, Int y_end) : [[Float]]  {
+	var [[Float]] result = init_List([81,81])
+	for var Int i = x_offset; i < x_end; i++ {
+		for var Int j = y_offset; j < y_end; j++ {
+			if i == 0 {
+				result[i][j] = frame[i + 1][j] - frame[i][j]
+			} else if i == #result - 1 {
+				result[i][j] = frame[i][j] - frame[i - 1][j]
+			} else {
+				result[i][j] = (frame[i + 1][j] - frame[i - 1][j])/2
+			}
+		}
+	}
+	return result
+}
+
+map cell_tracking([Float] x, [Float] y, [[Float]] r, [[Float]] y_pred, [[Float]] frame, [Float] t) : [[Float]] res {
+	res[INDEX] = single_step(x[INDEX], y[INDEX], r[INDEX], y_pred[INDEX], frame, t)
+}
+
+seq single_step(Float x, Float y, [Float] r, [Float] y_pred, [[Float]] frame, [Float] t) : [Float] {
+	var [Float] result = init_List([62]) // combined result from xc and yc snakes and the x, y and r values 20 + 20 + 20 + 1 + 1 = 62
+			
+	// Add up the last ten y-values for this cell
+	//  (or fewer if there are not yet ten previous frames)
+	var Float ycavg = 0.0
+	var Int non_zero = 0
+	for var Float x in y_pred {
+		ycavg += x
+		if x != 0 {
+			non_zero++
+		}
+	}
+	// Compute the average of the last ten y-values
+	//  (this represents the expected y-location of the cell)
+	ycavg = ycavg / non_zero
+	
+	// Determine the range of the subimage surrounding the current position
+	var Int u1 = max(x - 4.0 * radius + 0.5, 0.0 )
+	var Int u2 = min(x + 4.0 * radius + 0.5, 1280 - 1.0)
+	var Int v1 = max(y - 2.0 * radius + 1.5, 0.0 )
+	var Int v2 = min(y + 2.0 * radius + 1.5, 720 - 1.0)
+	
+	var Int x_offset = u1 - (x - 4.0 * radius + 0.5)
+	var Int y_offset = v1 - (y - 4.0 * radius + 1.5)
+	
+	// Extract the subimage
+	var [[Float]] Isub = init_List([81,81])
+	for var Int i = v1; i <= v2; i++ {
+		for var Int j = u1; j <= u2; j++ {
+			Isub[i - v1][j - u1] = frame[i][j]
+		}
+	}
+		
+	// Compute the subimage gradient magnitude	
+	var [[Float]] Ix = init_List([81,81])
+	var [[Float]] Iy = init_List([81,81])
+	var [[Float]] IE = init_List([81,81])	
+	
+	Ix = gradient_x(Isub, x_offset, x_offset + u2 - u1, y_offset, y_offset + v2 - v1)
+	Iy = gradient_y(Isub, x_offset, x_offset + u2 - u1, y_offset, y_offset + v2 - v1)
+	for var Int i = x_offset; i < x_offset + u2 - u1; i++ {
+		for var Int j = y_offset; j < y_offset + v2 - v1; j++ {
+			var Float temp_x = Ix[i][j]
+			var Float temp_y = Iy[i][j]
+			IE[i][j] = sqrt((temp_x * temp_x) + (temp_y * temp_y))
+		}
+	}
+	
+	// Compute the motion gradient vector flow (MGVF) edgemaps
+	var [[Float]] IMGVF = init_List([81,81])
+	IMGVF = MGVF(IE, 1, 1, x_offset, x_offset + u2 - u1, y_offset, y_offset + v2 - v1)
+	
+	// Determine the position of the cell in the subimage			
+	var Float xci = xci - u1
+	var Float yci = yci - (v1 - 1)
+	ycavg = ycavg - (v1 - 1)
+	
+	// Evolve the snake
+	var [Float] evo = init_List([22]) // output combining r, x and y
+	evo = ellipseevolve(IMGVF, xci, yci, r, t, 20, radius, ycavg, x_offset, x_offset + u2 - u1, y_offset, y_offset + v2 - v1)
+		
+	// Compute the cell's new position in the full image
+	xci = evo[0] + u1
+	yci = evo[1] + (v1 - 1)
+	
+	// Store the new location of the cell and the snake
+	result[xc_shift] = xci
+	result[yc_shift] = yci
+	for var Int j = 0; j < 20; j++ {
+		result[j+r_shift] = evo[j+2]
+		result[j+x_shift] = result[xc_shift] + (evo[j+2] * cos(t[j]))
+		result[j+y_shift] = result[yc_shift] + (evo[j+2] * sin(t[j]))
+	}
+	return result
+}
+
+seq ellipseevolve([[Float]] f, Float xc0, Float yc0, [Float] r0, [Float] t, Int Np, Float Er, Float Ey, Int x_offset, Int x_end, Int y_offset, Int y_end) : [Float] {
+	
+	var [Float] result = init_List([22]) // output combining r0, xc0 and yc0
+	
+	// Constants
+	var Float deltax = 0.2
+	var Float deltay = 0.2
+	var Float deltar = 0.2
+	var Float converge = 0.1
+	var Float lambdaedge = 1
+	var Float lambdasize = 0.2
+	var Float lambdapath = 0.05
+	var Int iterations = 1000     // maximum number of iterations
+
+
+	// Initialize variables
+	var Int xc = 0
+	var Int yc = 1
+	result[xc] = xc0
+	result[yc] = yc0
+	for var Int i = 0; i < Np; i++ { result[i+2] = r0[i]}
+	
+	// Compute the x- and y-gradients of the MGVF matrix
+	var [[Float]] fx = init_List([81,81])
+	var [[Float]] fy = init_List([81,81])
+	fx = gradient_x(f, x_offset, x_end, y_offset, y_end)
+	fy = gradient_y(f, x_offset, x_end, y_offset, y_end)
+	
+	// Normalize the gradients
+	for var Int i = x_offset; i < x_end; i++ {
+		for var Int j = y_offset; j < y_end; j++ {
+			var Float temp_x = fx[i][j]
+			var Float temp_y = fy[i][j]
+			var Float fmag = sqrt((temp_x * temp_x) + (temp_y * temp_y))
+			fx[i][j] = temp_x / fmag
+			fy[i][j] = temp_y / fmag
+		}
+	}
+	
+	var [Float] r_old = init_List([20])
+	var [Float] x = init_List([20])
+	var [Float] y = init_List([20])
+	
+	
+	// Evolve the snake
+	var Int iter = 0
+	var Float snakediff = 1.0
+	var Bool stop_condition = false
+	while iter < iterations && snakediff > converge && not stop_condition {
+		
+		// Save the values from the previous iteration
+		var Float xc_old = result[xc]
+		var Float yc_old = result[yc]
+		for var Int i = 0; i < Np; i++ {
+			r_old[i] = result[i+2]
+		}
+		
+		// Compute the locations of the snaxels
+		for var Int i = 0; i < Np; i++ {
+			x[i] = result[xc] + result[i+2] * cos(t[i])
+			y[i] = result[yc] + result[i+2] * sin(t[i])
+		}
+		
+		// See if any of the points in the snake are off the edge of the image
+		var Float min_x = x[0]
+		var Float max_x = x[0]
+		var Float min_y = y[0]
+		var Float max_y = y[0]
+		for var Int i = 1; i < Np; i++ {
+			var Float x_i = x[i]
+			if (x_i < min_x) {min_x = x_i}
+			else if (x_i > max_x){ max_x = x_i}
+			var Float y_i = x[i]
+			if (y_i < min_y){ min_y = y_i}
+			else if (y_i > max_y){ max_y = y_i}
+		}
+		if min_x < x_offset || max_x > x_end - 1.0 || min_y < y_offset || max_y > y_end - 1.0 {
+			stop_condition = true
+		} else {		
+		
+			// Compute the length of the snake		
+			var Float L = 0.0
+			for var Int i = 0; i < Np - 1; i++ {
+				var Float diff_x_in = x[ i + 1] - x[i]
+				var Float diff_y_in = y[ i + 1] - y[i]
+				L += sqrt((diff_x_in * diff_x_in) + (diff_y_in * diff_y_in))
+			}
+			var Float diff_x = x[0] - x[Np - 1]
+			var Float diff_y = y[0] - y[Np - 1]
+			L += sqrt((diff_x * diff_x) + (diff_y * diff_y))
+		
+			// Compute the potential surface at each snaxel
+			var [Float] vf = init_List([20])
+			var [Float] vfx = init_List([20])
+			var [Float] vfy = init_List([20])
+			
+			vf  = linear_interp2(f,  x, y)
+			vfx = linear_interp2(fx, x, y)
+			vfy = linear_interp2(fy, x, y)
+		
+			// Compute the average potential surface around the snake
+			var Float vfmean  = 0
+			var Float vfxmean = 0
+			var Float vfymean = 0
+			
+			vfmean  = sum<<<>>>(vf )
+			vfxmean = sum<<<>>>(vfx)
+			vfymean = sum<<<>>>(vfy)
+
+			vfmean  = vfmean / L
+			vfxmean = vfxmean / L
+			vfymean = vfymean / L			
+			// Compute the radial potential surface		
+			
+			var [Float] vfr = init_List([20])
+			for var Int i = 0; i < #vfr; i++ {
+				var Float vf_val  = vf[i]
+				var Float vfx_val = vfx[i]
+				var Float vfy_val = vfy[i]
+				var Float x_val = x[i]
+				var Float y_val = y[i]
+				var Float new_val = (vf_val + vfx_val * (x_val - xc) + vfy_val * (y_val - yc) - vfmean) / L
+				vfr[i] = new_val
+			}		
+		
+			// Update the snake center and snaxels
+			result[xc] =  result[xc] + (deltax * lambdaedge * vfxmean)
+			result[yc] = (result[yc] + (deltay * lambdaedge * vfymean) + (deltay * lambdapath * Ey)) / (1.0 + deltay * lambdapath)
+			var Float r_diff = 0.0
+			for var Int i = 0; i < Np; i++ {
+				result[i+2] = (result[i+2] + (deltar * lambdaedge * vfr[i]) + (deltar * lambdasize * Er)) /
+			       (1.0 + deltar * lambdasize)
+				r_diff += abs(result[i+2] - r_old[i])
+			}
+		
+			// Test for convergence
+			snakediff = abs(xc - xc_old) + abs(yc - yc_old) + r_diff
+		
+	    
+			iter++
+		}
+	}
+	
+	return result
+}
+
+reduction sum([Float] x) : Float res {
+	res += x[INDEX]
+}
+	
+seq linear_interp2([[Float]] m, [Float] X, [Float] Y) : [Float] {
+	var [Float] res = init_List([20])
+	
+	for var Int i = 0; i < #res; i++ {
+		var Float x_coord = X[i]
+		var Float y_coord = Y[i]
+		
+		var Int l = Cast2Int(x_coord)
+		var Int k = Cast2Int(y_coord)
+		
+		var Float a = x_coord - l
+		var Float b = y_coord - k
+
+		var Float val = (1-a)*(1-b)*m[k][l] +
+				  a*(1-b)*m[k][l+1] +
+				  (1-a)*b*m[k+1][l] +
+				  a*b*m[k+1][l+1]
+		
+		res[i] = val
+	}
+	
+	return res
+}
+
+seq main(): Int {
+	var [Float] xc0  = init_List([1300]) //assume k_count to be NC = 1300
+	var [Float] yc0  = init_List([1300])
+	
+	
+	var [[[Float]]] file = init_List([3600,1280,720]) //NF = 3600
+	
+	file = read("video.txt")
+	
+	xc0 = read("X_Center.txt")
+	yc0 = read("Y_Center.txt")
+	
+	var Int NP = 20
+	
+	// Compute angle parameter
+	var [Float] t = init_List([20])
+	var Float increment = 2 * pi / NP
+	for var Int i = 0; i < #t; i++ {
+		t[i] = i * increment
+	}
+	
+	// Allocate space for a snake for each cell in each frame
+	var [[Float]] xc = init_List([3601, 1300])
+	var [[Float]] yc = init_List([3601, 1300])
+	
+	var [[[Float]]] r = init_List([3601,1300,20])
+	var [[[Float]]] x = init_List([3601,1300,20])
+	var [[[Float]]] y = init_List([3601,1300,20])
+	
+	
+	// Save the first snake for each cell
+	for var Int i = 0; i < #xc0; i++{
+		xc[0][i] = xc0[i]
+		yc[0][i] = yc0[i]
+		for var Int j = 0; j < 20; j++ {
+			r[0][i][j] = radius
+		}
+	}
+	
+	// Generate ellipse points for each cell
+	for var Int i = 0; i < #xc0; i++ {
+		for var Int j = 0; j < NP; j++ {
+			x[0][i][j] = xc[0][i] + (r[0][i][j] * cos(t[j]))
+			y[0][i][j] = yc[0][i] + (r[0][i][j] * sin(t[j]))
+		}
+	}
+	
+	// Process each frame
+	for var Int frame_num = 1; frame_num <= 1000; frame_num++ {	 
+		
+		// Get the current video frame and its dimensions
+		var [[Float]] frame = init_List([1280,720])
+		frame = file[frame_num]
+	    
+	    // Set the current positions equal to the previous positions		
+		for var Int i = 0; i < #xc; i++ {
+			xc[frame_num][i] = xc[frame_num-1][i]
+			yc[frame_num][i] = yc[frame_num-1][i]
+			for var Int j = 0; j < NP; j++ {
+				r[frame_num][i][j] = r[frame_num-1][i][j]
+			}
+		}
+		
+		// create predecessor values for y
+		var [[Float]] y_pred = init_List([1300,10],0)
+		for var Int cell = 0; cell < #y_pred; cell++ {
+			for var Int i = 0; i < #y_pred; i++ {
+				if !(frame_num < i) {
+					y_pred[cell][i] = yc[cell][frame_num - i]
+				}
+			}
+		}
+		
+		var [[Float]] parallel_result = init_List([1300,62]) // combination of the xc, yc, x, y and r values into a single data structure
+		// Split the work among multiple threads, 
+		
+		var [Float] xc_frame = init_List([1300])
+		var [Float] yc_frame = init_List([1300])
+	
+		var [[Float]] r_frame = init_List([1300,20])
+		xc_frame = xc[frame_num]
+		yc_frame = yc[frame_num]
+		r_frame = r[frame_num]
+		
+		parallel_result = cell_tracking<<<>>>(xc_frame, yc_frame, r_frame, y_pred, frame, t)
+
+		// reset original data-structures
+		for var Int i = 0; i < #parallel_result; i++ {
+			xc[frame_num][i] = parallel_result[i][xc_shift]
+			yc[frame_num][i] = parallel_result[i][yc_shift]
+			for var Int j = 0; j < 20; j++ {
+				x[frame_num][i][j] = parallel_result[i][x_shift + j]
+				y[frame_num][i][j] = parallel_result[i][y_shift + j]
+				r[frame_num][i][j] = parallel_result[i][r_shift + j]
+			}
+		}
+		
+		if (frame_num == #file - 1){
+	
+		    write("xc.txt", {xc})
+			write("yc.txt", {yc})
+
+		}
+	}
+	
+    return 0
+}
+
+}

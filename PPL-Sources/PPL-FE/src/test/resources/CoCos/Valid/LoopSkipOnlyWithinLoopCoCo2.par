@@ -1,0 +1,7 @@
+LoopSkipOnlyWithinLoopCoCo2 {
+seq main() : Void {
+    while true {
+        break
+    }
+}
+}

@@ -31,7 +31,7 @@
 
       <!-- Unit Tests -->
       <!-- default folder is src/test/java/ -->
-      <!-- default incl. are "**/Test*.java", "**/*Test.java", "**/*TestCase.java" -->
+      <!-- default incl. are "**/PerformanceTest*.java", "**/*PerformanceTest.java", "**/*TestCase.java" -->
       <plugin>
         <artifactId>maven-surefire-plugin</artifactId>
         <version>${surefire.plugin}</version>
@@ -40,6 +40,7 @@
           <classpathDependencyExcludes>
             <classpathDependencyExclude>de.monticore:monticore-cli</classpathDependencyExclude>
           </classpathDependencyExcludes>
+          <forkMode>always</forkMode>
         </configuration>
         <dependencies>
           <dependency>
@@ -87,7 +88,7 @@
       <scope>provided</scope>
     </dependency>
     
-    <!-- Test Libraries  -->
+    <!-- PerformanceTest Libraries  -->
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>

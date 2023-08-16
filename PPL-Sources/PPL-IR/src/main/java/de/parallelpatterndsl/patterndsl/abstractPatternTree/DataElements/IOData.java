@@ -32,6 +32,11 @@ public class IOData extends Data {
     }
 
     public Data createInlineCopy(String inlineIdentifier) {
-        return new IOData(getIdentifier() + "_" + inlineIdentifier, getTypeName(), isOutput, isHasFileAccess());
+        return new IOData(getIdentifier(), getTypeName(), isOutput, isHasFileAccess());
+    }
+
+    @Override
+    public Data deepCopy() {
+        return new IOData(getIdentifier(), getTypeName(), isOutput, isHasFileAccess());
     }
 }

@@ -1,23 +1,18 @@
 package de.parallelpatterndsl.patterndsl.MappingTree.Nodes.Plain;
 
-import de.parallelpatterndsl.patterndsl.MappingTree.AbstractMappingTree;
-import de.parallelpatterndsl.patterndsl.MappingTree.Nodes.DataControl.DataPlacement;
-import de.parallelpatterndsl.patterndsl.MappingTree.Nodes.DataControl.EndPoint;
 import de.parallelpatterndsl.patterndsl.MappingTree.Nodes.MappingNode;
 import de.parallelpatterndsl.patterndsl.MappingTree.Visitor.AMTVisitor;
-import de.parallelpatterndsl.patterndsl.abstractPatternTree.DataElements.ArrayData;
 import de.parallelpatterndsl.patterndsl.abstractPatternTree.DataElements.Data;
 import de.parallelpatterndsl.patterndsl.abstractPatternTree.Nodes.Plain.ForEachLoopNode;
+import de.parallelpatterndsl.patterndsl.hardwareDescription.Node;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Optional;
 
 /**
  * Defines the for-each-loop node in abstract mapping trees.
  */
-public class ForEachLoopMapping extends MappingNode {
+public class ForEachLoopMapping extends SerialNodeMapping {
 
     /**
      * The variable which defines the individual iterations of the loop.
@@ -35,8 +30,8 @@ public class ForEachLoopMapping extends MappingNode {
      */
     private ComplexExpressionMapping parsedList;
 
-    public ForEachLoopMapping(Optional<MappingNode> parent, HashMap<String, Data> variableTable, ForEachLoopNode aptNode) {
-        super(parent, variableTable, aptNode);
+    public ForEachLoopMapping(Optional<MappingNode> parent, HashMap<String, Data> variableTable, ForEachLoopNode aptNode, Node target) {
+        super(parent, variableTable, aptNode, target);
         loopControlVariable = aptNode.getLoopControlVariable();
         generationRandomIndex = aptNode.getGenerationRandomIndex();
     }

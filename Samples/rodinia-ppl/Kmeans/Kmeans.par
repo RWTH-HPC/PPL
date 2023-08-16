@@ -1,0 +1,116 @@
+Kmeans {
+
+include "../math"
+
+var Int K = 5
+var Int N = 494020
+var Int NITERS = 37
+var Int Dim = 35
+
+map determine_cemtroids([[Float]] points, [[Float]] centroids) : [Int] assignment {
+	assignment[INDEX] = assign_centroid(points[INDEX], centroids[INDEX])
+} 
+
+seq assign_centroid([Float] point, [Float] centroid) : Int{
+	var Float opt_dist = MAX_FLOAT
+	var Int result = 0
+	for var Int i = 0; i < K; i++ {
+        var Float dist = 0
+        for var Int j = 0; j < Dim; j++{
+            dist += (point[j] - centroid[j]) * (point[j] - centroid[j])
+        }
+		if dist < opt_dist {
+			opt_dist = dist
+			result = i
+		}
+	}
+	return result
+}
+
+map update_centroids([[Float]] points, [Int] assignment) : [[Float]] centroids {
+	var [Float] sum = init_List([35])
+    sum = assigned_sum(points, assignment, INDEX)
+	var Int count = assigned_count(points, assignment, INDEX)
+	
+	if count != 0 {
+        centroids[INDEX] = update_feature<<<>>>(sum, count)
+	}
+}
+
+map update_feature([Float] sum, Int count):[Float]centroid{
+    centroid[INDEX] = sum[INDEX]/count
+}
+
+seq assigned_sum([[Float]] points, [Int] assignment, Int centroid) : [Float] {
+	var [Float] res = init_List([35])
+	for var Int i = 0; i < N; i++ {
+		if assignment[i] == centroid {
+            for var Int j = 0; j < Dim; j++{
+			    res[j] += points[i][j]
+            }
+		}
+	}
+	return res
+}
+
+seq assigned_count([[Float]] points, [Int] assignment, Int centroid) : Int {
+	var Int res = 0
+	for var Int i = 0; i < N; i++ {
+		if assignment[i] == centroid {
+			res++
+		}
+	}
+	return res
+}
+
+map copy1D([Float] input) : [Float] output {
+	output[INDEX] = input[INDEX]
+}
+
+seq k_means([[Float]] points, [[Float]] centroids):[[Float]] {
+	var [Int] assignment = init_List([494020])
+	var [[Float]] result_old = init_List([5, 35])
+	var [[Float]] result = init_List([5, 35])
+	
+	result = copy1D<<<>>>(centroids)
+	
+    for var Int iter = 0; iter < 37; iter++ { //niters = 37 the number necessary for kdd_cup.txt
+        // determine nearest centroids
+        assignment = determine_cemtroids<<<>>>(points, result)
+
+        // update centroid positions
+        result = update_centroids<<<>>>(points, assignment)
+		
+    }
+	
+	return result
+}
+
+seq main(): Int {
+    var [[Float]] points = init_List([494020, 35])
+    var [[Float]] centroids = init_List([5, 35])
+    var [Int] assignment = init_List([494020])
+
+    points = read("kdd_cup.txt")
+    
+    for var Int i = 0; i < 5; i++ {
+        for var Int j = 0; j < 35; j++ {
+            centroids[i][j] = rand()
+        }
+    }
+    
+    //var Long time = get_time()
+    
+    centroids = k_means( points, centroids)
+    
+    //time = get_time() - time
+    
+    //print("Kernel Time:" {time} "us")
+
+    write("result.txt", {centroids})
+
+    return 0
+}
+
+}
+

@@ -3,7 +3,7 @@ package Benchmarks;
 import com.google.common.base.Stopwatch;
 import de.monticore.io.paths.ModelPath;
 import de.monticore.symboltable.GlobalScope;
-import de.parallelpatterndsl.patterndsl.APTInlineHandler;
+import de.parallelpatterndsl.patterndsl.Preprocessing.APTInlineHandler;
 import de.parallelpatterndsl.patterndsl.AST2APTGenerator.AST2APT;
 import de.parallelpatterndsl.patterndsl.FlatAPT;
 import de.parallelpatterndsl.patterndsl.FlatAPTGenerator;
@@ -49,11 +49,9 @@ import java.util.stream.Collectors;
 
 public class BatchClassificationTest {
 
-    public static final String GLOBAL_PATH = "../../Samples";
+    public static final String BENCHMARK_PATH = "../../../benchmark/ppl/";
 
-    public static final String BENCHMARK_PATH = GLOBAL_PATH + "/classification/ppl/";
-
-    public static final String CLUSTER_SPEC_PATH = GLOBAL_PATH + "/clusters/cluster_c18g.json";
+    public static final String CLUSTER_SPEC_PATH = "../../../benchmark/clusters/cluster_c18g.json";
 
     private AbstractPatternTree apt;
 
@@ -140,8 +138,8 @@ public class BatchClassificationTest {
         Pair<Mapping, Double> base = baseMapping(flatAPT, model);
 
         try {
-            mapping.a.toJSONFile(BENCHMARK_PATH + "batch_classification.json", "Batch Classification", "c18g", mapping.b);
-            base.a.toJSONFile(BENCHMARK_PATH + "batch_classification_base.json", "Batch Classification", "c18g", base.b);
+            mapping.a.toJSONFile("../../../benchmark/mappings/batch_classification.json", "Batch Classification", "c18g", mapping.b);
+            base.a.toJSONFile("../../../benchmark/mappings/batch_classification_base.json", "Batch Classification", "c18g", base.b);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -149,6 +147,14 @@ public class BatchClassificationTest {
         watch.stop();
         System.out.println("Base: " + base.b + " opt: " + mapping.b);
         System.out.println("Optimization took: " + watch.elapsed(TimeUnit.MILLISECONDS) + " ms.");
+
+        OPT2AMTGenerator amtGenerator = new OPT2AMTGenerator(apt, flatAPT, mapping.a);
+        AbstractMappingTree amt = amtGenerator.generate();
+
+        AbstractMappingTree.setDefaultDevice(network.getNodes().get(0).getDevices().get(0));
+
+        AbstractSynchronizationModel memoryModel = new AbstractSynchronizationModel(amt.getRoot(), network);
+        ArrayList<MappingNode> synchronizedNodes = memoryModel.generateSyncAndTransfer();
     }
 
     private Pair<Mapping, Double> baseMapping(FlatAPT flatAPT, PerformanceModel model) {
@@ -174,7 +180,7 @@ public class BatchClassificationTest {
 
         for (int i = 1; i < flatAPT.size() - 1; i++) {
             StepMapping stepMapping = new StepMapping(i);
-            Iterator<PatternSplit> iter = flatAPT.getSplits(i).stream().sorted(Comparator.comparingInt(s -> s.getStartIndices()[0])).collect(Collectors.toCollection(LinkedHashSet::new)).iterator();
+            Iterator<PatternSplit> iter = flatAPT.getSplits(i).stream().sorted(Comparator.comparingLong(s -> s.getStartIndices()[0])).collect(Collectors.toCollection(LinkedHashSet::new)).iterator();
 
             Team one = new Team(cpu, socket1, socket1.getCores());
             Team two = new Team(cpu, socket2, socket2.getCores());

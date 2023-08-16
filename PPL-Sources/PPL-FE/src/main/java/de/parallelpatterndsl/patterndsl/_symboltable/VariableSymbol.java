@@ -25,21 +25,28 @@ public class VariableSymbol extends VariableSymbolTOP {
      */
     private boolean arrayOnStack;
 
+    /**
+     * True, iff the variable is defined globally.
+     */
+    private boolean global;
+
 
     public VariableSymbol(String name) {
         super(name);
     }
 
-    public VariableSymbol(String name, ASTType type) {
+    public VariableSymbol(String name, ASTType type, boolean global) {
         super(name);
         this.type = type;
         shape = new ArrayList<>();
+        this.global = global;
     }
 
-    public VariableSymbol(String name, ASTType type, boolean arrayOnStack) {
+    public VariableSymbol(String name, ASTType type, boolean global, boolean arrayOnStack) {
         super(name);
         this.type = type;
         shape = new ArrayList<>();
+        this.global = global;
         this.arrayOnStack = arrayOnStack;
     }
 
@@ -55,5 +62,9 @@ public class VariableSymbol extends VariableSymbolTOP {
 
     public boolean isArrayOnStack() {
         return arrayOnStack;
+    }
+
+    public boolean isGlobal() {
+        return global;
     }
 }

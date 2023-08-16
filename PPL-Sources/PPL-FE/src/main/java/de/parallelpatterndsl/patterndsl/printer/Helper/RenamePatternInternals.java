@@ -1,6 +1,8 @@
 package de.parallelpatterndsl.patterndsl.printer.Helper;
-
+/**
 import de.monticore.expressions.commonexpressions._ast.ASTNameExpression;
+ **/
+import de.parallelpatterndsl.patterndsl._ast.ASTNameExpression;
 import de.monticore.symboltable.GlobalScope;
 import de.parallelpatterndsl.patterndsl._ast.ASTFunction;
 import de.parallelpatterndsl.patterndsl._ast.ASTPatternCallStatement;

@@ -1,8 +1,12 @@
 package de.parallelpatterndsl.patterndsl.abstractPatternTree.Nodes.Functions;
 
+import de.parallelpatterndsl.patterndsl.abstractPatternTree.Nodes.PatternNode;
 import de.parallelpatterndsl.patterndsl.abstractPatternTree.Visitor.APTVisitor;
 import de.parallelpatterndsl.patterndsl.abstractPatternTree.Visitor.CallCountResetter;
 import de.parallelpatterndsl.patterndsl.abstractPatternTree.Visitor.ExtendedShapeAPTVisitor;
+import de.parallelpatterndsl.patterndsl.helperLibrary.DeepCopyHelper;
+
+import java.util.ArrayList;
 
 /**
  * Definition of the stencil pattern of the abstract pattern tree.
@@ -18,6 +22,19 @@ public class StencilNode extends ParallelNode {
 
     public int getDimension() {
         return dimension;
+    }
+
+    public void setDimension(int dimension) {
+        this.dimension = dimension;
+    }
+
+    @Override
+    public StencilNode deepCopy() {
+        StencilNode result = new StencilNode(getIdentifier(), dimension);
+
+        DeepCopyHelper.basicPatternSetup(this, result);
+
+        return result;
     }
 
     /**

@@ -16,6 +16,7 @@
     <module>PPL-IR</module>
     <module>PPL-OPT</module>
     <module>PPL-Tool</module>
+    <module>PPL-2CPP</module>
   </modules>
 
   <developers>
@@ -46,6 +47,7 @@
     <junit.platform.version>1.0.3</junit.platform.version>
     <assertj.version>3.7.0</assertj.version>
     <antlr.version>4.7.1</antlr.version>
+    <commons-io.version>2.11.0</commons-io.version>
     <logback.version>1.1.2</logback.version>
     <emf.common.version>2.5.0</emf.common.version>
     <emf.ecore.version>2.5.0</emf.ecore.version>
@@ -141,7 +143,6 @@
             <classpathDependencyExcludes>
               <classpathDependencyExclude>de.monticore:monticore-cli</classpathDependencyExclude>
             </classpathDependencyExcludes>
-            <forkMode>always</forkMode>
           </configuration>
           <dependencies>
             <dependency>
@@ -176,6 +177,13 @@
         <version>${antlr.version}</version>
       </dependency>
     
+
+      <dependency>
+        <groupId>commons-io</groupId>
+        <artifactId>commons-io</artifactId>
+        <version>${commons-io.version}</version>
+      </dependency>
+
       <!-- MontiCore Dependencies -->
       <dependency>
         <groupId>de.monticore</groupId>

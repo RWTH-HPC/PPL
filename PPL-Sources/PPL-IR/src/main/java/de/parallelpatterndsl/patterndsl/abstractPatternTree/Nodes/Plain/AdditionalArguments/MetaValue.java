@@ -15,4 +15,9 @@ public class MetaValue<T> extends AdditionalArguments {
     public T getValue() {
         return value;
     }
+
+    @Override
+    public AdditionalArguments deepCopy() {
+        return new MetaValue<T>(value);
+    }
 }

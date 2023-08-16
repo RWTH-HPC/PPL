@@ -33,4 +33,9 @@ public class LiteralData <T> extends Data {
     public Data createInlineCopy(String inlineIdentifier) {
         return new LiteralData<T>(getIdentifier(), getTypeName(), getValue());
     }
+
+    @Override
+    public Data deepCopy() {
+        return new LiteralData<T>(getIdentifier(), getTypeName(), getValue());
+    }
 }

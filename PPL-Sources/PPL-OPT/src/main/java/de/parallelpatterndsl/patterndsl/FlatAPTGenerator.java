@@ -57,8 +57,15 @@ public class FlatAPTGenerator implements APTVisitor {
     @Override
     public void endVisit(SerialNode node) {
         // Call only for main.
+        int i  = 0;
+        long duration = System.currentTimeMillis();
         for (PatternNode child : node.getChildren()) {
             this.flatAPT.add(child);
+            if (i % 200 == 0 ) {
+                System.out.println("Added node " + i + " of " + node.getChildren().size());
+                System.out.println("Took " + ((double) (System.currentTimeMillis() - duration)/1000) + "s");
+            }
+            i++;
         }
     }
 

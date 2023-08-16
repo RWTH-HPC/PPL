@@ -2,6 +2,7 @@ package de.parallelpatterndsl.patterndsl.abstractPatternTree.Nodes.Functions;
 
 import de.parallelpatterndsl.patterndsl.abstractPatternTree.DataElements.PrimitiveDataTypes;
 import de.parallelpatterndsl.patterndsl.abstractPatternTree.Nodes.FunctionNode;
+import de.parallelpatterndsl.patterndsl.abstractPatternTree.Nodes.PatternNode;
 import de.parallelpatterndsl.patterndsl.abstractPatternTree.Nodes.Plain.CallNode;
 import de.parallelpatterndsl.patterndsl.abstractPatternTree.Nodes.Plain.ComplexExpressionNode;
 import de.parallelpatterndsl.patterndsl.abstractPatternTree.Nodes.Plain.ParallelCallNode;
@@ -9,6 +10,7 @@ import de.parallelpatterndsl.patterndsl.abstractPatternTree.Nodes.Plain.ReturnNo
 import de.parallelpatterndsl.patterndsl.abstractPatternTree.Visitor.APTVisitor;
 import de.parallelpatterndsl.patterndsl.abstractPatternTree.Visitor.CallCountResetter;
 import de.parallelpatterndsl.patterndsl.abstractPatternTree.Visitor.ExtendedShapeAPTVisitor;
+import de.parallelpatterndsl.patterndsl.helperLibrary.DeepCopyHelper;
 import de.se_rwth.commons.logging.Log;
 
 import java.util.ArrayList;
@@ -35,8 +37,18 @@ public class SerialNode extends FunctionNode {
         this.isList = isList;
     }
 
+    @Override
     public PrimitiveDataTypes getReturnType() {
         return returnType;
+    }
+
+    @Override
+    public boolean returnsArray() {
+        ArrayList<Integer> shape = getShape();
+        if (shape.isEmpty()) {
+            return false;
+        }
+        return true;
     }
 
     public boolean isList() {
@@ -91,6 +103,15 @@ public class SerialNode extends FunctionNode {
             }
             shape = newShape;
         }
+    }
+
+    @Override
+    public SerialNode deepCopy() {
+        SerialNode result = new SerialNode(getIdentifier(), returnType, isList);
+
+        DeepCopyHelper.basicFunctionSetup(this, result);
+
+        return result;
     }
 
     /**

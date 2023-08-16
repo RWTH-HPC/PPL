@@ -40,7 +40,8 @@ public class CorrectPatternCallReferenceCoCoTest extends AbstractCocoTest {
 
     @ParameterizedTest
     @CsvSource({
-            "CorrectPatternCallRef"
+            "CorrectPatternCallRef",
+            "CorrectPatternCallRef2"
     })
     public void testInvalid(String modelStringPath) {
         ModuleSymbol moduleSymbol = parseModel(COCO_MODELS_ROOT_PATH_INVALID, modelStringPath);

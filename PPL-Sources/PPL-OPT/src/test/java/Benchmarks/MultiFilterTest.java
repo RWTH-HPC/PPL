@@ -42,11 +42,9 @@ import java.util.stream.Collectors;
 
 public class MultiFilterTest {
 
-    public static final String GLOBAL_PATH = "../../Samples";
+    public static final String BENCHMARK_PATH = "../../../benchmark/ppl/";
 
-    public static final String BENCHMARK_PATH = GLOBAL_PATH + "/multi-filter/ppl/";
-
-    public static final String CLUSTER_SPEC_PATH = GLOBAL_PATH + "/clusters/cluster_c18g.json";
+    public static final String CLUSTER_SPEC_PATH = "../../../benchmark/clusters/cluster_c18g.json";
 
     private AbstractPatternTree apt;
 
@@ -129,8 +127,8 @@ public class MultiFilterTest {
         Pair<Mapping, Double> base = baseMapping();
 
         try {
-            mapping.a.toJSONFile(BENCHMARK_PATH + "multi_filter.json", "Multi-Filter", "c18g", mapping.b);
-            base.a.toJSONFile(BENCHMARK_PATH + "multi_filter_base.json", "Multi-Filter", "c18g", base.b);
+            mapping.a.toJSONFile("../../../benchmark/mappings/multi_filter.json", "Multi-Filter", "c18g", mapping.b);
+            base.a.toJSONFile("../../../benchmark/mappings/multi_filter_base.json", "Multi-Filter", "c18g", base.b);
         } catch (IOException e) {
             e.printStackTrace();
        }

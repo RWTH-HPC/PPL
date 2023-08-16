@@ -1,0 +1,25 @@
+Parsing {
+		stencil iteration([[[[Float]]]] temp) : [[[[Float]]]] result {
+			result[INDEX0][INDEX1][INDEX2][INDEX3] = 1 * temp[INDEX0][INDEX1][INDEX2][INDEX3] + 1 * temp[INDEX0][INDEX1][INDEX2][INDEX3] + 1 * temp[INDEX0][INDEX1][INDEX2][INDEX3] + 
+													 1 * temp[INDEX0][INDEX1][INDEX2][INDEX3] + 1 * temp[INDEX0][INDEX1][INDEX2][INDEX3] + 1 * temp[INDEX0][INDEX1][INDEX2][INDEX3] + 
+													 1 * temp[INDEX0][INDEX1][INDEX2][INDEX3] + 1 * temp[INDEX0][INDEX1][INDEX2][INDEX3] + 1 * temp[INDEX0][INDEX1][INDEX2][INDEX3] + 
+													 1 * temp[INDEX0][INDEX1][INDEX2][INDEX3] + 1 * temp[INDEX0][INDEX1][INDEX2][INDEX3] + 1 * temp[INDEX0][INDEX1][INDEX2][INDEX3] + 
+													 1 * temp[INDEX0][INDEX1][INDEX2][INDEX3] + 1 * temp[INDEX0][INDEX1][INDEX2][INDEX3] + 1 * temp[INDEX0][INDEX1][INDEX2][INDEX3] + 
+													 1 * temp[INDEX0][INDEX1][INDEX2][INDEX3] + 1 * temp[INDEX0][INDEX1][INDEX2][INDEX3] + 1 * temp[INDEX0][INDEX1][INDEX2][INDEX3] + 
+													 1 * temp[INDEX0][INDEX1][INDEX2][INDEX3] + 1 * temp[INDEX0][INDEX1][INDEX2][INDEX3] + 1 * temp[INDEX0][INDEX1][INDEX2][INDEX3]
+													 
+		}
+		seq main () : Int{
+				var [[[[Float]]]] temperature = init_List([10,10,10,10])
+				var [[[[Float]]]] result = init_List([10,10,10,10])
+
+				temperature = read("temp.txt")
+
+				result = iteration<<<>>>(temperature)
+
+				write("result.txt", {result})
+
+				return 0
+
+		}
+}

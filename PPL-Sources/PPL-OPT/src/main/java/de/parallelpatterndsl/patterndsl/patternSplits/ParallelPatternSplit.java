@@ -14,7 +14,7 @@ public class ParallelPatternSplit implements PatternSplit {
 
     private final ParallelCallNode node;
 
-    private int[] startIndices;
+    private long[] startIndices;
 
     private final long[] lengths;
 
@@ -28,7 +28,7 @@ public class ParallelPatternSplit implements PatternSplit {
      * @param startIndices - start indices of split interval in every dimension.
      * @param lengths - length of split interval in every dimension.
      */
-    public ParallelPatternSplit(ParallelCallNode node, int[] startIndices, long[] lengths) {
+    public ParallelPatternSplit(ParallelCallNode node, long[] startIndices, long[] lengths) {
         this.node = node;
         this.startIndices = startIndices;
         this.lengths = lengths;
@@ -43,7 +43,7 @@ public class ParallelPatternSplit implements PatternSplit {
     }
 
     @Override
-    public int[] getStartIndices() {
+    public long[] getStartIndices() {
         return startIndices;
     }
 

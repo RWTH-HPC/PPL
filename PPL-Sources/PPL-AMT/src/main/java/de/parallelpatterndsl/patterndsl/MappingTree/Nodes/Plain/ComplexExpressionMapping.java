@@ -13,21 +13,23 @@ import de.parallelpatterndsl.patterndsl.abstractPatternTree.Nodes.Plain.ComplexE
 import de.parallelpatterndsl.patterndsl.expressions.AssignmentExpression;
 import de.parallelpatterndsl.patterndsl.expressions.IRLExpression;
 import de.parallelpatterndsl.patterndsl.expressions.OperationExpression;
+import de.parallelpatterndsl.patterndsl.expressions.Operator;
+import de.parallelpatterndsl.patterndsl.hardwareDescription.Node;
 
 import java.util.*;
 
 /**
  * Defines a singular expression within the abstract mapping tree.
  */
-public class ComplexExpressionMapping extends MappingNode {
+public class ComplexExpressionMapping extends SerialNodeMapping {
 
     /**
      * The expression it contains.
      */
     private IRLExpression expression;
 
-    public ComplexExpressionMapping(Optional<MappingNode> parent, HashMap<String, Data> variableTable, ComplexExpressionNode aptNode) {
-        super(parent, variableTable, aptNode);
+    public ComplexExpressionMapping(Optional<MappingNode> parent, HashMap<String, Data> variableTable, ComplexExpressionNode aptNode, Node target) {
+        super(parent, variableTable, aptNode, target);
         expression = aptNode.getExpression();
     }
 
@@ -76,6 +78,24 @@ public class ComplexExpressionMapping extends MappingNode {
         return result;
     }
 
+    public boolean isArrayInitializer() {
+        if (expression instanceof AssignmentExpression) {
+            if (((AssignmentExpression) expression).getRhsExpression().getOperators().size() != 0) {
+                if (((AssignmentExpression) expression).getRhsExpression().getOperators().get(0) == Operator.LEFT_ARRAY_DEFINITION) {
+                    return true;
+                }
+            } else if (!((AssignmentExpression) expression).getRhsExpression().getOperands().isEmpty()) {
+                if (((AssignmentExpression) expression).getRhsExpression().getOperands().get(0) instanceof FunctionInlineData) {
+                    if (((FunctionInlineData) ((AssignmentExpression) expression).getRhsExpression().getOperands().get(0)).getCall().getOperands().get(0).getIdentifier().equals("init_List")) {
+                        return true;
+                    } else if (((FunctionInlineData) ((AssignmentExpression) expression).getRhsExpression().getOperands().get(0)).getCall().getOperands().get(0).getIdentifier().equals("copy")) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
 
     /**
      * Visitor accept function.

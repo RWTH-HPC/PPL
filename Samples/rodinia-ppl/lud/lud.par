@@ -1,0 +1,54 @@
+lud {
+
+
+map kernel([[Float]] matrix, [Float] target_row, Int iteration) : [[Float]] result{
+	
+	result[INDEX] = handle_row(matrix[INDEX], target_row, INDEX, iteration)
+	
+}
+
+seq handle_row([Float] row, [Float] target_row, Int row_idx, Int iteration) : [Float] {
+	var [Float] result = init_List([2048])
+	
+	result = row
+	
+	if row_idx <= iteration {
+		return result
+	}
+	var Float temp = 1
+	for var Int i = 0; i < #row; i++ {
+		if i == iteration {
+			temp = row[i]/target_row[i]
+			result[i] = temp 
+		} else if i >= row_idx {
+			result[i] = row[i] - row[i] * temp
+		}
+	}
+	return result
+}
+
+seq main(): Int {
+	
+	var [[Float]] matrix = init_List([2048,2048])
+	var [[Float]] result = init_List([2048,2048])
+
+	matrix = read("2048.dat")
+	
+	//var Long time = get_time()
+	
+	for var Int i = 0; i < #matrix - 1; i++ { //2047
+		var [Float] row = init_List([2048])
+		row = matrix[i]
+		result = kernel<<<>>>(matrix, row ,i)
+		matrix = result
+	}
+	//time = get_time() - time
+	
+	//print("Kernel duration:" {time} "us")
+	
+	write("result.txt", {result})
+	
+    return 0
+}
+
+}

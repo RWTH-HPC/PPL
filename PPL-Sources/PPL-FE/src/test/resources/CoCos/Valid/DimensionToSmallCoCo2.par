@@ -1,0 +1,11 @@
+DimensionToSmallCoCo2 {
+
+
+seq main() : Void {
+
+    var [[Int]] f = init_List([2,3])
+    f[1][1] = 0
+}
+
+
+}

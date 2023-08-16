@@ -17,4 +17,9 @@ seq main() : Void {
     var Int i1 = 12 mod 3
     var Int i2 = 12 % 3
 
+    /* Bitwise operations*/
+    var Int i = (3 | 6) & ~9
+    i |= 12
+    i &= 7
+
 }}

@@ -1,8 +1,13 @@
 package de.parallelpatterndsl.patterndsl._symboltable;
 
+/**
 import de.monticore.expressions.commonexpressions._ast.ASTCallExpression;
 import de.monticore.expressions.commonexpressions._ast.ASTNameExpression;
 import de.monticore.expressions.expressionsbasis._ast.ASTExpression;
+**/
+import de.parallelpatterndsl.patterndsl._ast.ASTCallExpression;
+import de.parallelpatterndsl.patterndsl._ast.ASTNameExpression;
+import de.parallelpatterndsl.patterndsl._ast.ASTExpression;
 import de.monticore.literals.literals._ast.ASTIntLiteral;
 import de.monticore.literals.literals._ast.ASTLiteral;
 import de.parallelpatterndsl.patterndsl._ast.*;
@@ -40,13 +45,13 @@ public class VariableShapeHandler implements PatternDSLVisitor {
 
             // handle instantiation with init function
             if (exp instanceof ASTCallExpression) {
-                if (((ASTCallExpression) exp).getExpression() instanceof ASTNameExpression) {
-                    if (((ASTNameExpression) ((ASTCallExpression) exp).getExpression()).getName().equals("init_List")) {
+                if (((ASTCallExpression) exp).getCall() instanceof ASTNameExpression) {
+                    if (((ASTNameExpression) ((ASTCallExpression) exp).getCall()).getName().equals("init_List")) {
                         ASTExpression dimensions = ((ASTCallExpression) exp).getArguments().getExpression(0);
                         if (dimensions instanceof ASTListExpression) {
                             for (ASTExpression value: ((ASTListExpression) dimensions).getExpressionList() ) {
-                                if (value instanceof ASTLitExpression) {
-                                    ASTLiteral literal = ((ASTLitExpression) value).getLiteral();
+                                if (value instanceof ASTLiteralExpression) {
+                                    ASTLiteral literal = ((ASTLiteralExpression) value).getLiteral();
                                     if (literal instanceof ASTIntLiteral) {
                                         shape.add(((ASTIntLiteral) literal).getValue());
                                     } else {

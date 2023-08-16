@@ -1,6 +1,7 @@
 package de.parallelpatterndsl.patterndsl.abstractPatternTree.DataElements.DataAccess;
 
 import de.parallelpatterndsl.patterndsl.abstractPatternTree.DataElements.Data;
+import de.parallelpatterndsl.patterndsl.helperLibrary.DeepCopyHelper;
 
 import java.util.ArrayList;
 
@@ -30,5 +31,20 @@ public class DynamicProgrammingDataAccess extends DataAccess {
 
     public ArrayList<String> getRuleBaseIndex() {
         return ruleBaseIndex;
+    }
+
+    /**
+     * creates a copy of this data access, with a different data element
+     * @param data
+     * @return
+     */
+    @Override
+    public DataAccess getInlineCopy(Data data) {
+        return new DynamicProgrammingDataAccess(data, super.isReadAccess(), this.shiftOffsets, this.ruleBaseIndex);
+    }
+
+    @Override
+    public DataAccess deepCopy() {
+        return new DynamicProgrammingDataAccess(DeepCopyHelper.currentScope().get(getData().getIdentifier()), isReadAccess(), new ArrayList<>(shiftOffsets), new ArrayList<>(ruleBaseIndex));
     }
 }

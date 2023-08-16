@@ -1,0 +1,10 @@
+WhileLoopTest{
+
+seq main() : Int {
+    var Int a = 0
+    while a < 5 {
+        a++
+    }
+    
+return 0 
+}}

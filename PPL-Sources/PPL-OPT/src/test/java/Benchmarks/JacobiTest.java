@@ -47,11 +47,9 @@ import java.util.stream.Collectors;
 
 public class JacobiTest {
 
-    public static final String GLOBAL_PATH = "../../Samples";
+    public static final String BENCHMARK_PATH = "../../../benchmark/ppl/";
 
-    public static final String BENCHMARK_PATH = GLOBAL_PATH + "/jacobi/ppl/";
-
-    public static final String CLUSTER_SPEC_PATH = GLOBAL_PATH + "/clusters/cluster_c18g.json";
+    public static final String CLUSTER_SPEC_PATH = "../../../benchmark/clusters/cluster_c18g.json";
 
     private AbstractPatternTree apt;
 
@@ -135,8 +133,8 @@ public class JacobiTest {
 
         Pair<Mapping, Double> base = baseMapping(flatAPT, model);
         try {
-            mapping.a.toJSONFile(BENCHMARK_PATH + "jacobi.json", "Jacobi", "c18g", mapping.b);
-            base.a.toJSONFile(BENCHMARK_PATH + "jacobi_base.json", "Jacobi", "c18g", base.b);
+            mapping.a.toJSONFile("../../../benchmark/mappings/jacobi.json", "Jacobi", "c18g", mapping.b);
+            base.a.toJSONFile("../../../benchmark/mappings/jacobi_base.json", "Jacobi", "c18g", base.b);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -172,7 +170,7 @@ public class JacobiTest {
             Iterator<PatternSplit> iter = flatAPT.getSplits(i)
                     .stream()
                     .filter(s -> s.getInputDataSplits().stream().anyMatch(d -> d.getData().getIdentifier().startsWith("x")))
-                    .sorted(Comparator.comparingInt(s -> s.getStartIndices()[0]))
+                    .sorted(Comparator.comparingLong(s -> s.getStartIndices()[0]))
                     .collect(Collectors.toCollection(LinkedHashSet::new))
                     .iterator();
 
@@ -191,7 +189,7 @@ public class JacobiTest {
             Iterator<PatternSplit> iter = flatAPT.getSplits(i - 50)
                     .stream()
                     .filter(s -> s.getInputDataSplits().stream().anyMatch(d -> d.getData().getIdentifier().startsWith("y")))
-                    .sorted(Comparator.comparingInt(s -> s.getStartIndices()[0]))
+                    .sorted(Comparator.comparingLong(s -> s.getStartIndices()[0]))
                     .collect(Collectors.toCollection(LinkedHashSet::new))
                     .iterator();
 
@@ -210,7 +208,7 @@ public class JacobiTest {
             Iterator<PatternSplit> iter = flatAPT.getSplits(i - 100)
                     .stream()
                     .filter(s -> s.getInputDataSplits().stream().anyMatch(d -> d.getData().getIdentifier().startsWith("z")))
-                    .sorted(Comparator.comparingInt(s -> s.getStartIndices()[0]))
+                    .sorted(Comparator.comparingLong(s -> s.getStartIndices()[0]))
                     .collect(Collectors.toCollection(LinkedHashSet::new))
                     .iterator();
 

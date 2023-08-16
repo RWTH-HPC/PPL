@@ -16,12 +16,9 @@ public class ReadOnlyPatternParameterCoCo implements PatternDSLASTFunctionCoCo {
 
     @Override
     public void check(ASTFunction node) {
-        if(node.getPatternType().isPresentSerial()) {
-            return;
-        }
         ReadOnlyHelper readOnlyHelper = new ReadOnlyHelper(parameterNameList(node.getFunctionParameters()));
         if (!readOnlyHelper.isReadOnly(node)){
-            Log.error(node.get_SourcePositionStart() + " Parameter change in pattern detected");
+            Log.error(node.get_SourcePositionStart() + " Parameter change in function detected");
         }
     }
 

@@ -1,0 +1,121 @@
+backprop {
+
+	include "../math"
+	
+	var Float momentum_base = 0.3
+	var Float eta_base = 0.3	
+	
+	// activation function as a sigmoid
+	seq squash(Float x) : Float {
+		var Float res = 1.0 / (1.0 + exp(0-x))
+		return res
+	}
+	
+	// Dot product of two vectors
+	reduction weighted_sum([Float] vectorA, [Float] vectorB) : Float res {
+		res += vectorA[INDEX] * vectorB[INDEX]
+	}
+	
+	// a simple forward pass in a neural network
+	map forward_pass([Float] input, [[Float]] weights): [Float] output {
+		var Float node_result = 0
+		node_result = weighted_sum<<<>>>(weights[INDEX], input)
+		output[INDEX] = squash(node_result)	
+	}
+
+	// Computation of the output error
+	map output_error([Float] target, [Float] output) : [Float] delta {
+		delta[INDEX] = output[INDEX] * (1 - output[INDEX]) * (target[INDEX] - output[INDEX])
+	}
+	
+	// Computation of the error induced by the hidden layer
+	map hidden_error([Float] hidden_units, [[Float]] output_weights, [Float] output_delta) : [Float] hidden_delta {
+		var Float sum = 0
+		sum = weighted_sum<<<>>>(output_delta, output_weights[INDEX])
+		
+		hidden_delta[INDEX] = hidden_units[INDEX] * (1 - hidden_units[INDEX]) * sum
+	}
+	
+	// traversal of a matrix
+	stencil traverse([[Float]] matrix) : [[Float]] traversed {
+		traversed[INDEX1][INDEX0] = matrix[INDEX0][INDEX1]
+	}
+	
+	// copying af a matrix
+	stencil move([[Float]] matrix) : [[Float]] moved {
+		moved[INDEX0][INDEX1] = matrix[INDEX0][INDEX1]
+	}
+	
+	// updating the weights of a layer based on the error
+    stencil update_weights([Float] delta, [Float] units, [[Float]] old_weights) : [[Float]] weights {
+		weights[INDEX1][INDEX0] = ((eta_base * delta[INDEX0] * units[INDEX1]) + (momentum_base * old_weights[INDEX1][INDEX0]))
+	}
+	
+	map rand_init():[Float] res {
+	    res[INDEX] = rand() / MAX_INT
+	}
+	
+	stencil rand_init_weights():[[Float]] res {
+	    res[INDEX0][INDEX1] = rand() / MAX_INT
+	}
+
+    seq main() : Int {
+        
+		// initialization of the used vectors
+		var [Float] input_units = init_List([65536],0)
+		var [Float] hidden_units = init_List([16],0)
+		var [Float] output_units = init_List([1],0)
+
+		var [Float] hidden_delta = init_List([16],0)
+		var [Float] output_delta = init_List([1],0)
+		
+		var [Float] target = init_List([1],0)
+		
+		// Weights are stored by ROW for the used matricies
+		var [[Float]] input_weights = init_List([65536, 16],0)
+		var [[Float]] hidden_weights = init_List([16, 1],0)
+		
+		var [[Float]] prev_input_weights = init_List([65536, 16],0)
+		var [[Float]] prev_hidden_weights = init_List([16, 1],0)
+		
+		// randomise the initial values and weights for the net
+		input_units = rand_init<<<>>>()
+		
+		input_weights = rand_init_weights<<<>>>()
+		hidden_weights = rand_init_weights<<<>>>()
+		
+		target = rand_init<<<>>>()
+		
+		// initialization of the additional matrix for traversal before the error computation of the hidden layer
+		var [[Float]] traversalWeights = init_List([1, 16],0)
+		
+		//var Long time = get_time()
+		
+		// feed forward computation of the current network
+		hidden_units = forward_pass<<<>>>(input_units, input_weights)
+		output_units = forward_pass<<<>>>(hidden_units, hidden_weights)
+		
+		// error computation for the output layer
+		output_delta = output_error<<<>>>(target, output_units)
+		
+		// error computation for the hidden layer 
+		traversalWeights = traverse<<<>>>(hidden_weights)
+		hidden_delta = hidden_error<<<>>>(hidden_units, traversalWeights, output_delta)
+		
+		// set the current weights to be the old weights 
+		prev_hidden_weights = traverse<<<>>>(traversalWeights)
+		
+		prev_input_weights = move<<<>>>(input_weights)
+		
+		// update the weights based on the current weights and the computed error
+		hidden_weights = update_weights<<<>>>(output_delta, output_units, prev_hidden_weights)
+		input_weights = update_weights<<<>>>(hidden_delta, hidden_units, prev_input_weights)
+        
+        //time = get_time() - time
+        
+        //print("Backpropagation Kernel took " {time} " us")
+
+        return 0
+    }
+
+}

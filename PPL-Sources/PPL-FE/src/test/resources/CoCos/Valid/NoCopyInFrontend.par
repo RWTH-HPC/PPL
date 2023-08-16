@@ -1,0 +1,14 @@
+NoCopyInFrontend {
+
+seq add_copy([Int] input) : [Int] {
+    var [Int] res = [0,0]
+    res = input
+    return res
+}
+
+seq main() : Void {
+    var [Int] test = [0,0]
+    test = add_copy(test)
+
+}
+}

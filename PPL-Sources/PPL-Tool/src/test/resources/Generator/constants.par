@@ -1,0 +1,13 @@
+    constants{
+    // global constants
+    // error codes
+    var Int32 VolumeError = 0 - 1
+    var Int32 QStopError  = 0 - 2 
+    // minimum integer for 32 bit
+    //var Int32 INT_MIN = 0 - 2147483648
+
+    // index vars used for many Struct like arrays
+    var Int32 xIdx = 0
+    var Int32 yIdx = 1
+    var Int32 zIdx = 2
+}

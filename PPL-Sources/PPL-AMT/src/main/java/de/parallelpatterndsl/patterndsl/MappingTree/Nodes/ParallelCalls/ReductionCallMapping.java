@@ -1,5 +1,6 @@
 package de.parallelpatterndsl.patterndsl.MappingTree.Nodes.ParallelCalls;
 
+import de.parallelpatterndsl.patterndsl.MappingTree.GeneralDataPlacementFunctions.OffloadDataEncoding;
 import de.parallelpatterndsl.patterndsl.MappingTree.Nodes.MappingNode;
 import de.parallelpatterndsl.patterndsl.MappingTree.Visitor.AMTVisitor;
 import de.parallelpatterndsl.patterndsl.abstractPatternTree.DataElements.Data;
@@ -38,6 +39,16 @@ public class ReductionCallMapping extends ParallelCallMapping {
      */
     private boolean onGPU;
 
+    /**
+     * Stores the encodings for the input data
+     */
+    private ArrayList<OffloadDataEncoding> inputDataEncodings;
+
+    /**
+     * Stores the encodings for the output data
+     */
+    private ArrayList<OffloadDataEncoding> outputDataEncodings;
+
     public ReductionCallMapping(Optional<MappingNode> parent, HashMap<String, Data> variableTable, CallNode aptNode, ArrayList<Long> startIndex, ArrayList<Long> numIterations, Processor executor, int numThreads, boolean isOnlyCombiner, Set<TempData> tempInput, Set<TempData> tempOutput, int numBlocks, boolean onGPU) {
         super(parent, variableTable, aptNode, startIndex, numIterations, executor, numThreads, Optional.empty(), new HashSet<>());
         this.isOnlyCombiner = isOnlyCombiner;
@@ -45,6 +56,12 @@ public class ReductionCallMapping extends ParallelCallMapping {
         this.tempOutput = tempOutput;
         this.numBlocks = numBlocks;
         this.onGPU = onGPU;
+        inputDataEncodings = new ArrayList<>();
+        outputDataEncodings = new ArrayList<>();
+    }
+
+    public void setNumBlocks(int numBlocks) {
+        this.numBlocks = numBlocks;
     }
 
     public boolean isOnlyCombiner() {
@@ -65,6 +82,14 @@ public class ReductionCallMapping extends ParallelCallMapping {
 
     public boolean getOnGPU() {
         return onGPU;
+    }
+
+    public ArrayList<OffloadDataEncoding> getInputDataEncodings() {
+        return inputDataEncodings;
+    }
+
+    public ArrayList<OffloadDataEncoding> getOutputDataEncodings() {
+        return outputDataEncodings;
     }
 
     /**

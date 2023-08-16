@@ -71,3 +71,11 @@ PPL-Tool contains the sources for the executable compiler.
   * test: Testcases for the tool.
     * java: test implementation.
     * resources: Test case definitions.
+	
+	
+PPL-2CPP contains the sources for the cpp code generator.
+
+* src: Implementation of the tool.
+  * main: Testcases for the tool.
+    * generator: Implementation of the generator.
+    * template: Definition of the Freemarker templates.

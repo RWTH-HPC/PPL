@@ -23,7 +23,7 @@ public class FusedPatternSplit implements PatternSplit {
     }
 
     @Override
-    public int[] getStartIndices() {
+    public long[] getStartIndices() {
         return this.jobs.peekFirst().getStartIndices();
     }
 

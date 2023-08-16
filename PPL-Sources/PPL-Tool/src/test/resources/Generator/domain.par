@@ -1,0 +1,110 @@
+domain {
+    //Constants
+    
+    //Cutoffs (treat as constants)
+    var Double m_e_cut = 1.0e-7 // energy tolerance 
+    var Double m_p_cut = 1.0e-7 // pressure tolerance
+    var Double m_q_cut = 1.0e-7 // q tolerance
+    var Double m_v_cut = 1.0e-10 // relative volume tolerance
+    var Double m_u_cut = 1.0e-7 // velocity tolerance
+
+    // Other constants (usually setable, but hardcoded in
+    //  this proxy app)
+    var Double m_hgcoef = 3.0 // hourglass control
+    var Double m_ss4o3 = (4.0 / 3.0) //
+    var Double m_qstop = 1.0e+12 // excessive q indicator
+    var Double m_monoq_max_slope = 1.0 //
+    var Double m_monoq_limiter_mult = 2.0 //
+    var Double m_qlc_monoq = 0.5 // linear term coef for q
+    var Double m_qqc_monoq = (2.0 / 3.0)// quadratic term coef for q
+    var Double m_qqc = 2.0 // 
+    var Double m_eosvmax = 1.0e+9 //
+    var Double m_eosvmin = 1.0e-9 //
+    var Double m_pmin =  0. // pressure floor
+    var Double m_emin =  0 - 1.0e+15 // energy floor
+    var Double m_dvovmax = 0.1 // maximum allowable volume change 
+    var Double m_refdens = 1.0 // reference density
+
+
+    // Index Variablen
+    // Indices for domain_coordinates
+    // Node-centered //coordinates
+    var Int8 m_x = 0
+    var Int8 m_y = 1
+    var Int8 m_z = 2
+
+    // Indices for domain_velocities
+    // velocities
+    var Int8 m_xd = 0
+    var Int8 m_yd = 1
+    var Int8 m_zd = 2
+
+
+    // Indices for domain_accelerations
+    // accelerations
+    var Int8 m_xdd = 0
+    var Int8 m_ydd = 1
+    var Int8 m_zdd = 2
+
+    // Indices for domain_forces
+    // forces
+    var Int8 m_fx = 0
+    var Int8 m_fy = 1
+    var Int8 m_fz = 2
+
+    //Replaced, see written thesis
+    // Indices for domain_symmPlaneNodesets
+    //symmetry plane nodesets
+    //var Int8 m_symmX = 0
+    //var Int8 m_symmY = 1
+    //var Int8 m_symmZ = 2
+
+    //Replaced, see written thesis
+    // Indices for domain_elemConnectivity
+    //element connectivity across each face
+    //var Int8 m_lxim = 0
+    //var Int8 m_lxip = 1
+    //var Int8 m_letam = 2
+    //var Int8 m_letap = 3
+    //var Int8 m_lzetam = 4
+    //var Int8 m_lzetap = 5
+
+    // Indices for domain_strains
+    // principal strains -- temporary
+    var Int8 m_dxx = 0
+    var Int8 m_dyy = 1
+    var Int8 m_dzz = 2
+
+    // Indices for domain_velocGradient
+    // velocity gradient -- temporary
+    var Int8 m_delv_xi = 0
+    var Int8 m_delv_eta = 1
+    var Int8 m_delv_zeta = 2
+
+    // Indices for domain_coordGradient
+    // coordinate gradient -- temporary
+    var Int8 m_delx_xi = 0
+    var Int8 m_delx_eta = 1
+    var Int8 m_delx_zeta = 2
+
+
+    // Indices for domain_terms
+    // not used anymore because of replacement of array indirection
+    //var Int8 m_e = 0 // energy
+    //var Int8 m_p = 1 // pressure
+    //var Int8 m_q = 2 // q
+    //var Int8 m_ql = 3 // linear term for q
+    //var Int8 m_qq = 4 // quadratic term for q
+    //var Int8 m_v = 5 // relative volume
+    //var Int8 m_volo = 6 // reference volume
+    //var Int8 m_vnew = 7 // new relative volume -- temporary
+    //var Int8 m_delv = 8 // m_vnew - m_v
+    //var Int8 m_vdov = 9 // volume derivative over volume
+    //var Int8 m_arealg = 10 // characteristic length of an element
+    //var Int8 m_ss = 11 // sound speed
+    //var Int8 m_elemMass = 12 // mass
+
+    
+}
+
+

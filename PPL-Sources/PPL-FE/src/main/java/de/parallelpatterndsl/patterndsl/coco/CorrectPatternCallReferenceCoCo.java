@@ -15,7 +15,15 @@ public class CorrectPatternCallReferenceCoCo implements PatternDSLASTPatternCall
     @Override
     public void check(ASTPatternCallStatement node) {
         if(node.isPresentEnclosingScope()) {
-            if (((FunctionSymbol) node.getEnclosingScope().resolve(node.getName(), FunctionSymbol.KIND).get()).getPattern().isPresentSerial()) {
+            if (node.getEnclosingScope().resolve(node.getName(), FunctionSymbol.KIND).isPresent()) {
+                FunctionSymbol symbol = (FunctionSymbol) node.getEnclosingScope().resolve(node.getName() , FunctionSymbol.KIND).get();
+                if (((FunctionSymbol) node.getEnclosingScope().resolve(node.getName(), FunctionSymbol.KIND).get()).getPattern().isPresentSerial()) {
+                    Log.error(node.get_SourcePositionStart() + " No parallel pattern defined for: " + node.getName());
+                }
+                if (node.getArguments().sizeExpressions() != symbol.getParameterCount()) {
+                    Log.error(node.get_SourcePositionStart() + " Function call parameter mismatch for: "  + node.getName() + " Provided: " + node.getArguments().sizeExpressions() + ". Expected: " + symbol.getParameterCount());
+                }
+            } else {
                 Log.error(node.get_SourcePositionStart() + " No parallel pattern defined for: " + node.getName());
             }
         }

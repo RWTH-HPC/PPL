@@ -1,0 +1,15 @@
+ReturnWithoutStackVar {
+seq add(Int input) : [Int] {
+    var [Int] res = init_List([3], 0)
+    return res
+}
+seq add2(Int input) : Int {
+    var Int res = 0
+    return res
+}
+seq main() : Void {
+    add(1)
+    add2(2)
+    return 0
+}
+}

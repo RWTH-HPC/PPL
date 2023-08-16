@@ -1,0 +1,14 @@
+NoGlobalsAsArguments {
+
+
+seq test(Int a) : Int {
+ return a
+}
+
+seq main() : Void {
+
+var Int i = 0
+    test(i)
+
+}
+}

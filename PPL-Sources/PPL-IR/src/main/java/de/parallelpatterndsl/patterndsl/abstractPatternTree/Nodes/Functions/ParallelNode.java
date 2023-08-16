@@ -1,6 +1,8 @@
 package de.parallelpatterndsl.patterndsl.abstractPatternTree.Nodes.Functions;
 
+import de.parallelpatterndsl.patterndsl.abstractPatternTree.DataElements.ArrayData;
 import de.parallelpatterndsl.patterndsl.abstractPatternTree.DataElements.Data;
+import de.parallelpatterndsl.patterndsl.abstractPatternTree.DataElements.PrimitiveDataTypes;
 import de.parallelpatterndsl.patterndsl.abstractPatternTree.Nodes.FunctionNode;
 
 /**
@@ -23,5 +25,18 @@ public abstract class ParallelNode extends FunctionNode {
 
     public void setReturnElement(Data returnElement) {
         this.returnElement = returnElement;
+    }
+
+    @Override
+    public boolean returnsArray() {
+        if (returnElement instanceof ArrayData) {
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public PrimitiveDataTypes getReturnType() {
+        return returnElement.getTypeName();
     }
 }

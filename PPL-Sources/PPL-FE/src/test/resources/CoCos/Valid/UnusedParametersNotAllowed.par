@@ -1,0 +1,8 @@
+UnusedParametersNotAllowed {
+seq copy(Int n) : Int {
+    return n
+}
+seq main() : Void {
+    var Int test = copy(6)
+}
+}

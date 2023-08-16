@@ -60,7 +60,7 @@ public class InclusionHandler extends IncludeManager {
         /**
          * Parse included modules
          */
-        ModelPath modelPath = new ModelPath(Paths.get(sourcePath + source));
+        ModelPath modelPath = new ModelPath(Paths.get(sourcePath, source));
         GlobalScope inclusionSymbolTable = PatternDSLScopeCreator.createGlobalScope(modelPath);
         Optional<ModuleSymbol> moduleSymbol = inclusionSymbolTable.resolve(modelname, ModuleSymbol.KIND);
         if (!moduleSymbol.isPresent()) {

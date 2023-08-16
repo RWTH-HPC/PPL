@@ -1,7 +1,8 @@
 package de.parallelpatterndsl.patterndsl.printer;
-
+/**
 import de.monticore.expressions.commonexpressions._ast.*;
 import de.monticore.expressions.expressionsbasis._ast.ASTExpression;
+ **/
 import de.parallelpatterndsl.patterndsl._ast.*;
 
 /**
@@ -39,10 +40,10 @@ public abstract class AbstractExpressionPrinter<T> {
             return this.doPrintNameExpression((ASTNameExpression) expression);
         } else if (expression instanceof ASTPlusExpression) {
             return this.doPrintPlusExpression((ASTPlusExpression) expression);
-        } else if (expression instanceof ASTQualifiedNameExpression) {
+        } /**else if (expression instanceof ASTQualifiedNameExpression) {
             return this.doPrintQualifiedNameExpression((ASTQualifiedNameExpression) expression);
-        } else if (expression instanceof ASTLitExpression) {
-            return this.doPrintLitExpression((ASTLitExpression) expression);
+        } **/else if (expression instanceof ASTLiteralExpression) {
+            return this.doPrintLiteralExpression((ASTLiteralExpression) expression);
         } else if (expression instanceof ASTBooleanNotExpression) {
             return this.doPrintBooleanNotExpression((ASTBooleanNotExpression) expression);
         } else if (expression instanceof ASTBooleanNotOpExpressionDiff) {
@@ -71,9 +72,9 @@ public abstract class AbstractExpressionPrinter<T> {
             return this.doPrintNotEqualsExpression((ASTNotEqualsExpression) expression);
         } else if (expression instanceof ASTConditionalExpression) {
             return this.doPrintConditionalExpression((ASTConditionalExpression) expression);
-        } else if (expression instanceof ASTSimpleAssignmentExpression) {
+        }/** else if (expression instanceof ASTSimpleAssignmentExpression) {
             return this.doPrintSimpleAssignmentExpression((ASTSimpleAssignmentExpression) expression);
-        } else if (expression instanceof ASTBracketExpression) {
+        }**/ else if (expression instanceof ASTBracketExpression) {
             return this.doPrintBracketExpression((ASTBracketExpression) expression);
         } else if (expression instanceof ASTAssignmentByIncreaseExpression) {
             return this.doPrintAssignmentByIncreaseExpression((ASTAssignmentByIncreaseExpression) expression);
@@ -91,10 +92,30 @@ public abstract class AbstractExpressionPrinter<T> {
             return this.doPrintReadExpression((ASTReadExpression) expression);
         } else if (expression instanceof ASTWriteExpression) {
             return this.doPrintWriteExpression((ASTWriteExpression) expression);
+        } else if (expression instanceof ASTBitwiseAndExpression) {
+            return this.doPrintBitwiseAndExpression((ASTBitwiseAndExpression) expression);
+        } else if (expression instanceof ASTBitwiseNotExpression) {
+            return this.doPrintBitwiseNotExpression((ASTBitwiseNotExpression) expression);
+        } else if (expression instanceof ASTBitwiseOrExpression) {
+            return this.doPrintBitwiseOrExpression((ASTBitwiseOrExpression) expression);
+        } else if (expression instanceof ASTAssignmentByBitwiseAndExpression) {
+            return this.doPrintAssignmentByBitwiseAndExpression((ASTAssignmentByBitwiseAndExpression) expression);
+        } else if (expression instanceof ASTAssignmentByBitwiseOrExpression) {
+            return this.doPrintAssignmentByBitwiseOrExpression((ASTAssignmentByBitwiseOrExpression) expression);
         }
 
         throw new RuntimeException( "Not implemented in PureFunExpressionPrinter: " + expression.toString());
     }
+
+    protected abstract T doPrintAssignmentByBitwiseOrExpression(ASTAssignmentByBitwiseOrExpression expression);
+
+    protected abstract T doPrintAssignmentByBitwiseAndExpression(ASTAssignmentByBitwiseAndExpression expression);
+
+    protected abstract T doPrintBitwiseOrExpression(ASTBitwiseOrExpression expression);
+
+    protected abstract T doPrintBitwiseNotExpression(ASTBitwiseNotExpression expression);
+
+    protected abstract T doPrintBitwiseAndExpression(ASTBitwiseAndExpression expression);
 
     protected abstract T doPrintWriteExpression(ASTWriteExpression expression);
 
@@ -133,23 +154,23 @@ public abstract class AbstractExpressionPrinter<T> {
     protected abstract T doPrintNameExpression(ASTNameExpression exp);
 
     protected abstract T doPrintPlusExpression(ASTPlusExpression exp);
-
+    /**
     protected abstract T doPrintQualifiedNameExpression(ASTQualifiedNameExpression exp);
-
+    **/
     protected abstract T doPrintLogicalNotExpression(ASTLogicalNotExpression exp);
 
     protected abstract T doPrintBooleanNotExpression(ASTBooleanNotExpression exp);
 
-    protected abstract T doPrintLitExpression(ASTLitExpression exp);
+    protected abstract T doPrintLiteralExpression(ASTLiteralExpression exp);
 
     protected abstract T doPrintAssignmentByMultiplyExpression(ASTAssignmentByMultiplyExpression exp);
 
     protected abstract T doPrintAssignmentByDecreaseExpression(ASTAssignmentByDecreaseExpression exp);
 
     protected abstract T doPrintBracketExpression(ASTBracketExpression exp);
-
+    /**
     protected abstract T doPrintSimpleAssignmentExpression(ASTSimpleAssignmentExpression exp);
-
+    **/
     protected abstract T doPrintConditionalExpression(ASTConditionalExpression exp);
 
     protected abstract T doPrintNotEqualsExpression(ASTNotEqualsExpression exp);

@@ -1,0 +1,10 @@
+ListMustBeInitialized {
+
+seq test(): [Int]  {
+  return [1]
+}
+
+seq main() : Void {
+    var [Int] a = test()
+}
+}

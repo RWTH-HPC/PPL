@@ -1,0 +1,28 @@
+ArithmeticExpressionTest{
+
+seq test(): Int {
+    return 2
+}
+
+seq main() : Int {
+    var Float F = 1.5
+    var Double D = 1.2
+    var Int I = 1    
+    
+    I--
+    I++
+    
+    F += I
+    F -= I
+    F *= I
+    
+    F = I * (2 + 2)
+    
+    F = 5 / (3 - 1)
+    
+    F = test() + 2
+    
+    I = 5 mod 2
+    
+return 0 
+}}

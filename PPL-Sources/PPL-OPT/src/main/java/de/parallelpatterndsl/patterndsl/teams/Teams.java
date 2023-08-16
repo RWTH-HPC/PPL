@@ -72,6 +72,9 @@ public class Teams {
             Processor processor = team.getProcessor();
             int occupation = occupationMap.get(processor);
             int free = processor.getCores() - occupation;
+            if (free < 0) {
+                free = 0;
+            }
             int addCores = Integer.min(free, team.getCores() * (factor - 1));
 
             Team newTeam = new Team(team);

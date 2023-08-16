@@ -1,0 +1,9 @@
+NoCopyInFrontend {
+
+
+seq main() : Void {
+    var [Int] test = [0,0]
+    test = copy(test)
+
+}
+}

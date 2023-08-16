@@ -1,5 +1,6 @@
 package GraphPrinter;
 
+import Generator.CaseDefinitions;
 import Generator.RodiniaBenchmarks;
 import de.monticore.io.paths.ModelPath;
 import de.monticore.symboltable.GlobalScope;
@@ -18,6 +19,7 @@ import de.parallelpatterndsl.patterndsl.printer.PPLExpressionPrinter;
 import de.se_rwth.commons.logging.Log;
 import org.junit.Assert;
 import org.junit.BeforeClass;
+import org.junit.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 
@@ -30,6 +32,8 @@ import java.util.Optional;
 
 
 public class GraphvizGeneratorRodinia {
+
+    public static final String MODEL_SOURCE_PATH = "./src/test/resources/GraphPrinter/";
 
     @BeforeClass
     public static void init() {

@@ -1,0 +1,18 @@
+LocalAllocationTest{
+
+
+seq test2() : Int {
+    var Int a = 0
+    var [Int] b = init_List([10])
+    var [Int] B = [1,2,3,4,5,6,7,8,9,0]
+    var [[Int]] c = init_List([10,9])
+    var [[Int]] C = [[1,2,3,4,5,6,7,8,9,0], [1,2,3,4,5,6,7,8,9]]
+    var [[[Int]]] d = init_List([10,9,8])
+    var [[[Int]]] D = [[[1,2,3,4,5,6,7,8,9,0], [1,2,3,4,5,6,7,8,9]],[[1,2,3,4,5,6,7,8,9,0], [1,2,3,4,5,6,7,8,9]]]
+    return 0
+}
+
+seq main() : Int {
+    var Int a = test2()
+return 0 
+}}

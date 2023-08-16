@@ -42,7 +42,8 @@ public class VariableOrFunctionExistsCoCoTest extends AbstractCocoTest {
 
     @ParameterizedTest
     @CsvSource({
-            "VariableExistsCoCo"
+            "VariableExistsCoCo",
+            "VariableExistsCoCo2",
     })
     public void testInvalid(String modelStringPath) {
         ModuleSymbol moduleSymbol = parseModel(COCO_MODELS_ROOT_PATH_INVALID, modelStringPath);

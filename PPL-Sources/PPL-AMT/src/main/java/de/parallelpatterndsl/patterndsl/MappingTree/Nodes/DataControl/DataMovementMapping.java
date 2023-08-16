@@ -14,7 +14,7 @@ import java.util.Optional;
 /**
  * Class defining data movement in an abstract mapping tree.
  */
-public class DataMovementMapping extends MappingNode {
+public class DataMovementMapping extends AbstractDataMovementMapping {
 
 
     /**

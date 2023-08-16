@@ -8,30 +8,31 @@ import java.util.HashMap;
  */
 public enum RodiniaBenchmarks {
 
+
     Backpropagation,
-    Breadth_First_Search,
-    CFD,
     Heartwall,
+    Stream,
+    CFD,
+    Lud,
+    Breadth_First_Search,
     Hotspot,
     Hotspot3D,
     Kmeans,
     LavaMD,
-    Lud,
     Leukocyte_pre,
-    Leukocyte,
     Myocyte,
     Neighbor_pre,
     Neighbor,
-    Needle,
     Particle,
     Pathfinder,
     Srad,
-    Stream,
+    Needle,
+    Leukocyte,
     //Parsing
     ;
 
 
-    private static final String globalPath = "../../Samples/Rodinia-PPL/";
+    private static final String globalPath = "../../Samples/rodinia-ppl/";
 
     public static final HashMap<RodiniaBenchmarks, TestCase> paths;
     static {
@@ -44,7 +45,7 @@ public enum RodiniaBenchmarks {
         paths.put(Hotspot3D, new TestCase(globalPath + "Hotspot3D/", "hotspot3D"));
         paths.put(Kmeans, new TestCase(globalPath + "Kmeans/", "Kmeans"));
         paths.put(LavaMD, new TestCase(globalPath + "LavaMD/", "LavaMD"));
-        paths.put(Lud, new TestCase(globalPath + "Lud/", "lud"));
+        paths.put(Lud, new TestCase(globalPath + "lud/", "lud"));
         paths.put(Leukocyte_pre, new TestCase(globalPath + "leukocyte-preprocessing/", "leukocyte_preprocessing"));
         paths.put(Leukocyte, new TestCase(globalPath + "leukocyte/", "leukocyte"));
         paths.put(Myocyte, new TestCase(globalPath + "myocyte/", "myocyte"));
@@ -58,5 +59,30 @@ public enum RodiniaBenchmarks {
         //paths.put(Parsing, new TestCase(globalPath + "_Longest_Parsingtime/", "Parsing"));
     }
 
+
+    public static final HashMap<RodiniaBenchmarks, Integer> splitsize;
+    static {
+        splitsize = new HashMap<>();
+        splitsize.put(Backpropagation, 8192);
+        splitsize.put(Breadth_First_Search, 65536);
+        splitsize.put(CFD, 24000);
+        splitsize.put(Heartwall, 24);
+        splitsize.put(Hotspot, 72);
+        splitsize.put(Hotspot3D, 24);
+        splitsize.put(Kmeans, 65536);
+        splitsize.put(LavaMD, 24);
+        splitsize.put(Lud, 24);
+        splitsize.put(Leukocyte_pre, 8192);
+        splitsize.put(Leukocyte, 8192);
+        splitsize.put(Myocyte, 24);
+        splitsize.put(Neighbor_pre, 240);
+        splitsize.put(Neighbor, 240);
+        splitsize.put(Needle,96);
+        splitsize.put(Particle,1024);
+        splitsize.put(Pathfinder, 8192);
+        splitsize.put(Srad, 120);
+        splitsize.put(Stream, 8192);
+        //paths.put(Parsing, new TestCase(globalPath + "_Longest_Parsingtime/", "Parsing"));
+    }
 
 }

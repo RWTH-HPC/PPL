@@ -45,6 +45,10 @@ public class FunctionInlineData extends Data {
         return call;
     }
 
+    public void setCall(OperationExpression call) {
+        this.call = call;
+    }
+
     public Integer getDimension() {
         return dimension;
     }
@@ -55,8 +59,13 @@ public class FunctionInlineData extends Data {
     }
 
     @Override
-    public Data createInlineCopy(String inlineIdentifier) {
+    public FunctionInlineData createInlineCopy(String inlineIdentifier) {
         return new FunctionInlineData(getIdentifier() + "_" + inlineIdentifier, getTypeName(), getCall().simpleCopy(), getDimension());
+    }
+
+    @Override
+    public FunctionInlineData deepCopy() {
+        return new FunctionInlineData(getIdentifier(), getTypeName(), (OperationExpression) getCall().deepCopy(), dimension);
     }
 
     public String getInlineEnding() {
@@ -124,5 +133,19 @@ public class FunctionInlineData extends Data {
      */
     public void replaceDataElement(Data oldData, Data newData) {
         call.replaceDataElement(oldData, newData);
+    }
+
+    /**
+     * This function replaces missing data elements in function inline data
+     * @param oldData
+     * @param newScope
+     */
+    public void updateOperands(FunctionInlineData oldData, HashMap<String, Data> newScope) {
+        for (int i = 0; i < oldData.getCall().getOperands().size(); i++) {
+            Data oldOperand = oldData.getCall().getOperands().get(i);
+            if (oldOperand instanceof FunctionInlineData || oldOperand instanceof PrimitiveData || oldOperand instanceof ArrayData) {
+                call.getOperands().set(i, newScope.get(oldOperand.getIdentifier()));
+            }
+        }
     }
 }

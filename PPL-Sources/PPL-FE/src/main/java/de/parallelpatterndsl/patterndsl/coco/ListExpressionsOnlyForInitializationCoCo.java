@@ -1,11 +1,9 @@
 package de.parallelpatterndsl.patterndsl.coco;
 
-import de.parallelpatterndsl.patterndsl._ast.ASTListExpression;
-import de.parallelpatterndsl.patterndsl._ast.ASTModule;
-import de.parallelpatterndsl.patterndsl._ast.ASTPatternCallStatement;
-import de.parallelpatterndsl.patterndsl._ast.ASTVariable;
+import de.parallelpatterndsl.patterndsl._ast.*;
 import de.parallelpatterndsl.patterndsl._cocos.PatternDSLASTModuleCoCo;
 import de.parallelpatterndsl.patterndsl._visitor.PatternDSLParentAwareVisitor;
+import de.parallelpatterndsl.patterndsl._visitor.PatternDSLVisitor;
 import de.se_rwth.commons.logging.Log;
 
 /**
@@ -28,12 +26,46 @@ public class ListExpressionsOnlyForInitializationCoCo implements PatternDSLASTMo
         @Override
         public void visit(ASTListExpression node) {
             if (getParent().isPresent()) {
-                if ( !(getParent().get() instanceof ASTVariable || getParent().get() instanceof ASTPatternCallStatement || getParent().get() instanceof ASTListExpression)) {
+                if ( !(getParent().get() instanceof ASTVariable || getParent().get() instanceof ASTListExpression)) {
+                    /** Argument added**/
+                    System.out.println(getParent().get().toString());
+                    System.out.println(getParent().get().toString());
                     Log.error(node.get_SourcePositionStart() + " List Expression used outside of a direct assignment!");
+
+
                 }
             } else {
-                Log.error(node.get_SourcePositionStart() + " List Expression used outside of a direct assignment!");
+
+                Log.error(node.get_SourcePositionStart() + " List Expression used outside of a direct assignment! (parent not present case)");
             }
+        }
+
+        @Override
+        public void traverse(ASTCallExpression node) {
+            if (node.getCall() instanceof ASTNameExpression) {
+                if (!((ASTNameExpression) node.getCall()).getName().equals("init_List")) {
+                    node.getCall().accept(getRealThis());
+                    node.getArguments().accept(getRealThis());
+                }
+            }
+        }
+
+        @Override
+        public void traverse(ASTPatternCallStatement node) {
+            node.getLeft().accept(getRealThis());
+            node.getArguments().accept(getRealThis());
+        }
+
+        private PatternDSLVisitor realThis = this;
+
+        @Override
+        public PatternDSLVisitor getRealThis() {
+            return realThis;
+        }
+
+        @Override
+        public void setRealThis(PatternDSLVisitor realThis) {
+            this.realThis = realThis;
         }
     }
 }

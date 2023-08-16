@@ -1,8 +1,6 @@
 package de.parallelpatterndsl.patterndsl.MappingTree;
 
 import de.parallelpatterndsl.patterndsl.MappingTree.Nodes.DataControl.BarrierMapping;
-import de.parallelpatterndsl.patterndsl.MappingTree.Nodes.DataControl.DataMovementMapping;
-import de.parallelpatterndsl.patterndsl.MappingTree.Nodes.DataControl.EndPoint;
 import de.parallelpatterndsl.patterndsl.MappingTree.Nodes.Function.*;
 import de.parallelpatterndsl.patterndsl.MappingTree.Nodes.FunctionMapping;
 import de.parallelpatterndsl.patterndsl.MappingTree.Nodes.MappingNode;
@@ -12,9 +10,6 @@ import de.parallelpatterndsl.patterndsl.MappingTree.Nodes.ParallelCalls.Reductio
 import de.parallelpatterndsl.patterndsl.MappingTree.Nodes.ParallelCalls.SerializedParallelCallMapping;
 import de.parallelpatterndsl.patterndsl.MappingTree.Nodes.Plain.*;
 import de.parallelpatterndsl.patterndsl.abstractPatternTree.AbstractPatternTree;
-import de.parallelpatterndsl.patterndsl.abstractPatternTree.DataElements.Data;
-import de.parallelpatterndsl.patterndsl.abstractPatternTree.DataElements.DataAccess.DataAccess;
-import de.parallelpatterndsl.patterndsl.abstractPatternTree.DataElements.DataAccess.DynamicProgrammingDataAccess;
 import de.parallelpatterndsl.patterndsl.abstractPatternTree.DataElements.TempData;
 import de.parallelpatterndsl.patterndsl.abstractPatternTree.Nodes.FunctionNode;
 import de.parallelpatterndsl.patterndsl.abstractPatternTree.Nodes.Functions.*;
@@ -46,7 +41,9 @@ public class DebugCreator {
 
     public AbstractMappingTree generate() {
         for (FunctionNode node : AbstractPatternTree.getFunctionTable().values() ) {
-            functionTable.put(node.getIdentifier(), generateAMT(node));
+            if (node.isAvailableAfterInlining() || node.getIdentifier().equals("main")) {
+                functionTable.put(node.getIdentifier(), generateAMT(node));
+            }
         }
         AbstractMappingTree.setFunctionTable(functionTable);
         AbstractMappingTree AMT = new AbstractMappingTree((MainMapping) AbstractMappingTree.getFunctionTable().get("main"), APT.getGlobalVariableTable(), APT.getGlobalAssignments());
@@ -129,7 +126,7 @@ public class DebugCreator {
 
 
     private BranchCaseMapping generateBranchCaseMapping(Optional<MappingNode> parent, BranchCaseNode node) {
-        BranchCaseMapping res = new BranchCaseMapping(parent, node.getVariableTable(), node);
+        BranchCaseMapping res = new BranchCaseMapping(parent, node.getVariableTable(), node, AbstractMappingTree.getDefaultDevice().getParent());
         if (node.isHasCondition()) {
             ComplexExpressionMapping condition = generateComplexExpressionMapping(Optional.of(res), (ComplexExpressionNode) node.getChildren().get(0));
             res.setCondition(Optional.of(condition));
@@ -150,7 +147,7 @@ public class DebugCreator {
     }
 
     private ComplexExpressionMapping generateComplexExpressionMapping(Optional<MappingNode> parent, ComplexExpressionNode node) {
-        ComplexExpressionMapping res = new ComplexExpressionMapping(parent, node.getVariableTable(), node);
+        ComplexExpressionMapping res = new ComplexExpressionMapping(parent, node.getVariableTable(), node, AbstractMappingTree.getDefaultDevice().getParent());
 
         ArrayList<MappingNode> children = new ArrayList<>();
         for (PatternNode child : node.getChildren() ) {
@@ -162,7 +159,7 @@ public class DebugCreator {
     }
 
     private BranchMapping generateBranchMapping(Optional<MappingNode> parent, BranchNode node) {
-        BranchMapping res = new BranchMapping(parent, node.getVariableTable(), node);
+        BranchMapping res = new BranchMapping(parent, node.getVariableTable(), node, AbstractMappingTree.getDefaultDevice().getParent());
         ArrayList<MappingNode> children = new ArrayList<>();
         for (PatternNode child : node.getChildren() ) {
             children.addAll(generateMappingNode(child, Optional.of(res)));
@@ -173,7 +170,7 @@ public class DebugCreator {
     }
 
     private CallMapping generateCallMapping(Optional<MappingNode> parent, CallNode node) {
-        CallMapping res = new CallMapping(parent, node.getVariableTable(), node);
+        CallMapping res = new CallMapping(parent, node.getVariableTable(), node, AbstractMappingTree.getDefaultDevice().getParent());
 
         ArrayList<MappingNode> children = new ArrayList<>();
         res.setChildren(children);
@@ -182,7 +179,7 @@ public class DebugCreator {
     }
 
     private ForEachLoopMapping generateForEachLoopMapping(Optional<MappingNode> parent, ForEachLoopNode node) {
-        ForEachLoopMapping res = new ForEachLoopMapping(parent, node.getVariableTable(), node);
+        ForEachLoopMapping res = new ForEachLoopMapping(parent, node.getVariableTable(), node, AbstractMappingTree.getDefaultDevice().getParent());
 
         ArrayList<MappingNode> children = new ArrayList<>();
         for (int i = 1; i < node.getChildren().size(); i++) {
@@ -196,7 +193,7 @@ public class DebugCreator {
     }
 
     private ForLoopMapping generateForLoopMapping(Optional<MappingNode> parent, ForLoopNode node) {
-        ForLoopMapping res = new ForLoopMapping(parent, node.getVariableTable(), node);
+        ForLoopMapping res = new ForLoopMapping(parent, node.getVariableTable(), node, AbstractMappingTree.getDefaultDevice().getParent());
 
         ArrayList<MappingNode> children = new ArrayList<>();
         for (int i = 3; i < node.getChildren().size(); i++) {
@@ -213,7 +210,7 @@ public class DebugCreator {
 
 
     private JumpLabelMapping generateJumpLabelMapping(Optional<MappingNode> parent, JumpLabelNode node) {
-        JumpLabelMapping res = new JumpLabelMapping(parent, node.getVariableTable(), node, node.getLabel());
+        JumpLabelMapping res = new JumpLabelMapping(parent, node.getVariableTable(), node, node.getLabel(), AbstractMappingTree.getDefaultDevice().getParent());
 
         ArrayList<MappingNode> children = new ArrayList<>();
         for (PatternNode child : node.getChildren() ) {
@@ -225,7 +222,7 @@ public class DebugCreator {
     }
 
     private JumpStatementMapping generateJumpStatementMapping(Optional<MappingNode> parent, JumpStatementNode node) {
-        JumpStatementMapping res = new JumpStatementMapping(parent, node.getVariableTable(), node, node.getClosingVars(), generateComplexExpressionMapping(Optional.empty(), node.getResultExpression()), node.getLabel(), node.getOutputData());
+        JumpStatementMapping res = new JumpStatementMapping(parent, node.getVariableTable(), node, node.getClosingVars(), generateComplexExpressionMapping(Optional.empty(), node.getResultExpression()), node.getLabel(), node.getOutputData(), AbstractMappingTree.getDefaultDevice().getParent());
         res.getResultExpression().setParent(Optional.of(res));
 
         ArrayList<MappingNode> children = new ArrayList<>();
@@ -238,7 +235,7 @@ public class DebugCreator {
     }
 
     private ReturnMapping generateReturnMapping(Optional<MappingNode> parent, ReturnNode node) {
-        ReturnMapping res = new ReturnMapping(parent, node.getVariableTable(), node);
+        ReturnMapping res = new ReturnMapping(parent, node.getVariableTable(), node, AbstractMappingTree.getDefaultDevice().getParent());
 
         ArrayList<MappingNode> children = new ArrayList<>();
         for (int i = 1; i < node.getChildren().size(); i++) {
@@ -252,7 +249,7 @@ public class DebugCreator {
     }
 
     private WhileLoopMapping generateWhileLoopMapping(Optional<MappingNode> parent, WhileLoopNode node) {
-        WhileLoopMapping res = new WhileLoopMapping(parent, node.getVariableTable(), node);
+        WhileLoopMapping res = new WhileLoopMapping(parent, node.getVariableTable(), node, AbstractMappingTree.getDefaultDevice().getParent());
 
         ArrayList<MappingNode> children = new ArrayList<>();
         for (int i = 1; i < node.getChildren().size(); i++) {
@@ -266,7 +263,7 @@ public class DebugCreator {
     }
 
     private SimpleExpressionBlockMapping generateSimpleExpressionBlockMapping(Optional<MappingNode> parent, SimpleExpressionBlockNode node) {
-        SimpleExpressionBlockMapping res = new SimpleExpressionBlockMapping(parent, node.getVariableTable(), node);
+        SimpleExpressionBlockMapping res = new SimpleExpressionBlockMapping(parent, node.getVariableTable(), node, AbstractMappingTree.getDefaultDevice().getParent());
 
         ArrayList<MappingNode> children = new ArrayList<>();
         for (PatternNode child : node.getChildren() ) {
@@ -386,7 +383,7 @@ public class DebugCreator {
                         reductionCallMapping.setDefinition(generateComplexExpressionMapping(Optional.of(reductionCallMapping), (ComplexExpressionNode) node.getChildren().get(0)));
                     }
 
-                    res.add(new BarrierMapping(parent, node.getVariableTable(), executionUnits));
+                    res.add(new BarrierMapping(parent, node.getVariableTable(), new HashSet<>(executionUnits)));
 
                     ReductionCallMapping reductionCallMapping = new ReductionCallMapping(parent, node.getVariableTable(), node, starts, numIterations, executionUnits.get(0), 1, true, tempDatas, new HashSet<>(), 1, executionUnits.get(0).getParent().getType().equals("GPU"));
 

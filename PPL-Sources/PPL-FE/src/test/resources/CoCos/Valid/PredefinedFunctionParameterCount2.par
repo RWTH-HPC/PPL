@@ -1,0 +1,13 @@
+PredefinedFunctionParameterCount2 {
+
+seq main() : Void {
+    var Int test = rand()
+    var Double test2 = sqrt(4)
+    var Double test3 = cbrt(4)
+    var Double test4 = pow(4,5)
+    var Double test5 = abs(3.5)
+    var Float test6 = fabs(0-4.6)
+
+
+}
+}

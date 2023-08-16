@@ -1,7 +1,8 @@
 package de.parallelpatterndsl.patterndsl.coco;
 
-import de.monticore.expressions.commonexpressions._ast.ASTNameExpression;
-import de.monticore.expressions.expressionsbasis._ast.ASTExpression;
+import de.parallelpatterndsl.patterndsl._ast.ASTNameExpression;
+import de.parallelpatterndsl.patterndsl._ast.ASTExpression;
+
 import de.parallelpatterndsl.patterndsl._ast.ASTIndexAccessExpression;
 import de.parallelpatterndsl.patterndsl._ast.ASTListType;
 import de.parallelpatterndsl.patterndsl._cocos.PatternDSLASTIndexAccessExpressionCoCo;
@@ -20,12 +21,16 @@ public class IndexAccessListExistsCoCo implements PatternDSLASTIndexAccessExpres
 
     @Override
     public void check(ASTIndexAccessExpression node) {
-        ASTExpression exp = node.getExpression();
+        ASTExpression exp = node.getIndexAccess();
         if (exp instanceof ASTIndexAccessExpression) {
             return;
         } else if(exp instanceof ASTNameExpression) {
             String name = ((ASTNameExpression) exp).getName();
+            if (node.getEnclosingScope().resolveMany(name, VariableSymbol.KIND).size() > 1 || node.getEnclosingScope().resolveMany(name, FunctionParameterSymbol.KIND).size() > 1) {
+                Log.error(node.get_SourcePositionStart() + " Variable: " + name + " is defined multiple times. Shadowing is not allowed within the PPL.");
+            }
             Optional<VariableSymbol> symbol = node.getEnclosingScope().resolve(name, VariableSymbol.KIND);
+
             if (symbol.isPresent()) {
                 if (symbol.get().getType() instanceof ASTListType) {
                     return;
@@ -39,6 +44,7 @@ public class IndexAccessListExistsCoCo implements PatternDSLASTIndexAccessExpres
                 }
             }
         }
+
         Log.error(node.get_SourcePositionStart() + " Expression not of List type");
     }
 }

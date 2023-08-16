@@ -1,0 +1,11 @@
+ReturnWithoutCall {
+var Int test = 0
+seq add(Int input) : Int {
+    input + 1
+    return 0
+}
+seq main() : Void {
+    test = add(1)
+    return add(1)
+}
+}

@@ -45,11 +45,9 @@ import java.util.stream.Collectors;
 
 public class NeuralNetworkTest {
 
-    public static final String GLOBAL_PATH = "../../Samples";
+    public static final String BENCHMARK_PATH = "../../../benchmark/ppl/";
 
-    public static final String BENCHMARK_PATH = GLOBAL_PATH + "/nn/ppl/";
-
-    public static final String CLUSTER_SPEC_PATH = GLOBAL_PATH + "/clusters/cluster_c18g.json";
+    public static final String CLUSTER_SPEC_PATH = "../../../benchmark/clusters/cluster_c18g.json";
 
     private AbstractPatternTree apt;
 
@@ -133,8 +131,8 @@ public class NeuralNetworkTest {
 
         Pair<Mapping, Double> base = baseMapping(flatAPT, model);
         try {
-            mapping.a.toJSONFile(BENCHMARK_PATH + "neural_network.json", "Neural Network", "c18g", mapping.b);
-            base.a.toJSONFile(BENCHMARK_PATH + "neural_network_base.json", "Neural Network", "c18g", base.b);
+            mapping.a.toJSONFile("../../../benchmark/mappings/neural_network.json", "Neural Network", "c18g", mapping.b);
+            base.a.toJSONFile("../../../benchmark/mappings/neural_network_base.json", "Neural Network", "c18g", base.b);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -167,7 +165,7 @@ public class NeuralNetworkTest {
         // Forward steps
         for (int i = 1; i < flatAPT.size(); i++) {
             StepMapping stepMapping = new StepMapping(i);
-            Iterator<PatternSplit> iter = flatAPT.getSplits(i).stream().sorted(Comparator.comparingInt(s -> s.getStartIndices()[0])).collect(Collectors.toCollection(LinkedHashSet::new)).iterator();
+            Iterator<PatternSplit> iter = flatAPT.getSplits(i).stream().sorted(Comparator.comparingLong(s -> s.getStartIndices()[0])).collect(Collectors.toCollection(LinkedHashSet::new)).iterator();
 
             Team one = new Team(cpu, socket1, socket1.getCores());
             Team two = new Team(cpu, socket2, socket2.getCores());

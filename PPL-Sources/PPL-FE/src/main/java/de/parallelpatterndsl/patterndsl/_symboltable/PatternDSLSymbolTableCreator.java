@@ -17,6 +17,8 @@ import static java.util.Objects.requireNonNull;
 public class PatternDSLSymbolTableCreator extends PatternDSLSymbolTableCreatorTOP {
     protected ASTModule module;
 
+    boolean global = true;
+
     public PatternDSLSymbolTableCreator(ResolvingConfiguration resolvingConfig, Scope enclosingScope) {
         super(resolvingConfig, enclosingScope);
     }
@@ -60,7 +62,33 @@ public class PatternDSLSymbolTableCreator extends PatternDSLSymbolTableCreatorTO
                 arrayOnStack = true;
             }
         }
-        return new VariableSymbol(ast.getName(), ast.getType(), arrayOnStack);
+        return new VariableSymbol(ast.getName(), ast.getType(), global, arrayOnStack);
+    }
+
+    @Override
+    public void traverse(ASTFunction node) {
+        // One might think that we could call traverse(subelement) immediately,
+        // but this is not true for interface-types where we do not know the
+        // concrete type of the element.
+        // Instead we double-dispatch the call, to call the correctly typed
+        // traverse(...) method with the elements concrete type.
+        global = false;
+        if (null != node.getPatternType()) {
+            node.getPatternType().accept(getRealThis());
+        }
+        if (null != node.getFunctionParameters()) {
+            node.getFunctionParameters().accept(getRealThis());
+        }
+        if (node.getTypeOpt().isPresent()) {
+            node.getTypeOpt().get().accept(getRealThis());
+        }
+        if (node.getFunctionParameterOpt().isPresent()) {
+            node.getFunctionParameterOpt().get().accept(getRealThis());
+        }
+        if (null != node.getBlockStatement()) {
+            node.getBlockStatement().accept(getRealThis());
+        }
+        global=true;
     }
 
     /**
@@ -86,7 +114,7 @@ public class PatternDSLSymbolTableCreator extends PatternDSLSymbolTableCreatorTO
      */
     @Override
     protected FunctionSymbol create_Function(ASTFunction ast) {
-        return new FunctionSymbol(ast.getName(), ast.getPatternType());
+        return new FunctionSymbol(ast.getName(), ast.getPatternType(), ast.getFunctionParameters().sizeFunctionParameters());
     }
 
     /**
@@ -99,6 +127,6 @@ public class PatternDSLSymbolTableCreator extends PatternDSLSymbolTableCreatorTO
      */
     @Override
     protected ConstantSymbol create_Constant(ASTConstant ast) {
-        return new ConstantSymbol(ast.getName(),ast.getListExpressionOpt(),ast.getNameExpressionOpt(),ast.getLitExpressionOpt());
+        return new ConstantSymbol(ast.getName(),ast.getListExpressionOpt(),ast.getNameExpressionOpt(),ast.getLiteralExpressionOpt());
     }
 }

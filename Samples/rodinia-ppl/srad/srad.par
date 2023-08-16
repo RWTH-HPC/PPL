@@ -1,0 +1,145 @@
+srad {
+include "../math"
+
+var Int rows = 512
+var Int cols = 512
+var Float lambda = 0.5
+
+map deriv_N([[Float]] J) : [[Float]] dN {
+	dN[INDEX] = deriv_row<<<>>>(J[INDEX], J[INDEX - 1])
+}
+
+map deriv_S([[Float]] J) : [[Float]] dS {
+	dS[INDEX] = deriv_row<<<>>>(J[INDEX], J[INDEX + 1])
+}
+
+map deriv_row([Float] J, [Float] D) : [Float] dcol {
+	dcol[INDEX] = D[INDEX] + J[INDEX]
+}
+
+stencil deriv_W([[Float]] J) : [[Float]] dW {
+	dW[INDEX0][INDEX1] = J[INDEX0][INDEX1 - 1] + J[INDEX0][INDEX1]
+}
+
+stencil deriv_E([[Float]] J) : [[Float]] dE {
+	dE[INDEX0][INDEX1] = J[INDEX0][INDEX1 - 1] + J[INDEX0][INDEX1]
+}
+
+stencil diffuse([[Float]] dN,[[Float]] dS, [[Float]] dW,[[Float]] dE, [[Float]] J, Float q0sqr) : [[Float]] c {
+	var Float G2 = (dN[INDEX0][INDEX1] * dN[INDEX0][INDEX1] + dS[INDEX0][INDEX1] * dS[INDEX0][INDEX1] + dW[INDEX0][INDEX1] * dW[INDEX0][INDEX1] + dE[INDEX0][INDEX1] * dE[INDEX0][INDEX1] )/ J[INDEX0][INDEX1] * J[INDEX0][INDEX1]
+	var Float L = (dN[INDEX0][INDEX1] + dS[INDEX0][INDEX1] + dW[INDEX0][INDEX1] + dE[INDEX0][INDEX1] )/ J[INDEX0][INDEX1]
+	
+	var Float num  = (0.5*G2) - ((1.0/16.0)*(L*L)) 
+    var Float den  = 1 + (0.25*L)
+    var Float qsqr = num/(den*den)
+ 
+    // diffusion coefficent (equ 33)
+    den = (qsqr-q0sqr) / (q0sqr * (1+q0sqr)) 
+    c[INDEX0][INDEX1] = 1.0 / (1.0+den) 
+                
+    // saturate diffusion coefficent
+    if c[INDEX0][INDEX1] < 0 {c[INDEX0][INDEX1] = 0}
+    else if c[INDEX0][INDEX1] > 1 {c[INDEX0][INDEX1] = 1}
+}
+
+seq get_cS([[Float]] c, Int i, Int j) : Float {
+	if i == rows - 1 {
+		return c[rows-1][j]
+	}
+	return c[i+1][j]
+}
+
+seq get_cE([[Float]] c, Int i, Int j) : Float {
+	if j == cols - 1 {
+		return c[i][cols-1]
+	}
+	return c[i][j+1]
+}
+
+stencil update([[Float]] dN,[[Float]] dS, [[Float]] dW,[[Float]] dE, [[Float]] c) : [[Float]] J {
+	// diffusion coefficent
+	var Float cN = c[INDEX0][INDEX1]
+	var Float cS = get_cS(c,INDEX0,INDEX1)
+	var Float cW = c[INDEX0][INDEX1]
+	var Float cE = get_cE(c,INDEX0,INDEX1)
+
+    // divergence (equ 58)
+    var Float D = cN * dN[INDEX0][INDEX1] + cS * dS[INDEX0][INDEX1] + cW * dW[INDEX0][INDEX1] + cE * dE[INDEX0][INDEX1]
+                
+    // image update (equ 61)
+    J[INDEX0][INDEX1] += 0.25*lambda*D
+}
+
+
+
+seq main(): Int {
+	
+	var Int r1 = 0
+	var Int r2 = 63
+	var Int c1 = 0
+	var Int c2 = 63
+	
+	var Int niter = 4
+	
+	var Int size_R = (r2-r1+1)*(c2-c1+1)
+	
+	var [[Float]] J = init_List([512,512])
+	var [[Float]] c = init_List([512,512])
+	
+	var [[Float]] dN = init_List([512,512])
+	var [[Float]] dS = init_List([512,512])
+	var [[Float]] dW = init_List([512,512])
+	var [[Float]] dE = init_List([512,512])
+	
+	
+	for var Int i = 0; i < rows; i++ {
+		for var Int j = 0; j < cols; j++ {
+			J[i][j] = rand()/MAX_INT
+		}
+	}
+	//var Long time = get_time()
+	
+	for var Int iter = 0; iter < 4; iter++ { // niter=4
+		var Float sum=0
+		var Float sum2=0 
+		var Float tmp
+		for var Int i=r1; i<=r2; i++ {
+            for var Int j=c1; j<=c2; j++ {
+                tmp   = J[i][j]
+                sum  += tmp
+                sum2 += tmp*tmp
+            }
+        }
+		
+        var Float meanROI = sum / size_R
+        var Float varROI  = (sum2 / size_R) - meanROI*meanROI
+        var Float q0sqr   = varROI / (meanROI*meanROI)
+		
+		dN = deriv_N<<<>>>(J)
+		dS = deriv_S<<<>>>(J)
+		dW = deriv_W<<<>>>(J)
+		dE = deriv_E<<<>>>(J)
+		
+		for var Int i = 0; i < rows; i++ {
+			dW[i][0] = 2 * J[i][0]
+			dE[i][cols - 1] = 2 * J[i][cols - 1]
+		}
+		for var Int i = 0; i < cols; i++ {
+			dN[0][i] = 2 * J[0][i]
+			dS[cols - 1][i] = 2 * J[cols - 1][i]
+		}
+		
+		c = diffuse<<<>>>(dN, dS, dW, dE, J, q0sqr)
+		
+		J = update<<<>>>(dN, dS, dW, dE, c)
+		
+	}
+	//time = get_time() - time
+	//print("Kernel took: " {time} " us")
+	
+	write("res.txt", {J})
+	
+	return 0
+}
+
+}

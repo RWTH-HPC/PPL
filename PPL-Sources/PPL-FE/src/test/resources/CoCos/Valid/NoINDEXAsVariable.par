@@ -1,0 +1,10 @@
+NoINDEXAsVariable {
+
+
+
+seq main() : Void {
+
+    var Int index = 0
+    var Int INDex = 1
+}
+}

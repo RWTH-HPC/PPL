@@ -1,0 +1,32 @@
+CPU2SEQ2CPU{
+
+map increment([Int] input): [Int] res{
+    res[INDEX] = input[INDEX] + 1
+}
+
+seq main() : Int {
+    var [Int] initial = init_List([200],1)
+    var [Int] intermediate = init_List([200])
+    var [Int] result = init_List([200])
+    var [Int] result_seq = init_List([200])
+    
+    /*execute the pattern on node 0 device 0 */
+    intermediate = increment<<<[0,0,0]>>>(initial)
+    
+    for var Int i = 0; i < 200; i++ {
+        intermediate[i]++
+    }
+    
+    result = increment<<<[0,0,0]>>>(intermediate)
+    
+    
+    for var Int i = 0; i < 200; i++ {
+        result_seq[i] = initial[i] + 3
+        if result_seq[i] != result[i] {
+            print("value at element " {i} " is wrong!")
+            exit(1)
+        }
+    }
+    
+return 0 
+}}

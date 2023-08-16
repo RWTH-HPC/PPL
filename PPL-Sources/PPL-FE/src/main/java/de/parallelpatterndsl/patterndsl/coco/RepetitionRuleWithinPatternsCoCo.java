@@ -1,11 +1,12 @@
 package de.parallelpatterndsl.patterndsl.coco;
 
 
-import de.monticore.expressions.commonexpressions._ast.ASTMinusExpression;
-import de.monticore.expressions.commonexpressions._ast.ASTMultExpression;
-import de.monticore.expressions.commonexpressions._ast.ASTNameExpression;
-import de.monticore.expressions.commonexpressions._ast.ASTPlusExpression;
-import de.monticore.expressions.expressionsbasis._ast.ASTExpression;
+import de.parallelpatterndsl.patterndsl._ast.ASTMinusExpression;
+import de.parallelpatterndsl.patterndsl._ast.ASTMultExpression;
+import de.parallelpatterndsl.patterndsl._ast.ASTNameExpression;
+import de.parallelpatterndsl.patterndsl._ast.ASTPlusExpression;
+import de.parallelpatterndsl.patterndsl._ast.ASTExpression;
+
 import de.monticore.literals.literals._ast.ASTIntLiteral;
 import de.parallelpatterndsl.patterndsl._ast.*;
 import de.parallelpatterndsl.patterndsl._cocos.PatternDSLASTFunctionCoCo;
@@ -54,8 +55,8 @@ public class RepetitionRuleWithinPatternsCoCo implements PatternDSLASTFunctionCo
 
         @Override
         public void visit(ASTIndexAccessExpression node) {
-            if (node.getExpression() instanceof ASTNameExpression) {
-                if (node.getEnclosingScope().resolveMany(((ASTNameExpression) node.getExpression()).getName(), FunctionParameterSymbol.KIND).size() == 0) {
+            if (node.getIndexAccess() instanceof ASTNameExpression) {
+                if (node.getEnclosingScope().resolveMany(((ASTNameExpression) node.getIndexAccess()).getName(), FunctionParameterSymbol.KIND).size() == 0) {
                     accessesParameter = true;
                     return;
                 }
@@ -79,8 +80,8 @@ public class RepetitionRuleWithinPatternsCoCo implements PatternDSLASTFunctionCo
                 ASTExpression left = ((ASTPlusExpression) expression).getLeft();
                 ASTExpression right = ((ASTPlusExpression) expression).getRight();
 
-                if (right instanceof ASTLitExpression) {
-                    if ( !(((ASTLitExpression) right).getLiteral() instanceof ASTIntLiteral)) {
+                if (right instanceof ASTLiteralExpression) {
+                    if ( !(((ASTLiteralExpression) right).getLiteral() instanceof ASTIntLiteral)) {
                         isCorrect = false;
                         Log.error(node.get_SourcePositionStart() + " Pattern access rule not correct ");
                     }
@@ -99,8 +100,8 @@ public class RepetitionRuleWithinPatternsCoCo implements PatternDSLASTFunctionCo
                 ASTExpression left = ((ASTMinusExpression) expression).getLeft();
                 ASTExpression right = ((ASTMinusExpression) expression).getRight();
 
-                if (right instanceof ASTLitExpression) {
-                    if ( !(((ASTLitExpression) right).getLiteral() instanceof ASTIntLiteral)) {
+                if (right instanceof ASTLiteralExpression) {
+                    if ( !(((ASTLiteralExpression) right).getLiteral() instanceof ASTIntLiteral)) {
                         isCorrect = false;
                         Log.error(node.get_SourcePositionStart() + " Pattern access rule not correct ");
                     }
@@ -116,8 +117,8 @@ public class RepetitionRuleWithinPatternsCoCo implements PatternDSLASTFunctionCo
                     }
                 }
 
-            } else if (expression instanceof ASTLitExpression) {
-                if ( !(((ASTLitExpression) expression).getLiteral() instanceof ASTIntLiteral)) {
+            } else if (expression instanceof ASTLiteralExpression) {
+                if ( !(((ASTLiteralExpression) expression).getLiteral() instanceof ASTIntLiteral)) {
                     isCorrect = false;
                     Log.error(node.get_SourcePositionStart() + " Pattern access rule not correct ");
                 }
@@ -158,8 +159,8 @@ public class RepetitionRuleWithinPatternsCoCo implements PatternDSLASTFunctionCo
 
         @Override
         public void visit(ASTIndexAccessExpression node) {
-            if (node.getExpression() instanceof ASTNameExpression) {
-                if (node.getEnclosingScope().resolveMany(((ASTNameExpression) node.getExpression()).getName(), FunctionParameterSymbol.KIND).size() == 0) {
+            if (node.getIndexAccess() instanceof ASTNameExpression) {
+                if (node.getEnclosingScope().resolveMany(((ASTNameExpression) node.getIndexAccess()).getName(), FunctionParameterSymbol.KIND).size() == 0) {
                     accessesParameter = true;
                     return;
                 }
@@ -183,8 +184,8 @@ public class RepetitionRuleWithinPatternsCoCo implements PatternDSLASTFunctionCo
                 ASTExpression left = ((ASTMultExpression) expression).getLeft();
                 ASTExpression right = ((ASTMultExpression) expression).getRight();
 
-                if (left instanceof ASTLitExpression) {
-                    if ( !(((ASTLitExpression) left).getLiteral() instanceof ASTIntLiteral)) {
+                if (left instanceof ASTLiteralExpression) {
+                    if ( !(((ASTLiteralExpression) left).getLiteral() instanceof ASTIntLiteral)) {
                         isCorrect = false;
                         Log.error(node.get_SourcePositionStart() + " Pattern access rule not correct ");
                     }
@@ -209,8 +210,8 @@ public class RepetitionRuleWithinPatternsCoCo implements PatternDSLASTFunctionCo
                         }
                     }
 
-                    if (plusRight instanceof ASTLitExpression) {
-                        if ( !(((ASTLitExpression) plusRight).getLiteral() instanceof ASTIntLiteral)) {
+                    if (plusRight instanceof ASTLiteralExpression) {
+                        if ( !(((ASTLiteralExpression) plusRight).getLiteral() instanceof ASTIntLiteral)) {
                             isCorrect = false;
                             Log.error(node.get_SourcePositionStart() + " Pattern access rule not correct ");
                         }
@@ -230,8 +231,8 @@ public class RepetitionRuleWithinPatternsCoCo implements PatternDSLASTFunctionCo
                         }
                     }
 
-                    if (plusRight instanceof ASTLitExpression) {
-                        if ( !(((ASTLitExpression) plusRight).getLiteral() instanceof ASTIntLiteral)) {
+                    if (plusRight instanceof ASTLiteralExpression) {
+                        if ( !(((ASTLiteralExpression) plusRight).getLiteral() instanceof ASTIntLiteral)) {
                             isCorrect = false;
                             Log.error(node.get_SourcePositionStart() + " Pattern access rule not correct ");
                         }
@@ -246,8 +247,8 @@ public class RepetitionRuleWithinPatternsCoCo implements PatternDSLASTFunctionCo
                 ASTExpression left = ((ASTPlusExpression) expression).getLeft();
                 ASTExpression right = ((ASTPlusExpression) expression).getRight();
 
-                if (right instanceof ASTLitExpression) {
-                    if ( !(((ASTLitExpression) right).getLiteral() instanceof ASTIntLiteral)) {
+                if (right instanceof ASTLiteralExpression) {
+                    if ( !(((ASTLiteralExpression) right).getLiteral() instanceof ASTIntLiteral)) {
                         isCorrect = false;
                         Log.error(node.get_SourcePositionStart() + " Pattern access rule not correct ");
                     }
@@ -272,8 +273,8 @@ public class RepetitionRuleWithinPatternsCoCo implements PatternDSLASTFunctionCo
                         }
                     }
 
-                    if (multLeft instanceof ASTLitExpression) {
-                        if ( !(((ASTLitExpression) multLeft).getLiteral() instanceof ASTIntLiteral)) {
+                    if (multLeft instanceof ASTLiteralExpression) {
+                        if ( !(((ASTLiteralExpression) multLeft).getLiteral() instanceof ASTIntLiteral)) {
                             isCorrect = false;
                             Log.error(node.get_SourcePositionStart() + " Pattern access rule not correct ");
                         }
@@ -288,8 +289,8 @@ public class RepetitionRuleWithinPatternsCoCo implements PatternDSLASTFunctionCo
                 ASTExpression left = ((ASTMinusExpression) expression).getLeft();
                 ASTExpression right = ((ASTMinusExpression) expression).getRight();
 
-                if (right instanceof ASTLitExpression) {
-                    if ( !(((ASTLitExpression) right).getLiteral() instanceof ASTIntLiteral)) {
+                if (right instanceof ASTLiteralExpression) {
+                    if ( !(((ASTLiteralExpression) right).getLiteral() instanceof ASTIntLiteral)) {
                         isCorrect = false;
                         Log.error(node.get_SourcePositionStart() + " Pattern access rule not correct ");
                     }
@@ -314,8 +315,8 @@ public class RepetitionRuleWithinPatternsCoCo implements PatternDSLASTFunctionCo
                         }
                     }
 
-                    if (multLeft instanceof ASTLitExpression) {
-                        if ( !(((ASTLitExpression) multLeft).getLiteral() instanceof ASTIntLiteral)) {
+                    if (multLeft instanceof ASTLiteralExpression) {
+                        if ( !(((ASTLiteralExpression) multLeft).getLiteral() instanceof ASTIntLiteral)) {
                             isCorrect = false;
                             Log.error(node.get_SourcePositionStart() + " Pattern access rule not correct ");
                         }

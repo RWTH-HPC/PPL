@@ -2,12 +2,16 @@ package de.parallelpatterndsl.patterndsl.abstractPatternTree.Nodes.Plain;
 
 import de.parallelpatterndsl.patterndsl.abstractPatternTree.AbstractPatternTree;
 import de.parallelpatterndsl.patterndsl.abstractPatternTree.DataElements.Data;
+import de.parallelpatterndsl.patterndsl.abstractPatternTree.DataElements.DataAccess.ReduceDataAccess;
 import de.parallelpatterndsl.patterndsl.abstractPatternTree.DataElements.FunctionInlineData;
+import de.parallelpatterndsl.patterndsl.abstractPatternTree.DataElements.FunctionReturnData;
 import de.parallelpatterndsl.patterndsl.abstractPatternTree.DataElements.PrimitiveDataTypes;
 import de.parallelpatterndsl.patterndsl.abstractPatternTree.Nodes.FunctionNode;
-import de.parallelpatterndsl.patterndsl.abstractPatternTree.Nodes.Functions.RecursionNode;
+import de.parallelpatterndsl.patterndsl.abstractPatternTree.Nodes.Functions.*;
 import de.parallelpatterndsl.patterndsl.abstractPatternTree.Nodes.PatternNode;
 import de.parallelpatterndsl.patterndsl.abstractPatternTree.Nodes.Plain.AdditionalArguments.AdditionalArguments;
+import de.parallelpatterndsl.patterndsl.abstractPatternTree.Nodes.Plain.AdditionalArguments.MetaList;
+import de.parallelpatterndsl.patterndsl.abstractPatternTree.Nodes.Plain.AdditionalArguments.MetaValue;
 import de.parallelpatterndsl.patterndsl.abstractPatternTree.Visitor.APTVisitor;
 import de.parallelpatterndsl.patterndsl.abstractPatternTree.Visitor.CallCountResetter;
 import de.parallelpatterndsl.patterndsl.abstractPatternTree.Visitor.ExtendedShapeAPTVisitor;
@@ -15,6 +19,7 @@ import de.parallelpatterndsl.patterndsl.expressions.AssignmentExpression;
 import de.parallelpatterndsl.patterndsl.expressions.IRLExpression;
 import de.parallelpatterndsl.patterndsl.expressions.OperationExpression;
 import de.parallelpatterndsl.patterndsl.expressions.Operator;
+import de.parallelpatterndsl.patterndsl.helperLibrary.DeepCopyHelper;
 import de.se_rwth.commons.logging.Log;
 
 import java.util.ArrayList;
@@ -29,7 +34,7 @@ public class ParallelCallNode extends CallNode {
 
     /**
      * The number of meta arguments within the parallel call notation.
-     * The number denotes how many elements are accounted to the additional arguments within the child nodes.
+     * The number denotes how many elements additional arguments are used per instance.
      */
     private int additionalArgumentCount;
 
@@ -41,6 +46,7 @@ public class ParallelCallNode extends CallNode {
     public ParallelCallNode(int parameterCount, String functionIdentifier, int additionalArgumentCount) {
         super(parameterCount, functionIdentifier);
         this.additionalArgumentCount = additionalArgumentCount;
+        additionalArguments = new ArrayList<>();
 
         setCallExpression(new FunctionInlineData("", PrimitiveDataTypes.VOID, new OperationExpression(new ArrayList<>(),new ArrayList<>()), -1));
     }
@@ -141,6 +147,48 @@ public class ParallelCallNode extends CallNode {
         return arguments;
     }
 
+    @Override
+    public long getCost() {
+        long cost = 0;
+        for (PatternNode child: getChildren() ) {
+            cost += child.getCost();
+        }
+        return cost * totalIterations();
+    }
+
+    @Override
+    public long getLoadStore() {
+        long cost = 0;
+        for (PatternNode child: getChildren() ) {
+            cost += child.getLoadStore();
+        }
+        return cost * totalIterations();
+    }
+
+    public long totalIterations() {
+        long result = 1;
+
+        FunctionNode function = AbstractPatternTree.getFunctionTable().get(getFunctionIdentifier());
+
+        if (function instanceof MapNode) {
+            result = ((Number) ((MetaValue<Long>) getAdditionalArguments().get(0)).getValue()).longValue();
+        } else if (function instanceof ReduceNode) {
+            result = ((Number) ((MetaList<Long>) getAdditionalArguments().get(0)).getValues().get(0)).longValue();
+        } else if (function instanceof DynamicProgrammingNode) {
+            for (int i = 0; i <((MetaList<Long>) getAdditionalArguments().get(0)).getValues().size() ; i++) {
+                long length = ((Number) ((MetaList<Long>) getAdditionalArguments().get(0)).getValues().get(i)).longValue();
+                result *= length;
+            }
+        } else if (function instanceof StencilNode) {
+            for (int i = 0; i <((MetaList<Long>) getAdditionalArguments().get(0)).getValues().size() ; i++) {
+                long length = ((Number) ((MetaList<Long>) getAdditionalArguments().get(0)).getValues().get(i)).longValue();
+                result *= length;
+            }
+        }
+
+        return result;
+    }
+
     /**
      * Visitor accept function.
      */
@@ -152,5 +200,30 @@ public class ParallelCallNode extends CallNode {
         visitor.handle(this);
         CallCountResetter resetter = new CallCountResetter();
         this.accept(resetter);
+    }
+
+    @Override
+    public ParallelCallNode deepCopy() {
+        ParallelCallNode result = new ParallelCallNode(getParameterCount(), functionIdentifier, additionalArgumentCount);
+
+        ArrayList<AdditionalArguments> newAdditionalArguments = new ArrayList<>();
+        for (AdditionalArguments arg: additionalArguments) {
+            newAdditionalArguments.add(arg.deepCopy());
+        }
+        result.setAdditionalArguments(newAdditionalArguments);
+
+        DeepCopyHelper.basicCallSetup(this, result);
+
+        return result;
+    }
+
+    /**
+     * Adds the identifier to the Function node, used when unrolling the APT
+     * @param unrollIdentifier
+     */
+    @Override
+    public void addUnrollIdentifier(String unrollIdentifier) {
+        functionIdentifier = functionIdentifier + "_" + unrollIdentifier;
+        ((FunctionReturnData)((AssignmentExpression) ((ComplexExpressionNode) getChildren().get(0)).getExpression()).getRhsExpression().getOperands().get(0)).setIdentifier(functionIdentifier);
     }
 }

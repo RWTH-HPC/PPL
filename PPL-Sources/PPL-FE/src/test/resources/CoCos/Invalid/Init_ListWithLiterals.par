@@ -1,0 +1,9 @@
+Init_ListWithLiterals {
+
+
+seq main() : Void {
+    var Int a = 2
+    var [Int] test = init_List([a])
+
+}
+}

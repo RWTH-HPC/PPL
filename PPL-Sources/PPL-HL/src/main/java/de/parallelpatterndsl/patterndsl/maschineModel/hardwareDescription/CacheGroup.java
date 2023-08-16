@@ -68,10 +68,10 @@ public class CacheGroup implements Processor {
 
 
             } catch (IOException e) {
-                Log.error("Parsing failure! Not readable!");
+                Log.error("Parsing failure! No JSON File in:" + path + cacheGroup.get(ClusterParameter.TEMPLATE).toString());
                 e.printStackTrace();
             } catch (ParseException e) {
-                Log.error("Parsing failure! Not JSON format!");
+                Log.error("Parsing failure! Not JSON format! " + path + cacheGroup.get(ClusterParameter.TEMPLATE).toString());
                 e.printStackTrace();
             }
         }
@@ -195,5 +195,13 @@ public class CacheGroup implements Processor {
             Log.error("No caches in cache group defined!");
         }
         return (JSONArray) cacheGroup.get(ClusterParameter.CACHES);
+    }
+
+    @Override
+    public boolean isFirstCG() {
+        if (getParent().getProcessor().get(0) == this) {
+            return true;
+        }
+        return false;
     }
 }

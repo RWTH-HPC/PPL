@@ -1,0 +1,43 @@
+hurricane_gen {	
+include "../math"
+	
+seq main():Int {
+	
+	var Int canes = 16000000
+	var Int year
+	var Int month
+	var Int date
+	var Int hour
+	var Int num
+	var Int speed
+	var Int press
+	var Float lat
+	var Float lon
+	var String name
+	var [Int] hours = [0,6,12,18]
+	var [String] names = ["ALBERTO", "BERYL", "CHRIS","DEBBY","ERNESTO","FLORENCE","GORDON",
+		"HELENE","ISAAC","JOYCE","KIRK","LESLIE","MICHAEL","NADINE","OSCAR","PATTY","RAFAEL",
+		"SANDY","TONY","VALERIE","WILLIAM"]
+      
+
+	
+	for var Int i = 0; i < canes; i++ {
+		year = 1950 + rand() % 55
+		month = 1 + rand() % 12
+		date = 1 + rand()% 28
+		hour = hours[rand()%4]
+		num = 1 + rand()% 28
+		name = names[rand()%21]
+		lat = 10 + rand()%63 + rand()/MAX_INT
+		lon= rand()%358 + rand()/MAX_INT
+		speed = 10 + rand()%155
+		press= rand() % 900
+		
+		write("names.txt", {year} ", " {month} ", " {date} ", " {hour} ", " {num} ", " {name} ", " {lat} ", " {lon} ", " {speed} ", " {press})
+		write("longitude.txt", {lon})
+		write("latitude.txt", {lat})
+		
+	} 
+    return 0
+}
+}

@@ -1,23 +1,18 @@
 package de.parallelpatterndsl.patterndsl.MappingTree.Nodes.Plain;
 
-import de.parallelpatterndsl.patterndsl.MappingTree.AbstractMappingTree;
-import de.parallelpatterndsl.patterndsl.MappingTree.Nodes.DataControl.DataPlacement;
-import de.parallelpatterndsl.patterndsl.MappingTree.Nodes.DataControl.EndPoint;
 import de.parallelpatterndsl.patterndsl.MappingTree.Nodes.MappingNode;
 import de.parallelpatterndsl.patterndsl.MappingTree.Visitor.AMTVisitor;
-import de.parallelpatterndsl.patterndsl.abstractPatternTree.DataElements.ArrayData;
 import de.parallelpatterndsl.patterndsl.abstractPatternTree.DataElements.Data;
 import de.parallelpatterndsl.patterndsl.abstractPatternTree.Nodes.Plain.ForLoopNode;
+import de.parallelpatterndsl.patterndsl.hardwareDescription.Node;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Optional;
 
 /**
  * Defines the for-loop node in abstract mapping trees.
  */
-public class ForLoopMapping extends MappingNode {
+public class ForLoopMapping extends SerialNodeMapping {
 
     /**
      * The expression initializing the loop control variable.
@@ -39,8 +34,8 @@ public class ForLoopMapping extends MappingNode {
      */
     private Data loopControlVariable;
 
-    public ForLoopMapping(Optional<MappingNode> parent, HashMap<String, Data> variableTable, ForLoopNode aptNode) {
-        super(parent, variableTable, aptNode);
+    public ForLoopMapping(Optional<MappingNode> parent, HashMap<String, Data> variableTable, ForLoopNode aptNode, Node target) {
+        super(parent, variableTable, aptNode, target);
         loopControlVariable = aptNode.getLoopControlVariable();
     }
 

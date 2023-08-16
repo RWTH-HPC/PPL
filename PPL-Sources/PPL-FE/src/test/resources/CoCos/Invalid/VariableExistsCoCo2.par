@@ -1,0 +1,12 @@
+VariableExistsCoCo2 {
+seq main() : Void {
+
+    test()
+}
+
+seq test(): Void {
+    for var Int i = 0; i < 10 ; j++ {
+
+    }
+}
+}

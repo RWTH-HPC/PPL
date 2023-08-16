@@ -1,0 +1,8 @@
+IncrementOnlyAssignment {
+
+seq main() : Void {
+    var Int a = 10
+    var Int b = a++
+    var Int c = b--
+}
+}

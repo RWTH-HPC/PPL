@@ -1,0 +1,9 @@
+ForControlWarningCoCo {
+seq main() : Void {
+
+    for var Int i = 0; i < 2; i++ {
+
+    }
+
+}
+}

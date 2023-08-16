@@ -92,8 +92,6 @@ public class ExtendedShapeGeneratorTest {
         AST2APT aptGenerator = new AST2APT(symbolTable,ast,10);
         AbstractPatternTree abstractPatternTree = aptGenerator.generate();
 
-        int a = 0;
-
         TestVisitor visitor = new TestVisitor();
 
         abstractPatternTree.getRoot().accept(visitor);

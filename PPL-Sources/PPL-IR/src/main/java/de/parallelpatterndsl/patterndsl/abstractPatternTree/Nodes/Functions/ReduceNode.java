@@ -12,6 +12,9 @@ import de.parallelpatterndsl.patterndsl.abstractPatternTree.Visitor.ExtendedShap
 import de.parallelpatterndsl.patterndsl.expressions.AssignmentExpression;
 import de.parallelpatterndsl.patterndsl.expressions.IRLExpression;
 import de.parallelpatterndsl.patterndsl.expressions.Operator;
+import de.parallelpatterndsl.patterndsl.helperLibrary.DeepCopyHelper;
+
+import java.util.ArrayList;
 
 /**
  * Definition of the reduction pattern node of the abstract pattern tree.
@@ -60,6 +63,15 @@ public class ReduceNode extends ParallelNode {
             }
         }
         return CombinerFunction.FAILURE;
+    }
+
+    @Override
+    public ReduceNode deepCopy() {
+        ReduceNode result = new ReduceNode(getIdentifier());
+
+        DeepCopyHelper.basicPatternSetup(this, result);
+
+        return result;
     }
 
     /**

@@ -1,0 +1,705 @@
+streamcluster {
+include "../math"
+
+/* increase this to reduce probability of random error */
+/* increasing it also ups running time of "speedy" part of the code */
+/* SP = 1 seems to be fine */
+var Int SP = 1 // number of repetitions of speedy must be >=1
+var Int ITER = 3 // iterate ITER* k log k times; ITER >= 1
+
+var Int num_points = 65536
+
+var Int num_dim = 256
+
+var Int CACHE_LINE = 512 // cache line in byte
+
+/* this structure represents a point */
+
+var Int Point_weight_offset = 0
+var Int Point_coord_offset = Point_weight_offset + 1
+var Int Point_assign_offset = Point_coord_offset + 256
+var Int Point_cost_offset = Point_assign_offset + 1
+var Int Point_is_center_offset = Point_cost_offset + 1
+var Int Point_center_table_offset = Point_is_center_offset + 1
+var Int Additional_offset = Point_center_table_offset + 1
+
+// tells whether two points are identical
+seq isIdentical([Float] i, [Float] j):Int{
+	var Int a = 0
+	var Int equal = 1
+
+	while (equal && a < #i ) {
+		if (i[a] != j[a]) {
+			equal = 0
+		} else {
+			a++
+		}
+	}
+	return equal
+}
+
+/* comparator for floating point numbers */
+seq floatcomp(Float a, Float b) : Int{
+	if (a > b) {return (1)}
+	if (a < b) {return (0-1)}
+	return(0)
+}
+
+/* shuffle points into random order */
+seq shuffle([[Float]] points):[[Float]]{
+	var [[Float]] res = init_List([65537,261])
+	var [Float] temp = init_List([261])
+	res = points
+	for var Long i=0; i<num_points ;i++ {
+		var Long j=rand() % 65537
+		temp = res[i]
+		res[i] = res[j]
+		res[j] = temp
+	}
+	return res
+}
+
+/* shuffle an array of integers */
+seq intshuffle([Int] intarray, Int length):[Int]{
+	var Int temp = 0
+	var [Int] res = init_List([65536])
+	res = intarray
+	for var Int i=0;i<length;i++ {
+		var Long j=rand() % 65536
+		temp = res[i]
+		res[i]=res[j]
+		res[j]=temp
+	}
+	return res
+}
+
+/* compute Euclidean distance squared between two points */
+seq dist([Float] p1, [Float] p2): Float{	
+	var Float result = 0.0
+	var Int Point_coord_offset2 = Point_coord_offset
+	for var Int i=0; i<3; i++ {
+		result += powi((p1[i + Point_coord_offset2] - p2[i + Point_coord_offset2]),2)
+	}
+	return(result)
+}
+
+/* run speedy on the points, return total cost of solution */
+seq pspeedy([[Float]] points_in, Float z, Long kcenter_in) : [[Float]]{
+	//my block
+	var Long k1 = 0
+	var Long k2 = num_points
+
+	var Float totalcost
+
+	var Bool open = false
+	
+	var [[Float]] points = init_List([65537,261])
+	points = points_in
+	
+	var Long kcenter = 1
+
+
+	/* create center at first point, send it to itself */
+	for var Int k = k1; k < k2; k++ {
+		var Float distance = dist(points[k],points[0])
+		points[k][Point_cost_offset] = distance * points[k][Point_weight_offset]
+		points[k][Point_assign_offset]=0
+	}
+		
+	// I am the master thread. I decide whether to open a center and notify others if so. 
+	for var Int i = 1; i < num_points; i++ {
+		kcenter++
+		for var Int k = k1; k < k2; k++ {
+			var Float distance = dist(points[i],points[k])
+			if( distance*points[k][Point_weight_offset] < points[k][Point_cost_offset] )	{
+				points[k][Point_cost_offset] = distance * points[k][Point_weight_offset]
+				points[k][Point_assign_offset] = i
+			}
+		}
+	}
+	
+	for var Int k = k1; k < k2; k++ {
+		totalcost += points[k][Point_cost_offset]
+	}
+	
+	points[num_points][0] = totalcost
+	points[num_points][1] = kcenter
+	
+
+	return(points)
+}
+
+seq get_x_cost_diff([Float] point, [Float] x):Float {
+	var Float x_cost = dist(point, x) 
+			* point[Point_weight_offset]
+	return x_cost - point[Point_cost_offset]
+}
+
+map costs_to_x([[Float]] points, [Float] x):[Float] costs {
+	costs[INDEX] = get_x_cost_diff(points[INDEX], x)
+}
+
+map get_switch([Float] cost_diff): [Int] switch {
+	if cost_diff[INDEX] < 0 {
+		switch[INDEX] = 1
+	}
+}
+
+reduction get_cost_sum([Float] costs) : Float sum {
+	var Float input = 0
+	if costs[INDEX] < 0 {
+		input = costs[INDEX]
+	}
+	sum += input
+}
+
+seq single_update([Float] gl_lower, Long x, [Float] x_value, [Float] Point, Int switch_membership):[Float] {
+    var Int Point_assign_offset2 = Point_assign_offset
+	var Int position = Cast2Int(Point[Point_assign_offset2])
+	var Bool close_center = gl_lower[position] > 0
+	var [Float] result = init_List([259])
+	result = Point
+	if switch_membership || close_center {
+		result[Point_cost_offset] = Point[Point_cost_offset] * dist(Point, x_value)
+		result[Point_assign_offset] = x
+	}
+	return result
+}
+
+map update_assignment([Float] gl_lower, Long x, [Float] x_value, [[Float]] Points, [Int] switch_membership):[[Float]] updated_points {
+	updated_points[INDEX] = single_update(gl_lower, x, x_value, Points[INDEX], switch_membership[INDEX])
+}
+
+
+
+/* For a given point x, find the cost of the following operation:
+ * -- open a facility at x if there isn't already one there,
+ * -- for points y such that the assignment distance of y exceeds dist(y, x),
+ *		make y a member of x,
+ * -- for facilities y such that reassigning y and all its members to x 
+ *		would save cost, realize this closing and reassignment.
+ * 
+ * If the cost of this operation is negative (i.e., if this entire operation
+ * saves cost), perform this operation and return the amount of cost saved;
+ * otherwise, do nothing.
+ */
+
+/* numcenters will be updated to reflect the new number of centers */
+/* z is the facility cost, x is the number of this point in the array 
+	 points */
+
+seq pgain(Long x, [[Float]] points_in, Double z, Long numcenters_in):[[Float]]{
+
+	var Long k1 = 0
+	var Long k2 = num_points
+	
+	var [[Float]] points = init_List([65537,261])
+	points = points_in
+	
+	var [Float] point_local = init_List([261])
+	point_local = points[x]
+	
+	
+	var [Int] switch_membership = init_List([65536])
+	
+	var Long numcenters = numcenters_in
+
+	var Int number_of_centers_to_close = 0
+	
+	//my own cost of opening x
+	var Double cost_of_opening_x = 0
+	
+	/*For each center, we have a *lower* field that indicates 
+		how much we will save by closing the center. 
+		Each thread has its own copy of the *lower* fields as an array.
+		We first build a table to index the positions of the *lower* fields. 
+	*/
+	
+	var Int count = 0
+	for var Int i = k1; i < k2; i++ {
+		if points[i][Point_is_center_offset] {
+			count++
+			points[i][Point_center_table_offset] = count
+		}		
+	}
+	
+	//global *lower* fields
+	var [Float] gl_lower = init_List([65536],0)
+	
+	var [Float] full_costs = init_List([65536],0)
+	
+	full_costs = costs_to_x<<<>>>(points, point_local)
+	switch_membership = get_switch<<<>>>(full_costs)
+	
+	cost_of_opening_x = get_cost_sum<<<>>>(full_costs)
+	
+	var Int Point_assign_offset2 = Point_assign_offset
+	
+	for var Int i = k1; i < k2; i++ {
+		if full_costs[i] >= 0 {
+			var Int position = Cast2Int(points[i][Point_assign_offset2])
+			gl_lower[position] -= full_costs[i]
+		}
+	}
+	
+	// at this time, we can calculate the cost of opening a center
+	// at x; if it is negative, we'll go through with opening it
+	
+	
+	for var Int i = k1; i < k2; i++  {
+		if points[i][Point_is_center_offset] && gl_lower[i] > 0 {
+			// i is a median, and
+			// if we were to open x (which we still may not) we'd close i
+
+			// note, we'll ignore the following quantity unless we do open x
+			number_of_centers_to_close++
+			cost_of_opening_x -= gl_lower[i]
+		}
+	}
+
+	cost_of_opening_x += z
+	
+	// Now, check whether opening x would save cost; if so, do it, and
+	// otherwise do nothing
+
+	if cost_of_opening_x < 0 {
+		//	we'd save money by opening x; we'll do it
+		points = update_assignment<<<>>>(gl_lower, x, point_local, points, switch_membership)
+		
+		for var Int i = k1; i < k2; i++ {
+			if points[i][Point_is_center_offset] && gl_lower[i] > 0  {
+				points[i][Point_is_center_offset] = 0
+			}
+		}
+		if x >= k1 && x < k2  {
+			points[x][Point_is_center_offset] = 1
+		}
+
+		numcenters = numcenters + 1 - number_of_centers_to_close
+		
+	}
+	else {
+		cost_of_opening_x = 0	// the value we'll return
+	}
+	
+	points[num_points][0] = 0-cost_of_opening_x
+	points[num_points][1] = numcenters
+	
+	return points
+}
+
+/* facility location on the points using local search */
+/* z is the facility cost, returns the total cost and # of centers */
+/* assumes we are seeded with a reasonable solution */
+/* cost should represent this solution's cost */
+/* halt if there is < e improvement after iter calls to gain */
+/* feasible is an array of numfeasible points which may be centers */
+
+seq pFL([[Float]] points_in, [Int] feasible_in, Int numfeasible,
+		Float z, Long k_in, Float cost, Long iter, Float eps):[[Float]]{
+		
+	var [[Float]] points = init_List([65537,261])
+	points = points_in
+	
+	var [Int] feasible = init_List([65536])
+	feasible = feasible_in
+	
+	var Float cost_local = cost
+	
+	var Long k = k_in
+	
+	var Long x
+	var Float change = cost
+
+	/* continue until we run iter iterations without improvement */
+	/* stop instead if improvement is less than eps */
+	while change/cost_local > 1.0*eps {
+		change = 0.0
+		/* randomize order in which centers are considered */
+
+		feasible = intshuffle(feasible,numfeasible)
+		
+		for var Int i=0;i<iter;i++ {
+			x = i%numfeasible
+			//printf("iteration %d started********\n", i)
+			var [[Float]] pgain_res = init_List([65537,261])
+			pgain_res = pgain(feasible[x], points, z, k)
+			points = pgain_res
+			change += pgain_res[num_points][0]
+			k = pgain_res[num_points][1]
+			
+			//printf("iteration %d finished @@@@@@\n", i);
+		}
+
+		cost_local -= change
+	}
+	
+	var [[Float]] result = init_List([65537,262])
+	for var Int i = 0; i< #result; i++ {
+		for var Int j = 0; j < 261; j++ {
+			result[i][j] = points[i][j]
+		}
+		if i < numfeasible {
+			result[i][Additional_offset] = feasible[i]
+		}
+	}
+	result[num_points][0] = cost_local
+	
+	return result
+}
+
+seq selectfeasible_fast([[Float]] points, Int kmin): [Int]{
+
+	var Int numfeasible = num_points
+	var Float value = ITER*kmin*log(kmin)
+	if numfeasible > value {
+		numfeasible = Cast2Int(value)
+	}
+
+	
+	var [Int] feasible = init_List([65537])
+	
+	var [Float] accumweight = init_List([65537])
+	var Float totalweight = 0
+
+	feasible[num_points] = numfeasible
+
+	/* 
+		 Calcuate my block. 
+		 For now this routine does not seem to be the bottleneck, so it is not parallelized. 
+		 When necessary, this can be parallelized by setting k1 and k2 to 
+		 proper values and calling this routine from all threads ( it is called only
+		 by thread 0 for now ). 
+		 Note that when parallelized, the randomization might not be the same and it might
+		 not be difficult to measure the parallel speed-up for the whole program. 
+	 */
+	var Long k1 = 0
+	var Long k2 = numfeasible
+
+	var Float w
+	var Int l
+	var Int r
+	var Int k
+
+	/* not many points, all will be feasible */
+	if numfeasible == num_points {
+		for var Int i=k1; i<k2; i++ {
+			feasible[i] = i
+		}
+		return feasible
+	}
+
+	accumweight[0] = points[0][Point_weight_offset]
+	for var Int i = 1; i < num_points; i++  {
+		accumweight[i] = accumweight[i-1] + points[i][Point_weight_offset]
+	}
+	totalweight=accumweight[num_points-1]
+
+	for var Int i=k1; i<k2; i++ {
+		w = (rand()/MAX_INT)*totalweight
+		//binary search
+		l=0
+		r=num_points-1
+		var Bool skip = false
+		if accumweight[0] > w 	{ 
+			feasible[i]=0
+			skip = true
+		}
+		if skip {
+			while l+1 < r  {
+				k = (l+r)/2
+				if accumweight[k] > w  {
+					r = k
+				} else {
+					l=k
+				}
+			}
+			feasible[i]=r
+		}
+	}
+	return feasible
+}
+
+/* compute approximate kmedian on the points */
+seq pkmedian([[Float]] points_in, Long kmin, Long kmax) : [[Float]]{
+
+	var [[Float]] points = init_List([65537,261])
+	
+	var Long kfinal
+	
+	points = points_in
+	
+	var Float cost
+	var Float lastcost
+	var Float hiz = 0
+	var Float loz = 0
+	var Float z
+
+	var Long k
+	var [Int] feasible = init_List([65537])
+	var Int numfeasible
+
+	var Int k1 = 0
+	var Int k2 = num_points
+
+
+	for var Long kk=k1; kk < k2; kk++ {
+		hiz += dist(points[kk], points[0])*points[kk][Point_weight_offset]
+	}
+	
+	z = (hiz+loz)/2.0
+	/* NEW: Check whether more centers than points! */
+	if num_points <= kmax{
+		/* just return all points as facilities */
+		for var Long kk=k1; kk<k2; kk++ {
+			points[kk][Point_assign_offset] = kk
+			points[kk][Point_cost_offset] = 0
+		}
+		cost = 0
+		kfinal = k
+		
+		points[num_points][Point_cost_offset] = cost
+		points[num_points][Additional_offset] = kfinal
+		
+		return points
+	}
+
+	points = shuffle(points)
+	
+	points = pspeedy(points, z, k)
+	
+	cost = points[num_points][Point_cost_offset]
+	k = points[num_points][Additional_offset]
+
+	var Int iterations = 0
+	/* give speedy SP chances to get at least kmin/2 facilities */
+	while (k < kmin)&&(iterations<SP) {
+		points = pspeedy(points, z, k)
+	
+		cost = points[num_points][Point_cost_offset]
+		k = points[num_points][Additional_offset]
+		iterations++
+	}
+
+	/* if still not enough facilities, assume z is too high */
+	while (k < kmin) {
+		if (iterations >= SP) {
+			hiz=z
+			z=(hiz+loz)/2.0
+			iterations=0
+		}
+		
+		points = shuffle(points)
+		points = pspeedy(points, z, k)
+	
+		cost = points[num_points][Point_cost_offset]
+		k = points[num_points][Additional_offset]
+		iterations++
+	}
+
+	/* now we begin the binary search for real */
+	/* must designate some points as feasible centers */
+	/* this creates more consistancy between FL runs */
+	/* helps to guarantee correct # of centers at the end */
+	
+	feasible = selectfeasible_fast(points,kmin)
+	numfeasible = feasible[num_points]
+	var Int Point_assign_offset2 = Point_assign_offset
+	for var Int i = 0; i< num_points; i++ {
+		var Int position = Cast2Int(points[i][Point_assign_offset2])
+		points[position][Point_is_center_offset] = 1
+	}
+	
+	var Bool cont = true
+	while(cont) {
+		lastcost = cost
+		var [[Float]] pFL_res = init_List([65537,262])
+		var Float value = (ITER*kmax*log(kmax))
+		pFL_res = pFL(points, feasible, numfeasible, z, k, cost, value, 0.1)
+		
+		// rebuild original structure
+		cost = pFL_res[num_points][0]
+		var Int Additional_offset2 = Additional_offset
+		for var Int i = 0; i < num_points; i++ {
+			points[i] = pFL_res[i]
+			feasible[i] = Cast2Int(pFL_res[i][Additional_offset2])
+		}
+
+		/* if number of centers seems good, try a more accurate FL */
+		if ((k <= (1.1)*kmax)&&(k >= (0.9)*kmin))||
+			((k <= kmax+2)&&(k >= kmin-2)) {
+
+			/* may need to run a little longer here before halting without
+			improvement */
+			pFL_res = pFL(points, feasible, numfeasible, z, k, cost, value, 0.1)
+			
+			// rebuild original structure
+			cost = pFL_res[num_points][0]
+			for var Int i = 0; i < num_points; i++ {
+				points[i] = pFL_res[i]
+				feasible[i] = Cast2Int(pFL_res[i][Additional_offset2])
+			}
+		}
+
+		if k > kmax {
+			/* facilities too cheap */
+			/* increase facility cost and up the cost accordingly */
+			loz = z
+			z = (hiz+loz)/2.0
+			cost += (z-loz)*k
+		}
+		if k < kmin {
+			/* facilities too expensive */
+			/* decrease facility cost and reduce the cost accordingly */
+			hiz = z
+			z = (hiz+loz)/2.0
+			cost += (z-hiz)*k
+		}
+
+		/* if k is good, return the result */
+		/* if we're stuck, just give up and return what we have */
+		if ((k <= kmax)&&(k >= kmin))||((loz >= (0.999)*hiz)) { 
+			cont = false
+		}
+	}
+
+	kfinal = k	
+
+	points[num_points][Point_cost_offset] = cost
+	points[num_points][Additional_offset] = kfinal
+	
+		
+	return points
+}
+
+
+/* compute the means for the k clusters */
+seq contcenters([[Float]] points_in): [[Float]]{
+	var [[Float]] points = init_List([65537,261])
+	points = points_in
+	var Float relweight
+    var Int Point_assign_offset2 = Point_assign_offset
+	for var Int i=0; i<num_points; i++ {
+		/* compute relative weight of this point to the cluster */
+		if (points[i][Point_assign_offset] != i) {
+			var Int position = Cast2Int(points[i][Point_assign_offset2])
+			relweight=points[position][Point_weight_offset] + points[i][Point_weight_offset]
+			relweight = points[i][Point_weight_offset]/relweight
+			for var Int ii=0; ii<num_dim; ii++ {
+				points[position][Point_coord_offset + ii] *= 1.0-relweight
+				points[position][Point_coord_offset + ii] += points[i][Point_coord_offset + ii]*relweight
+			}
+			points[position][Point_weight_offset] += points[i][Point_weight_offset]
+		}
+	}
+	
+	return points
+}
+
+/* copy centers from points to centers */
+seq copycenters([[Float]] points): [[Float]]{
+	var Long k = 0
+
+	var [[Float]] centers = init_List([65537,262])
+
+	var [Bool] is_a_median = init_List([65536], false)
+
+	/* mark the centers */
+	for var Int i = 0; i < num_points; i++ {
+		var Int access = points[i][Point_assign_offset]
+		is_a_median[access] = true
+	}
+
+	/* count how many	*/
+	for var Int i = 0; i < num_points; i++  {
+		if  is_a_median[i]  {
+			for var Int j = 0; j < 261; j++ {
+				centers[k][j] = points[i][j]
+			}
+			centers[k][Additional_offset] = i
+			k++
+		}
+	}
+
+	centers[num_points][Additional_offset] = k
+	return centers
+}
+
+
+seq localSearch( [[Float]] points_in, Int kmin, Int kmax) : [[Float]] {
+	var [[Float]] points = init_List([65537,261])
+	points = points_in
+	
+	points = pkmedian(points, kmin, kmax)
+	
+	return points
+}
+
+seq outcenterIDs( [[Float]] centers, Int num_centers) : Int{
+	for var Int i = 0; i < num_centers; i++ {
+		write("output.txt", {i} ": " {centers[i]})		
+	}
+	return 0
+}
+
+seq streamCluster([[Float]] points_in, Int kmin, Int kmax): Int{
+	var [[Float]] points = init_List([65537,261])
+	points = points_in	
+	
+	var [[Float]] centers = init_List([65537,261])
+	var Int num_centers = 0
+
+	for var Int i = 0; i< #centers; i++  {
+		centers[i][Point_weight_offset] = 1.0
+	}
+
+	var Long kfinal
+		
+	for var Int i = 0; i < num_points; i++  {
+		points[i][Point_weight_offset] = 1.0
+	}
+
+	points = localSearch(points,kmin, kmax)
+	kfinal = points[num_points][Additional_offset]
+	
+	print("finish local search")
+	points = contcenters(points)
+	
+
+	centers = copycenters(points)
+	num_centers = centers[num_points][Additional_offset]
+
+	centers = localSearch( centers, kmin, kmax)
+	kfinal = centers[num_points][Additional_offset]
+	centers = contcenters(centers)
+	outcenterIDs( centers, num_centers)
+	return 0
+}
+
+seq main():Int{
+	var Int kmin = 10
+	var Int	kmax = 20
+	var [[Float]] points_read = init_List([65536,259], 0)
+	
+	//points_read = read("input.txt")
+	
+	var [[Float]] points = init_List([65537,261])
+	
+	for var Int i = 0; i < num_points; i++ {
+		for var Int j = 0; j < 259; j++ {
+			points[i][j] = points_read[i][j]
+		}
+	}
+	
+	//var Long time = get_time()
+
+	var Int err = streamCluster(points, kmin, kmax)
+	
+	//time = get_time() - time
+	//print("Kernel took " {time} "us")
+	
+	return 0
+}
+
+
+}

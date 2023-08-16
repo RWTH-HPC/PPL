@@ -1,0 +1,36 @@
+multicalltest {
+ 
+	
+	reduction Reduction3D([[[Double]]] array3D): Double res_min{
+        var Double localMin = 42
+        localMin = Reduction2D<<<>>>(array3D[INDEX])
+        res_min = min(res_min, localMin)
+    }
+
+    reduction Reduction2D([[Double]] array2D): Double res_min{
+        var Double localMin = 42
+        localMin = Reduction1D<<<>>>(array2D[INDEX])
+        res_min = min(res_min, localMin)
+    }
+	
+    reduction Reduction1D([Double] array1D): Double res_min{
+        var Double localMin
+        localMin = array1D[INDEX]
+        res_min = min(res_min, localMin)
+    }
+
+    seq main() : Int {        
+		
+		var [[[Float]]] array = init_List([100,10,10])
+		var [[[Float]]] array2 = init_List([200,20,20])
+		
+		var Int res_a = 0
+		var Int res_b = 0
+		
+		res_a = Reduction3D<<<>>>(array)
+		res_b = Reduction3D<<<>>>(array2)
+
+        return 0
+    }
+
+}

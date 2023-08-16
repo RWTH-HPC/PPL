@@ -1,0 +1,10 @@
+ForLoopTest{
+
+seq main() : Int {
+    var Int a = 0
+    for var Int i = 0; i < 20; i++ {
+        a--
+    }
+    
+return 0 
+}}

@@ -1,9 +1,11 @@
 package de.parallelpatterndsl.patterndsl.AST2APTGenerator;
-
+/**
 import de.monticore.expressions.commonexpressions._ast.*;
 import de.monticore.expressions.expressionsbasis._ast.ASTExpression;
+ **/
 import de.monticore.literals.literals._ast.ASTIntLiteral;
 import de.monticore.symboltable.GlobalScope;
+import de.parallelpatterndsl.patterndsl.Postprocessing.APTDataTraceGenerator;
 import de.parallelpatterndsl.patterndsl._ast.*;
 import de.parallelpatterndsl.patterndsl._symboltable.VariableSymbol;
 import de.parallelpatterndsl.patterndsl._visitor.PatternDSLVisitor;
@@ -20,7 +22,6 @@ import de.parallelpatterndsl.patterndsl.abstractPatternTree.Nodes.Plain.*;
 import de.parallelpatterndsl.patterndsl.abstractPatternTree.Nodes.Plain.AdditionalArguments.AdditionalArguments;
 import de.parallelpatterndsl.patterndsl.abstractPatternTree.Nodes.Plain.AdditionalArguments.MetaList;
 import de.parallelpatterndsl.patterndsl.abstractPatternTree.Nodes.Plain.AdditionalArguments.MetaValue;
-import de.parallelpatterndsl.patterndsl.abstractPatternTree.Visitor.APTVisitor;
 import de.parallelpatterndsl.patterndsl.abstractPatternTree.Visitor.ExtendedShapeAPTVisitor;
 import de.parallelpatterndsl.patterndsl.expressions.AssignmentExpression;
 import de.parallelpatterndsl.patterndsl.expressions.IRLExpression;
@@ -76,42 +77,21 @@ public class AST2APT{
         //get the main node
         MainNode mainNode = (MainNode) functionTable.get("main");
 
-        System.out.println("symbol table finished!");
+        Log.info("symbol table finished!", "");
 
         //generate function nodes and top down tree structure
         for (ASTFunction astFunction : astFunctionTable.values()) {
             generateFunctionNode(astFunction);
         }
 
-        System.out.println("tree structure finished!");
+        Log.info("tree structure finished!", "");
 
         //generate the bottom up structure
         for (FunctionNode function : functionTable.values()) {
             generateParentAwareness(function);
         }
 
-        System.out.println("bottom up structure finished!");
-
-        //generate data traces
-        APTDataTraceGenerator traceGenerator = new APTDataTraceGenerator();
-        traceGenerator.generateTraces(mainNode);
-
-        System.out.println("data trace generation finished!");
-
-        //generate input and output data (accesses) for all nodes
-        for (FunctionNode node: functionTable.values() ) {
-            generateParentAwareDataAccesses(node);
-        }
-
-        System.out.println("parent aware data trace generation finished!");
-
-        //generates the value for functions, if they have parallel ancestors.
-        generateHasParallelDescendants();
-        System.out.println("parallel descendant computation finished!");
-
-        //generate additional Meta informations.
-        generateAdditionalArguments();
-        System.out.println("additional argument generation finished!");
+        Log.info("bottom up structure finished!", "");
 
         return new AbstractPatternTree(mainNode, variableData, globalAssignments);
     }
@@ -240,6 +220,7 @@ public class AST2APT{
      */
     private void generateFunctionNode(ASTFunction astFunction) {
         HashMap<String, Data> oldVariableData = new HashMap<>(variableData);
+        variableData = new HashMap<>(variableData);
         ArrayList<PatternNode> childNodes = new ArrayList<>();
         ArrayList<Data> parameters = new ArrayList<>();
         FunctionNode functionNode = functionTable.get(astFunction.getName());
@@ -334,6 +315,32 @@ public class AST2APT{
      * @return
      */
     private ArrayList<PatternNode> generateBlockStatement(ASTBlockStatement blockStatement) {
+        variableData = new HashMap<>(variableData);
+        // generate variable table
+        for (ASTBlockElement element: blockStatement.getBlockElementList() ) {
+            if (element.isPresentVariable()) {
+                ASTVariable variable = element.getVariable();
+                Data dataElement;
+                //test whether the variable is an array or a primitive value
+                if (variable.getType() instanceof ASTListType) {
+                    ArrayList<Integer> shape = new ArrayList<>();
+                    boolean onStack = false;
+                    Optional<VariableSymbol> variableSymbolOPT = variable.getEnclosingScope().resolve(variable.getName(), VariableSymbol.KIND);
+                    if (variableSymbolOPT.isPresent()) {
+                        VariableSymbol symbol = variableSymbolOPT.get();
+                        shape = symbol.getShape();
+                        onStack = symbol.isArrayOnStack();
+                    }
+                    dataElement = new ArrayData(variable.getName(), APTTypesPrinter.printType(variable.getType()), false, shape, onStack);
+                } else {
+                    dataElement = new PrimitiveData(variable.getName(), APTTypesPrinter.printType(variable.getType()), false);
+                }
+
+                variableData.put(variable.getName(), dataElement);
+            }
+        }
+
+
         ArrayList<PatternNode> result = new ArrayList<>();
         for (ASTBlockElement element: blockStatement.getBlockElementList() ) {
             //generate singular expressions
@@ -352,23 +359,8 @@ public class AST2APT{
                 //generate variables
                 if (element.isPresentVariable()) {
                 ASTVariable variable = element.getVariable();
-                Data dataElement;
-                //test whether the variable is an array or a primitive value
-                if (variable.getType() instanceof ASTListType) {
-                    ArrayList<Integer> shape = new ArrayList<>();
-                    boolean onStack = false;
-                    Optional<VariableSymbol> variableSymbolOPT = variable.getEnclosingScope().resolve(variable.getName(),VariableSymbol.KIND);
-                    if (variableSymbolOPT.isPresent()) {
-                        VariableSymbol symbol = variableSymbolOPT.get();
-                        shape = symbol.getShape();
-                        onStack = symbol.isArrayOnStack();
-                    }
-                    dataElement = new ArrayData(variable.getName(),APTTypesPrinter.printType(variable.getType()), false, shape, onStack);
-                } else {
-                    dataElement = new PrimitiveData(variable.getName(),APTTypesPrinter.printType(variable.getType()), false);
-                }
+                Data dataElement = variableData.get(variable.getName());
 
-                variableData.put(variable.getName(),dataElement);
 
                 //generate the initialization expression
                 if (variable.isPresentExpression()) {
@@ -401,6 +393,40 @@ public class AST2APT{
                         result.add(generateParallelCallNode((ASTPatternCallStatement) statement));
                     } else if (statement instanceof ASTReturnStatement) {
                         result.add(generateReturnNode((ASTReturnStatement) statement));
+                    } else if (statement instanceof ASTLoopSkipStatement) {
+                        result.add((generateLoopSkipNode((ASTLoopSkipStatement) statement)));
+                    } else if (statement instanceof ASTBlockStatement) {
+                        BranchNode branchNode = new BranchNode();
+                        ArrayList<PatternNode> children = new ArrayList<>();
+                        HashMap<String, Data> oldVariableData = new HashMap<>(variableData);
+
+                        // create true branch condition
+                        LiteralData<Boolean> literalData = new LiteralData<>("True", PrimitiveDataTypes.BOOLEAN, true);
+                        ArrayList<Data> operands = new ArrayList();
+                        operands.add(literalData);
+                        OperationExpression expression = new OperationExpression(operands, new ArrayList<>());
+                        ComplexExpressionNode condition = new ComplexExpressionNode(expression);
+                        condition.setVariableTable(variableData);
+                        condition.setChildren(new ArrayList<>());
+
+                        //create branch case node
+                        BranchCaseNode branchCaseNode = new BranchCaseNode(true);
+                        ArrayList<PatternNode> branchCaseChildren = new ArrayList<>();
+                        branchCaseChildren.add(condition);
+
+                        branchCaseChildren.addAll(generateBlockStatement((ASTBlockStatement) statement));
+                        branchCaseNode.setVariableTable(variableData);
+                        branchCaseNode.setChildren(branchCaseChildren);
+
+                        variableData = oldVariableData;
+
+                        children.add(branchCaseNode);
+                        branchNode.setVariableTable(variableData);
+                        branchNode.setChildren(children);
+
+                        result.add(branchNode);
+                    } else {
+                        Log.error(statement.get_SourcePositionStart() + " Statement not recognised " + statement.getClass().toString());
                     }
                 }
         }
@@ -408,6 +434,21 @@ public class AST2APT{
             result.add(generateSimpleExpressionBlockNode());
         }
         return result;
+    }
+
+    /**
+     * Generates a loop skip node.
+     * @param statement
+     * @return
+     */
+    private LoopSkipNode generateLoopSkipNode(ASTLoopSkipStatement statement) {
+
+        LoopSkipNode node = new LoopSkipNode(statement.isPresentBreakStatement());
+
+        node.setChildren(new ArrayList<>());
+        node.setVariableTable(variableData);
+
+        return node;
     }
 
     /**
@@ -585,8 +626,8 @@ public class AST2APT{
      * @return
      */
     private CallNode generateCallNode(ASTCallExpression astCallExpression) {
-        if (astCallExpression.getExpression() instanceof ASTNameExpression) {
-            ASTNameExpression nameExpression = ((ASTNameExpression) astCallExpression.getExpression());
+        if (astCallExpression.getCall() instanceof ASTNameExpression) {
+            ASTNameExpression nameExpression = ((ASTNameExpression) astCallExpression.getCall());
             CallNode callNode = new CallNode(astCallExpression.getArguments().sizeExpressions(), nameExpression.getName());
             callNode.setVariableTable(variableData);
             return callNode;
@@ -606,11 +647,11 @@ public class AST2APT{
         // Generate additional arguments
         ArrayList<AdditionalArguments> additionalArguments = new ArrayList<>();
         for (ASTExpression expression: astPatternCallStatement.getArgsList()) {
-            if( expression instanceof ASTLitExpression) {
+            if( expression instanceof ASTLiteralExpression) {
                 // Handle single literals
 
-                if (((ASTLitExpression) expression).getLiteral() instanceof ASTIntLiteral) {
-                    ASTIntLiteral literal = (ASTIntLiteral) ((ASTLitExpression) expression).getLiteral();
+                if (((ASTLiteralExpression) expression).getLiteral() instanceof ASTIntLiteral) {
+                    ASTIntLiteral literal = (ASTIntLiteral) ((ASTLiteralExpression) expression).getLiteral();
                     MetaValue<Long> argument = new MetaValue<>((long) literal.getValue());
                     additionalArguments.add(argument);
 
@@ -623,11 +664,11 @@ public class AST2APT{
                 //Handle lists of literals
                 ArrayList<Integer> list = new ArrayList<>();
                 for (ASTExpression element: ((ASTListExpression) expression).getExpressionList()){
-                    if( element instanceof ASTLitExpression) {
+                    if( element instanceof ASTLiteralExpression) {
                         // Handle single literals
 
-                        if (((ASTLitExpression) element).getLiteral() instanceof ASTIntLiteral) {
-                            ASTIntLiteral literal = (ASTIntLiteral) ((ASTLitExpression) element).getLiteral();
+                        if (((ASTLiteralExpression) element).getLiteral() instanceof ASTIntLiteral) {
+                            ASTIntLiteral literal = (ASTIntLiteral) ((ASTLiteralExpression) element).getLiteral();
                             list.add(literal.getValue());
 
                         } else {
@@ -665,7 +706,7 @@ public class AST2APT{
         if (left instanceof ASTIndexAccessExpression) {
             accessScheme = printer.getAccessScheme((ASTIndexAccessExpression) left, variableData, astFunctionTable);
             while(left instanceof ASTIndexAccessExpression) {
-                left = ((ASTIndexAccessExpression) left).getExpression();
+                left = ((ASTIndexAccessExpression) left).getIndexAccess();
             }
         }
         if (left instanceof ASTNameExpression) {
@@ -698,7 +739,19 @@ public class AST2APT{
 
         childNodes.add(generateComplexExpressionNode(assignment,getFunctionCalls(astPatternCallStatement)));
 
-        ParallelCallNode result = new ParallelCallNode(astPatternCallStatement.getArguments().sizeExpressions(), astPatternCallStatement.getName(), 0);
+        int additionalArgumentCount = 0;
+
+        if (AbstractPatternTree.getFunctionTable().get(astPatternCallStatement.getName()) instanceof MapNode) {
+            additionalArgumentCount = 2;
+        } else if (AbstractPatternTree.getFunctionTable().get(astPatternCallStatement.getName()) instanceof ReduceNode) {
+            additionalArgumentCount = 1;
+        } else if (AbstractPatternTree.getFunctionTable().get(astPatternCallStatement.getName()) instanceof StencilNode) {
+            additionalArgumentCount = 2;
+        } else if (AbstractPatternTree.getFunctionTable().get(astPatternCallStatement.getName()) instanceof DynamicProgrammingNode) {
+            additionalArgumentCount = 3;
+        }
+
+            ParallelCallNode result = new ParallelCallNode(astPatternCallStatement.getArguments().sizeExpressions(), astPatternCallStatement.getName(), additionalArgumentCount);
 
         result.setVariableTable(variableData);
         result.setChildren(childNodes);
@@ -737,10 +790,9 @@ public class AST2APT{
     private void generateParentAwareness(PatternNode node) {
         if (node instanceof CallNode) {
             if (node instanceof ParallelCallNode) {
-                for (int i = 0; i <= ((ParallelCallNode) node).getAdditionalArgumentCount(); i++) {
-                    node.getChildren().get(i).setParent(node);
-                    generateParentAwareness(node.getChildren().get(i));
-                }
+                // Complex expression node defining the call
+                node.getChildren().get(0).setParent(node);
+                generateParentAwareness(node.getChildren().get(0));
             }
             return;
         }
@@ -752,621 +804,7 @@ public class AST2APT{
     }
 
 
-    /************************************************
-     *
-     *
-     * Post-processing Functions (hasParallelAncestors)
-     *
-     *
-     ************************************************/
 
-    private void generateHasParallelDescendants() {
-
-        hasParallelDescendants visitor = new hasParallelDescendants();
-        for (FunctionNode node: functionTable.values() ) {
-            if (visitor.getResult(node)) {
-                node.setHasParallelDescendants(true);
-            } else {
-                node.setHasParallelDescendants(false);
-            }
-        }
-    }
-
-    private class hasParallelDescendants implements APTVisitor {
-        private boolean result = false;
-
-        public boolean getResult(FunctionNode node) {
-            result = false;
-
-            node.accept(getRealThis());
-
-            return result;
-        }
-
-        @Override
-        public void visit(ParallelCallNode node) {
-            result = true;
-        }
-
-        /**
-         * Visitor support functions.
-         */
-        private APTVisitor realThis = this;
-
-        @Override
-        public APTVisitor getRealThis() {
-            return realThis;
-        }
-
-        @Override
-        public void setRealThis(APTVisitor realThis) {
-            this.realThis = realThis;
-        }
-
-
-    }
-
-
-    /************************************************
-     *
-     *
-     * Data access generation Functions
-     *
-     *
-     ************************************************/
-
-
-    private void generateParentAwareDataAccesses(PatternNode node) {
-        if (node instanceof SimpleExpressionBlockNode || node instanceof ComplexExpressionNode) {
-            return;
-        } else {
-            ArrayList<Data> inputData = node.getInputElements();
-            ArrayList<Data> outputData = node.getOutputElements();
-            ArrayList<DataAccess> inputAccesses = node.getInputAccesses();
-            ArrayList<DataAccess> outputAccesses = node.getOutputAccesses();
-
-            int numChildren = node.getChildren().size();
-            if (node instanceof ParallelCallNode) {
-                numChildren = ((ParallelCallNode) node).getAdditionalArgumentCount() + 1;
-            }
-
-            for (int i = 0; i < numChildren; i++) {
-
-                PatternNode childnode = node.getChildren().get(i);
-                generateParentAwareDataAccesses(childnode);
-
-                // Update input data
-                for (Data element : childnode.getInputElements() ) {
-                    if (node.getVariableTable().containsValue(element) && !inputData.contains(element)) {
-                        if (!(node instanceof FunctionNode)) {
-                            if (node.getParent().getVariableTable().containsValue(element)) {
-                                inputData.add(element);
-                            }
-                        } else {
-                            inputData.add(element);
-                        }
-                    }
-                }
-                node.setInputElements(inputData);
-
-                // Update output data
-                for (Data element : childnode.getOutputElements() ) {
-                    if (node.getVariableTable().containsValue(element) && !outputData.contains(element)) {
-                        if (!(node instanceof FunctionNode)) {
-                            if (node.getParent().getVariableTable().containsValue(element)) {
-                                outputData.add(element);
-                            }
-                        } else {
-                            outputData.add(element);
-                        }
-                    }
-                }
-                node.setOutputElements(outputData);
-
-                // Update input data accesses
-                for (DataAccess element : childnode.getInputAccesses() ) {
-                    if (node.getVariableTable().containsValue(element.getData())) {
-                        if (!(node instanceof FunctionNode)) {
-                            if (node.getParent().getVariableTable().containsValue(element)) {
-                                inputAccesses.add(element);
-                            }
-                        } else {
-                            inputAccesses.add(element);
-                        }
-                    }
-                }
-                node.setInputAccesses(inputAccesses);
-
-                // Update output data accesses
-                for (DataAccess element : childnode.getOutputAccesses() ) {
-                    if (node.getVariableTable().containsValue(element.getData())) {
-                        if (!(node instanceof FunctionNode)) {
-                            if (node.getParent().getVariableTable().containsValue(element)) {
-                                outputAccesses.add(element);
-                            }
-                        } else {
-                            outputAccesses.add(element);
-                        }
-                    }
-                }
-                node.setOutputAccesses(outputAccesses);
-            }
-        }
-    }
-
-
-    /************************************************
-     *
-     *
-     * Generate not provided additional arguments.
-     *
-     *
-     ************************************************/
-
-    /**
-     * Support class used to generate the computable additional arguments for all parallel calls.
-     */
-    private class AdditionalArgumentGenerator implements ExtendedShapeAPTVisitor {
-
-        public AdditionalArgumentGenerator() {
-        }
-
-        @Override
-        public void visit(ParallelCallNode node) {
-            String name = node.getFunctionIdentifier();
-
-            FunctionNode function = AbstractPatternTree.getFunctionTable().get(name);
-
-            ArrayList<AdditionalArguments> additionalArguments = new ArrayList<>();
-
-            if (function instanceof MapNode) {
-                MapNode mapNode = (MapNode) function;
-
-                MetaValue<Long> start = new MetaValue<>(getMapStart(mapNode,node));
-
-                MetaValue<Long> width = new MetaValue<>(getMapWidth(mapNode,node,start.getValue()));
-
-                additionalArguments.add(width);
-
-                additionalArguments.add(start);
-            } else if (function instanceof ReduceNode) {
-                ReduceNode reduceNode = (ReduceNode) function;
-
-                long start = getReductionStart(reduceNode,node);
-
-                long width = getReductionWidth(reduceNode,node,start);
-
-                long arity = getReductionArity(reduceNode);
-
-                long depth = getReductionDepth(width,arity);
-
-                ArrayList<Long> list = new ArrayList<>();
-
-                list.add(width);
-                list.add(arity);
-                list.add(depth);
-                list.add(start);
-
-                MetaList<Long> meta = new MetaList<>(list);
-
-                additionalArguments.add(meta);
-            } else if (function instanceof DynamicProgrammingNode) {
-                DynamicProgrammingNode dbNode = (DynamicProgrammingNode) function;
-
-                // the time steps are the first additional argument for dynamic programming
-                MetaValue<Long> timesteps = (MetaValue<Long>) node.getAdditionalArguments().get(0);
-
-                node.getAdditionalArguments().remove(0);
-
-                additionalArguments.add(timesteps);
-
-                MetaList<Long> starts = new MetaList<>(getDynamicProgrammingStart(dbNode,node));
-
-                MetaValue<Long> width = new MetaValue<>(getDynamicProgrammingWidth(dbNode,node,starts.getValues()));
-
-                additionalArguments.add(width);
-
-                additionalArguments.add(starts);
-
-            } else if (function instanceof StencilNode) {
-                StencilNode stencilNode = (StencilNode) function;
-
-                MetaList<Long> starts = new MetaList<>(getStencilStarts(stencilNode,node));
-
-                MetaList<Long> widths = new MetaList<>(getStencilWidths(stencilNode,node,starts.getValues()));
-
-                additionalArguments.add(widths);
-                additionalArguments.add(starts);
-
-            }
-
-
-
-            additionalArguments.addAll(node.getAdditionalArguments());
-
-            node.setAdditionalArguments(additionalArguments);
-        }
-
-        /**
-         * Visitor support functions.
-         */
-        private ExtendedShapeAPTVisitor realThis = this;
-
-        @Override
-        public ExtendedShapeAPTVisitor getRealThis() {
-            return realThis;
-        }
-
-        public void setRealThis(ExtendedShapeAPTVisitor realThis) {
-            this.realThis = realThis;
-        }
-    }
-
-    private void generateAdditionalArguments() {
-        AdditionalArgumentGenerator gen = new AdditionalArgumentGenerator();
-
-        AbstractPatternTree.getFunctionTable().get("main").accept(gen);
-
-    }
-
-    /**
-     * Returns the width (number of instances/iterations) of a stencil call.
-     * @param function
-     * @param call
-     * @param initialOffsets
-     * @return
-     */
-    private ArrayList<Long> getStencilWidths(StencilNode function, ParallelCallNode call, ArrayList<Long> initialOffsets) {
-        ArrayList<Long> widths = new ArrayList<>();
-        for (int dim = 0; dim < function.getDimension(); dim++) {
-            long N = Long.MAX_VALUE;
-            String currentRuleBase = "INDEX" + dim;
-            for (int i = 0; i < call.getParameterCount() + 1; ++i) {
-                Data argumentData;
-                if (i == call.getParameterCount()) {
-                    argumentData = function.getReturnElement();
-                } else {
-                    argumentData = function.getArgumentValues().get(i);
-                }
-                if (!(argumentData instanceof ArrayData)) {
-                    continue;
-                }
-                ArrayList<DataAccess> accesses = argumentData.getTrace().getDataAccesses();
-                for (DataAccess access : accesses) {
-                    // Replace by correct access class.
-                    if (access instanceof StencilDataAccess) {
-                        StencilDataAccess stencilAccess = ((StencilDataAccess) access);
-                        for (int j = 0; j < stencilAccess.getRuleBaseIndex().size(); j++) {
-                            if (stencilAccess.getRuleBaseIndex().get(j).equals(currentRuleBase) && stencilAccess.getShiftOffsets().get(j) >= 0) {
-                                N = Long.min((long) Math.floor((((ArrayData) argumentData).getShape().get(j) - 1 - stencilAccess.getShiftOffsets().get(j))/ (double) stencilAccess.getScalingFactors().get(j)), N);
-                            }
-                        }
-                    }
-                }
-            }
-            widths.add(N+1-initialOffsets.get(dim));
-        }
-        return widths;
-    }
-
-    /**
-     * Returns the minimal initial offset to avoid negative indices for a stencil call.
-     * @param function
-     * @param call
-     * @return
-     */
-    private ArrayList<Long> getStencilStarts(StencilNode function, ParallelCallNode call) {
-        ArrayList<Long> starts = new ArrayList<>();
-        for (int dim = 0; dim < function.getDimension(); dim++) {
-            boolean hasSpecStart = false;
-            long N = Long.MIN_VALUE;
-            String currentRuleBase = "INDEX" + dim;
-            for (int i = 0; i < call.getParameterCount() + 1; ++i) {
-                Data argumentData;
-                if (i == call.getParameterCount()) {
-                    argumentData = function.getReturnElement();
-                } else {
-                    argumentData = function.getArgumentValues().get(i);
-                }
-                if (!(argumentData instanceof ArrayData)) {
-                    continue;
-                }
-                ArrayList<DataAccess> accesses = argumentData.getTrace().getDataAccesses();
-                for (DataAccess access : accesses) {
-                    // Replace by correct access class.
-                    if (access instanceof StencilDataAccess) {
-                        StencilDataAccess stencilAccess = ((StencilDataAccess) access);
-                        for (int j = 0; j < stencilAccess.getRuleBaseIndex().size(); j++) {
-                            if (stencilAccess.getRuleBaseIndex().get(j).equals(currentRuleBase) && stencilAccess.getShiftOffsets().get(j) < 0) {
-                                hasSpecStart = true;
-                                long NOld = N;
-                                N = Long.max((long) Math.floor((Math.abs(stencilAccess.getShiftOffsets().get(j))) / (double) stencilAccess.getScalingFactors().get(j)), N);
-                                if ((Math.abs(stencilAccess.getShiftOffsets().get(j))) % stencilAccess.getScalingFactors().get(j) != 0 && (int) Math.floor((Math.abs(stencilAccess.getShiftOffsets().get(j))) / (double) stencilAccess.getScalingFactors().get(j)) >= NOld) {
-                                    N++;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            if (!hasSpecStart) {
-                N=0;
-            }
-            starts.add(N);
-        }
-        return starts;
-    }
-
-    /**
-     *
-     * Returns the width (number of instances/iterations) of a dynamic programming call.
-     * This function may throw an error, if a data element is accessed based on time and the array is to small for a given number of time steps.
-     * @param function
-     * @param call
-     * @param initialOffsets
-     * @return
-     */
-
-    private long getDynamicProgrammingWidth(DynamicProgrammingNode function, ParallelCallNode call, ArrayList<Long> initialOffsets) {
-        long N = Long.MAX_VALUE;
-        boolean hasInternal = false;
-
-        for (int i = 0; i < call.getParameterCount() + 1; ++i) {
-            Data argumentData;
-            if (i == call.getParameterCount()) {
-                argumentData = function.getReturnElement();
-            } else {
-                argumentData = function.getArgumentValues().get(i);
-            }
-            if (!(argumentData instanceof ArrayData)) {
-                continue;
-            }
-
-            ArrayList<DataAccess> accesses = argumentData.getTrace().getDataAccesses();
-            for (DataAccess access : accesses) {
-                // Replace by correct access class.
-                if (access instanceof DynamicProgrammingDataAccess) {
-                    DynamicProgrammingDataAccess dpAccess = ((DynamicProgrammingDataAccess) access);
-
-                    if (dpAccess.getRuleBaseIndex().get(0).equals("INDEX0")) {
-                        // get the number of time steps, since INDEX0 iterates over the time steps.
-                        long diff = ((MetaValue<Integer>) call.getAdditionalArguments().get(0)).getValue() - (((ArrayData) argumentData).getShape().get(0) - dpAccess.getShiftOffsets().get(0) - initialOffsets.get(0));
-                        if (diff > 0){
-                            Log.error("Size of array " + argumentData.getIdentifier() + " to small for this number of time steps! Try " + diff + " more elements!");
-                            throw new RuntimeException("Critical error!");
-                        }
-                    } else if (dpAccess.getRuleBaseIndex().get(0).equals("INDEX1") && dpAccess.getShiftOffsets().get(0) >= 0) {
-                        N = Long.min((long) Math.floor(((ArrayData) argumentData).getShape().get(0) - 1 - dpAccess.getShiftOffsets().get(0)), N);
-                        hasInternal = true;
-                    }
-                }
-            }
-        }
-        if (hasInternal) {
-            return N+1-initialOffsets.get(1);
-        }
-        return 1;
-    }
-
-
-    /**
-     * Returns the minimal initial offset to avoid negative indices for a dynamic programming call.
-     * @param function
-     * @param call
-     * @return
-     */
-    private ArrayList<Long> getDynamicProgrammingStart(DynamicProgrammingNode function, ParallelCallNode call) {
-
-        ArrayList<Long> starts = new ArrayList<>();
-        for (int dim = 0; dim < 2; dim++) {
-            long N = Long.MIN_VALUE;
-            boolean hasSpecStart = false;
-            String currentRuleBase = "INDEX" + dim;
-            for (int i = 0; i < call.getParameterCount() + 1; ++i) {
-                Data argumentData;
-                if (i == call.getParameterCount()) {
-                    argumentData = function.getReturnElement();
-                } else {
-                    argumentData = function.getArgumentValues().get(i);
-                }
-                if (!(argumentData instanceof ArrayData)) {
-                    continue;
-                }
-
-                ArrayList<DataAccess> accesses = argumentData.getTrace().getDataAccesses();
-                for (DataAccess access : accesses) {
-                    // Replace by correct access class.
-                    if (access instanceof DynamicProgrammingDataAccess) {
-                        DynamicProgrammingDataAccess dpAccess = ((DynamicProgrammingDataAccess) access);
-                        if (dpAccess.getShiftOffsets().get(0) < 0 && dpAccess.getRuleBaseIndex().get(0).equals(currentRuleBase)) {
-                            hasSpecStart = true;
-                            N = Long.max(-dpAccess.getShiftOffsets().get(0), N);
-                        }
-                    }
-                }
-            }
-            if (!hasSpecStart) {
-                N=0;
-            }
-            starts.add(N);
-        }
-        return starts;
-    }
-
-    /**
-     * Returns the width (number of instances/iterations) of a Map call.
-     * @param function
-     * @param call
-     * @param initialOffset
-     * @return
-     */
-    private long getMapWidth(MapNode function, ParallelCallNode call, long initialOffset) {
-        long N = Long.MAX_VALUE;
-        for (int i = 0; i < call.getParameterCount() + 1; ++i) {
-            Data argumentData;
-            if (i == call.getParameterCount()) {
-                argumentData = function.getReturnElement();
-            } else {
-                argumentData = function.getArgumentValues().get(i);
-            }
-            if (!(argumentData instanceof ArrayData)) {
-                continue;
-            }
-
-            ArrayList<DataAccess> accesses = argumentData.getTrace().getDataAccesses();
-            for (DataAccess access : accesses) {
-                // Replace by correct access class.
-                if (access instanceof MapDataAccess) {
-                    MapDataAccess mapAccess = ((MapDataAccess) access);
-                    if (mapAccess.getShiftOffset() >= 0) {
-                        N = Long.min((int) Math.floor((((ArrayData) argumentData).getShape().get(0) - 1 - mapAccess.getShiftOffset()) / (double) mapAccess.getScalingFactor()), N);
-                    }
-                }
-            }
-        }
-        return N+1 - initialOffset;
-    }
-
-    /**
-     * Returns the minimal initial offset to avoid negative indices for a map call.
-     * @param function
-     * @param call
-     * @return
-     */
-    private long getMapStart(MapNode function, ParallelCallNode call) {
-        long N = Long.MIN_VALUE;
-        boolean hasSpecStart = false;
-        for (int i = 0; i < call.getParameterCount() + 1; ++i) {
-            Data argumentData;
-            if (i == call.getParameterCount()) {
-                argumentData = function.getReturnElement();
-            } else {
-                argumentData = function.getArgumentValues().get(i);
-            }
-            if (!(argumentData instanceof ArrayData)) {
-                continue;
-            }
-
-            ArrayList<DataAccess> accesses = argumentData.getTrace().getDataAccesses();
-            for (DataAccess access : accesses) {
-                // Replace by correct access class.
-                if (access instanceof MapDataAccess) {
-                    MapDataAccess mapAccess = ((MapDataAccess) access);
-                    if (mapAccess.getShiftOffset() < 0) {
-                        long NOld = N;
-                        hasSpecStart = true;
-                        N = Long.max((int) Math.floor(( Math.abs(mapAccess.getShiftOffset())) / (double) mapAccess.getScalingFactor()), N);
-                        if (((Math.abs(mapAccess.getShiftOffset())) % mapAccess.getScalingFactor()) != 0 && (int) Math.floor(( Math.abs(mapAccess.getShiftOffset())) / (double) mapAccess.getScalingFactor()) >= NOld) {
-                            N++;
-                        }
-                    }
-                }
-            }
-        }
-
-        if (!hasSpecStart) {
-            N=0;
-        }
-        return N ;
-    }
-
-    /**
-     * Returns the width (number of instances/iterations) of a reduction call.
-     * @param function
-     * @param call
-     * @param initialOffset
-     * @return
-     */
-    private long getReductionWidth(ReduceNode function, ParallelCallNode call, long initialOffset) {
-        long N = Long.MAX_VALUE;
-        for (int i = 0; i < call.getParameterCount(); ++i) {
-            Data argumentData = function.getArgumentValues().get(i);
-            if (!(argumentData instanceof ArrayData)) {
-                continue;
-            }
-
-            ArrayList<DataAccess> accesses = argumentData.getTrace().getDataAccesses();
-            for (DataAccess access : accesses) {
-                // Replace by correct access class.
-                if (access instanceof MapDataAccess) {
-                    MapDataAccess mapAccess = ((MapDataAccess) access);
-                    N = Long.min((int) Math.floor((((ArrayData) argumentData).getShape().get(0) - 1 - mapAccess.getShiftOffset()) / (double) mapAccess.getScalingFactor()), N);
-                }
-            }
-        }
-        return N + 1 - initialOffset;
-    }
-
-    /**
-     * Returns the minimal initial offset to avoid negative indices for a reduction call.
-     * @param function
-     * @param call
-     * @return
-     */
-    private long getReductionStart(ReduceNode function, ParallelCallNode call) {
-        long N = Long.MIN_VALUE;
-        boolean hasSpecStart = false;
-        for (int i = 0; i < call.getParameterCount(); ++i) {
-            //Data inputData = call.getInputElements().get(i);
-            Data argumentData = function.getArgumentValues().get(i);
-            if (!(argumentData instanceof ArrayData)) {
-                continue;
-            }
-
-            ArrayList<DataAccess> accesses = argumentData.getTrace().getDataAccesses();
-            for (DataAccess access : accesses) {
-                // Replace by correct access class.
-                if (access instanceof MapDataAccess) {
-                    MapDataAccess mapAccess = ((MapDataAccess) access);
-                    if (mapAccess.getShiftOffset() < 0) {
-                        long NOld = N;
-                        hasSpecStart = true;
-                        N = Long.max((int) Math.floor(( Math.abs(mapAccess.getShiftOffset())) / (double) mapAccess.getScalingFactor()), N);
-                        if (((Math.abs(mapAccess.getShiftOffset())) % mapAccess.getScalingFactor()) != 0 && (int) Math.floor(( Math.abs(mapAccess.getShiftOffset())) / (double) mapAccess.getScalingFactor()) >= NOld) {
-                            N++;
-                        }
-                    }
-                }
-            }
-        }
-
-        if (!hasSpecStart) {
-            N=0;
-        }
-        return N ;
-    }
-
-    /**
-     * Calculates the depth of the reduction (The number of necessary synchronization steps).
-     * @param width
-     * @param arity
-     * @return
-     */
-    private long getReductionDepth(long width, long arity) {
-        long depth = (long) (Math.log10(width) / Math.log10(arity));
-        return depth;
-    }
-
-
-    /**
-     * Computes the arity of the reduction step from a given reduce node.
-     * The arity is defined as the number of read data elements within the reduction step. e.g. "res += in1 * in2" has an arity of two, because in1 and in2 are both accessed once.
-     * @param node
-     * @return
-     */
-    private long getReductionArity(ReduceNode node) {
-        if (node.getChildren().get(node.getChildren().size() - 1) instanceof SimpleExpressionBlockNode) {
-            SimpleExpressionBlockNode expNode = (SimpleExpressionBlockNode) node.getChildren().get(node.getChildren().size() - 1);
-            AssignmentExpression exp = (AssignmentExpression) expNode.getExpressionList().get(expNode.getExpressionList().size() - 1);
-            return exp.getRhsExpression().getOperands().size();
-        } else if (node.getChildren().get(node.getChildren().size() - 1) instanceof ComplexExpressionNode) {
-            AssignmentExpression exp = (AssignmentExpression) ((ComplexExpressionNode) node.getChildren().get(node.getChildren().size() - 1)).getExpression();
-            return exp.getRhsExpression().getOperands().size();
-        } else {
-            Log.error("Reduction not sufficiently defined!  " + node.getIdentifier());
-            throw new RuntimeException("Critical error!");
-        }
-    }
 
 
     /************************************************

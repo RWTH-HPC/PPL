@@ -17,14 +17,15 @@ public class PrimitiveData extends Data{
 
     @Override
     public long getBytes() {
-        if (this.isParameter()) {
-            Log.error(this.getIdentifier() + " is a parameter and does not need memory space!");
-            return 0;
-        }
         return PrimitiveDataTypes.GetPrimitiveSize(this.getTypeName());
     }
 
     public Data createInlineCopy(String inlineIdentifier) {
         return new PrimitiveData(getIdentifier() + "_" + inlineIdentifier, getTypeName(), isInitialized(), isReturnData());
+    }
+
+    @Override
+    public Data deepCopy() {
+        return new PrimitiveData(getIdentifier(), getTypeName(), isInitialized(), isReturnData());
     }
 }

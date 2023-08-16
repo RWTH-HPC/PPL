@@ -38,10 +38,10 @@ public class ClusterDescription {
 
 
         } catch (IOException e) {
-            Log.error("Parsing failure! File not found!");
+            Log.error("Parsing failure! No JSON File in:" + path);
             e.printStackTrace();
         } catch (ParseException e) {
-            Log.error("Parsing failure! Not JSON format!");
+            Log.error("Parsing failure! Not JSON format!" + path);
             e.printStackTrace();
         }
 

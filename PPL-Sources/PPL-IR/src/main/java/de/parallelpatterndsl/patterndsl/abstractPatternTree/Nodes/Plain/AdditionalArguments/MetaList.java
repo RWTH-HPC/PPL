@@ -16,4 +16,9 @@ public class MetaList<T> extends AdditionalArguments {
     public MetaList(ArrayList<T> values) {
         this.values = values;
     }
+
+    @Override
+    public MetaList deepCopy() {
+        return new MetaList<>(new ArrayList<>(values));
+    }
 }

@@ -1,11 +1,13 @@
 package de.parallelpatterndsl.patterndsl.expressions;
 
 import de.parallelpatterndsl.patterndsl.PatternTypes;
+import de.parallelpatterndsl.patterndsl.Preprocessing.VariableReplacementStack;
 import de.parallelpatterndsl.patterndsl.abstractPatternTree.DataElements.ArrayData;
 import de.parallelpatterndsl.patterndsl.abstractPatternTree.DataElements.Data;
 import de.parallelpatterndsl.patterndsl.abstractPatternTree.DataElements.DataAccess.*;
 import de.parallelpatterndsl.patterndsl.abstractPatternTree.DataElements.LiteralData;
 import de.parallelpatterndsl.patterndsl.abstractPatternTree.DataElements.PrimitiveData;
+import de.parallelpatterndsl.patterndsl.helperLibrary.DeepCopyHelper;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -73,10 +75,16 @@ public class AssignmentExpression extends IRLExpression {
     @Override
     public ArrayList<DataAccess> getDataAccesses(PatternTypes patternType) {
         ArrayList<DataAccess> result = new ArrayList<>();
+
+
         // handle special IO accesses
         if (rhsExpression.isHasIOData()) {
             result.add(new IODataAccess(outputElement,false));
+            result.add(new IODataAccess(outputElement,true));
         } else {
+            if (Operator.getReadAssignment(operator)) {
+                result.add(new DataAccess(outputElement, true));
+            }
             if (outputElement instanceof PrimitiveData) {
                 if (patternType == PatternTypes.REDUCE && outputElement.isReturnData()) {
                     result.add(new ReduceDataAccess(outputElement, false));
@@ -174,6 +182,9 @@ public class AssignmentExpression extends IRLExpression {
                     //TODO!!!
                 }
             }
+            for (OperationExpression accesses : this.getAccessScheme() ) {
+                result.addAll(accesses.getDataAccesses(patternType));
+            }
             result.addAll(getRhsExpression().getDataAccesses( patternType));
         }
         return result;
@@ -207,7 +218,7 @@ public class AssignmentExpression extends IRLExpression {
 
     @Override
     public AssignmentExpression createInlineCopy(ArrayList<Data> globalVars, String inlineIdentifier, HashMap<String, Data> variableTable) {
-        Data newOutput = variableTable.get(outputElement.getIdentifier()+ "_" + inlineIdentifier);
+        Data newOutput = VariableReplacementStack.getCurrentTable().get(outputElement);
 
         ArrayList<OperationExpression> newAccessScheme = new ArrayList<>();
 
@@ -224,8 +235,38 @@ public class AssignmentExpression extends IRLExpression {
     public void replaceDataElement(Data oldData, Data newData) {
         if (outputElement == oldData) {
             outputElement = newData;
-        } else {
-            rhsExpression.replaceDataElement(oldData, newData);
         }
+        rhsExpression.replaceDataElement(oldData, newData);
+        for (OperationExpression exp: this.getAccessScheme() ) {
+            exp.replaceDataElement(oldData, newData);
+        }
+    }
+
+    @Override
+    public boolean hasProfilingInfo() {
+        return rhsExpression.hasProfilingInfo();
+    }
+
+    @Override
+    public boolean hasExit() {
+        return rhsExpression.hasExit();
+    }
+
+    @Override
+    public int getLoadStores() {
+        int sum = 1;
+        for (OperationExpression access: this.getAccessScheme() ) {
+            sum += access.getLoadStores();
+        }
+        return sum + rhsExpression.getLoadStores();
+    }
+
+    @Override
+    public AssignmentExpression deepCopy() {
+        ArrayList<OperationExpression> newAccessScheme = new ArrayList<>();
+        for (OperationExpression exp : accessScheme ) {
+            newAccessScheme.add(exp.deepCopy());
+        }
+        return new AssignmentExpression(DeepCopyHelper.currentScope().get(outputElement.getIdentifier()), newAccessScheme, rhsExpression.deepCopy(), operator);
     }
 }

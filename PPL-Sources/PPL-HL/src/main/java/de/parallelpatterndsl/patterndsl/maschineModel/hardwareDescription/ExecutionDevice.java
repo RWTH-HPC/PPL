@@ -68,10 +68,10 @@ public class ExecutionDevice implements Device {
 
 
             } catch (IOException e) {
-                Log.error("Parsing failure! Not readable!");
+                Log.error("Parsing failure! Not readable! " + path + device.get(ClusterParameter.TEMPLATE).toString());
                 e.printStackTrace();
             } catch (ParseException e) {
-                Log.error("Parsing failure! Not JSON format!");
+                Log.error("Parsing failure! No JSON File in:" + path + device.get(ClusterParameter.TEMPLATE).toString());
                 e.printStackTrace();
             }
         }

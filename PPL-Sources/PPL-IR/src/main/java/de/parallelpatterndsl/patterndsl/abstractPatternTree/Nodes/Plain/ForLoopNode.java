@@ -2,12 +2,16 @@ package de.parallelpatterndsl.patterndsl.abstractPatternTree.Nodes.Plain;
 
 import de.parallelpatterndsl.patterndsl.abstractPatternTree.DataElements.Data;
 import de.parallelpatterndsl.patterndsl.abstractPatternTree.DataElements.LiteralData;
+import de.parallelpatterndsl.patterndsl.abstractPatternTree.Nodes.PatternNode;
 import de.parallelpatterndsl.patterndsl.abstractPatternTree.Visitor.APTVisitor;
 import de.parallelpatterndsl.patterndsl.abstractPatternTree.Visitor.CallCountResetter;
 import de.parallelpatterndsl.patterndsl.abstractPatternTree.Visitor.ExtendedShapeAPTVisitor;
 import de.parallelpatterndsl.patterndsl.expressions.AssignmentExpression;
 import de.parallelpatterndsl.patterndsl.expressions.OperationExpression;
 import de.parallelpatterndsl.patterndsl.expressions.Operator;
+import de.parallelpatterndsl.patterndsl.helperLibrary.DeepCopyHelper;
+
+import java.util.ArrayList;
 
 /**
  * Definition of a for-loop of the abstract pattern tree.
@@ -16,6 +20,8 @@ import de.parallelpatterndsl.patterndsl.expressions.Operator;
 public class ForLoopNode extends LoopNode {
 
     private int numIterations = -1;
+
+    private boolean simpleLength = false;
 
     /**
      * The Variable used for the Loop iteration.
@@ -30,6 +36,13 @@ public class ForLoopNode extends LoopNode {
         return loopControlVariable;
     }
 
+    public boolean hasSimpleLength() {
+        if (numIterations == -1) {
+            numIterations = genNumIterations();
+        }
+        return simpleLength;
+    }
+
     /**
      * generates the number of iterations.
      * @return
@@ -38,6 +51,10 @@ public class ForLoopNode extends LoopNode {
         int start = 0;
         int end = 0;
         int total = 1;
+
+        boolean simpleStart = false;
+        boolean simpleEnd = false;
+        boolean simpleUpdate = false;
 
         // Test and get the starting value for the loop iteration.
         if (children.get(0) instanceof ComplexExpressionNode) {
@@ -48,6 +65,7 @@ public class ForLoopNode extends LoopNode {
                     if (exp.getRhsExpression().getOperands().get(0) instanceof LiteralData) {
                         if (((LiteralData) exp.getRhsExpression().getOperands().get(0)).getValue() instanceof Integer) {
                             start = (int) ((LiteralData) exp.getRhsExpression().getOperands().get(0)).getValue();
+                            simpleStart = true;
                         }
                     }
                 }
@@ -68,6 +86,7 @@ public class ForLoopNode extends LoopNode {
                             } else if (exp.getOperators().get(0) == Operator.GREATER) {
                                 end++;
                             }
+                            simpleEnd = true;
                         }
                     }
                 }
@@ -80,14 +99,22 @@ public class ForLoopNode extends LoopNode {
                 AssignmentExpression exp = (AssignmentExpression) ((ComplexExpressionNode) children.get(2)).getExpression();
                 if (exp.getOperator() == Operator.INCREMENT) {
                     total = end - start + 1;
+                    simpleUpdate = true;
                 } else if (exp.getOperator() == Operator.DECREMENT) {
                     total = start - end + 1;
+                    simpleUpdate = true;
                 }
             }
         }
 
         if (total < 0) {
             total *= -1;
+        }
+
+        simpleLength = simpleStart && simpleEnd && simpleUpdate;
+
+        if (total == 0 && !simpleLength) {
+            total = 1;
         }
 
         return total;
@@ -100,6 +127,29 @@ public class ForLoopNode extends LoopNode {
             numIterations = genNumIterations();
         }
         return numIterations;
+    }
+
+    @Override
+    public ForLoopNode deepCopy() {
+
+        DeepCopyHelper.addScope(this.getVariableTable());
+        ForLoopNode result = new ForLoopNode(DeepCopyHelper.currentScope().get(loopControlVariable.getIdentifier()));
+        result.setVariableTable(DeepCopyHelper.currentScope());
+
+        DeepCopyHelper.DataTraceUpdate(result);
+
+        ArrayList<PatternNode> newChildren = new ArrayList<>();
+        for (PatternNode node: this.getChildren()) {
+            PatternNode newNode = node.deepCopy();
+            newChildren.add(newNode);
+            newNode.setParent(result);
+        }
+
+        result.setChildren(newChildren);
+
+        DeepCopyHelper.removeScope();
+
+        return result;
     }
 
     /**

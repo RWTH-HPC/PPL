@@ -1,0 +1,27 @@
+DPTest{
+
+dp fibonacci([Int] input):[Int] res {
+    res[0] = input[1]
+    res[1] = input[0] + input[1]
+}
+
+
+seq main() : Int {
+    var [Int] initial = init_List([2],1)
+    var [Int] result = init_List([2])
+    
+    /*execute the pattern on node 0 device 0 */
+    result = fibonacci<<<7,[0,0,0]>>>(initial)
+    
+    
+    if result[0] != 21 {
+        print("The 8th fibonacci number is not correct!")
+        exit(1)
+    }
+    if result[1] != 34 {
+        print("The 9th fibonacci number is not correct!")
+        exit(1)
+    }
+    
+return 0 
+}}

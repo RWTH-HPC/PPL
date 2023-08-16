@@ -1,8 +1,8 @@
 package de.parallelpatterndsl.patterndsl.MappingTree.DataMovementGenerator;
 
+import de.parallelpatterndsl.patterndsl.MappingTree.AbstractMappingTree;
 import de.parallelpatterndsl.patterndsl.MappingTree.Nodes.DataControl.DataPlacement;
 import de.parallelpatterndsl.patterndsl.MappingTree.Nodes.Function.MainMapping;
-import de.parallelpatterndsl.patterndsl.MappingTree.Nodes.ParallelCalls.FusedParallelCallMapping;
 import de.parallelpatterndsl.patterndsl.MappingTree.Nodes.ParallelCalls.ParallelCallMapping;
 import de.parallelpatterndsl.patterndsl.MappingTree.Nodes.Plain.SimpleExpressionBlockMapping;
 import de.parallelpatterndsl.patterndsl.PatternTypes;
@@ -49,9 +49,13 @@ public class CallGroup extends ParallelGroup{
         inputSet = new HashMap<>();
         this.identifier = RandomStringGenerator.getAlphaNumericString();
 
-        createInputParameterAssignments();
-        createOutputParameterAssignment();
-        updateNewNodes();
+
+        parameterReplacementExpressions = Optional.empty();
+        resultReplacementExpression = Optional.empty();
+        //TODO: Needs to be reworked
+        //createInputParameterAssignments();
+        //createOutputParameterAssignment();
+        //updateNewNodes();
     }
 
     public boolean isFirstAccess() {
@@ -186,7 +190,7 @@ public class CallGroup extends ParallelGroup{
         if (parameterAssignments.isEmpty()) {
             parameterReplacementExpressions = Optional.empty();
         } else {
-            parameterReplacementExpressions = Optional.of(new SimpleExpressionBlockMapping(Optional.of(mainFunction), call.getVariableTable(), new SimpleExpressionBlockNode(parameterAssignments)));
+            parameterReplacementExpressions = Optional.of(new SimpleExpressionBlockMapping(Optional.of(mainFunction), call.getVariableTable(), new SimpleExpressionBlockNode(parameterAssignments), AbstractMappingTree.getDefaultDevice().getParent()));
         }
 
 
@@ -229,7 +233,7 @@ public class CallGroup extends ParallelGroup{
 
             result.add(replacement);
 
-            resultReplacementExpression = Optional.of(new SimpleExpressionBlockMapping(Optional.of(mainFunction), call.getVariableTable(), new SimpleExpressionBlockNode(result)));
+            resultReplacementExpression = Optional.of(new SimpleExpressionBlockMapping(Optional.of(mainFunction), call.getVariableTable(), new SimpleExpressionBlockNode(result), AbstractMappingTree.getDefaultDevice().getParent()));
 
             definition = outputDefinition;
 

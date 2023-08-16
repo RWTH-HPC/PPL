@@ -1,0 +1,13 @@
+DoInlineTest{
+
+seq toInline([Int] input) : Int {
+    return #input
+}
+
+seq main() : Int {
+    var [Int] a = init_List([2])
+    
+    toInline(a)
+    
+return 0 
+}}
