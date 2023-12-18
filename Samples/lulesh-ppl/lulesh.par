@@ -1,0 +1,854 @@
+lulesh {
+    include "domain"
+    include "cmdOpts"
+    include "lulesh_util"
+    include "luleshSeq"
+    include "luleshPar"
+
+
+
+    seq main() : Int32 {
+        var Int32 myReturnCode = 0
+
+        // Set defaults that can be overridden by command line opts
+        var [Int32] cmdOpts = [0,0,0,0]
+        cmdOpts[its] = 2 // only in seq. version supported otherwise not since loop contains par. code and this is not supported by ppl
+        cmdOpts[showProg] = 0
+        cmdOpts[quiet] = 0
+        cmdOpts[help] = 0 // stands for h flag 0 means not given flag 
+
+        //cmdOpts[nx] = 30  not supported here but as preprocessing variable - see preprocessing.sh for details
+        //cmdOpts[numReg] = 11 regions are not supported, see written thesis for details
+        //cmdOpts[numFiles] = 2 // not supported in the sense of no support for viz files and only one main processor coordinating
+        //cmdOpts[viz] = 0 // no support for viz output format
+        //cmdOpts[cost] = 1 // regions are not supported
+        //cmdOpts[balance] = 1 // regions are not supported
+
+
+        //the following may overwrite default values depending on input
+        //cmdOpts = lulesh_util_ParseCommandLineOptionsFromFile(cmdOpts)
+      
+        var Int32 nx = 240
+        var Int32 edgeElems = nx
+        var Int32 edgeNodes = nx +1
+        var Int32 domain_numElem = 13824000
+
+        if cmdOpts[quiet] == 0 {
+            print("Running problem size " {240} "^3 per domain until completion")
+            print("Num processors: Depends on the optimization and hardware language.")
+            print("Num threads: Depends on the optimization and hardware language.")
+            print("Total number of elements: nx^3=" {240*240*240})
+            print()
+            print("To run other sizes, use the nx option <integer>.")
+            print("To run a fixed number of iterations, use the its option <integer>.")
+            print("To print out progress, use the showProg option.")
+            print("See help (h option) for more options.")
+            print()
+            print()
+            print()
+            //print("To run a more or less balanced region set, use -b <integer>.")
+            //print("To change the relative costs of regions, use -c <integer>.")
+            //print("To write an output file for VisIt, use -v.")
+        } 
+   
+        // Set up the mesh and decompose. Assumes regular cubes for now
+        /*   this function is not been used, since we have no predistribution by hand in ppl
+           and this is against the philosophy of PPL, see written thesis for details */
+        //var [Int32] meshAndDecompose = [0,0,0,0]
+        //meshAndDecompose = lulesh_init_InitMeshDecomp(numRanks)
+
+        // Build the main data structure and initialize it
+        // ---------------------------------------------------------------------------------------
+        // following replaces constructor of domain
+        // ---------------------------------------------------------------------------------------
+
+        ///////////////////////////////
+        //   Initialize Sedov Mesh
+        ///////////////////////////////
+
+        // Basic Field Initialization 
+
+        var [[[Double]]] domain_e = init_List([240, 240, 240], 0.0)
+        var [[[Double]]] domain_p = init_List([240, 240, 240], 0.0)
+        var [[[Double]]] domain_q = init_List([240, 240, 240], 0.0)
+
+        var [[[Double]]] domain_ql = init_List([240, 240, 240])
+        var [[[Double]]] domain_qq = init_List([240, 240, 240])
+
+        // Note - v initializes to 1.0, not 0.0!
+        var [[[Double]]] domain_v = init_List([240, 240, 240], 1.0)
+
+        var [[[Double]]] domain_volo = init_List([240, 240, 240])
+        var [[[Double]]] domain_vnew = init_List([240, 240, 240])
+        var [[[Double]]] domain_delv = init_List([240, 240, 240])
+        var [[[Double]]] domain_vdov = init_List([240, 240, 240])
+        var [[[Double]]] domain_arealg = init_List([240, 240, 240])
+
+        var [[[Double]]] domain_ss = init_List([240, 240, 240], 0.0)
+
+        var [[[Double]]] domain_elemMass = init_List([240, 240, 240])
+
+        //NUMNODE!!
+        var [[[[Double]]]] domain_velocities = init_List([241, 241, 241, 3], 0.0)
+
+        var [[[[Double]]]] domain_accelerations = init_List([241, 241, 241, 3], 0.0)
+
+        var [[[Double]]] domain_nodalMass = init_List([241, 241, 241], 0.0)
+
+        var [[[[Double]]]] domain_coordinates = init_List([241, 241, 241, 3], 0.0)
+        // ---------------------------------------------------------------------------------------
+        // following replaces BuildMesh(nx, edgeNodes, edgeElems)
+        // ---------------------------------------------------------------------------------------
+        {
+            var Int32 meshEdgeElems = nx 
+            // initialize nodal coordinates 
+            var Double tz = 0 
+
+            for var Int32 p = 0; p < edgeNodes; p++ {
+                var Double ty = 0
+                for var Int32 r = 0; r < edgeNodes; r++ {
+                    var Double tx = 0
+                    for var Int32 c = 0; c < edgeNodes; c++ {
+                        domain_coordinates[p][r][c][m_x] = tx
+                        domain_coordinates[p][r][c][m_y] = ty
+                        domain_coordinates[p][r][c][m_z] = tz
+
+                        tx = (1.125 * (c + 1)) / meshEdgeElems
+                    }
+                    ty = (1.125 * (r + 1)) / meshEdgeElems
+                }
+                tz = (1.125 * (p + 1)) / meshEdgeElems
+            }
+        }
+        // ---------------------------------------------------------------------------------------
+        // preceding replaces BuildMesh(nx, edgeNodes, edgeElems)
+        // ---------------------------------------------------------------------------------------
+
+        // no regions are used since against philosophy of PPL and due to limitations, see written thesis for detail
+        // Setup region index sets. For now, these are constant sized
+        // throughout the run, but could be changed every cycle to 
+        // simulate effects of ALE on the lagrange solver
+        //lulesh_init_CreateRegionIndexSets(nr, balance)
+
+        /* replaced since array indirection and not needed since only one region and no predivision
+           see written thesis for details */
+        // Setup symmetry nodesets
+        // lulesh_init_SetupSymmetryPlanes(edgeNodes)
+
+        // following function is not needed anymore, since array indirection is both not supported
+        // and not needed by ppl, see written thesis for details
+        // Setup element connectivities
+        // lulesh_init_SetupElementConnectivities(edgeElems)
+    
+        // following function is not needed anymore, since array indirection is both not supported
+        // and not needed by ppl
+        // see written thesis for details
+        // Setup symmetry planes and free surface boundary arrays
+        // lulesh_init_SetupBoundaryConditions(edgeElems)
+
+        // Setup defaults
+
+        // These can be changed (requires recompile) if you want to run
+        // with a fixed timestep, or to a different end time, but it's
+        // probably easier/better to just run a fixed number of timesteps
+        // using the -i flag in 2.x
+
+        var Double domain_dtfixed = 0 - 1.0e-6 // Negative means use courant condition
+        var Double domain_stoptime  = 1.0e-2 // *var Double(edgeElems*tp/45.0) ;
+
+        // Initial conditions
+        var Double domain_deltatimemultlb = 1.1
+        var Double domain_deltatimemultub = 1.2
+        var Double domain_dtcourant = 1.0e+20
+        var Double domain_dthydro = 1.0e+20
+        var Double domain_dtmax = 1.0e-2
+        var Double domain_time = 0
+        var Int32 domain_cycle = 0
+
+        // initialize field data 
+        for var Int32 plane = 0; plane < edgeElems; plane++ {
+            for var Int32 row = 0; row < edgeElems; row++ {
+                for var Int32 col = 0; col < edgeElems; col++ {
+                    var [Double] x_local = [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]
+                    var [Double] y_local = [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]
+                    var [Double] z_local = [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]
+
+                    x_local = luleshSeq_replaceDomainNodelist(domain_coordinates, plane, row, col, m_x)
+                    y_local = luleshSeq_replaceDomainNodelist(domain_coordinates, plane, row, col, m_y)
+                    z_local = luleshSeq_replaceDomainNodelist(domain_coordinates, plane, row, col, m_z)
+
+                    // volume calculations
+                    var Double volume = luleshSeq_CalcElemVolume(x_local, y_local, z_local)
+
+                    domain_volo[plane][row][col] = volume
+                    domain_elemMass[plane][row][col] = volume
+
+                    domain_nodalMass[plane    ][row    ][col    ] += volume / 8.0
+                    domain_nodalMass[plane    ][row    ][col + 1] += volume / 8.0
+                    domain_nodalMass[plane    ][row + 1][col + 1] += volume / 8.0
+                    domain_nodalMass[plane    ][row + 1][col    ] += volume / 8.0
+                    domain_nodalMass[plane + 1][row    ][col    ] += volume / 8.0
+                    domain_nodalMass[plane + 1][row    ][col + 1] += volume / 8.0
+                    domain_nodalMass[plane + 1][row + 1][col + 1] += volume / 8.0
+                    domain_nodalMass[plane + 1][row + 1][col    ] += volume / 8.0
+                }
+            }
+        }
+        // deposit initial energy
+        // An energy of 3.948746e+7 is correct for a problem with
+        // 45 zones along a side - we need to scale it
+        var Double ebase = 3.948746e+7
+        // since we have only 1 region domain_tp is regarded as 1, however,
+        // if the problem should be made bigger, then increase nx accordingly
+        var Double scale = (nx * 1 /*domain_tp*/) / 45.0
+        var Double einit = ebase * scale * scale * scale
+
+        //if (domain_rowLoc + domain_colLoc + domain_planeLoc == 0) {
+            // Dump into the first zone (which we know is in the corner)
+            // of the domain that sits at the origin
+            domain_e[0][0][0] = einit
+        //}
+        //set initial deltatime base on analytic CFL calculation
+        var Double domain_deltatime = (0.5 * cbrt(domain_volo[0][0][0])) / sqrt(2.0 * einit)
+
+        // ---------------------------------------------------------------------------------------
+        // preceding replaces constructor of domain
+        // ---------------------------------------------------------------------------------------
+
+
+        var [[[[Double]]]] domain_forces = init_List([241, 241, 241, 3])
+
+
+        // BEGIN timestep to solution */
+        var Double start = get_time() // current time in seconds but microseconds accuracy
+
+        //$beginHereToDuplicate
+
+        // while(/*(domain_time < domain_stoptime) &&*/ (domain_cycle < cmdOpts[its]))
+
+        // var Double elapsedTimeTimeIncrement
+        // var Double elapsedTimeLagrangeLeapFrog
+        // var Double elapsedTimeLagrangeNodal
+        // var Double elapsedTimeLagrangeElements
+        // var Double elapsedTimeCalcTimeConstraintsForElems
+
+
+        // var Double elapsedTimeCalcForceForNodes
+        // var Double elapsedTimeCalcAccelerationForNodes
+        // var Double elapsedTimeApplyAccelerationBoundaryConditionsForNodes
+        // var Double elapsedTimeCalcVelocityForNodes
+        // var Double elapsedTimeCalcPositionForNodes
+
+        // var Double elapsedTimeCalcKinematicsForElems_a
+        // var Double elapsedTimeGetSubArray
+        // var Double elapsedTimeCalcKinematicsForElems_b
+        // var Double elapsedTimeCalcLagrangeElements_a
+        // var Double elapsedTimeCalcLagrangeElements_b
+        // var Double elapsedTimeCheckNonPosElem
+
+        // var Double elapsedTimeCalcQForElems
+        // var Double elapsedTimeGetSubArray2
+        // var Double elapsedTimeApplyMaterialPropertiesForElems
+        // var Double elapsedTimeGetSubArray3
+        // var Double elapsedTimeUpdateVolumesForElems
+
+        // var Double elapsedTimeInitListDouble
+        // var Double elapsedTimeInitStressTermsForElems
+        // var Double elapsedTimetIntegrateStressForElems_a
+        // var Double elapsedTimetIntegrateStressForElems_b
+        // var Double elapsedTimetIntegrateStressForElems_c
+        // var Double elapsedTimetReverseDimensions
+        // var Double elapsedTimeReplaceArrayIndirection
+        // var Double elapsedTimeCheckNonPosElem2
+        // var Double elapsedTimeCalcHourglassControlForElems_a
+        // var Double elapsedTimeCalcHourglassControlForElems_b
+        // var Double elapsedTimeCalcHourglassControlForElems_c
+        // var Double elapsedTimeCheckNonPosElem3
+        // var Double elapsedTimeCalcFBHourglassForceForElems
+
+        // var Double elapsedTimeTest = 0
+        // var Double elapsedTimeTest2 = 0
+
+        {   
+            // var Double startTimeIncrement = get_time()
+            // ---------------------------------------------------------------------------------------
+            // following replaces TimeIncrement(*locDom)
+            // ---------------------------------------------------------------------------------------
+            {
+                var Double targetdt = domain_stoptime - domain_time
+
+                if ((domain_dtfixed <= 0.0) && (domain_cycle != 0)) {
+                    var Double ratio
+                    var Double olddt = domain_deltatime
+
+                    /* This will require a reduction in parallel */
+                    // Not in our case, since we have only "one" domain
+                    var Double gnewdt = 1.0e+20
+                    var Double newdt
+                    if (domain_dtcourant < gnewdt) {
+                        gnewdt = domain_dtcourant / 2.0
+                    }
+                    if (domain_dthydro < gnewdt) {
+                        gnewdt = (domain_dthydro * 2.0) / 3.0
+                    }
+                    
+                    newdt = gnewdt
+                    
+                    //#endif
+            
+                    ratio = newdt / olddt
+                    if (ratio >= 1.0) {
+                        if (ratio < domain_deltatimemultlb) {
+                            newdt = olddt
+                        }
+                        else if (ratio > domain_deltatimemultub) {
+                            newdt = olddt * domain_deltatimemultub
+                        }
+                    }
+
+                    if (newdt > domain_dtmax) {
+                        newdt = domain_dtmax
+                    }
+                    domain_deltatime = newdt
+                }
+
+                /* TRY TO PREVENT VERY SMALL SCALING ON THE NEXT CYCLE */
+                if ( (targetdt > domain_deltatime) &&
+                     (targetdt < ((4.0 * domain_deltatime) / 3.0)) ) {
+                    targetdt = (2.0 * domain_deltatime) / 3.0
+                }
+
+                if (targetdt < domain_deltatime) {
+                    domain_deltatime = targetdt
+                }
+
+                domain_time += domain_deltatime
+
+                domain_cycle++
+            }
+            // ---------------------------------------------------------------------------------------
+            // preceding replaces TimeIncrement(*locDom)
+            // ---------------------------------------------------------------------------------------
+            // var Double endTimeIncrement = get_time() 
+            // elapsedTimeTimeIncrement = (endTimeIncrement - startTimeIncrement) / 1000000
+
+            // var Double startLagrangeLeapFrog = get_time()
+            // ---------------------------------------------------------------------------------------
+            // following replaces LagrangeLeapFrog(*locDom)
+            // ---------------------------------------------------------------------------------------
+             {
+                /* calculate nodal forces, accelerations, velocities, positions, with
+                * applied boundary conditions and slide surface considerations */
+                // var Double startLagrangeNodal= get_time()
+                // ---------------------------------------------------------------------------------------
+                // following replaces LagrangeNodal(domain)
+                // ---------------------------------------------------------------------------------------
+                {
+                    /* time of boundary condition evaluation is beginning of step for force and
+                    * acceleration boundary conditions. */
+                    // var Double startCalcForceForNodes = get_time()
+                    // ---------------------------------------------------------------------------------------
+                    // following replaces CalcForceForNodes(domain)
+                    // ---------------------------------------------------------------------------------------
+                    {
+                        // var Double startInitListDouble = get_time()
+                        domain_forces = luleshPar_par_initListDouble4<<<>>>(0.0)
+                        // var Double endInitListDouble = get_time() 
+                        // elapsedTimeInitListDouble = (endInitListDouble - startInitListDouble) / 1000000
+                        /* Calcforce calls partial, force, hourq */
+                        // ---------------------------------------------------------------------------------------
+                        // following replaces CalcVolumeForceForElems(domain)
+                        // ---------------------------------------------------------------------------------------
+                        {
+
+                            var Double hgcoef = m_hgcoef
+                            var [[[[Double]]]] sig = init_List([240, 240, 240, 3])
+                            var [[[Double]]] determ = init_List([240, 240, 240])
+
+                            /* Sum contributions to total stress tensor */
+
+                            // var Double startInitStressTermsForElems = get_time()
+                            sig = luleshPar_InitStressTermsForElems<<<>>>(domain_p, domain_q)
+                            // var Double endInitStressTermsForElems = get_time() 
+                            // elapsedTimeInitStressTermsForElems = (endInitStressTermsForElems - startInitStressTermsForElems) / 1000000
+
+                            // call elemlib stress integration loop to produce nodal forces from
+                            // material stresses.
+                            // ---------------------------------------------------------------------------------------
+                            // following replaces IntegrateStressForElems( domain,
+                            //                      sigxx, sigyy, sigzz, determ, numElem,
+                            //                      domain.numNode())
+                            // ---------------------------------------------------------------------------------------
+                            {   
+
+
+                                // loop over all elements
+                                // var Double startIntegrateStressForElems_a = get_time()
+                                determ = luleshPar_par_a_IntegrateStressForElems<<<>>>(domain_coordinates)
+                                // var Double endtIntegrateStressForElems_a = get_time() 
+                                // elapsedTimetIntegrateStressForElems_a = (endtIntegrateStressForElems_a - startIntegrateStressForElems_a) / 1000000
+
+                                var [[[[[Double]]]]] B_all =  init_List([240, 240, 240, 3, 8])
+
+                                // var Double startIntegrateStressForElems_b = get_time()
+                                B_all = luleshPar_par_b_IntegrateStressForElems<<<>>>(domain_coordinates)
+                                // var Double endtIntegrateStressForElems_b = get_time() 
+                                // elapsedTimetIntegrateStressForElems_b = (endtIntegrateStressForElems_b - startIntegrateStressForElems_b) / 1000000
+
+                                var [[[[[Double]]]]] domain_forcesTimes8Reversed = init_List([240, 240, 240, 8, 3])
+                                
+                                // var Double startIntegrateStressForElems_c = get_time()
+                                domain_forcesTimes8Reversed = luleshPar_par_c_IntegrateStressForElems<<<>>>(sig, B_all)
+                                // var Double endtIntegrateStressForElems_c = get_time() 
+                                // elapsedTimetIntegrateStressForElems_c = (endtIntegrateStressForElems_c - startIntegrateStressForElems_c) / 1000000
+				                
+				                /*
+                                var [[[[[Double]]]]] domain_forcesTimes8 = init_List([8, 240, 240, 240, 3])
+                                
+                                // var Double startReverseDimensions = get_time()
+                                domain_forcesTimes8 = luleshPar_reverseDimensions<<<>>>(domain_forcesTimes8Reversed)
+                                // var Double endReverseDimensions = get_time() 
+                                // elapsedTimetReverseDimensions = (endReverseDimensions - startReverseDimensions) / 1000000
+                                */
+                                
+                                // var Double startReplaceArrayIndirection = get_time()
+                                /*
+                                domain_forces = replaceArrayIndirectionUpdate0<<<>>>(domain_forcesTimes8[0], domain_forces)
+                                domain_forces = replaceArrayIndirectionUpdate1<<<>>>(domain_forcesTimes8[1], domain_forces)
+                                domain_forces = replaceArrayIndirectionUpdate2<<<>>>(domain_forcesTimes8[2], domain_forces)
+                                domain_forces = replaceArrayIndirectionUpdate3<<<>>>(domain_forcesTimes8[3], domain_forces)
+                                domain_forces = replaceArrayIndirectionUpdate4<<<>>>(domain_forcesTimes8[4], domain_forces)
+                                domain_forces = replaceArrayIndirectionUpdate5<<<>>>(domain_forcesTimes8[5], domain_forces)
+                                domain_forces = replaceArrayIndirectionUpdate6<<<>>>(domain_forcesTimes8[6], domain_forces)
+                                domain_forces = replaceArrayIndirectionUpdate7<<<>>>(domain_forcesTimes8[7], domain_forces)
+                                */
+                                domain_forces = replaceArrayIndirectionUpdate0<<<>>>(domain_forcesTimes8Reversed, domain_forces)
+                                domain_forces = replaceArrayIndirectionUpdate1<<<>>>(domain_forcesTimes8Reversed, domain_forces)
+                                domain_forces = replaceArrayIndirectionUpdate2<<<>>>(domain_forcesTimes8Reversed, domain_forces)
+                                domain_forces = replaceArrayIndirectionUpdate3<<<>>>(domain_forcesTimes8Reversed, domain_forces)
+                                domain_forces = replaceArrayIndirectionUpdate4<<<>>>(domain_forcesTimes8Reversed, domain_forces)
+                                domain_forces = replaceArrayIndirectionUpdate5<<<>>>(domain_forcesTimes8Reversed, domain_forces)
+                                domain_forces = replaceArrayIndirectionUpdate6<<<>>>(domain_forcesTimes8Reversed, domain_forces)
+                                domain_forces = replaceArrayIndirectionUpdate7<<<>>>(domain_forcesTimes8Reversed, domain_forces)
+                                // var Double endReplaceArrayIndirection = get_time() 
+                                // elapsedTimeReplaceArrayIndirection = (endReplaceArrayIndirection - startReplaceArrayIndirection) / 1000000
+                            }       
+                            // ---------------------------------------------------------------------------------------
+                            // preceding replaces IntegrateStressForElems( domain,
+                            //                      sigxx, sigyy, sigzz, determ, numElem,
+                            //                     domain.numNode())
+                            // ---------------------------------------------------------------------------------------
+
+                            // check for negative element volume; to say non-pos would be more accurate
+                            // var Double startCheckNonPosElem2 = get_time()
+                            var Int32 errorCode = luleshSeq_checkNonPosElem(determ) 
+                            // var Double endCheckNonPosElem2 = get_time() 
+                            // elapsedTimeCheckNonPosElem2 = (endCheckNonPosElem2 - startCheckNonPosElem2) / 1000000
+
+                            if (errorCode == VolumeError) {
+                                print("VolumeError in CalcVolumeFCalcHourglassControlForElemsorceForElems")
+                                exit(VolumeError)
+                            }
+
+                            // ---------------------------------------------------------------------------------------
+                            // following replaces CalcVolumeFCalcHourglassControlForElemsorceForElems()
+                            // ---------------------------------------------------------------------------------------
+                            {
+
+                                var [[[[[Double]]]]] xyz8n  = init_List([240, 240, 240, 3, 8])
+                                var [[[[[Double]]]]] dvd = init_List([240, 240, 240, 8, 3])
+
+                                /* start loop over elements */
+                                // var Double startCalcHourglassControlForElems_a = get_time()
+                                xyz8n = luleshPar_par_a_CalcHourglassControlForElems<<<>>>(domain_coordinates)
+                                // var Double endCalcHourglassControlForElems_a = get_time() 
+                                // elapsedTimeCalcHourglassControlForElems_a = (endCalcHourglassControlForElems_a - startCalcHourglassControlForElems_a) / 1000000
+
+                                // var Double startCalcHourglassControlForElems_b = get_time()
+                                dvd = luleshPar_par_b_CalcHourglassControlForElems<<<>>>(xyz8n)
+                                // var Double endCalcHourglassControlForElems_b = get_time() 
+                                // elapsedTimeCalcHourglassControlForElems_b = (endCalcHourglassControlForElems_b - startCalcHourglassControlForElems_b) / 1000000
+
+                                // var Double startCalcHourglassControlForElems_c = get_time()
+                                determ = luleshPar_par_c_CalcHourglassControlForElems<<<>>>(domain_volo, domain_v)
+                                // var Double endCalcHourglassControlForElems_c = get_time() 
+                                // elapsedTimeCalcHourglassControlForElems_c = (endCalcHourglassControlForElems_c - startCalcHourglassControlForElems_c) / 1000000
+
+                                /* Do a check for negative volumes moved from CalcHourglassControlForElems's parallel part due to limitations*/
+                                // var Double startCheckNonPosElem3 = get_time()
+                                errorCode = luleshSeq_checkNonPosElem(domain_v) 
+                                // var Double endCheckNonPosElem3 = get_time() 
+                                // elapsedTimeCheckNonPosElem3 = (endCheckNonPosElem3 - startCheckNonPosElem3) / 1000000
+
+                                if (errorCode == VolumeError) {
+                                    print("VolumeError in CalcHourglassControlForElems")
+                                    exit(VolumeError)
+                                }
+
+                                // part2 of CalcHourglassControlForElems
+                                if (hgcoef > 0.0) {
+                                    // var Double startCalcFBHourglassForceForElems = get_time()
+                                    domain_forces = luleshSeq_CalcFBHourglassForceForElems(domain_ss, domain_elemMass,
+                                        domain_velocities, domain_forces, determ, xyz8n, dvd, hgcoef)
+                                    // var Double endCalcFBHourglassForceForElems  = get_time() 
+                                    // elapsedTimeCalcFBHourglassForceForElems  = (endCalcFBHourglassForceForElems  - startCalcFBHourglassForceForElems ) / 1000000
+
+                                }
+                            }
+                            // ---------------------------------------------------------------------------------------
+                            // preceding replaces CalcHourglassControlForElems()
+                            // ---------------------------------------------------------------------------------------
+                        }
+                        // ---------------------------------------------------------------------------------------
+                        // preceding replaces CalcVolumeForceForElems(domain)
+                        // ---------------------------------------------------------------------------------------
+                    }
+                    // ---------------------------------------------------------------------------------------
+                    // preceding replaces CalcForceForNodes(domain)
+                    // ---------------------------------------------------------------------------------------
+                    // var Double endCalcForceForNodes = get_time() 
+                    // elapsedTimeCalcForceForNodes = (endCalcForceForNodes - startCalcForceForNodes) / 1000000
+
+                    // var Double startCalcAccelerationForNodes = get_time()
+                    domain_accelerations = luleshPar_CalcAccelerationForNodes<<<>>>(domain_nodalMass, domain_forces)
+                    // var Double endCalcAccelerationForNodes = get_time() 
+                    // elapsedTimeCalcAccelerationForNodes = (endCalcAccelerationForNodes - startCalcAccelerationForNodes) / 1000000
+
+                    // var Double startApplyAccelerationBoundaryConditionsForNodes = get_time()
+                    domain_accelerations = luleshPar_ApplyAccelerationBoundaryConditionsForNodes<<<>>>(domain_accelerations)
+                    // var Double endApplyAccelerationBoundaryConditionsForNodes = get_time() 
+                    // elapsedTimeApplyAccelerationBoundaryConditionsForNodes = (endApplyAccelerationBoundaryConditionsForNodes - startApplyAccelerationBoundaryConditionsForNodes) / 1000000
+
+                    var Double delt = domain_deltatime
+                    var Double u_cut = m_u_cut
+
+                    // var Double startCalcVelocityForNodes = get_time()
+                    domain_velocities = luleshPar_CalcVelocityForNodes<<<>>>(domain_accelerations, domain_velocities, delt)
+                    // var Double endCalcVelocityForNodes = get_time() 
+                    // elapsedTimeCalcVelocityForNodes = (endCalcVelocityForNodes - startCalcVelocityForNodes) / 1000000
+
+
+                    // var Double startCalcPositionForNodes = get_time()
+                    domain_coordinates = luleshPar_CalcPositionForNodes<<<>>>(domain_velocities, delt)  
+                    // var Double endCalcPositionForNodes = get_time() 
+                    // elapsedTimeCalcPositionForNodes = (endCalcPositionForNodes - startCalcPositionForNodes) / 1000000
+                }
+                // ---------------------------------------------------------------------------------------
+                // preceding replaces LagrangeNodal(domain)
+                // ---------------------------------------------------------------------------------------
+                // var Double endLagrangeNodal = get_time()
+                // elapsedTimeLagrangeNodal = (endLagrangeNodal - startLagrangeNodal) / 1000000
+
+                /* calculate element quantities (i.e. velocity gradient & q), and update
+                * material states */
+                // var Double startLagrangeElements= get_time()
+                // ---------------------------------------------------------------------------------------
+                // following replaces LagrangeElements(domain, domain.numElem())           
+                // ---------------------------------------------------------------------------------------
+                {
+                    // ---------------------------------------------------------------------------------------
+                    // following replaces CalcLagrangeElements(domain)          
+                    // ---------------------------------------------------------------------------------------
+                    {
+                        var Double deltatime = domain_deltatime
+                        var [[[[Double]]]] domain_strains = init_List([240, 240, 240, 3])
+
+                        var [[[[Double]]]] res_terms_reversed = init_List([240, 240, 240, 3])
+                        
+                        // var Double startCalcKinematicsForElems_a = get_time()
+                        res_terms_reversed = luleshPar_a_CalcKinematicsForElems<<<>>>(domain_volo, domain_v, domain_coordinates)
+                        // var Double endCalcKinematicsForElems_a = get_time()
+                        // elapsedTimeCalcKinematicsForElems_a = (endCalcKinematicsForElems_a - startCalcKinematicsForElems_a) / 1000000
+
+                        // var Double startGetSubArray = get_time()
+                        domain_vnew   = luleshPar_getSubArray3D<<<>>>(res_terms_reversed, 0)
+                        domain_delv   = luleshPar_getSubArray3D<<<>>>(res_terms_reversed, 1)
+                        domain_arealg = luleshPar_getSubArray3D<<<>>>(res_terms_reversed, 2)
+                        // var Double endGetSubArray = get_time()
+                        // elapsedTimeGetSubArray = (endGetSubArray - startGetSubArray) / 1000000
+
+        	            // var Double startCalcKinematicsForElems_b = get_time()
+                        domain_strains = luleshPar_b_CalcKinematicsForElems<<<>>>(domain_coordinates, 
+                                domain_velocities, deltatime)
+                        // var Double endCalcKinematicsForElems_b = get_time()
+                        // elapsedTimeCalcKinematicsForElems_b = (endCalcKinematicsForElems_b - startCalcKinematicsForElems_b) / 1000000
+
+                        // element loop to do some stuff not included in the elemlib function.
+                        // var Double startCalcLagrangeElements_a = get_time()
+                        domain_vdov = luleshPar_par_a_CalcLagrangeElements<<<>>>(domain_strains)
+                        // var Double endCalcLagrangeElements_a = get_time()
+                        // elapsedTimeCalcLagrangeElements_a = (endCalcLagrangeElements_a - startCalcLagrangeElements_a) / 1000000
+
+                        // var Double startCalcLagrangeElements_b = get_time()
+                        domain_strains = luleshPar_par_b_CalcLagrangeElements<<<>>>(domain_vdov, domain_strains)
+                        // var Double endCalcLagrangeElements_b = get_time()
+                        // elapsedTimeCalcLagrangeElements_b = (endCalcLagrangeElements_b - startCalcLagrangeElements_b) / 1000000
+
+                        // See if any volumes are negative, and take appropriate action.
+                        //moved from luleshSeq_par_b_CalcLagrangeElements due to exit ppl limitations
+                        // var Double startCheckNonPosElem = get_time()
+                        var Int32 errorCode = luleshSeq_checkNonPosElem(domain_vnew) 
+                        // var Double endCheckNonPosElem = get_time()
+                        // elapsedTimeCheckNonPosElem = (endCheckNonPosElem - startCheckNonPosElem) / 1000000
+                        
+                        if (errorCode == VolumeError) {
+                            print("VolumeError in CalcLagrangeElements")
+                            exit(VolumeError)
+                        }
+                    }
+                    // ---------------------------------------------------------------------------------------
+                    // preceding replaces CalcLagrangeElements(domain)           
+                    // ---------------------------------------------------------------------------------------
+
+                    /* Calculate Q.  (Monotonic q option requires communication) */
+                    var [[[[Double]]]] qqANDql = init_List([240, 240, 240, 2])
+
+                    // var Double startCalcQForElems = get_time()
+                    qqANDql = luleshSeq_CalcQForElems(domain_q, domain_volo,
+                             domain_vnew, domain_coordinates, domain_velocities, 
+                             domain_vdov, domain_elemMass)
+                    // var Double endCalcQForElems = get_time()
+                    // elapsedTimeCalcQForElems = (endCalcQForElems - startCalcQForElems) / 1000000
+
+                    // var Double startGetSubArray2 = get_time()
+                    domain_qq = luleshPar_getSubArray3D<<<>>>(qqANDql, 0)
+                    domain_ql = luleshPar_getSubArray3D<<<>>>(qqANDql, 1)
+                    // var Double endGetSubArray2 = get_time()
+                    // elapsedTimeGetSubArray2 = (endGetSubArray2 - startGetSubArray2) / 1000000  
+
+                    var [[[[Double]]]] res_terms = init_List([240, 240, 240, 4])
+
+                    // var Double startApplyMaterialPropertiesForElems = get_time()
+                    res_terms = luleshSeq_ApplyMaterialPropertiesForElems(domain_vnew, domain_v,
+                            domain_e, domain_delv, domain_p, domain_q, domain_qq, domain_ql)
+                    // var Double endApplyMaterialPropertiesForElems= get_time()
+                    // elapsedTimeApplyMaterialPropertiesForElems = (endApplyMaterialPropertiesForElems - startApplyMaterialPropertiesForElems) / 1000000  
+
+                    // var Double startGetSubArray3 = get_time()
+                    domain_p  = luleshPar_getSubArray3D<<<>>>(res_terms, 0)
+                    domain_e  = luleshPar_getSubArray3D<<<>>>(res_terms, 1)
+                    domain_q  = luleshPar_getSubArray3D<<<>>>(res_terms, 2)
+                    domain_ss = luleshPar_getSubArray3D<<<>>>(res_terms, 3)
+                    // var Double endGetSubArray3 = get_time()
+                    // elapsedTimeGetSubArray3 = (endGetSubArray3 - startGetSubArray3) / 1000000  
+                    
+                    //printListDouble3D("domain_p", domain_p)
+                    //printListDouble3D("domain_e", domain_e)
+                    //printListDouble3D("domain_q", domain_q)
+                    //printListDouble3D("domain_ss", domain_ss)
+
+                    // var Double startUpdateVolumesForElems = get_time()
+                    domain_v = luleshPar_UpdateVolumesForElems<<<>>>(domain_vnew)
+                    // var Double endUpdateVolumesForElems = get_time()
+                    // elapsedTimeUpdateVolumesForElems = (endUpdateVolumesForElems - startUpdateVolumesForElems) / 1000000  
+
+                    //printListDouble3D("domain_v", domain_v)
+                }
+                // ---------------------------------------------------------------------------------------
+                // preceding replaces LagrangeElements(domain, domain.numElem())           
+                // ---------------------------------------------------------------------------------------
+                // var Double endLagrangeElements = get_time() // current time in seconds but microseconds accuracy
+                // elapsedTimeLagrangeElements = (endLagrangeElements - startLagrangeElements) / 1000000
+
+                // var Double startCalcTimeConstraintsForElems = get_time()
+                // ---------------------------------------------------------------------------------------
+                // following replaces CalcTimeConstraintsForElems(domain)             
+                // ---------------------------------------------------------------------------------------
+                {
+                    // Initialize conditions to a very large value
+                    domain_dtcourant = 1.0e+20
+                    domain_dthydro = 1.0e+20
+
+                    /* evaluate time constraint */
+                    domain_dtcourant = luleshSeq_CalcCourantConstraintForElems(
+                            m_qqc, domain_dtcourant, domain_ss, domain_arealg, domain_vdov)
+
+                    /* check hydro constraint */
+                    domain_dthydro = luleshSeq_CalcHydroConstraintForElems(
+                            domain_vdov, domain_dthydro)  
+                }
+                // ---------------------------------------------------------------------------------------
+                // preceding replaces CalcTimeConstraintsForElems(domain)
+                // ---------------------------------------------------------------------------------------
+                // var Double endCalcTimeConstraintsForElems= get_time() // current time in seconds but microseconds accuracy
+                // elapsedTimeCalcTimeConstraintsForElems = (endCalcTimeConstraintsForElems - startCalcTimeConstraintsForElems) / 1000000
+            }
+            // ---------------------------------------------------------------------------------------
+            // preceding replaces LagrangeLeapFrog(*locDom)
+            // ---------------------------------------------------------------------------------------
+            // var Double endLagrangeLeapFrog = get_time() // current time in seconds but microseconds accuracy
+            // elapsedTimeLagrangeLeapFrog = (endLagrangeLeapFrog - startLagrangeLeapFrog) / 1000000
+
+            if ((cmdOpts[showProg] != 0) && (cmdOpts[quiet] == 0)) {
+                print("cycle = " {domain_cycle} ", "
+                        "time = " {domain_time} ", "
+                        "dt=" {domain_deltatime})
+            }
+        }
+
+        //$endHereToDuplicate
+
+        // Use reduced max elapsed time
+        var Double elapsed_time
+        var Double end = get_time() // current time in seconds but microseconds accuracy
+        elapsed_time = end - start
+        // convert from microseconds to seconds
+        elapsed_time = elapsed_time / 1000000 
+
+        var Double elapsed_timeG
+
+        //#if USE_MPI   
+        //MPI_Reduce(&elapsed_time, &elapsed_timeG, 1, MPI_DOUBLE,
+        //            MPI_MAX, 0, MPI_COMM_WORLD);
+        //#else
+        elapsed_timeG = elapsed_time
+        //#endif
+
+        var Long used_peak_memory = get_maxRusage()
+        var Long used_peak_memoryG = used_peak_memory
+
+
+        // not supported - see thesis for details
+        // Write out final viz file */
+        //if (opts.viz) {
+        //    DumpToVisit(*locDom, opts.numFiles, myRank, numRanks) ;
+        //}
+
+        // print("elapsedTime: " {elapsed_time})
+        // print("level1")
+        // print("elapsedTimeTimeIncrement: " {elapsedTimeTimeIncrement} "  " {(elapsedTimeTimeIncrement / elapsed_time) * 100} " %")
+        // print("elapsedTimeLagrangeLeapFrog: " {elapsedTimeLagrangeLeapFrog} "  " {(elapsedTimeLagrangeLeapFrog / elapsed_time) * 100} " %")
+        // print("rest: " {elapsed_time - elapsedTimeTimeIncrement - elapsedTimeLagrangeLeapFrog} "  " {((elapsed_time - elapsedTimeTimeIncrement - elapsedTimeLagrangeLeapFrog) / elapsed_time) * 100} " %")
+        // print()
+
+        // print("level2")   
+        // print("elapsedTimeTimeIncrement: " {elapsedTimeTimeIncrement} "  " {(elapsedTimeTimeIncrement / elapsed_time) * 100} " %")
+        // print("elapsedTimeLagrangeNodal: " {elapsedTimeLagrangeNodal} "  " {(elapsedTimeLagrangeNodal / elapsed_time) * 100} " %")
+        // print("elapsedTimeLagrangeElements: " {elapsedTimeLagrangeElements} "  "  {(elapsedTimeLagrangeElements / elapsed_time) * 100} " %")
+        // print("elapsedTimeCalcTimeConstraintsForElems: " {elapsedTimeCalcTimeConstraintsForElems} "  " {(elapsedTimeCalcTimeConstraintsForElems / elapsed_time) * 100} " %")
+        // print("rest: " {elapsed_time - elapsedTimeTimeIncrement - elapsedTimeLagrangeNodal - elapsedTimeLagrangeElements - elapsedTimeCalcTimeConstraintsForElems} "  " {((elapsed_time - elapsedTimeTimeIncrement - elapsedTimeLagrangeNodal - elapsedTimeLagrangeElements - elapsedTimeCalcTimeConstraintsForElems) / elapsed_time) * 100} " %")
+        // print()
+
+        // print("level3")
+        // print("elapsedTimeTimeIncrement: " {elapsedTimeTimeIncrement} "  " {(elapsedTimeTimeIncrement / elapsed_time) * 100} " %")
+
+        // print("elapsedTimeCalcForceForNodes: " {elapsedTimeCalcForceForNodes} "  " {(elapsedTimeCalcForceForNodes / elapsed_time) * 100} " %")
+        // print("elapsedTimeCalcAccelerationForNodes: " {elapsedTimeCalcAccelerationForNodes} "  " {(elapsedTimeCalcAccelerationForNodes / elapsed_time) * 100} " %")
+        // print("elapsedTimeApplyAccelerationBoundaryConditionsForNodes: " {elapsedTimeApplyAccelerationBoundaryConditionsForNodes} "  " {(elapsedTimeApplyAccelerationBoundaryConditionsForNodes / elapsed_time) * 100} " %")
+        // print("elapsedTimeCalcVelocityForNodes: " {elapsedTimeCalcVelocityForNodes} "  " {(elapsedTimeCalcVelocityForNodes / elapsed_time) * 100} " %")
+        // print("elapsedTimeCalcPositionForNodes: " {elapsedTimeCalcPositionForNodes} "  " {(elapsedTimeCalcPositionForNodes / elapsed_time) * 100} " %")
+        
+        // print("elapsedTimeCalcKinematicsForElems_a: " {elapsedTimeCalcKinematicsForElems_a} "  " {(elapsedTimeCalcKinematicsForElems_a / elapsed_time) * 100} " %")
+        // print("elapsedTimeGetSubArray: " {elapsedTimeGetSubArray} "  " {(elapsedTimeGetSubArray / elapsed_time) * 100} " %")
+        // print("elapsedTimeCalcKinematicsForElems_b: " {elapsedTimeCalcKinematicsForElems_b} "  " {(elapsedTimeCalcKinematicsForElems_b / elapsed_time) * 100} " %")
+        // print("elapsedTimeCalcLagrangeElements_a: " {elapsedTimeCalcLagrangeElements_a} "  " {(elapsedTimeCalcLagrangeElements_a / elapsed_time) * 100} " %")
+        // print("elapsedTimeCalcLagrangeElements_b: " {elapsedTimeCalcLagrangeElements_b} "  " {(elapsedTimeCalcLagrangeElements_b / elapsed_time) * 100} " %")
+        // print("elapsedTimeCheckNonPosElem: " {elapsedTimeCheckNonPosElem} "  " {(elapsedTimeCheckNonPosElem / elapsed_time) * 100} " %")
+        // print("elapsedTimeCalcQForElems: " {elapsedTimeCalcQForElems} "  " {(elapsedTimeCalcQForElems / elapsed_time) * 100} " %")
+        // print("elapsedTimeGetSubArray2: " {elapsedTimeGetSubArray2} "  " {(elapsedTimeGetSubArray2 / elapsed_time) * 100} " %")
+        // print("elapsedTimeApplyMaterialPropertiesForElems: " {elapsedTimeApplyMaterialPropertiesForElems} "  " {(elapsedTimeApplyMaterialPropertiesForElems / elapsed_time) * 100} " %")
+        // print("elapsedTimeGetSubArray3: " {elapsedTimeGetSubArray3} "  " {(elapsedTimeGetSubArray3 / elapsed_time) * 100} " %")
+        // print("elapsedTimeUpdateVolumesForElems: " {elapsedTimeUpdateVolumesForElems} "  " {(elapsedTimeUpdateVolumesForElems / elapsed_time) * 100} " %")
+        
+        // var Double sumTimeLagrangeNodal = elapsedTimeCalcForceForNodes + elapsedTimeCalcAccelerationForNodes
+        //     + elapsedTimeApplyAccelerationBoundaryConditionsForNodes + elapsedTimeCalcVelocityForNodes
+        //    + elapsedTimeCalcPositionForNodes
+
+        // var Double sumTimeLagrangeElements = elapsedTimeCalcKinematicsForElems_a + elapsedTimeGetSubArray
+        //     + elapsedTimeCalcKinematicsForElems_b + elapsedTimeCalcLagrangeElements_a + elapsedTimeCalcLagrangeElements_b
+        //     + elapsedTimeCheckNonPosElem + elapsedTimeCalcQForElems
+        //     + elapsedTimeGetSubArray2 + elapsedTimeApplyMaterialPropertiesForElems + elapsedTimeGetSubArray3
+        //     + elapsedTimeUpdateVolumesForElems
+
+        // print("rest: " {elapsed_time - elapsedTimeTimeIncrement - sumTimeLagrangeNodal - sumTimeLagrangeElements - elapsedTimeCalcTimeConstraintsForElems} "  " {((elapsed_time - elapsedTimeTimeIncrement - sumTimeLagrangeNodal - sumTimeLagrangeElements - elapsedTimeCalcTimeConstraintsForElems) / elapsed_time) * 100} " %")
+        // print("rest of elapsedTimeLagrangeNodal: " {elapsedTimeLagrangeNodal - sumTimeLagrangeNodal} "  " {((elapsedTimeLagrangeNodal - sumTimeLagrangeNodal) / elapsed_time) * 100} " %")
+        // print("rest of elapsedTimeLagrangeElements: " {elapsedTimeLagrangeElements - sumTimeLagrangeElements} "  " {((elapsedTimeLagrangeElements - sumTimeLagrangeElements) / elapsed_time) * 100} " %")
+        // print()
+
+
+        // print("level4")
+        // print("elapsedTimeTimeIncrement: " {elapsedTimeTimeIncrement} "  " {(elapsedTimeTimeIncrement / elapsed_time) * 100} " %")
+
+        // print("elapsedTimeInitListDouble: " {elapsedTimeInitListDouble} "  " {(elapsedTimeInitListDouble / elapsed_time) * 100} " %")
+        // print("elapsedTimeInitStressTermsForElems: " {elapsedTimeInitStressTermsForElems} "  " {(elapsedTimeInitStressTermsForElems / elapsed_time) * 100} " %")
+        // print("elapsedTimetIntegrateStressForElems_a: " {elapsedTimetIntegrateStressForElems_a} "  " {(elapsedTimetIntegrateStressForElems_a / elapsed_time) * 100} " %")
+        // print("elapsedTimetIntegrateStressForElems_b: " {elapsedTimetIntegrateStressForElems_b} "  " {(elapsedTimetIntegrateStressForElems_b / elapsed_time) * 100} " %")
+        // print("elapsedTimetIntegrateStressForElems_c: " {elapsedTimetIntegrateStressForElems_c} "  " {(elapsedTimetIntegrateStressForElems_c / elapsed_time) * 100} " %")
+        // print("elapsedTimetReverseDimensions: " {elapsedTimetReverseDimensions} "  " {(elapsedTimetReverseDimensions / elapsed_time) * 100} " %")
+        // print("elapsedTimeReplaceArrayIndirection: " {elapsedTimeReplaceArrayIndirection} "  " {(elapsedTimeReplaceArrayIndirection / elapsed_time) * 100} " %")
+        // print("elapsedTimeCheckNonPosElem2: " {elapsedTimeCheckNonPosElem2} "  " {(elapsedTimeCheckNonPosElem2 / elapsed_time) * 100} " %")
+        // print("elapsedTimeCalcHourglassControlForElems_a: " {elapsedTimeCalcHourglassControlForElems_a} "  " {(elapsedTimeCalcHourglassControlForElems_a / elapsed_time) * 100} " %")
+        // print("elapsedTimeCalcHourglassControlForElems_b: " {elapsedTimeCalcHourglassControlForElems_b} "  " {(elapsedTimeCalcHourglassControlForElems_b / elapsed_time) * 100} " %")
+        // print("elapsedTimeCalcHourglassControlForElems_c: " {elapsedTimeCalcHourglassControlForElems_c} "  " {(elapsedTimeCalcHourglassControlForElems_c / elapsed_time) * 100} " %")
+        // print("elapsedTimeCheckNonPosElem3: " {elapsedTimeCheckNonPosElem3} "  " {(elapsedTimeCheckNonPosElem3 / elapsed_time) * 100} " %")
+        // print("elapsedTimeCalcFBHourglassForceForElems: " {elapsedTimeCalcFBHourglassForceForElems} "  " {(elapsedTimeCalcFBHourglassForceForElems / elapsed_time) * 100} " %")
+
+        // print("elapsedTimeCalcAccelerationForNodes: " {elapsedTimeCalcAccelerationForNodes} "  " {(elapsedTimeCalcAccelerationForNodes / elapsed_time) * 100} " %")
+        // print("elapsedTimeApplyAccelerationBoundaryConditionsForNodes: " {elapsedTimeApplyAccelerationBoundaryConditionsForNodes} "  " {(elapsedTimeApplyAccelerationBoundaryConditionsForNodes / elapsed_time) * 100} " %")
+        // print("elapsedTimeCalcVelocityForNodes: " {elapsedTimeCalcVelocityForNodes} "  " {(elapsedTimeCalcVelocityForNodes / elapsed_time) * 100} " %")
+        // print("elapsedTimeCalcPositionForNodes: " {elapsedTimeCalcPositionForNodes} "  " {(elapsedTimeCalcPositionForNodes / elapsed_time) * 100} " %")
+        
+        // print("elapsedTimeCalcKinematicsForElems_a: " {elapsedTimeCalcKinematicsForElems_a} "  " {(elapsedTimeCalcKinematicsForElems_a / elapsed_time) * 100} " %")
+        // print("elapsedTimeGetSubArray: " {elapsedTimeGetSubArray} "  " {(elapsedTimeGetSubArray / elapsed_time) * 100} " %")
+        // print("elapsedTimeCalcKinematicsForElems_b: " {elapsedTimeCalcKinematicsForElems_b} "  " {(elapsedTimeCalcKinematicsForElems_b / elapsed_time) * 100} " %")
+        // print("elapsedTimeCalcLagrangeElements_a: " {elapsedTimeCalcLagrangeElements_a} "  " {(elapsedTimeCalcLagrangeElements_a / elapsed_time) * 100} " %")
+        // print("elapsedTimeCalcLagrangeElements_b: " {elapsedTimeCalcLagrangeElements_b} "  " {(elapsedTimeCalcLagrangeElements_b / elapsed_time) * 100} " %")
+        // print("elapsedTimeCheckNonPosElem: " {elapsedTimeCheckNonPosElem} "  " {(elapsedTimeCheckNonPosElem / elapsed_time) * 100} " %")
+        // print("elapsedTimeCalcQForElems: " {elapsedTimeCalcQForElems} "  " {(elapsedTimeCalcQForElems / elapsed_time) * 100} " %")
+        // print("elapsedTimeGetSubArray2: " {elapsedTimeGetSubArray2} "  " {(elapsedTimeGetSubArray2 / elapsed_time) * 100} " %")
+        // print("elapsedTimeApplyMaterialPropertiesForElems: " {elapsedTimeApplyMaterialPropertiesForElems} "  " {(elapsedTimeApplyMaterialPropertiesForElems / elapsed_time) * 100} " %")
+        // print("elapsedTimeGetSubArray3: " {elapsedTimeGetSubArray3} "  " {(elapsedTimeGetSubArray3 / elapsed_time) * 100} " %")
+        // print("elapsedTimeUpdateVolumesForElems: " {elapsedTimeUpdateVolumesForElems} "  " {(elapsedTimeUpdateVolumesForElems / elapsed_time) * 100} " %")
+        // print()
+
+        // print("elapsedTimeCalcTimeConstraintsForElems: " {elapsedTimeCalcTimeConstraintsForElems} "  " {(elapsedTimeCalcTimeConstraintsForElems / elapsed_time) * 100} " %")
+
+        // var Double sumTimeCalcForceForNodes = elapsedTimeInitListDouble + elapsedTimeInitStressTermsForElems + elapsedTimetIntegrateStressForElems_a
+        //     + elapsedTimetIntegrateStressForElems_b + elapsedTimetIntegrateStressForElems_c + elapsedTimetReverseDimensions + elapsedTimeReplaceArrayIndirection
+        //     + elapsedTimeCheckNonPosElem2 + elapsedTimeCalcHourglassControlForElems_a + elapsedTimeCalcHourglassControlForElems_b + elapsedTimeCalcHourglassControlForElems_c
+        //     + elapsedTimeCheckNonPosElem3 + elapsedTimeCalcFBHourglassForceForElems
+
+        // print("rest: " {elapsed_time - elapsedTimeTimeIncrement - (sumTimeLagrangeNodal - elapsedTimeCalcForceForNodes) - sumTimeCalcForceForNodes
+        //    - sumTimeLagrangeElements - elapsedTimeCalcTimeConstraintsForElems} "  " {((elapsed_time - elapsedTimeTimeIncrement - (sumTimeLagrangeNodal - elapsedTimeCalcForceForNodes) - sumTimeCalcForceForNodes
+        //    - sumTimeLagrangeElements - elapsedTimeCalcTimeConstraintsForElems) / elapsed_time) * 100} " %")
+
+        // print("rest of elapsedTimeCalcForceForNodes: " {elapsedTimeCalcForceForNodes - sumTimeCalcForceForNodes})
+        // print()
+
+        // print("Hotspots:")
+        // print("elapsedTimetIntegrateStressForElems_a: " {elapsedTimetIntegrateStressForElems_a} "  " {(elapsedTimetIntegrateStressForElems_a / elapsed_time) * 100} " %")
+        // print("elapsedTimetIntegrateStressForElems_b: " {elapsedTimetIntegrateStressForElems_b} "  " {(elapsedTimetIntegrateStressForElems_b / elapsed_time) * 100} " %")
+        // print("elapsedTimeCalcHourglassControlForElems_a: " {elapsedTimeCalcHourglassControlForElems_a} "  " {(elapsedTimeCalcHourglassControlForElems_a / elapsed_time) * 100} " %")
+        // print("elapsedTimeCalcHourglassControlForElems_b: " {elapsedTimeCalcHourglassControlForElems_b} "  " {(elapsedTimeCalcHourglassControlForElems_b / elapsed_time) * 100} " %")
+        // print("elapsedTimeApplyMaterialPropertiesForElems: " {elapsedTimeApplyMaterialPropertiesForElems} "  " {(elapsedTimeApplyMaterialPropertiesForElems / elapsed_time) * 100} " %")
+        // print("elapsedTimeCalcFBHourglassForceForElems: " {elapsedTimeCalcFBHourglassForceForElems} "  " {(elapsedTimeCalcFBHourglassForceForElems / elapsed_time) * 100} " %")
+        // print("elapsedTimeCalcKinematicsForElems_a: " {elapsedTimeCalcKinematicsForElems_a} "  " {(elapsedTimeCalcKinematicsForElems_a / elapsed_time) * 100} " %")
+        // print("elapsedTimeCalcKinematicsForElems_b: " {elapsedTimeCalcKinematicsForElems_b} "  " {(elapsedTimeCalcKinematicsForElems_b / elapsed_time) * 100} " %")
+        // print("elapsedTimeCalcQForElems: " {elapsedTimeCalcQForElems} "  " {(elapsedTimeCalcQForElems / elapsed_time) * 100} " %")
+
+        // var Double sumTimeHotspots = elapsedTimetIntegrateStressForElems_a
+        //     + elapsedTimetIntegrateStressForElems_b + elapsedTimeCalcHourglassControlForElems_a
+        //     + elapsedTimeCalcFBHourglassForceForElems + elapsedTimeCalcKinematicsForElems_a
+        //     + elapsedTimeCalcKinematicsForElems_b + elapsedTimeCalcQForElems
+
+        // print("sumTimeHotspots=" {sumTimeHotspots} "of elapsedTime=" {elapsed_time})
+        // print("percentual: " {(sumTimeHotspots / elapsed_time) * 100} " %")
+        // print()
+        
+        // print("elapsedTimeTest: " {elapsedTimeTest})
+        // print("elapsedTimeTest of elapsedTimeCalcKinematicsForElems_b:" {(elapsedTimeTest / elapsedTimeCalcKinematicsForElems_b) * 100} " %")
+        // print()
+
+        // print("elapsedTimeTest2: " {elapsedTimeTest2})
+        // print("elapsedTimeTest2 of elapsedTimeCalcKinematicsForElems_a:" {(elapsedTimeTest2 / elapsedTimeCalcKinematicsForElems_a) * 100} " %")
+        // print()
+
+        var Int32 returnCode
+        if (cmdOpts[quiet] == 0) {
+            // returnCode only defined and returned for enforcing order of the nodes
+            returnCode = lulesh_util_VerifyAndWriteFinalOutput(elapsed_timeG, used_peak_memoryG, nx, domain_cycle, domain_e)
+        }
+
+        return 0
+    }
+}

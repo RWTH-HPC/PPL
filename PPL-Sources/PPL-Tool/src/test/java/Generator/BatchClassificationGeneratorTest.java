@@ -12,7 +12,7 @@ public class BatchClassificationGeneratorTest {
     @Test
     public void test() {
 
-        String[] args = new String[]{"-i", BENCHMARK_PATH, "-n", CLUSTER_SPEC_PATH, "-s", "65536", "-d", "65536", "-b", "-opt", "-o", "out/batch.cxx", "-APT", "-JSON"};
+        String[] args = new String[]{"-i", BENCHMARK_PATH, "-n", CLUSTER_SPEC_PATH, "-s", "65536", "-d", "65536", "-b", "-opt", "-o", "out/batch.cxx", "-seed", "7"};
         Tool.main(args);
 
     }

@@ -1,0 +1,118 @@
+lulesh_util{
+    include "cmdOpts"
+    
+
+    //implemented for one main rank, instead for all ranks in original code
+    seq lulesh_util_ParseCommandLineOptionsFromFile([Int] cmdOpts) : [Int] {
+        var [Int] tmp = init_List([5])
+        tmp =  read("commandLineOptionsAsFile.csv")
+
+        //checking whether certain fields assigned as a "boolean"
+        //and if "its" is between 1 and 9999999
+        if ((tmp[showProg] != 0 && tmp[showProg] != 1) ||
+            (tmp[quiet] != 0 && tmp[quiet] != 1) ||
+            (tmp[its] < 1 && tmp[its] > 9999999)) {
+            print("ParseError within lulesh_util_ParseCommandLineOptionsFromFile()")    
+            exit(0-1)
+        }
+
+        var Int32 returnCode
+        if tmp[help] == 1 {
+            // returnCode only defined and returned for enforcing order of the nodes
+            returnCode = lulesh_util_PrintCommandLineOptions()
+            exit(0)
+        }
+
+        return tmp
+    }
+
+    seq lulesh_util_PrintCommandLineOptions() : Int32 {
+        print("Specify in commandLineOptionsAsFile the following [opts]")
+        print("The sequence is: its, showProg, quiet, help")
+        print("For 'its', specify a number between and including 1 and 9999999")
+        print("showProg, quiet, help are boolean, thus specify 0 for False and 1 for True (setting the Flag)")
+        print("The meaning of the flag options are:")
+        
+        //print("Usage: " {execname} " [opts]")
+        //print(" where [opts] is one or more of:")
+
+        print(" -its <iterations>  : number of cycles to run")
+        print(" -showProg          : Print out progress")
+        print(" -quiet             : quiet mode - suppress all stdout")
+        print(" -help              : output this message")
+
+        print("Exception: The option nx can be specified by changing nx in preprocessing.sh")
+        print(" -nx <size>         : length of cube mesh along side")
+        print()
+        print()
+
+        //print(" -r <numregions> : Number of distinct regions (def: 11)")
+        //print(" -b <balance>    : Load balance between regions of a domain (def: 1)")
+        //print(" -c <cost>       : Extra cost of more expensive regions (def: 1)")
+        //print(" -f <numfiles>   : Number of files to split viz dump into (def: (np+10)/9) (in ppl we fixed this to 2)")
+        //print(" -v              : Output viz file (requires compiling with -DVIZ_MESH")
+        return 0
+    }
+
+
+    seq lulesh_util_VerifyAndWriteFinalOutput(Double elapsed_time,
+                               Long used_peak_memory,
+                               Int32 nx,
+                               Int32 domain_cycle,
+                               [[[Double]]] domain_e) : Int32 {
+    // GrindTime1 only takes a single domain into account, and is thus a good way to measure
+    // processor speed indepdendent of MPI parallelism.
+    // GrindTime2 takes into account speedups from MPI parallelism.
+    // Cast to 64-bit integer to avoid overflows.
+    var Int64 nx8 = nx
+    //var Double grindTime1 = ((elapsed_time * 1e6) / domain_cycle) / (nx8 * nx8 * nx8)
+    //var Double grindTime2 = ((elapsed_time * 1e6) / domain_cycle) / (nx8 * nx8 * nx8 * numRanks)
+
+    var Int32 ElemId = 0
+    print("Run completed:")
+    print("   Problem size        =  " {nx})
+    //print("Run    MPI tasks           =  :" {numRanks})
+    print("   Iteration count     =  " {domain_cycle})
+    print("   Final Origin Energy =  "  {domain_e[ElemId]})
+
+    var Double   MaxAbsDiff = 0
+    var Double TotalAbsDiff = 0
+    var Double   MaxRelDiff = 0
+
+    for var Int32 row = 0; row < nx; row++ {
+        for var Int32 col = row+1; col < nx; col++ {
+        
+            var Double AbsDiff = fabs(domain_e[0][row][col] - domain_e[0][col][row])
+            TotalAbsDiff  += AbsDiff
+            if (MaxAbsDiff < AbsDiff) {
+                MaxAbsDiff = AbsDiff
+            }
+            
+            var Double RelDiff = AbsDiff / domain_e[0][col][row]
+            if (MaxRelDiff < RelDiff) {
+                MaxRelDiff = RelDiff
+            } 
+        }
+    }
+
+    // Quick symmetry check
+
+    print("   Testing Plane 0 of Energy Array on rank 0:")
+    print("        MaxAbsDiff   = " {MaxAbsDiff})
+    print("        TotalAbsDiff = " {TotalAbsDiff})
+    print("        MaxRelDiff   = " {MaxRelDiff})
+
+    // Timing information
+    //print(/*{std::setprecision(8)}*/ "Grind time (us/z/c)  = " /*{std::setw(10)}*/ {grindTime1} " (per dom)  (" /*{std::setw(10)}*/ {elapsed_time} " overall)")
+    //print("FOM                  = " /*{std::setw(10)}*/ {1000.0/grindTime2} " (z/s)")
+    
+    print()
+    print()
+    print("Elapsed time         = " {elapsed_time} " (s)")
+    print("MAX RSS during execution = " {used_peak_memory} " (kb)")
+    print()
+    
+    return 0
+   }
+
+}

@@ -27,10 +27,16 @@ multi_filter {
         var [[Double]] full = init_List([8192, 8192])
 
         image = read("image.txt")
+        
+        var Double time = get_time()
 
         upper_half = sobel_horizontal<<<>>>(image)
         lower_half = prewitt_horizontal<<<>>>(image)
         full = laplacian<<<>>>(image)
+        
+        time = get_time() - time
+        
+        print("Time: " {time})
 
         return 0
     }

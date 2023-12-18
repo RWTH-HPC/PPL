@@ -1,0 +1,329 @@
+{
+    "type": "GPU",
+    "latency": "55.07",
+    "bandwidth": "9375.0",
+    "max-bandwidth": "9375.0",
+    "size": "16000.0",
+    "cache-group": [
+      {
+        "identifier": "1",
+        "template": "sm_tesla_v100.json"
+      },
+      {
+        "identifier": "2",
+        "template": "sm_tesla_v100.json"
+      },
+      {
+        "identifier": "3",
+        "template": "sm_tesla_v100.json"
+      },
+      {
+        "identifier": "4",
+        "template": "sm_tesla_v100.json"
+      },
+      {
+        "identifier": "5",
+        "template": "sm_tesla_v100.json"
+      },
+      {
+        "identifier": "6",
+        "template": "sm_tesla_v100.json"
+      },
+      {
+        "identifier": "7",
+        "template": "sm_tesla_v100.json"
+      },
+      {
+        "identifier": "8",
+        "template": "sm_tesla_v100.json"
+      },
+      {
+        "identifier": "9",
+        "template": "sm_tesla_v100.json"
+      },
+      {
+        "identifier": "10",
+        "template": "sm_tesla_v100.json"
+      },
+      {
+        "identifier": "11",
+        "template": "sm_tesla_v100.json"
+      },
+      {
+        "identifier": "12",
+        "template": "sm_tesla_v100.json"
+      },
+      {
+        "identifier": "13",
+        "template": "sm_tesla_v100.json"
+      },
+      {
+        "identifier": "14",
+        "template": "sm_tesla_v100.json"
+      },
+      {
+        "identifier": "15",
+        "template": "sm_tesla_v100.json"
+      },
+      {
+        "identifier": "16",
+        "template": "sm_tesla_v100.json"
+      },
+      {
+        "identifier": "17",
+        "template": "sm_tesla_v100.json"
+      },
+      {
+        "identifier": "18",
+        "template": "sm_tesla_v100.json"
+      },
+      {
+        "identifier": "19",
+        "template": "sm_tesla_v100.json"
+      },
+      {
+        "identifier": "20",
+        "template": "sm_tesla_v100.json"
+      },
+      {
+        "identifier": "21",
+        "template": "sm_tesla_v100.json"
+      },
+      {
+        "identifier": "22",
+        "template": "sm_tesla_v100.json"
+      },
+      {
+        "identifier": "23",
+        "template": "sm_tesla_v100.json"
+      },
+      {
+        "identifier": "24",
+        "template": "sm_tesla_v100.json"
+      },
+      {
+        "identifier": "25",
+        "template": "sm_tesla_v100.json"
+      },
+      {
+        "identifier": "26",
+        "template": "sm_tesla_v100.json"
+      },
+      {
+        "identifier": "27",
+        "template": "sm_tesla_v100.json"
+      },
+      {
+        "identifier": "28",
+        "template": "sm_tesla_v100.json"
+      },
+      {
+        "identifier": "29",
+        "template": "sm_tesla_v100.json"
+      },
+      {
+        "identifier": "30",
+        "template": "sm_tesla_v100.json"
+      },
+      {
+        "identifier": "31",
+        "template": "sm_tesla_v100.json"
+      },
+      {
+        "identifier": "32",
+        "template": "sm_tesla_v100.json"
+      },
+      {
+        "identifier": "33",
+        "template": "sm_tesla_v100.json"
+      },
+      {
+        "identifier": "34",
+        "template": "sm_tesla_v100.json"
+      },
+      {
+        "identifier": "35",
+        "template": "sm_tesla_v100.json"
+      },
+      {
+        "identifier": "36",
+        "template": "sm_tesla_v100.json"
+      },
+      {
+        "identifier": "37",
+        "template": "sm_tesla_v100.json"
+      },
+      {
+        "identifier": "38",
+        "template": "sm_tesla_v100.json"
+      },
+      {
+        "identifier": "39",
+        "template": "sm_tesla_v100.json"
+      },
+      {
+        "identifier": "40",
+        "template": "sm_tesla_v100.json"
+      },
+      {
+        "identifier": "41",
+        "template": "sm_tesla_v100.json"
+      },
+      {
+        "identifier": "42",
+        "template": "sm_tesla_v100.json"
+      },
+      {
+        "identifier": "43",
+        "template": "sm_tesla_v100.json"
+      },
+      {
+        "identifier": "44",
+        "template": "sm_tesla_v100.json"
+      },
+      {
+        "identifier": "45",
+        "template": "sm_tesla_v100.json"
+      },
+      {
+        "identifier": "46",
+        "template": "sm_tesla_v100.json"
+      },
+      {
+        "identifier": "47",
+        "template": "sm_tesla_v100.json"
+      },
+      {
+        "identifier": "48",
+        "template": "sm_tesla_v100.json"
+      },
+      {
+        "identifier": "49",
+        "template": "sm_tesla_v100.json"
+      },
+      {
+        "identifier": "50",
+        "template": "sm_tesla_v100.json"
+      },
+      {
+        "identifier": "51",
+        "template": "sm_tesla_v100.json"
+      },
+      {
+        "identifier": "52",
+        "template": "sm_tesla_v100.json"
+      },
+      {
+        "identifier": "53",
+        "template": "sm_tesla_v100.json"
+      },
+      {
+        "identifier": "54",
+        "template": "sm_tesla_v100.json"
+      },
+      {
+        "identifier": "55",
+        "template": "sm_tesla_v100.json"
+      },
+      {
+        "identifier": "56",
+        "template": "sm_tesla_v100.json"
+      },
+      {
+        "identifier": "57",
+        "template": "sm_tesla_v100.json"
+      },
+      {
+        "identifier": "58",
+        "template": "sm_tesla_v100.json"
+      },
+      {
+        "identifier": "59",
+        "template": "sm_tesla_v100.json"
+      },
+      {
+        "identifier": "60",
+        "template": "sm_tesla_v100.json"
+      },
+      {
+        "identifier": "61",
+        "template": "sm_tesla_v100.json"
+      },
+      {
+        "identifier": "62",
+        "template": "sm_tesla_v100.json"
+      },
+      {
+        "identifier": "63",
+        "template": "sm_tesla_v100.json"
+      },
+      {
+        "identifier": "64",
+        "template": "sm_tesla_v100.json"
+      },
+      {
+        "identifier": "65",
+        "template": "sm_tesla_v100.json"
+      },
+      {
+        "identifier": "66",
+        "template": "sm_tesla_v100.json"
+      },
+      {
+        "identifier": "67",
+        "template": "sm_tesla_v100.json"
+      },
+      {
+        "identifier": "68",
+        "template": "sm_tesla_v100.json"
+      },
+      {
+        "identifier": "69",
+        "template": "sm_tesla_v100.json"
+      },
+      {
+        "identifier": "70",
+        "template": "sm_tesla_v100.json"
+      },
+      {
+        "identifier": "71",
+        "template": "sm_tesla_v100.json"
+      },
+      {
+        "identifier": "72",
+        "template": "sm_tesla_v100.json"
+      },
+      {
+        "identifier": "73",
+        "template": "sm_tesla_v100.json"
+      },
+      {
+        "identifier": "74",
+        "template": "sm_tesla_v100.json"
+      },
+      {
+        "identifier": "75",
+        "template": "sm_tesla_v100.json"
+      },
+      {
+        "identifier": "76",
+        "template": "sm_tesla_v100.json"
+      },
+      {
+        "identifier": "77",
+        "template": "sm_tesla_v100.json"
+      },
+      {
+        "identifier": "78",
+        "template": "sm_tesla_v100.json"
+      },
+      {
+        "identifier": "79",
+        "template": "sm_tesla_v100.json"
+      },
+      {
+        "identifier": "80",
+        "template": "sm_tesla_v100.json"
+      }
+    ]
+  }

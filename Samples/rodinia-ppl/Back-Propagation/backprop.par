@@ -62,7 +62,7 @@ backprop {
     seq main() : Int {
         
 		// initialization of the used vectors
-		var [Float] input_units = init_List([65536],0)
+		var [Float] input_units = init_List([262144],0)
 		var [Float] hidden_units = init_List([16],0)
 		var [Float] output_units = init_List([1],0)
 
@@ -72,10 +72,10 @@ backprop {
 		var [Float] target = init_List([1],0)
 		
 		// Weights are stored by ROW for the used matricies
-		var [[Float]] input_weights = init_List([65536, 16],0)
+		var [[Float]] input_weights = init_List([262144, 16],0)
 		var [[Float]] hidden_weights = init_List([16, 1],0)
 		
-		var [[Float]] prev_input_weights = init_List([65536, 16],0)
+		var [[Float]] prev_input_weights = init_List([262144, 16],0)
 		var [[Float]] prev_hidden_weights = init_List([16, 1],0)
 		
 		// randomise the initial values and weights for the net

@@ -1,0 +1,6 @@
+Parse Time: &53\\
+AST extension Time: &31\\
+APT Construction Time: &258\\
+Call Tree Time: &75\\
+Complete Tree Time: &917\\
+Pattern Tree Time: &46\\

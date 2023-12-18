@@ -1,13 +1,17 @@
 neural_network {
 	
+	
+	var Int MAX_INT = 2147483647
+	
+	seq tanh_taylor(Float x) : Float {
+        // Taylor expansion of tanh
+        return x - (1.0 / 3.0) * (x * x * x) + (2.0 / 15.0) * (x * x * x * x * x) - (17/315) * ( x*x*x*x*x*x*x)
+    }
+
+	
 	reduction mult_sum([Float] vectorA, [Float] vectorB) : Float res {
 		res += vectorA[INDEX] * vectorB[INDEX]
 	}
-
-    seq tanh(Float x) : Float {
-        // Taylor expansion of tanh
-        return x - (1.0 / 3.0) * (x * x * x) + (2.0 / 15.0) * (x * x * x * x * x)
-    }
 
     map layer([[Float]] weights, [Float] feature) : [Float] res {
         var Float z = 0
@@ -15,20 +19,20 @@ neural_network {
 
 		z = mult_sum<<<>>>(weights[INDEX], feature)
 		
-        act = tanh(z)
+        act = tanh_taylor(z)
         res[INDEX] = act
-    }
-
-    map forwardFirst([[Float]] batch, [[Float]] weights) : [[Float]] res {
-        res[INDEX] = layer<<<>>>(weights, batch[INDEX])
-    }
-
-    map forwardLast([[Float]] batch, [[Float]] weights) : [[Float]] res {
-        res[INDEX] = layer<<<>>>(weights, batch[INDEX])
     }
 
     map forward([[Float]] batch, [[Float]] weights) : [[Float]] res {
         res[INDEX] = layer<<<>>>(weights, batch[INDEX])
+    }
+    
+    map rand_init() : [[Float]] res {
+        res[INDEX] = rand_init_inner<<<>>>()
+    }
+    
+    map rand_init_inner() : [Float] res {
+        res[INDEX] = rand() / MAX_INT
     }
 
     seq main() : Int {
@@ -52,16 +56,32 @@ neural_network {
         var [[Float]] activations_7 = init_List([262144, 64])
         var [[Float]] result = init_List([262144, 10])
         
+        weights_1 = rand_init<<<>>>()
+        weights_2 = rand_init<<<>>>()
+        weights_3 = rand_init<<<>>>()
+        weights_4 = rand_init<<<>>>()
+        weights_5 = rand_init<<<>>>()
+        weights_6 = rand_init<<<>>>()
+        weights_7 = rand_init<<<>>>()
+        weights_8 = rand_init<<<>>>()
+        
         batch = read("batch.txt")
+        
+        //var Double time = get_time()
 
-        activations_1 = forwardFirst<<<>>>(batch, weights_1)
+        activations_1 = forward<<<>>>(batch, weights_1)
         activations_2 = forward<<<>>>(activations_1, weights_2)
         activations_3 = forward<<<>>>(activations_2, weights_3)
         activations_4 = forward<<<>>>(activations_3, weights_4)
         activations_5 = forward<<<>>>(activations_4, weights_5)
         activations_6 = forward<<<>>>(activations_5, weights_6)
         activations_7 = forward<<<>>>(activations_6, weights_7)
-        result = forwardLast<<<>>>(activations_7, weights_8)
+        result = forward<<<>>>(activations_7, weights_8)
+        
+        
+        //time = get_time() - time
+        
+        //print("Time: " {time})
 
         write("result.txt", {result})
 

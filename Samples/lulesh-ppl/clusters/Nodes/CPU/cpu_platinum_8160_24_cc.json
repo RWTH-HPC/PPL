@@ -1,0 +1,105 @@
+{
+    "type": "CPU",
+    "latency": "42.38",
+    "bandwidth": "21330.0",
+    "max-bandwidth": "97300.0",
+    "size": "192000.0",
+    "cache-group": [
+      {
+        "identifier": "1",
+        "template": "socket_platinum_8160_1.json"
+      },
+      {
+        "identifier": "2",
+        "template": "socket_platinum_8160_1.json"
+      },
+      {
+        "identifier": "3",
+        "template": "socket_platinum_8160_1.json"
+      },
+      {
+        "identifier": "4",
+        "template": "socket_platinum_8160_1.json"
+      },
+      {
+        "identifier": "5",
+        "template": "socket_platinum_8160_1.json"
+      },
+      {
+        "identifier": "6",
+        "template": "socket_platinum_8160_1.json"
+      },
+      {
+        "identifier": "7",
+        "template": "socket_platinum_8160_1.json"
+      },
+      {
+        "identifier": "8",
+        "template": "socket_platinum_8160_1.json"
+      },
+      {
+        "identifier": "9",
+        "template": "socket_platinum_8160_1.json"
+      },
+      {
+        "identifier": "10",
+        "template": "socket_platinum_8160_1.json"
+      },
+      {
+        "identifier": "11",
+        "template": "socket_platinum_8160_1.json"
+      },
+      {
+        "identifier": "12",
+        "template": "socket_platinum_8160_1.json"
+      },
+      {
+        "identifier": "13",
+        "template": "socket_platinum_8160_1.json"
+      },
+      {
+        "identifier": "14",
+        "template": "socket_platinum_8160_1.json"
+      },
+      {
+        "identifier": "15",
+        "template": "socket_platinum_8160_1.json"
+      },
+      {
+        "identifier": "16",
+        "template": "socket_platinum_8160_1.json"
+      },
+      {
+        "identifier": "17",
+        "template": "socket_platinum_8160_1.json"
+      },
+      {
+        "identifier": "18",
+        "template": "socket_platinum_8160_1.json"
+      },
+      {
+        "identifier": "19",
+        "template": "socket_platinum_8160_1.json"
+      },
+      {
+        "identifier": "20",
+        "template": "socket_platinum_8160_1.json"
+      },
+      {
+        "identifier": "21",
+        "template": "socket_platinum_8160_1.json"
+      },
+      {
+        "identifier": "22",
+        "template": "socket_platinum_8160_1.json"
+      },
+      {
+        "identifier": "23",
+        "template": "socket_platinum_8160_1.json"
+      },
+      {
+        "identifier": "24",
+        "template": "socket_platinum_8160_1.json"
+      }
+    ]
+  }

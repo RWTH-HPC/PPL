@@ -1,0 +1,23 @@
+myExample {
+    map myMap([Int] inputList): [Int] outputList {
+        if inputList[INDEX] == 0 {
+            outputList[INDEX] = 1
+        }
+        else {
+            var Int myFactor = 2
+            outputList[INDEX] = inputList[INDEX] * myFactor
+        }
+    }
+
+    seq main() : Int32 {
+        var [Int] myList = [0,1,2,0]
+        var [Int] resultList = init_List([4])
+        resultList = myMap<<<>>>(myList)
+        return 0
+    }
+}
+
+
+
+
+

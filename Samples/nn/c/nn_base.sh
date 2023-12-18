@@ -10,15 +10,13 @@
 
 ### beginning of executable commands
 
-module unload intel
-module load gcc/9
 
 export OMP_NUM_THREADS=48
 
-cd ~/PP/benchmark/c/nn
-$CC -fopenmp -std=c99 -O2 neural_network_base.c -o nn_base.out -lm
+#cd ~/PP/benchmark/c/nn
+gcc -fopenmp -std=c99 -O2 neural_network_base.c -o nn_base.out -lm
 
-for i in {1..30}
+for i in {1..40}
 do
    ./nn_base.out
 done

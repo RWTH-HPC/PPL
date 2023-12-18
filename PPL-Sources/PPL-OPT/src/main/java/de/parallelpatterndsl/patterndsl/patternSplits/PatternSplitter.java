@@ -256,63 +256,79 @@ public class PatternSplitter {
         long[] lengths = parallelismEstimator.estimate(node);
         long arity = ((MetaList<Long>) node.getAdditionalArguments().get(0)).getValues().get(1);
         long bytes = node.getOutputElements().get(0).getBytes();
-        ArrayList<Long> starts = new ArrayList<>();
-        starts.add(((MetaList<Long>) node.getAdditionalArguments().get(0)).getValues().get(3));
 
         ArrayList<ArrayList<ParallelPatternSplit>> nodeJobs = new ArrayList<>(lengths.length);
+        int t = 0;
         long operations = lengths[0];
-        // 1. Create jobs.
-        ArrayList<ParallelPatternSplit> jobsAtDepth = new ArrayList<>();
-        for (int j = 0; j < operations; j = j + patternSplitSize) {
-            long[] startIndices = new long[1];
-            startIndices[0] = j + starts.get(0);
+        while (operations > 0) {
+            // 1. Create jobs.
+            ArrayList<ParallelPatternSplit> jobsAtDepth = new ArrayList<>();
+            for (int j = 0; j < operations; j = j + patternSplitSize) {
+                long[] startIndices = new long[1];
+                startIndices[0] = j;
 
-            long[] patternSplitSizes = new long[1];
-            patternSplitSizes[0] = Long.min(patternSplitSize, operations - j);
+                long[] patternSplitSizes = new long[1];
+                patternSplitSizes[0] = Long.min(patternSplitSize, operations - j);
 
-            ParallelPatternSplit job = new ParallelPatternSplit(node, startIndices, patternSplitSizes);
-            jobsAtDepth.add(job);
-        }
+                ParallelPatternSplit job = new ParallelPatternSplit(node, startIndices, patternSplitSizes);
+                jobsAtDepth.add(job);
+            }
 
-        // 2. Add Input network packages.
-        for (int k = 0; k < node.getInputElements().size(); k++) {
-            Data inputData = node.getInputElements().get(k);
-            Data argumentData = pattern.getArgumentValues().get(k);
-            if (inputData instanceof PrimitiveData) {
-                for (ParallelPatternSplit job : jobsAtDepth) {
-                    job.addInputNetworkPackage(DataSplitTable.get((PrimitiveData) inputData));
-                }
-            } else if (inputData instanceof ArrayData) {
-                for (DataAccess access : argumentData.getTrace().getDataAccesses()) {
-                    for (ParallelPatternSplit job : jobsAtDepth) {
-                        if (!(access instanceof MapDataAccess)) {
-                            job.addAllInputNetworkPackages(DataSplitTable.get((ArrayData) inputData, 0, ((ArrayData) inputData).getShape().get(0)));
-                            continue;
+            // 2. Add Input network packages.
+            if (t == 0) {
+                for (int k = 0; k < node.getInputElements().size(); k++) {
+                    Data inputData = node.getInputElements().get(k);
+                    Data argumentData = pattern.getArgumentValues().get(k);
+                    if (inputData instanceof PrimitiveData) {
+                        for (ParallelPatternSplit job : jobsAtDepth) {
+                            job.addInputNetworkPackage(DataSplitTable.get((PrimitiveData) inputData));
                         }
+                    } else if (inputData instanceof ArrayData) {
+                        for (DataAccess access : argumentData.getTrace().getDataAccesses()) {
+                            for (ParallelPatternSplit job : jobsAtDepth) {
+                                if (!(access instanceof MapDataAccess)) {
+                                    job.addAllInputNetworkPackages(DataSplitTable.get((ArrayData) inputData, 0, ((ArrayData) inputData).getShape().get(0)));
+                                    continue;
+                                }
 
-                        MapDataAccess mapAccess = (MapDataAccess) access;
-                        long startIndex = mapAccess.getScalingFactor() * job.getStartIndices()[0] + mapAccess.getShiftOffset();
-                        long endIndex = (long) (mapAccess.getScalingFactor() * (job.getStartIndices()[0] + job.getLengths()[0] - 1) + mapAccess.getShiftOffset());
-                        long padding = dataSplitSize - endIndex % dataSplitSize;
-                        endIndex += padding - 1;
-                        long stepSize = Integer.max(mapAccess.getScalingFactor(), dataSplitSize);
+                                MapDataAccess mapAccess = (MapDataAccess) access;
+                                long startIndex = mapAccess.getScalingFactor() * job.getStartIndices()[0] + mapAccess.getShiftOffset();
+                                int endIndex = (int) (mapAccess.getScalingFactor() * (job.getStartIndices()[0] + job.getLengths()[0] - 1) + mapAccess.getShiftOffset());
+                                int padding = dataSplitSize - endIndex % dataSplitSize;
+                                endIndex += padding - 1;
+                                int stepSize = Integer.max(mapAccess.getScalingFactor(), dataSplitSize);
 
-                        for (long index = startIndex; index <= endIndex; index += stepSize) {
-                            job.addInputNetworkPackage(DataSplitTable.get((ArrayData) inputData, index));
+                                for (long index = startIndex; index <= endIndex; index += stepSize) {
+                                    job.addInputNetworkPackage(DataSplitTable.get((ArrayData) inputData, index));
+                                }
+                            }
                         }
                     }
                 }
+            } else {
+                ArrayList<ParallelPatternSplit> jobsAtPreviousDepth = nodeJobs.get(t - 1);
+                int split = jobsAtPreviousDepth.size() / jobsAtDepth.size();
+                for (int i = 0, j = 0; i < jobsAtPreviousDepth.size(); i = i + 1, j = i / split) {
+                    jobsAtDepth.get(j).addAllInputNetworkPackages(jobsAtPreviousDepth.get(i).getOutputDataSplits());
+                }
             }
+
+            // 3. Add output network packages.
+            if (operations == 1) {
+                Data outputData = node.getOutputElements().get(0);
+                ParallelPatternSplit lastJob = jobsAtDepth.iterator().next();
+                lastJob.addOutputNetworkPackage(DataSplitTable.get((PrimitiveData) outputData));
+                operations = 0;
+            } else {
+                for (ParallelPatternSplit job : jobsAtDepth) {
+                    job.addOutputNetworkPackage(DataSplitTable.create(bytes));
+                }
+                operations = 1;
+            }
+
+            nodeJobs.add(jobsAtDepth);
+            t++;
         }
-
-        // 3. Add output network packages.
-        Data outputData = node.getOutputElements().get(0);
-        ParallelPatternSplit lastJob = jobsAtDepth.iterator().next();
-        lastJob.addOutputNetworkPackage(DataSplitTable.get((PrimitiveData) outputData));
-
-
-        nodeJobs.add(jobsAtDepth);
-
 
         return nodeJobs.stream().map(HashSet::new).collect(Collectors.toList());
     }

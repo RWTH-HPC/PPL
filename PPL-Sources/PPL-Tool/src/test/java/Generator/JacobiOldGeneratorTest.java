@@ -12,7 +12,7 @@ public class JacobiOldGeneratorTest {
     @Test
     public void test() {
 
-        String[] args = new String[]{"-i", BENCHMARK_PATH, "-n", CLUSTER_SPEC_PATH, "-s", "4096", "-d", "4096", "-b", "-opt"};
+        String[] args = new String[]{"-i", BENCHMARK_PATH, "-n", CLUSTER_SPEC_PATH, "-s", "4096", "-d", "4096", "-b", "-opt", "-o", "out/jacobi.cxx"};
         Tool.main(args);
 
     }

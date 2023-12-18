@@ -3,11 +3,14 @@ jacobi_old {
     map iterate([[Double]] A, [Double] b, [Double] x_) : [Double] res {
         var [Double] row = init_List([8192])
         row = A[INDEX]
+        
+        var [Double] x_local = init_List([8192])
+        x_local = x_
 
         res[INDEX] = b[INDEX]
         for var Int j = 0; j < 8192; j++ {
             if j != INDEX {
-                res[INDEX] = res[INDEX] - row[j] * x_[j]
+                res[INDEX] = res[INDEX] - row[j] * x_local[j]
             }
         }
 

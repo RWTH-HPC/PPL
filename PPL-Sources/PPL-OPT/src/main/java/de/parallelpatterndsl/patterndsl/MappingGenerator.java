@@ -77,7 +77,7 @@ public class MappingGenerator {
      * @param model - performance model to be optimized.
      * @param lookahead - lookahead to be used.
      */
-    public MappingGenerator(FlatAPT flatAPT, Network network, PerformanceModel model, int lookahead, int timeLimit) {
+    public MappingGenerator(FlatAPT flatAPT, Network network, PerformanceModel model, int lookahead, int timeLimit, int seed) {
         this.flatAPT = flatAPT;
         this.network = network;
         this.model = model;
@@ -87,6 +87,7 @@ public class MappingGenerator {
             this.grbEnv = new GRBEnv(true);
             this.grbEnv.set(GRB.IntParam.Method, 4);
             this.grbEnv.set(GRB.DoubleParam.TimeLimit, timeLimit);
+            this.grbEnv.set(GRB.IntParam.Seed, seed);
 
             this.grbEnv.start();
         } catch (GRBException e) {

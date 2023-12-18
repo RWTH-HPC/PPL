@@ -10,12 +10,12 @@
 
 ### beginning of executable commands
 module unload intel
-module load gcc/9
+module load icx/9
 
 export OMP_NUM_THREADS=48
 
 cd ~/PP/benchmark/c/multi-filter
-gcc -fopenmp -std=c99 multi-filter_2.c -o multi-filter_2.out
+icx -fopenmp -std=c99 multi-filter_2.c -o multi-filter_2.out
 
 for i in {1..30}
 do

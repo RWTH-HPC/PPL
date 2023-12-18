@@ -1,0 +1,6436 @@
+{
+
+    "file" : "/home/adrian/Documents/PPL/parallel-pattern-dsl/PPL-Sources/PPL-Tool/out/nn",
+
+  "Name" : "/home/adrian/Documents/PPL/parallel-pattern-dsl/PPL-Sources/PPL-Tool/out/nn",
+  "Root" : {
+        "Name" : "main",
+    "Pattern" : "Serial",
+    "Input" : [
+    ],
+    "Output" : [
+    ],
+    "Cost" : "17889260160",
+    "Load/Store" : "72403795549",
+    "Variables" : [
+      {
+        "Name" : "activations_1",
+        "Data Type" : "float",
+        "Dimension" : "2",
+        "Shape" : ["262144","64"]
+      },      {
+        "Name" : "activations_7",
+        "Data Type" : "float",
+        "Dimension" : "2",
+        "Shape" : ["262144","64"]
+      },      {
+        "Name" : "result",
+        "Data Type" : "float",
+        "Dimension" : "2",
+        "Shape" : ["262144","10"]
+      },      {
+        "Name" : "activations_6",
+        "Data Type" : "float",
+        "Dimension" : "2",
+        "Shape" : ["262144","64"]
+      },      {
+        "Name" : "activations_3",
+        "Data Type" : "float",
+        "Dimension" : "2",
+        "Shape" : ["262144","64"]
+      },      {
+        "Name" : "activations_2",
+        "Data Type" : "float",
+        "Dimension" : "2",
+        "Shape" : ["262144","64"]
+      },      {
+        "Name" : "activations_5",
+        "Data Type" : "float",
+        "Dimension" : "2",
+        "Shape" : ["262144","64"]
+      },      {
+        "Name" : "activations_4",
+        "Data Type" : "float",
+        "Dimension" : "2",
+        "Shape" : ["262144","64"]
+      },      {
+        "Name" : "batch",
+        "Data Type" : "float",
+        "Dimension" : "2",
+        "Shape" : ["262144","64"]
+      },      {
+        "Name" : "weights_3",
+        "Data Type" : "float",
+        "Dimension" : "2",
+        "Shape" : ["64","64"]
+      },      {
+        "Name" : "weights_2",
+        "Data Type" : "float",
+        "Dimension" : "2",
+        "Shape" : ["64","64"]
+      },      {
+        "Name" : "weights_1",
+        "Data Type" : "float",
+        "Dimension" : "2",
+        "Shape" : ["64","64"]
+      },      {
+        "Name" : "weights_8",
+        "Data Type" : "float",
+        "Dimension" : "2",
+        "Shape" : ["10","64"]
+      },      {
+        "Name" : "weights_7",
+        "Data Type" : "float",
+        "Dimension" : "2",
+        "Shape" : ["64","64"]
+      },      {
+        "Name" : "weights_6",
+        "Data Type" : "float",
+        "Dimension" : "2",
+        "Shape" : ["64","64"]
+      },      {
+        "Name" : "weights_5",
+        "Data Type" : "float",
+        "Dimension" : "2",
+        "Shape" : ["64","64"]
+      },      {
+        "Name" : "weights_4",
+        "Data Type" : "float",
+        "Dimension" : "2",
+        "Shape" : ["64","64"]
+      },      {
+        "Name" : "MAX_INT",
+        "Data Type" : "int32",
+        "Dimension" : "0"
+      }    ],
+    "Parallel Descendants" : "true",
+    "Children" : [
+      {
+        "Pattern Node Type" : "ComplexExpressionNode",
+        "InputData" : [
+        ],
+        "OutputData" : [
+          {
+            "Name" : "batch",
+            "Data Type" : "float",
+            "Dimension" : "2",
+            "Shape" : ["262144","64"]
+          }
+        ],
+        "InputAccesses" : [
+        ],
+        "OutputAccesses" : [
+          {
+            "Variable" : "batch",
+            "Write" : "true",
+            "Type" : "Serial"
+          }
+        ],
+        "Cost" : "0",
+        "Load/Store" : "1",
+        "ID" : "QYBQcOmuAi",
+        "Parallel Descendants" : "false",
+        "Calls" : [
+        ]
+      },
+      {
+        "Pattern Node Type" : "ComplexExpressionNode",
+        "InputData" : [
+        ],
+        "OutputData" : [
+          {
+            "Name" : "weights_1",
+            "Data Type" : "float",
+            "Dimension" : "2",
+            "Shape" : ["64","64"]
+          }
+        ],
+        "InputAccesses" : [
+        ],
+        "OutputAccesses" : [
+          {
+            "Variable" : "weights_1",
+            "Write" : "true",
+            "Type" : "Serial"
+          }
+        ],
+        "Cost" : "0",
+        "Load/Store" : "1",
+        "ID" : "oL3pbvCa8J",
+        "Parallel Descendants" : "false",
+        "Calls" : [
+        ]
+      },
+      {
+        "Pattern Node Type" : "ComplexExpressionNode",
+        "InputData" : [
+        ],
+        "OutputData" : [
+          {
+            "Name" : "weights_2",
+            "Data Type" : "float",
+            "Dimension" : "2",
+            "Shape" : ["64","64"]
+          }
+        ],
+        "InputAccesses" : [
+        ],
+        "OutputAccesses" : [
+          {
+            "Variable" : "weights_2",
+            "Write" : "true",
+            "Type" : "Serial"
+          }
+        ],
+        "Cost" : "0",
+        "Load/Store" : "1",
+        "ID" : "qfvWQDeBl6",
+        "Parallel Descendants" : "false",
+        "Calls" : [
+        ]
+      },
+      {
+        "Pattern Node Type" : "ComplexExpressionNode",
+        "InputData" : [
+        ],
+        "OutputData" : [
+          {
+            "Name" : "weights_3",
+            "Data Type" : "float",
+            "Dimension" : "2",
+            "Shape" : ["64","64"]
+          }
+        ],
+        "InputAccesses" : [
+        ],
+        "OutputAccesses" : [
+          {
+            "Variable" : "weights_3",
+            "Write" : "true",
+            "Type" : "Serial"
+          }
+        ],
+        "Cost" : "0",
+        "Load/Store" : "1",
+        "ID" : "XBBDNaontJ",
+        "Parallel Descendants" : "false",
+        "Calls" : [
+        ]
+      },
+      {
+        "Pattern Node Type" : "ComplexExpressionNode",
+        "InputData" : [
+        ],
+        "OutputData" : [
+          {
+            "Name" : "weights_4",
+            "Data Type" : "float",
+            "Dimension" : "2",
+            "Shape" : ["64","64"]
+          }
+        ],
+        "InputAccesses" : [
+        ],
+        "OutputAccesses" : [
+          {
+            "Variable" : "weights_4",
+            "Write" : "true",
+            "Type" : "Serial"
+          }
+        ],
+        "Cost" : "0",
+        "Load/Store" : "1",
+        "ID" : "ocs2MkDBzz",
+        "Parallel Descendants" : "false",
+        "Calls" : [
+        ]
+      },
+      {
+        "Pattern Node Type" : "ComplexExpressionNode",
+        "InputData" : [
+        ],
+        "OutputData" : [
+          {
+            "Name" : "weights_5",
+            "Data Type" : "float",
+            "Dimension" : "2",
+            "Shape" : ["64","64"]
+          }
+        ],
+        "InputAccesses" : [
+        ],
+        "OutputAccesses" : [
+          {
+            "Variable" : "weights_5",
+            "Write" : "true",
+            "Type" : "Serial"
+          }
+        ],
+        "Cost" : "0",
+        "Load/Store" : "1",
+        "ID" : "7CLzSrnQLH",
+        "Parallel Descendants" : "false",
+        "Calls" : [
+        ]
+      },
+      {
+        "Pattern Node Type" : "ComplexExpressionNode",
+        "InputData" : [
+        ],
+        "OutputData" : [
+          {
+            "Name" : "weights_6",
+            "Data Type" : "float",
+            "Dimension" : "2",
+            "Shape" : ["64","64"]
+          }
+        ],
+        "InputAccesses" : [
+        ],
+        "OutputAccesses" : [
+          {
+            "Variable" : "weights_6",
+            "Write" : "true",
+            "Type" : "Serial"
+          }
+        ],
+        "Cost" : "0",
+        "Load/Store" : "1",
+        "ID" : "PzyxmPDlt0",
+        "Parallel Descendants" : "false",
+        "Calls" : [
+        ]
+      },
+      {
+        "Pattern Node Type" : "ComplexExpressionNode",
+        "InputData" : [
+        ],
+        "OutputData" : [
+          {
+            "Name" : "weights_7",
+            "Data Type" : "float",
+            "Dimension" : "2",
+            "Shape" : ["64","64"]
+          }
+        ],
+        "InputAccesses" : [
+        ],
+        "OutputAccesses" : [
+          {
+            "Variable" : "weights_7",
+            "Write" : "true",
+            "Type" : "Serial"
+          }
+        ],
+        "Cost" : "0",
+        "Load/Store" : "1",
+        "ID" : "hvHFc0EMaT",
+        "Parallel Descendants" : "false",
+        "Calls" : [
+        ]
+      },
+      {
+        "Pattern Node Type" : "ComplexExpressionNode",
+        "InputData" : [
+        ],
+        "OutputData" : [
+          {
+            "Name" : "weights_8",
+            "Data Type" : "float",
+            "Dimension" : "2",
+            "Shape" : ["10","64"]
+          }
+        ],
+        "InputAccesses" : [
+        ],
+        "OutputAccesses" : [
+          {
+            "Variable" : "weights_8",
+            "Write" : "true",
+            "Type" : "Serial"
+          }
+        ],
+        "Cost" : "0",
+        "Load/Store" : "1",
+        "ID" : "NtFM6MYhUz",
+        "Parallel Descendants" : "false",
+        "Calls" : [
+        ]
+      },
+      {
+        "Pattern Node Type" : "ComplexExpressionNode",
+        "InputData" : [
+        ],
+        "OutputData" : [
+          {
+            "Name" : "activations_1",
+            "Data Type" : "float",
+            "Dimension" : "2",
+            "Shape" : ["262144","64"]
+          }
+        ],
+        "InputAccesses" : [
+        ],
+        "OutputAccesses" : [
+          {
+            "Variable" : "activations_1",
+            "Write" : "true",
+            "Type" : "Serial"
+          }
+        ],
+        "Cost" : "0",
+        "Load/Store" : "1",
+        "ID" : "4CqgSfLifO",
+        "Parallel Descendants" : "false",
+        "Calls" : [
+        ]
+      },
+      {
+        "Pattern Node Type" : "ComplexExpressionNode",
+        "InputData" : [
+        ],
+        "OutputData" : [
+          {
+            "Name" : "activations_2",
+            "Data Type" : "float",
+            "Dimension" : "2",
+            "Shape" : ["262144","64"]
+          }
+        ],
+        "InputAccesses" : [
+        ],
+        "OutputAccesses" : [
+          {
+            "Variable" : "activations_2",
+            "Write" : "true",
+            "Type" : "Serial"
+          }
+        ],
+        "Cost" : "0",
+        "Load/Store" : "1",
+        "ID" : "laWvY6YVtE",
+        "Parallel Descendants" : "false",
+        "Calls" : [
+        ]
+      },
+      {
+        "Pattern Node Type" : "ComplexExpressionNode",
+        "InputData" : [
+        ],
+        "OutputData" : [
+          {
+            "Name" : "activations_3",
+            "Data Type" : "float",
+            "Dimension" : "2",
+            "Shape" : ["262144","64"]
+          }
+        ],
+        "InputAccesses" : [
+        ],
+        "OutputAccesses" : [
+          {
+            "Variable" : "activations_3",
+            "Write" : "true",
+            "Type" : "Serial"
+          }
+        ],
+        "Cost" : "0",
+        "Load/Store" : "1",
+        "ID" : "6sC3qYTGlq",
+        "Parallel Descendants" : "false",
+        "Calls" : [
+        ]
+      },
+      {
+        "Pattern Node Type" : "ComplexExpressionNode",
+        "InputData" : [
+        ],
+        "OutputData" : [
+          {
+            "Name" : "activations_4",
+            "Data Type" : "float",
+            "Dimension" : "2",
+            "Shape" : ["262144","64"]
+          }
+        ],
+        "InputAccesses" : [
+        ],
+        "OutputAccesses" : [
+          {
+            "Variable" : "activations_4",
+            "Write" : "true",
+            "Type" : "Serial"
+          }
+        ],
+        "Cost" : "0",
+        "Load/Store" : "1",
+        "ID" : "54uKNRpYAB",
+        "Parallel Descendants" : "false",
+        "Calls" : [
+        ]
+      },
+      {
+        "Pattern Node Type" : "ComplexExpressionNode",
+        "InputData" : [
+        ],
+        "OutputData" : [
+          {
+            "Name" : "activations_5",
+            "Data Type" : "float",
+            "Dimension" : "2",
+            "Shape" : ["262144","64"]
+          }
+        ],
+        "InputAccesses" : [
+        ],
+        "OutputAccesses" : [
+          {
+            "Variable" : "activations_5",
+            "Write" : "true",
+            "Type" : "Serial"
+          }
+        ],
+        "Cost" : "0",
+        "Load/Store" : "1",
+        "ID" : "BuEadg6pd8",
+        "Parallel Descendants" : "false",
+        "Calls" : [
+        ]
+      },
+      {
+        "Pattern Node Type" : "ComplexExpressionNode",
+        "InputData" : [
+        ],
+        "OutputData" : [
+          {
+            "Name" : "activations_6",
+            "Data Type" : "float",
+            "Dimension" : "2",
+            "Shape" : ["262144","64"]
+          }
+        ],
+        "InputAccesses" : [
+        ],
+        "OutputAccesses" : [
+          {
+            "Variable" : "activations_6",
+            "Write" : "true",
+            "Type" : "Serial"
+          }
+        ],
+        "Cost" : "0",
+        "Load/Store" : "1",
+        "ID" : "8IProKc81M",
+        "Parallel Descendants" : "false",
+        "Calls" : [
+        ]
+      },
+      {
+        "Pattern Node Type" : "ComplexExpressionNode",
+        "InputData" : [
+        ],
+        "OutputData" : [
+          {
+            "Name" : "activations_7",
+            "Data Type" : "float",
+            "Dimension" : "2",
+            "Shape" : ["262144","64"]
+          }
+        ],
+        "InputAccesses" : [
+        ],
+        "OutputAccesses" : [
+          {
+            "Variable" : "activations_7",
+            "Write" : "true",
+            "Type" : "Serial"
+          }
+        ],
+        "Cost" : "0",
+        "Load/Store" : "1",
+        "ID" : "Cfb2rgGh0v",
+        "Parallel Descendants" : "false",
+        "Calls" : [
+        ]
+      },
+      {
+        "Pattern Node Type" : "ComplexExpressionNode",
+        "InputData" : [
+        ],
+        "OutputData" : [
+          {
+            "Name" : "result",
+            "Data Type" : "float",
+            "Dimension" : "2",
+            "Shape" : ["262144","10"]
+          }
+        ],
+        "InputAccesses" : [
+        ],
+        "OutputAccesses" : [
+          {
+            "Variable" : "result",
+            "Write" : "true",
+            "Type" : "Serial"
+          }
+        ],
+        "Cost" : "0",
+        "Load/Store" : "1",
+        "ID" : "92BaS0W9aR",
+        "Parallel Descendants" : "false",
+        "Calls" : [
+        ]
+      },
+      {
+        "Name" : "rand_init_KeVA7GQAem",
+        "Pattern Node Type" : "ParallelCallNode",
+        "InputData" : [
+        ],
+        "OutputData" : [
+          {
+            "Name" : "weights_1",
+            "Data Type" : "float",
+            "Dimension" : "2",
+            "Shape" : ["64","64"]
+          }
+        ],
+        "InputAccesses" : [
+        ],
+        "OutputAccesses" : [
+          {
+            "Variable" : "weights_1",
+            "Write" : "true",
+            "Type" : "Serial"
+          }
+        ],
+        "Cost" : "4096",
+        "Load/Store" : "20544",
+        "ID" : "3ufKR09i8P",
+        "Starts" : [
+          "0"
+        ],
+        "Lengths" : [
+          "64"
+        ]
+      },
+      {
+        "Name" : "rand_init_ndBZfLHlBF",
+        "Pattern Node Type" : "ParallelCallNode",
+        "InputData" : [
+        ],
+        "OutputData" : [
+          {
+            "Name" : "weights_2",
+            "Data Type" : "float",
+            "Dimension" : "2",
+            "Shape" : ["64","64"]
+          }
+        ],
+        "InputAccesses" : [
+        ],
+        "OutputAccesses" : [
+          {
+            "Variable" : "weights_2",
+            "Write" : "true",
+            "Type" : "Serial"
+          }
+        ],
+        "Cost" : "4096",
+        "Load/Store" : "20544",
+        "ID" : "grWoXIeBS8",
+        "Starts" : [
+          "0"
+        ],
+        "Lengths" : [
+          "64"
+        ]
+      },
+      {
+        "Name" : "rand_init_eq1HFX6DF2",
+        "Pattern Node Type" : "ParallelCallNode",
+        "InputData" : [
+        ],
+        "OutputData" : [
+          {
+            "Name" : "weights_3",
+            "Data Type" : "float",
+            "Dimension" : "2",
+            "Shape" : ["64","64"]
+          }
+        ],
+        "InputAccesses" : [
+        ],
+        "OutputAccesses" : [
+          {
+            "Variable" : "weights_3",
+            "Write" : "true",
+            "Type" : "Serial"
+          }
+        ],
+        "Cost" : "4096",
+        "Load/Store" : "20544",
+        "ID" : "Ue4Zv5VLCt",
+        "Starts" : [
+          "0"
+        ],
+        "Lengths" : [
+          "64"
+        ]
+      },
+      {
+        "Name" : "rand_init_PlH53hIC5U",
+        "Pattern Node Type" : "ParallelCallNode",
+        "InputData" : [
+        ],
+        "OutputData" : [
+          {
+            "Name" : "weights_4",
+            "Data Type" : "float",
+            "Dimension" : "2",
+            "Shape" : ["64","64"]
+          }
+        ],
+        "InputAccesses" : [
+        ],
+        "OutputAccesses" : [
+          {
+            "Variable" : "weights_4",
+            "Write" : "true",
+            "Type" : "Serial"
+          }
+        ],
+        "Cost" : "4096",
+        "Load/Store" : "20544",
+        "ID" : "Juh0dH4Edg",
+        "Starts" : [
+          "0"
+        ],
+        "Lengths" : [
+          "64"
+        ]
+      },
+      {
+        "Name" : "rand_init_png5hzlbR4",
+        "Pattern Node Type" : "ParallelCallNode",
+        "InputData" : [
+        ],
+        "OutputData" : [
+          {
+            "Name" : "weights_5",
+            "Data Type" : "float",
+            "Dimension" : "2",
+            "Shape" : ["64","64"]
+          }
+        ],
+        "InputAccesses" : [
+        ],
+        "OutputAccesses" : [
+          {
+            "Variable" : "weights_5",
+            "Write" : "true",
+            "Type" : "Serial"
+          }
+        ],
+        "Cost" : "4096",
+        "Load/Store" : "20544",
+        "ID" : "gXIjU98idi",
+        "Starts" : [
+          "0"
+        ],
+        "Lengths" : [
+          "64"
+        ]
+      },
+      {
+        "Name" : "rand_init_eeNUSUs3M2",
+        "Pattern Node Type" : "ParallelCallNode",
+        "InputData" : [
+        ],
+        "OutputData" : [
+          {
+            "Name" : "weights_6",
+            "Data Type" : "float",
+            "Dimension" : "2",
+            "Shape" : ["64","64"]
+          }
+        ],
+        "InputAccesses" : [
+        ],
+        "OutputAccesses" : [
+          {
+            "Variable" : "weights_6",
+            "Write" : "true",
+            "Type" : "Serial"
+          }
+        ],
+        "Cost" : "4096",
+        "Load/Store" : "20544",
+        "ID" : "cWeAXfBTB2",
+        "Starts" : [
+          "0"
+        ],
+        "Lengths" : [
+          "64"
+        ]
+      },
+      {
+        "Name" : "rand_init_VrA8skJMcp",
+        "Pattern Node Type" : "ParallelCallNode",
+        "InputData" : [
+        ],
+        "OutputData" : [
+          {
+            "Name" : "weights_7",
+            "Data Type" : "float",
+            "Dimension" : "2",
+            "Shape" : ["64","64"]
+          }
+        ],
+        "InputAccesses" : [
+        ],
+        "OutputAccesses" : [
+          {
+            "Variable" : "weights_7",
+            "Write" : "true",
+            "Type" : "Serial"
+          }
+        ],
+        "Cost" : "4096",
+        "Load/Store" : "20544",
+        "ID" : "oSgEBLrndx",
+        "Starts" : [
+          "0"
+        ],
+        "Lengths" : [
+          "64"
+        ]
+      },
+      {
+        "Name" : "rand_init",
+        "Pattern Node Type" : "ParallelCallNode",
+        "InputData" : [
+        ],
+        "OutputData" : [
+          {
+            "Name" : "weights_8",
+            "Data Type" : "float",
+            "Dimension" : "2",
+            "Shape" : ["10","64"]
+          }
+        ],
+        "InputAccesses" : [
+        ],
+        "OutputAccesses" : [
+          {
+            "Variable" : "weights_8",
+            "Write" : "true",
+            "Type" : "Serial"
+          }
+        ],
+        "Cost" : "640",
+        "Load/Store" : "3210",
+        "ID" : "hujRDUAWPH",
+        "Starts" : [
+          "0"
+        ],
+        "Lengths" : [
+          "10"
+        ]
+      },
+      {
+        "Pattern Node Type" : "SimpleExpressionBlockNode",
+        "InputData" : [
+          {
+            "Name" : "batch",
+            "Data Type" : "float",
+            "Dimension" : "2",
+            "Shape" : ["262144","64"]
+          }
+        ],
+        "OutputData" : [
+          {
+            "Name" : "batch",
+            "Data Type" : "float",
+            "Dimension" : "2",
+            "Shape" : ["262144","64"]
+          }
+        ],
+        "InputAccesses" : [
+          {
+            "Variable" : "batch",
+            "Write" : "false",
+            "Type" : "Serial"
+          }
+        ],
+        "OutputAccesses" : [
+          {
+            "Variable" : "batch",
+            "Write" : "true",
+            "Type" : "Serial"
+          }
+        ],
+        "Cost" : "0",
+        "Load/Store" : "1",
+        "ID" : "24Y0xqET0B"      },
+      {
+        "Name" : "forward_BBhRO6II0W",
+        "Pattern Node Type" : "ParallelCallNode",
+        "InputData" : [
+          {
+            "Name" : "batch",
+            "Data Type" : "float",
+            "Dimension" : "2",
+            "Shape" : ["262144","64"]
+          },
+          {
+            "Name" : "weights_1",
+            "Data Type" : "float",
+            "Dimension" : "2",
+            "Shape" : ["64","64"]
+          }
+        ],
+        "OutputData" : [
+          {
+            "Name" : "activations_1",
+            "Data Type" : "float",
+            "Dimension" : "2",
+            "Shape" : ["262144","64"]
+          }
+        ],
+        "InputAccesses" : [
+          {
+            "Variable" : "batch",
+            "Write" : "false",
+            "Type" : "Serial"
+          },
+          {
+            "Variable" : "weights_1",
+            "Write" : "false",
+            "Type" : "Serial"
+          }
+        ],
+        "OutputAccesses" : [
+          {
+            "Variable" : "activations_1",
+            "Write" : "true",
+            "Type" : "Serial"
+          }
+        ],
+        "Cost" : "2499805184",
+        "Load/Store" : "10117447680",
+        "ID" : "zJgZOH09Li",
+        "Starts" : [
+          "0"
+        ],
+        "Lengths" : [
+          "262144"
+        ]
+      },
+      {
+        "Name" : "forward_F4SnxAXfxf",
+        "Pattern Node Type" : "ParallelCallNode",
+        "InputData" : [
+          {
+            "Name" : "activations_1",
+            "Data Type" : "float",
+            "Dimension" : "2",
+            "Shape" : ["262144","64"]
+          },
+          {
+            "Name" : "weights_2",
+            "Data Type" : "float",
+            "Dimension" : "2",
+            "Shape" : ["64","64"]
+          }
+        ],
+        "OutputData" : [
+          {
+            "Name" : "activations_2",
+            "Data Type" : "float",
+            "Dimension" : "2",
+            "Shape" : ["262144","64"]
+          }
+        ],
+        "InputAccesses" : [
+          {
+            "Variable" : "activations_1",
+            "Write" : "false",
+            "Type" : "Serial"
+          },
+          {
+            "Variable" : "weights_2",
+            "Write" : "false",
+            "Type" : "Serial"
+          }
+        ],
+        "OutputAccesses" : [
+          {
+            "Variable" : "activations_2",
+            "Write" : "true",
+            "Type" : "Serial"
+          }
+        ],
+        "Cost" : "2499805184",
+        "Load/Store" : "10117447680",
+        "ID" : "AkGYDpouG6",
+        "Starts" : [
+          "0"
+        ],
+        "Lengths" : [
+          "262144"
+        ]
+      },
+      {
+        "Name" : "forward_qAsnKyB9OD",
+        "Pattern Node Type" : "ParallelCallNode",
+        "InputData" : [
+          {
+            "Name" : "activations_2",
+            "Data Type" : "float",
+            "Dimension" : "2",
+            "Shape" : ["262144","64"]
+          },
+          {
+            "Name" : "weights_3",
+            "Data Type" : "float",
+            "Dimension" : "2",
+            "Shape" : ["64","64"]
+          }
+        ],
+        "OutputData" : [
+          {
+            "Name" : "activations_3",
+            "Data Type" : "float",
+            "Dimension" : "2",
+            "Shape" : ["262144","64"]
+          }
+        ],
+        "InputAccesses" : [
+          {
+            "Variable" : "activations_2",
+            "Write" : "false",
+            "Type" : "Serial"
+          },
+          {
+            "Variable" : "weights_3",
+            "Write" : "false",
+            "Type" : "Serial"
+          }
+        ],
+        "OutputAccesses" : [
+          {
+            "Variable" : "activations_3",
+            "Write" : "true",
+            "Type" : "Serial"
+          }
+        ],
+        "Cost" : "2499805184",
+        "Load/Store" : "10117447680",
+        "ID" : "shf4veBavb",
+        "Starts" : [
+          "0"
+        ],
+        "Lengths" : [
+          "262144"
+        ]
+      },
+      {
+        "Name" : "forward_HmKGZlyhss",
+        "Pattern Node Type" : "ParallelCallNode",
+        "InputData" : [
+          {
+            "Name" : "activations_3",
+            "Data Type" : "float",
+            "Dimension" : "2",
+            "Shape" : ["262144","64"]
+          },
+          {
+            "Name" : "weights_4",
+            "Data Type" : "float",
+            "Dimension" : "2",
+            "Shape" : ["64","64"]
+          }
+        ],
+        "OutputData" : [
+          {
+            "Name" : "activations_4",
+            "Data Type" : "float",
+            "Dimension" : "2",
+            "Shape" : ["262144","64"]
+          }
+        ],
+        "InputAccesses" : [
+          {
+            "Variable" : "activations_3",
+            "Write" : "false",
+            "Type" : "Serial"
+          },
+          {
+            "Variable" : "weights_4",
+            "Write" : "false",
+            "Type" : "Serial"
+          }
+        ],
+        "OutputAccesses" : [
+          {
+            "Variable" : "activations_4",
+            "Write" : "true",
+            "Type" : "Serial"
+          }
+        ],
+        "Cost" : "2499805184",
+        "Load/Store" : "10117447680",
+        "ID" : "U7y3plU6yg",
+        "Starts" : [
+          "0"
+        ],
+        "Lengths" : [
+          "262144"
+        ]
+      },
+      {
+        "Name" : "forward_ojXO3RetP1",
+        "Pattern Node Type" : "ParallelCallNode",
+        "InputData" : [
+          {
+            "Name" : "activations_4",
+            "Data Type" : "float",
+            "Dimension" : "2",
+            "Shape" : ["262144","64"]
+          },
+          {
+            "Name" : "weights_5",
+            "Data Type" : "float",
+            "Dimension" : "2",
+            "Shape" : ["64","64"]
+          }
+        ],
+        "OutputData" : [
+          {
+            "Name" : "activations_5",
+            "Data Type" : "float",
+            "Dimension" : "2",
+            "Shape" : ["262144","64"]
+          }
+        ],
+        "InputAccesses" : [
+          {
+            "Variable" : "activations_4",
+            "Write" : "false",
+            "Type" : "Serial"
+          },
+          {
+            "Variable" : "weights_5",
+            "Write" : "false",
+            "Type" : "Serial"
+          }
+        ],
+        "OutputAccesses" : [
+          {
+            "Variable" : "activations_5",
+            "Write" : "true",
+            "Type" : "Serial"
+          }
+        ],
+        "Cost" : "2499805184",
+        "Load/Store" : "10117447680",
+        "ID" : "cC15N0vGUi",
+        "Starts" : [
+          "0"
+        ],
+        "Lengths" : [
+          "262144"
+        ]
+      },
+      {
+        "Name" : "forward_QemoMWU8Ac",
+        "Pattern Node Type" : "ParallelCallNode",
+        "InputData" : [
+          {
+            "Name" : "activations_5",
+            "Data Type" : "float",
+            "Dimension" : "2",
+            "Shape" : ["262144","64"]
+          },
+          {
+            "Name" : "weights_6",
+            "Data Type" : "float",
+            "Dimension" : "2",
+            "Shape" : ["64","64"]
+          }
+        ],
+        "OutputData" : [
+          {
+            "Name" : "activations_6",
+            "Data Type" : "float",
+            "Dimension" : "2",
+            "Shape" : ["262144","64"]
+          }
+        ],
+        "InputAccesses" : [
+          {
+            "Variable" : "activations_5",
+            "Write" : "false",
+            "Type" : "Serial"
+          },
+          {
+            "Variable" : "weights_6",
+            "Write" : "false",
+            "Type" : "Serial"
+          }
+        ],
+        "OutputAccesses" : [
+          {
+            "Variable" : "activations_6",
+            "Write" : "true",
+            "Type" : "Serial"
+          }
+        ],
+        "Cost" : "2499805184",
+        "Load/Store" : "10117447680",
+        "ID" : "hUNc8vZoGC",
+        "Starts" : [
+          "0"
+        ],
+        "Lengths" : [
+          "262144"
+        ]
+      },
+      {
+        "Name" : "forward_l600xy7egX",
+        "Pattern Node Type" : "ParallelCallNode",
+        "InputData" : [
+          {
+            "Name" : "activations_6",
+            "Data Type" : "float",
+            "Dimension" : "2",
+            "Shape" : ["262144","64"]
+          },
+          {
+            "Name" : "weights_7",
+            "Data Type" : "float",
+            "Dimension" : "2",
+            "Shape" : ["64","64"]
+          }
+        ],
+        "OutputData" : [
+          {
+            "Name" : "activations_7",
+            "Data Type" : "float",
+            "Dimension" : "2",
+            "Shape" : ["262144","64"]
+          }
+        ],
+        "InputAccesses" : [
+          {
+            "Variable" : "activations_6",
+            "Write" : "false",
+            "Type" : "Serial"
+          },
+          {
+            "Variable" : "weights_7",
+            "Write" : "false",
+            "Type" : "Serial"
+          }
+        ],
+        "OutputAccesses" : [
+          {
+            "Variable" : "activations_7",
+            "Write" : "true",
+            "Type" : "Serial"
+          }
+        ],
+        "Cost" : "2499805184",
+        "Load/Store" : "10117447680",
+        "ID" : "cOSOHLXxPL",
+        "Starts" : [
+          "0"
+        ],
+        "Lengths" : [
+          "262144"
+        ]
+      },
+      {
+        "Name" : "forward",
+        "Pattern Node Type" : "ParallelCallNode",
+        "InputData" : [
+          {
+            "Name" : "activations_7",
+            "Data Type" : "float",
+            "Dimension" : "2",
+            "Shape" : ["262144","64"]
+          },
+          {
+            "Name" : "weights_8",
+            "Data Type" : "float",
+            "Dimension" : "2",
+            "Shape" : ["10","64"]
+          }
+        ],
+        "OutputData" : [
+          {
+            "Name" : "result",
+            "Data Type" : "float",
+            "Dimension" : "2",
+            "Shape" : ["262144","10"]
+          }
+        ],
+        "InputAccesses" : [
+          {
+            "Variable" : "activations_7",
+            "Write" : "false",
+            "Type" : "Serial"
+          },
+          {
+            "Variable" : "weights_8",
+            "Write" : "false",
+            "Type" : "Serial"
+          }
+        ],
+        "OutputAccesses" : [
+          {
+            "Variable" : "result",
+            "Write" : "true",
+            "Type" : "Serial"
+          }
+        ],
+        "Cost" : "390594560",
+        "Load/Store" : "1581514752",
+        "ID" : "hASyetUyKu",
+        "Starts" : [
+          "0"
+        ],
+        "Lengths" : [
+          "262144"
+        ]
+      },
+      {
+        "Pattern Node Type" : "SimpleExpressionBlockNode",
+        "InputData" : [
+          {
+            "Name" : "result",
+            "Data Type" : "float",
+            "Dimension" : "2",
+            "Shape" : ["262144","10"]
+          }
+        ],
+        "OutputData" : [
+        ],
+        "InputAccesses" : [
+          {
+            "Variable" : "result",
+            "Write" : "false",
+            "Type" : "Serial"
+          }
+        ],
+        "OutputAccesses" : [
+        ],
+        "Cost" : "0",
+        "Load/Store" : "1",
+        "ID" : "1LvPdINoBC"      },
+      {
+        "Pattern Node Type" : "ReturnNode",
+        "InputData" : [
+        ],
+        "OutputData" : [
+        ],
+        "InputAccesses" : [
+        ],
+        "OutputAccesses" : [
+        ],
+        "Cost" : "0",
+        "Load/Store" : "0",
+        "ID" : "JmnkxjgJOA",
+        "Parallel Descendants" : "false",
+        "Result" : {
+          "Pattern Node Type" : "ComplexExpressionNode",
+          "InputData" : [
+          ],
+          "OutputData" : [
+          ],
+          "InputAccesses" : [
+          ],
+          "OutputAccesses" : [
+          ],
+          "Cost" : "0",
+          "Load/Store" : "0",
+          "ID" : "ZvrVkY9e9J",
+          "Parallel Descendants" : "false",
+          "Calls" : [
+          ]
+        }
+      }
+    ]
+  },
+  "Global Variables" : [
+    {
+      "Name" : "MAX_INT",
+      "Data Type" : "int32",
+      "Dimension" : "0"
+    }
+
+  ],
+  "Functions" : [
+    {
+      "Name" : "forward_HmKGZlyhss",
+      "Pattern" : "Map",
+      "Input" : [
+        {
+          "Name" : "batch",
+          "Data Type" : "float",
+          "Dimension" : "2"
+        },
+        {
+          "Name" : "weights",
+          "Data Type" : "float",
+          "Dimension" : "2"
+        }
+      ],
+      "Output" : [
+        {
+          "Name" : "res",
+          "Data Type" : "float",
+          "Dimension" : "2"
+        }
+      ],
+      "Cost" : "9536",
+      "Load/Store" : "38592",
+      "Variables" : [
+        {
+          "Name" : "MAX_INT",
+          "Data Type" : "int32",
+          "Dimension" : "0"
+        }      ],
+      "Parallel Descendants" : "true",
+      "Children" : [
+        {
+          "Name" : "layer_RG5BLAshtX",
+          "Pattern Node Type" : "ParallelCallNode",
+          "InputData" : [
+            {
+              "Name" : "INDEX",
+              "Data Type" : "int32",
+              "Dimension" : "0"
+            },
+            {
+              "Name" : "weights",
+              "Data Type" : "float",
+              "Dimension" : "2"
+            },
+            {
+              "Name" : "batch",
+              "Data Type" : "float",
+              "Dimension" : "2"
+            }
+          ],
+          "OutputData" : [
+            {
+              "Name" : "res",
+              "Data Type" : "float",
+              "Dimension" : "2"
+            }
+          ],
+          "InputAccesses" : [
+            {
+              "Variable" : "INDEX",
+              "Write" : "false",
+              "Type" : "Serial"
+            },
+            {
+              "Variable" : "weights",
+              "Write" : "false",
+              "Type" : "Serial"
+            },
+            {
+              "Variable" : "batch",
+              "Write" : "false",
+              "Type" : "Map",
+              "Scaling" : ["1"],
+              "Shift" : ["0"],
+              "Iterator" : ["INDEX"]
+            },
+            {
+              "Variable" : "INDEX",
+              "Write" : "false",
+              "Type" : "Serial"
+            }
+          ],
+          "OutputAccesses" : [
+            {
+              "Variable" : "res",
+              "Write" : "true",
+              "Type" : "Map",
+              "Scaling" : ["1"],
+              "Shift" : ["0"],
+              "Iterator" : ["INDEX"]
+            }
+          ],
+          "Cost" : "9536",
+          "Load/Store" : "38592",
+          "ID" : "iCkjE5kTrD",
+          "Starts" : [
+            "0"
+          ],
+          "Lengths" : [
+            "64"
+          ]
+        }
+      ]
+    },
+    {
+      "Name" : "mult_sum",
+      "Pattern" : "Reduction",
+      "Input" : [
+        {
+          "Name" : "vectorA",
+          "Data Type" : "float",
+          "Dimension" : "1"
+        },
+        {
+          "Name" : "vectorB",
+          "Data Type" : "float",
+          "Dimension" : "1"
+        }
+      ],
+      "Output" : [
+        {
+          "Name" : "res",
+          "Data Type" : "float",
+          "Dimension" : "0"
+        }
+      ],
+      "Cost" : "2",
+      "Load/Store" : "5",
+      "Variables" : [
+        {
+          "Name" : "MAX_INT",
+          "Data Type" : "int32",
+          "Dimension" : "0"
+        }      ],
+      "Parallel Descendants" : "false",
+      "Children" : [
+        {
+          "Pattern Node Type" : "SimpleExpressionBlockNode",
+          "InputData" : [
+            {
+              "Name" : "res",
+              "Data Type" : "float",
+              "Dimension" : "0"
+            },
+            {
+              "Name" : "vectorA",
+              "Data Type" : "float",
+              "Dimension" : "1"
+            },
+            {
+              "Name" : "INDEX",
+              "Data Type" : "int32",
+              "Dimension" : "0"
+            },
+            {
+              "Name" : "vectorB",
+              "Data Type" : "float",
+              "Dimension" : "1"
+            }
+          ],
+          "OutputData" : [
+            {
+              "Name" : "res",
+              "Data Type" : "float",
+              "Dimension" : "0"
+            }
+          ],
+          "InputAccesses" : [
+            {
+              "Variable" : "res",
+              "Write" : "false",
+              "Type" : "Serial"
+            },
+            {
+              "Variable" : "vectorA",
+              "Write" : "false",
+              "Type" : "Map",
+              "Scaling" : ["1"],
+              "Shift" : ["0"],
+              "Iterator" : ["INDEX"]
+            },
+            {
+              "Variable" : "INDEX",
+              "Write" : "false",
+              "Type" : "Serial"
+            },
+            {
+              "Variable" : "vectorB",
+              "Write" : "false",
+              "Type" : "Map",
+              "Scaling" : ["1"],
+              "Shift" : ["0"],
+              "Iterator" : ["INDEX"]
+            },
+            {
+              "Variable" : "INDEX",
+              "Write" : "false",
+              "Type" : "Serial"
+            }
+          ],
+          "OutputAccesses" : [
+            {
+              "Variable" : "res",
+              "Write" : "true",
+              "Type" : "Reduce",
+              "Scaling" : ["1"],
+              "Shift" : ["0"],
+              "Iterator" : ["INDEX"]
+            }
+          ],
+          "Cost" : "2",
+          "Load/Store" : "5",
+          "ID" : "NV7vWYuJuC"        }
+      ]
+    },
+    {
+      "Name" : "rand_init_ndBZfLHlBF",
+      "Pattern" : "Map",
+      "Input" : [
+      ],
+      "Output" : [
+        {
+          "Name" : "res",
+          "Data Type" : "float",
+          "Dimension" : "2"
+        }
+      ],
+      "Cost" : "64",
+      "Load/Store" : "320",
+      "Variables" : [
+        {
+          "Name" : "MAX_INT",
+          "Data Type" : "int32",
+          "Dimension" : "0"
+        }      ],
+      "Parallel Descendants" : "true",
+      "Children" : [
+        {
+          "Name" : "rand_init_inner",
+          "Pattern Node Type" : "ParallelCallNode",
+          "InputData" : [
+            {
+              "Name" : "INDEX",
+              "Data Type" : "int32",
+              "Dimension" : "0"
+            }
+          ],
+          "OutputData" : [
+            {
+              "Name" : "res",
+              "Data Type" : "float",
+              "Dimension" : "2"
+            }
+          ],
+          "InputAccesses" : [
+            {
+              "Variable" : "INDEX",
+              "Write" : "false",
+              "Type" : "Serial"
+            }
+          ],
+          "OutputAccesses" : [
+            {
+              "Variable" : "res",
+              "Write" : "true",
+              "Type" : "Map",
+              "Scaling" : ["1"],
+              "Shift" : ["0"],
+              "Iterator" : ["INDEX"]
+            }
+          ],
+          "Cost" : "64",
+          "Load/Store" : "320",
+          "ID" : "UzFSUBUaKV",
+          "Starts" : [
+            "0"
+          ],
+          "Lengths" : [
+            "64"
+          ]
+        }
+      ]
+    },
+    {
+      "Name" : "rand_init_PlH53hIC5U",
+      "Pattern" : "Map",
+      "Input" : [
+      ],
+      "Output" : [
+        {
+          "Name" : "res",
+          "Data Type" : "float",
+          "Dimension" : "2"
+        }
+      ],
+      "Cost" : "64",
+      "Load/Store" : "320",
+      "Variables" : [
+        {
+          "Name" : "MAX_INT",
+          "Data Type" : "int32",
+          "Dimension" : "0"
+        }      ],
+      "Parallel Descendants" : "true",
+      "Children" : [
+        {
+          "Name" : "rand_init_inner",
+          "Pattern Node Type" : "ParallelCallNode",
+          "InputData" : [
+            {
+              "Name" : "INDEX",
+              "Data Type" : "int32",
+              "Dimension" : "0"
+            }
+          ],
+          "OutputData" : [
+            {
+              "Name" : "res",
+              "Data Type" : "float",
+              "Dimension" : "2"
+            }
+          ],
+          "InputAccesses" : [
+            {
+              "Variable" : "INDEX",
+              "Write" : "false",
+              "Type" : "Serial"
+            }
+          ],
+          "OutputAccesses" : [
+            {
+              "Variable" : "res",
+              "Write" : "true",
+              "Type" : "Map",
+              "Scaling" : ["1"],
+              "Shift" : ["0"],
+              "Iterator" : ["INDEX"]
+            }
+          ],
+          "Cost" : "64",
+          "Load/Store" : "320",
+          "ID" : "KQpQg8mpMx",
+          "Starts" : [
+            "0"
+          ],
+          "Lengths" : [
+            "64"
+          ]
+        }
+      ]
+    },
+    {
+      "Name" : "layer_8lJLO96WuW",
+      "Pattern" : "Map",
+      "Input" : [
+        {
+          "Name" : "weights",
+          "Data Type" : "float",
+          "Dimension" : "2"
+        },
+        {
+          "Name" : "feature",
+          "Data Type" : "float",
+          "Dimension" : "1"
+        }
+      ],
+      "Output" : [
+        {
+          "Name" : "res",
+          "Data Type" : "float",
+          "Dimension" : "1"
+        }
+      ],
+      "Cost" : "149",
+      "Load/Store" : "598",
+      "Variables" : [
+        {
+          "Name" : "act",
+          "Data Type" : "float",
+          "Dimension" : "0"
+        },        {
+          "Name" : "z",
+          "Data Type" : "float",
+          "Dimension" : "0"
+        },        {
+          "Name" : "MAX_INT",
+          "Data Type" : "int32",
+          "Dimension" : "0"
+        }      ],
+      "Parallel Descendants" : "true",
+      "Children" : [
+        {
+          "Pattern Node Type" : "SimpleExpressionBlockNode",
+          "InputData" : [
+          ],
+          "OutputData" : [
+            {
+              "Name" : "z",
+              "Data Type" : "float",
+              "Dimension" : "0"
+            },
+            {
+              "Name" : "act",
+              "Data Type" : "float",
+              "Dimension" : "0"
+            }
+          ],
+          "InputAccesses" : [
+          ],
+          "OutputAccesses" : [
+            {
+              "Variable" : "z",
+              "Write" : "true",
+              "Type" : "Serial"
+            },
+            {
+              "Variable" : "act",
+              "Write" : "true",
+              "Type" : "Serial"
+            }
+          ],
+          "Cost" : "0",
+          "Load/Store" : "2",
+          "ID" : "5hXlqjkzqW"        },
+        {
+          "Name" : "mult_sum",
+          "Pattern Node Type" : "ParallelCallNode",
+          "InputData" : [
+            {
+              "Name" : "weights",
+              "Data Type" : "float",
+              "Dimension" : "2"
+            },
+            {
+              "Name" : "INDEX",
+              "Data Type" : "int32",
+              "Dimension" : "0"
+            },
+            {
+              "Name" : "feature",
+              "Data Type" : "float",
+              "Dimension" : "1"
+            }
+          ],
+          "OutputData" : [
+            {
+              "Name" : "z",
+              "Data Type" : "float",
+              "Dimension" : "0"
+            }
+          ],
+          "InputAccesses" : [
+            {
+              "Variable" : "weights",
+              "Write" : "false",
+              "Type" : "Map",
+              "Scaling" : ["1"],
+              "Shift" : ["0"],
+              "Iterator" : ["INDEX"]
+            },
+            {
+              "Variable" : "INDEX",
+              "Write" : "false",
+              "Type" : "Serial"
+            },
+            {
+              "Variable" : "feature",
+              "Write" : "false",
+              "Type" : "Serial"
+            }
+          ],
+          "OutputAccesses" : [
+            {
+              "Variable" : "z",
+              "Write" : "true",
+              "Type" : "Serial"
+            }
+          ],
+          "Cost" : "128",
+          "Load/Store" : "576",
+          "ID" : "OWBCQaUPsU",
+          "Starts" : [
+            "0"
+          ],
+          "Lengths" : [
+            "64"
+          ]
+        },
+        {
+          "Pattern Node Type" : "ComplexExpressionNode",
+          "InputData" : [
+            {
+              "Name" : "z",
+              "Data Type" : "float",
+              "Dimension" : "0"
+            }
+          ],
+          "OutputData" : [
+            {
+              "Name" : "act",
+              "Data Type" : "float",
+              "Dimension" : "0"
+            }
+          ],
+          "InputAccesses" : [
+            {
+              "Variable" : "z",
+              "Write" : "false",
+              "Type" : "Serial"
+            }
+          ],
+          "OutputAccesses" : [
+            {
+              "Variable" : "act",
+              "Write" : "true",
+              "Type" : "Serial"
+            }
+          ],
+          "Cost" : "21",
+          "Load/Store" : "17",
+          "ID" : "ZQyjOxkpm4",
+          "Parallel Descendants" : "false",
+          "Calls" : [
+            {
+              "Pattern Node Type" : "CallNode",
+              "InputData" : [
+              ],
+              "OutputData" : [
+              ],
+              "InputAccesses" : [
+              ],
+              "OutputAccesses" : [
+              ],
+              "Cost" : "21",
+              "Load/Store" : "16",
+              "ID" : "ghbaf2BodL",
+              "Parallel Descendants" : "false"
+            }
+          ]
+        },
+        {
+          "Pattern Node Type" : "SimpleExpressionBlockNode",
+          "InputData" : [
+            {
+              "Name" : "INDEX",
+              "Data Type" : "int32",
+              "Dimension" : "0"
+            },
+            {
+              "Name" : "act",
+              "Data Type" : "float",
+              "Dimension" : "0"
+            }
+          ],
+          "OutputData" : [
+            {
+              "Name" : "res",
+              "Data Type" : "float",
+              "Dimension" : "1"
+            }
+          ],
+          "InputAccesses" : [
+            {
+              "Variable" : "INDEX",
+              "Write" : "false",
+              "Type" : "Serial"
+            },
+            {
+              "Variable" : "act",
+              "Write" : "false",
+              "Type" : "Serial"
+            }
+          ],
+          "OutputAccesses" : [
+            {
+              "Variable" : "res",
+              "Write" : "true",
+              "Type" : "Map",
+              "Scaling" : ["1"],
+              "Shift" : ["0"],
+              "Iterator" : ["INDEX"]
+            }
+          ],
+          "Cost" : "0",
+          "Load/Store" : "3",
+          "ID" : "th9kkYvM0v"        }
+      ]
+    },
+    {
+      "Name" : "main",
+      "Pattern" : "Serial",
+      "Input" : [
+      ],
+      "Output" : [
+      ],
+      "Cost" : "17889260160",
+      "Load/Store" : "72403795549",
+      "Variables" : [
+        {
+          "Name" : "activations_1",
+          "Data Type" : "float",
+          "Dimension" : "2",
+          "Shape" : ["262144","64"]
+        },        {
+          "Name" : "activations_7",
+          "Data Type" : "float",
+          "Dimension" : "2",
+          "Shape" : ["262144","64"]
+        },        {
+          "Name" : "result",
+          "Data Type" : "float",
+          "Dimension" : "2",
+          "Shape" : ["262144","10"]
+        },        {
+          "Name" : "activations_6",
+          "Data Type" : "float",
+          "Dimension" : "2",
+          "Shape" : ["262144","64"]
+        },        {
+          "Name" : "activations_3",
+          "Data Type" : "float",
+          "Dimension" : "2",
+          "Shape" : ["262144","64"]
+        },        {
+          "Name" : "activations_2",
+          "Data Type" : "float",
+          "Dimension" : "2",
+          "Shape" : ["262144","64"]
+        },        {
+          "Name" : "activations_5",
+          "Data Type" : "float",
+          "Dimension" : "2",
+          "Shape" : ["262144","64"]
+        },        {
+          "Name" : "activations_4",
+          "Data Type" : "float",
+          "Dimension" : "2",
+          "Shape" : ["262144","64"]
+        },        {
+          "Name" : "batch",
+          "Data Type" : "float",
+          "Dimension" : "2",
+          "Shape" : ["262144","64"]
+        },        {
+          "Name" : "weights_3",
+          "Data Type" : "float",
+          "Dimension" : "2",
+          "Shape" : ["64","64"]
+        },        {
+          "Name" : "weights_2",
+          "Data Type" : "float",
+          "Dimension" : "2",
+          "Shape" : ["64","64"]
+        },        {
+          "Name" : "weights_1",
+          "Data Type" : "float",
+          "Dimension" : "2",
+          "Shape" : ["64","64"]
+        },        {
+          "Name" : "weights_8",
+          "Data Type" : "float",
+          "Dimension" : "2",
+          "Shape" : ["10","64"]
+        },        {
+          "Name" : "weights_7",
+          "Data Type" : "float",
+          "Dimension" : "2",
+          "Shape" : ["64","64"]
+        },        {
+          "Name" : "weights_6",
+          "Data Type" : "float",
+          "Dimension" : "2",
+          "Shape" : ["64","64"]
+        },        {
+          "Name" : "weights_5",
+          "Data Type" : "float",
+          "Dimension" : "2",
+          "Shape" : ["64","64"]
+        },        {
+          "Name" : "weights_4",
+          "Data Type" : "float",
+          "Dimension" : "2",
+          "Shape" : ["64","64"]
+        },        {
+          "Name" : "MAX_INT",
+          "Data Type" : "int32",
+          "Dimension" : "0"
+        }      ],
+      "Parallel Descendants" : "true",
+      "Children" : [
+        {
+          "Pattern Node Type" : "ComplexExpressionNode",
+          "InputData" : [
+          ],
+          "OutputData" : [
+            {
+              "Name" : "batch",
+              "Data Type" : "float",
+              "Dimension" : "2",
+              "Shape" : ["262144","64"]
+            }
+          ],
+          "InputAccesses" : [
+          ],
+          "OutputAccesses" : [
+            {
+              "Variable" : "batch",
+              "Write" : "true",
+              "Type" : "Serial"
+            }
+          ],
+          "Cost" : "0",
+          "Load/Store" : "1",
+          "ID" : "qQ7fL8fqDA",
+          "Parallel Descendants" : "false",
+          "Calls" : [
+          ]
+        },
+        {
+          "Pattern Node Type" : "ComplexExpressionNode",
+          "InputData" : [
+          ],
+          "OutputData" : [
+            {
+              "Name" : "weights_1",
+              "Data Type" : "float",
+              "Dimension" : "2",
+              "Shape" : ["64","64"]
+            }
+          ],
+          "InputAccesses" : [
+          ],
+          "OutputAccesses" : [
+            {
+              "Variable" : "weights_1",
+              "Write" : "true",
+              "Type" : "Serial"
+            }
+          ],
+          "Cost" : "0",
+          "Load/Store" : "1",
+          "ID" : "67U6UHEJe1",
+          "Parallel Descendants" : "false",
+          "Calls" : [
+          ]
+        },
+        {
+          "Pattern Node Type" : "ComplexExpressionNode",
+          "InputData" : [
+          ],
+          "OutputData" : [
+            {
+              "Name" : "weights_2",
+              "Data Type" : "float",
+              "Dimension" : "2",
+              "Shape" : ["64","64"]
+            }
+          ],
+          "InputAccesses" : [
+          ],
+          "OutputAccesses" : [
+            {
+              "Variable" : "weights_2",
+              "Write" : "true",
+              "Type" : "Serial"
+            }
+          ],
+          "Cost" : "0",
+          "Load/Store" : "1",
+          "ID" : "mvXkK0Ao5E",
+          "Parallel Descendants" : "false",
+          "Calls" : [
+          ]
+        },
+        {
+          "Pattern Node Type" : "ComplexExpressionNode",
+          "InputData" : [
+          ],
+          "OutputData" : [
+            {
+              "Name" : "weights_3",
+              "Data Type" : "float",
+              "Dimension" : "2",
+              "Shape" : ["64","64"]
+            }
+          ],
+          "InputAccesses" : [
+          ],
+          "OutputAccesses" : [
+            {
+              "Variable" : "weights_3",
+              "Write" : "true",
+              "Type" : "Serial"
+            }
+          ],
+          "Cost" : "0",
+          "Load/Store" : "1",
+          "ID" : "f1YY3RYrfy",
+          "Parallel Descendants" : "false",
+          "Calls" : [
+          ]
+        },
+        {
+          "Pattern Node Type" : "ComplexExpressionNode",
+          "InputData" : [
+          ],
+          "OutputData" : [
+            {
+              "Name" : "weights_4",
+              "Data Type" : "float",
+              "Dimension" : "2",
+              "Shape" : ["64","64"]
+            }
+          ],
+          "InputAccesses" : [
+          ],
+          "OutputAccesses" : [
+            {
+              "Variable" : "weights_4",
+              "Write" : "true",
+              "Type" : "Serial"
+            }
+          ],
+          "Cost" : "0",
+          "Load/Store" : "1",
+          "ID" : "F4PYMVjOjq",
+          "Parallel Descendants" : "false",
+          "Calls" : [
+          ]
+        },
+        {
+          "Pattern Node Type" : "ComplexExpressionNode",
+          "InputData" : [
+          ],
+          "OutputData" : [
+            {
+              "Name" : "weights_5",
+              "Data Type" : "float",
+              "Dimension" : "2",
+              "Shape" : ["64","64"]
+            }
+          ],
+          "InputAccesses" : [
+          ],
+          "OutputAccesses" : [
+            {
+              "Variable" : "weights_5",
+              "Write" : "true",
+              "Type" : "Serial"
+            }
+          ],
+          "Cost" : "0",
+          "Load/Store" : "1",
+          "ID" : "iLJR96TA0S",
+          "Parallel Descendants" : "false",
+          "Calls" : [
+          ]
+        },
+        {
+          "Pattern Node Type" : "ComplexExpressionNode",
+          "InputData" : [
+          ],
+          "OutputData" : [
+            {
+              "Name" : "weights_6",
+              "Data Type" : "float",
+              "Dimension" : "2",
+              "Shape" : ["64","64"]
+            }
+          ],
+          "InputAccesses" : [
+          ],
+          "OutputAccesses" : [
+            {
+              "Variable" : "weights_6",
+              "Write" : "true",
+              "Type" : "Serial"
+            }
+          ],
+          "Cost" : "0",
+          "Load/Store" : "1",
+          "ID" : "18Etpzctkn",
+          "Parallel Descendants" : "false",
+          "Calls" : [
+          ]
+        },
+        {
+          "Pattern Node Type" : "ComplexExpressionNode",
+          "InputData" : [
+          ],
+          "OutputData" : [
+            {
+              "Name" : "weights_7",
+              "Data Type" : "float",
+              "Dimension" : "2",
+              "Shape" : ["64","64"]
+            }
+          ],
+          "InputAccesses" : [
+          ],
+          "OutputAccesses" : [
+            {
+              "Variable" : "weights_7",
+              "Write" : "true",
+              "Type" : "Serial"
+            }
+          ],
+          "Cost" : "0",
+          "Load/Store" : "1",
+          "ID" : "crmbX9Kx3p",
+          "Parallel Descendants" : "false",
+          "Calls" : [
+          ]
+        },
+        {
+          "Pattern Node Type" : "ComplexExpressionNode",
+          "InputData" : [
+          ],
+          "OutputData" : [
+            {
+              "Name" : "weights_8",
+              "Data Type" : "float",
+              "Dimension" : "2",
+              "Shape" : ["10","64"]
+            }
+          ],
+          "InputAccesses" : [
+          ],
+          "OutputAccesses" : [
+            {
+              "Variable" : "weights_8",
+              "Write" : "true",
+              "Type" : "Serial"
+            }
+          ],
+          "Cost" : "0",
+          "Load/Store" : "1",
+          "ID" : "eoTdOOxod1",
+          "Parallel Descendants" : "false",
+          "Calls" : [
+          ]
+        },
+        {
+          "Pattern Node Type" : "ComplexExpressionNode",
+          "InputData" : [
+          ],
+          "OutputData" : [
+            {
+              "Name" : "activations_1",
+              "Data Type" : "float",
+              "Dimension" : "2",
+              "Shape" : ["262144","64"]
+            }
+          ],
+          "InputAccesses" : [
+          ],
+          "OutputAccesses" : [
+            {
+              "Variable" : "activations_1",
+              "Write" : "true",
+              "Type" : "Serial"
+            }
+          ],
+          "Cost" : "0",
+          "Load/Store" : "1",
+          "ID" : "SsQ1Tc37p3",
+          "Parallel Descendants" : "false",
+          "Calls" : [
+          ]
+        },
+        {
+          "Pattern Node Type" : "ComplexExpressionNode",
+          "InputData" : [
+          ],
+          "OutputData" : [
+            {
+              "Name" : "activations_2",
+              "Data Type" : "float",
+              "Dimension" : "2",
+              "Shape" : ["262144","64"]
+            }
+          ],
+          "InputAccesses" : [
+          ],
+          "OutputAccesses" : [
+            {
+              "Variable" : "activations_2",
+              "Write" : "true",
+              "Type" : "Serial"
+            }
+          ],
+          "Cost" : "0",
+          "Load/Store" : "1",
+          "ID" : "99tOo7yhvL",
+          "Parallel Descendants" : "false",
+          "Calls" : [
+          ]
+        },
+        {
+          "Pattern Node Type" : "ComplexExpressionNode",
+          "InputData" : [
+          ],
+          "OutputData" : [
+            {
+              "Name" : "activations_3",
+              "Data Type" : "float",
+              "Dimension" : "2",
+              "Shape" : ["262144","64"]
+            }
+          ],
+          "InputAccesses" : [
+          ],
+          "OutputAccesses" : [
+            {
+              "Variable" : "activations_3",
+              "Write" : "true",
+              "Type" : "Serial"
+            }
+          ],
+          "Cost" : "0",
+          "Load/Store" : "1",
+          "ID" : "5RZiocoE4n",
+          "Parallel Descendants" : "false",
+          "Calls" : [
+          ]
+        },
+        {
+          "Pattern Node Type" : "ComplexExpressionNode",
+          "InputData" : [
+          ],
+          "OutputData" : [
+            {
+              "Name" : "activations_4",
+              "Data Type" : "float",
+              "Dimension" : "2",
+              "Shape" : ["262144","64"]
+            }
+          ],
+          "InputAccesses" : [
+          ],
+          "OutputAccesses" : [
+            {
+              "Variable" : "activations_4",
+              "Write" : "true",
+              "Type" : "Serial"
+            }
+          ],
+          "Cost" : "0",
+          "Load/Store" : "1",
+          "ID" : "1VKreOjh5O",
+          "Parallel Descendants" : "false",
+          "Calls" : [
+          ]
+        },
+        {
+          "Pattern Node Type" : "ComplexExpressionNode",
+          "InputData" : [
+          ],
+          "OutputData" : [
+            {
+              "Name" : "activations_5",
+              "Data Type" : "float",
+              "Dimension" : "2",
+              "Shape" : ["262144","64"]
+            }
+          ],
+          "InputAccesses" : [
+          ],
+          "OutputAccesses" : [
+            {
+              "Variable" : "activations_5",
+              "Write" : "true",
+              "Type" : "Serial"
+            }
+          ],
+          "Cost" : "0",
+          "Load/Store" : "1",
+          "ID" : "eRCs63Dv9p",
+          "Parallel Descendants" : "false",
+          "Calls" : [
+          ]
+        },
+        {
+          "Pattern Node Type" : "ComplexExpressionNode",
+          "InputData" : [
+          ],
+          "OutputData" : [
+            {
+              "Name" : "activations_6",
+              "Data Type" : "float",
+              "Dimension" : "2",
+              "Shape" : ["262144","64"]
+            }
+          ],
+          "InputAccesses" : [
+          ],
+          "OutputAccesses" : [
+            {
+              "Variable" : "activations_6",
+              "Write" : "true",
+              "Type" : "Serial"
+            }
+          ],
+          "Cost" : "0",
+          "Load/Store" : "1",
+          "ID" : "UTTKVDT2im",
+          "Parallel Descendants" : "false",
+          "Calls" : [
+          ]
+        },
+        {
+          "Pattern Node Type" : "ComplexExpressionNode",
+          "InputData" : [
+          ],
+          "OutputData" : [
+            {
+              "Name" : "activations_7",
+              "Data Type" : "float",
+              "Dimension" : "2",
+              "Shape" : ["262144","64"]
+            }
+          ],
+          "InputAccesses" : [
+          ],
+          "OutputAccesses" : [
+            {
+              "Variable" : "activations_7",
+              "Write" : "true",
+              "Type" : "Serial"
+            }
+          ],
+          "Cost" : "0",
+          "Load/Store" : "1",
+          "ID" : "0vZ3oMCe1D",
+          "Parallel Descendants" : "false",
+          "Calls" : [
+          ]
+        },
+        {
+          "Pattern Node Type" : "ComplexExpressionNode",
+          "InputData" : [
+          ],
+          "OutputData" : [
+            {
+              "Name" : "result",
+              "Data Type" : "float",
+              "Dimension" : "2",
+              "Shape" : ["262144","10"]
+            }
+          ],
+          "InputAccesses" : [
+          ],
+          "OutputAccesses" : [
+            {
+              "Variable" : "result",
+              "Write" : "true",
+              "Type" : "Serial"
+            }
+          ],
+          "Cost" : "0",
+          "Load/Store" : "1",
+          "ID" : "OYkTJ2qoYW",
+          "Parallel Descendants" : "false",
+          "Calls" : [
+          ]
+        },
+        {
+          "Name" : "rand_init_KeVA7GQAem",
+          "Pattern Node Type" : "ParallelCallNode",
+          "InputData" : [
+          ],
+          "OutputData" : [
+            {
+              "Name" : "weights_1",
+              "Data Type" : "float",
+              "Dimension" : "2",
+              "Shape" : ["64","64"]
+            }
+          ],
+          "InputAccesses" : [
+          ],
+          "OutputAccesses" : [
+            {
+              "Variable" : "weights_1",
+              "Write" : "true",
+              "Type" : "Serial"
+            }
+          ],
+          "Cost" : "4096",
+          "Load/Store" : "20544",
+          "ID" : "NyylE3qvD7",
+          "Starts" : [
+            "0"
+          ],
+          "Lengths" : [
+            "64"
+          ]
+        },
+        {
+          "Name" : "rand_init_ndBZfLHlBF",
+          "Pattern Node Type" : "ParallelCallNode",
+          "InputData" : [
+          ],
+          "OutputData" : [
+            {
+              "Name" : "weights_2",
+              "Data Type" : "float",
+              "Dimension" : "2",
+              "Shape" : ["64","64"]
+            }
+          ],
+          "InputAccesses" : [
+          ],
+          "OutputAccesses" : [
+            {
+              "Variable" : "weights_2",
+              "Write" : "true",
+              "Type" : "Serial"
+            }
+          ],
+          "Cost" : "4096",
+          "Load/Store" : "20544",
+          "ID" : "zpBA04YGG6",
+          "Starts" : [
+            "0"
+          ],
+          "Lengths" : [
+            "64"
+          ]
+        },
+        {
+          "Name" : "rand_init_eq1HFX6DF2",
+          "Pattern Node Type" : "ParallelCallNode",
+          "InputData" : [
+          ],
+          "OutputData" : [
+            {
+              "Name" : "weights_3",
+              "Data Type" : "float",
+              "Dimension" : "2",
+              "Shape" : ["64","64"]
+            }
+          ],
+          "InputAccesses" : [
+          ],
+          "OutputAccesses" : [
+            {
+              "Variable" : "weights_3",
+              "Write" : "true",
+              "Type" : "Serial"
+            }
+          ],
+          "Cost" : "4096",
+          "Load/Store" : "20544",
+          "ID" : "s37WlHDyc5",
+          "Starts" : [
+            "0"
+          ],
+          "Lengths" : [
+            "64"
+          ]
+        },
+        {
+          "Name" : "rand_init_PlH53hIC5U",
+          "Pattern Node Type" : "ParallelCallNode",
+          "InputData" : [
+          ],
+          "OutputData" : [
+            {
+              "Name" : "weights_4",
+              "Data Type" : "float",
+              "Dimension" : "2",
+              "Shape" : ["64","64"]
+            }
+          ],
+          "InputAccesses" : [
+          ],
+          "OutputAccesses" : [
+            {
+              "Variable" : "weights_4",
+              "Write" : "true",
+              "Type" : "Serial"
+            }
+          ],
+          "Cost" : "4096",
+          "Load/Store" : "20544",
+          "ID" : "oTlltAUmzy",
+          "Starts" : [
+            "0"
+          ],
+          "Lengths" : [
+            "64"
+          ]
+        },
+        {
+          "Name" : "rand_init_png5hzlbR4",
+          "Pattern Node Type" : "ParallelCallNode",
+          "InputData" : [
+          ],
+          "OutputData" : [
+            {
+              "Name" : "weights_5",
+              "Data Type" : "float",
+              "Dimension" : "2",
+              "Shape" : ["64","64"]
+            }
+          ],
+          "InputAccesses" : [
+          ],
+          "OutputAccesses" : [
+            {
+              "Variable" : "weights_5",
+              "Write" : "true",
+              "Type" : "Serial"
+            }
+          ],
+          "Cost" : "4096",
+          "Load/Store" : "20544",
+          "ID" : "2POGkaqyrx",
+          "Starts" : [
+            "0"
+          ],
+          "Lengths" : [
+            "64"
+          ]
+        },
+        {
+          "Name" : "rand_init_eeNUSUs3M2",
+          "Pattern Node Type" : "ParallelCallNode",
+          "InputData" : [
+          ],
+          "OutputData" : [
+            {
+              "Name" : "weights_6",
+              "Data Type" : "float",
+              "Dimension" : "2",
+              "Shape" : ["64","64"]
+            }
+          ],
+          "InputAccesses" : [
+          ],
+          "OutputAccesses" : [
+            {
+              "Variable" : "weights_6",
+              "Write" : "true",
+              "Type" : "Serial"
+            }
+          ],
+          "Cost" : "4096",
+          "Load/Store" : "20544",
+          "ID" : "ph2Nb8Le6E",
+          "Starts" : [
+            "0"
+          ],
+          "Lengths" : [
+            "64"
+          ]
+        },
+        {
+          "Name" : "rand_init_VrA8skJMcp",
+          "Pattern Node Type" : "ParallelCallNode",
+          "InputData" : [
+          ],
+          "OutputData" : [
+            {
+              "Name" : "weights_7",
+              "Data Type" : "float",
+              "Dimension" : "2",
+              "Shape" : ["64","64"]
+            }
+          ],
+          "InputAccesses" : [
+          ],
+          "OutputAccesses" : [
+            {
+              "Variable" : "weights_7",
+              "Write" : "true",
+              "Type" : "Serial"
+            }
+          ],
+          "Cost" : "4096",
+          "Load/Store" : "20544",
+          "ID" : "NVdP2frcqp",
+          "Starts" : [
+            "0"
+          ],
+          "Lengths" : [
+            "64"
+          ]
+        },
+        {
+          "Name" : "rand_init",
+          "Pattern Node Type" : "ParallelCallNode",
+          "InputData" : [
+          ],
+          "OutputData" : [
+            {
+              "Name" : "weights_8",
+              "Data Type" : "float",
+              "Dimension" : "2",
+              "Shape" : ["10","64"]
+            }
+          ],
+          "InputAccesses" : [
+          ],
+          "OutputAccesses" : [
+            {
+              "Variable" : "weights_8",
+              "Write" : "true",
+              "Type" : "Serial"
+            }
+          ],
+          "Cost" : "640",
+          "Load/Store" : "3210",
+          "ID" : "T2KxTFmcoc",
+          "Starts" : [
+            "0"
+          ],
+          "Lengths" : [
+            "10"
+          ]
+        },
+        {
+          "Pattern Node Type" : "SimpleExpressionBlockNode",
+          "InputData" : [
+            {
+              "Name" : "batch",
+              "Data Type" : "float",
+              "Dimension" : "2",
+              "Shape" : ["262144","64"]
+            }
+          ],
+          "OutputData" : [
+            {
+              "Name" : "batch",
+              "Data Type" : "float",
+              "Dimension" : "2",
+              "Shape" : ["262144","64"]
+            }
+          ],
+          "InputAccesses" : [
+            {
+              "Variable" : "batch",
+              "Write" : "false",
+              "Type" : "Serial"
+            }
+          ],
+          "OutputAccesses" : [
+            {
+              "Variable" : "batch",
+              "Write" : "true",
+              "Type" : "Serial"
+            }
+          ],
+          "Cost" : "0",
+          "Load/Store" : "1",
+          "ID" : "f6k456una7"        },
+        {
+          "Name" : "forward_BBhRO6II0W",
+          "Pattern Node Type" : "ParallelCallNode",
+          "InputData" : [
+            {
+              "Name" : "batch",
+              "Data Type" : "float",
+              "Dimension" : "2",
+              "Shape" : ["262144","64"]
+            },
+            {
+              "Name" : "weights_1",
+              "Data Type" : "float",
+              "Dimension" : "2",
+              "Shape" : ["64","64"]
+            }
+          ],
+          "OutputData" : [
+            {
+              "Name" : "activations_1",
+              "Data Type" : "float",
+              "Dimension" : "2",
+              "Shape" : ["262144","64"]
+            }
+          ],
+          "InputAccesses" : [
+            {
+              "Variable" : "batch",
+              "Write" : "false",
+              "Type" : "Serial"
+            },
+            {
+              "Variable" : "weights_1",
+              "Write" : "false",
+              "Type" : "Serial"
+            }
+          ],
+          "OutputAccesses" : [
+            {
+              "Variable" : "activations_1",
+              "Write" : "true",
+              "Type" : "Serial"
+            }
+          ],
+          "Cost" : "2499805184",
+          "Load/Store" : "10117447680",
+          "ID" : "gmIWCCfE2v",
+          "Starts" : [
+            "0"
+          ],
+          "Lengths" : [
+            "262144"
+          ]
+        },
+        {
+          "Name" : "forward_F4SnxAXfxf",
+          "Pattern Node Type" : "ParallelCallNode",
+          "InputData" : [
+            {
+              "Name" : "activations_1",
+              "Data Type" : "float",
+              "Dimension" : "2",
+              "Shape" : ["262144","64"]
+            },
+            {
+              "Name" : "weights_2",
+              "Data Type" : "float",
+              "Dimension" : "2",
+              "Shape" : ["64","64"]
+            }
+          ],
+          "OutputData" : [
+            {
+              "Name" : "activations_2",
+              "Data Type" : "float",
+              "Dimension" : "2",
+              "Shape" : ["262144","64"]
+            }
+          ],
+          "InputAccesses" : [
+            {
+              "Variable" : "activations_1",
+              "Write" : "false",
+              "Type" : "Serial"
+            },
+            {
+              "Variable" : "weights_2",
+              "Write" : "false",
+              "Type" : "Serial"
+            }
+          ],
+          "OutputAccesses" : [
+            {
+              "Variable" : "activations_2",
+              "Write" : "true",
+              "Type" : "Serial"
+            }
+          ],
+          "Cost" : "2499805184",
+          "Load/Store" : "10117447680",
+          "ID" : "d0BsXYH42Q",
+          "Starts" : [
+            "0"
+          ],
+          "Lengths" : [
+            "262144"
+          ]
+        },
+        {
+          "Name" : "forward_qAsnKyB9OD",
+          "Pattern Node Type" : "ParallelCallNode",
+          "InputData" : [
+            {
+              "Name" : "activations_2",
+              "Data Type" : "float",
+              "Dimension" : "2",
+              "Shape" : ["262144","64"]
+            },
+            {
+              "Name" : "weights_3",
+              "Data Type" : "float",
+              "Dimension" : "2",
+              "Shape" : ["64","64"]
+            }
+          ],
+          "OutputData" : [
+            {
+              "Name" : "activations_3",
+              "Data Type" : "float",
+              "Dimension" : "2",
+              "Shape" : ["262144","64"]
+            }
+          ],
+          "InputAccesses" : [
+            {
+              "Variable" : "activations_2",
+              "Write" : "false",
+              "Type" : "Serial"
+            },
+            {
+              "Variable" : "weights_3",
+              "Write" : "false",
+              "Type" : "Serial"
+            }
+          ],
+          "OutputAccesses" : [
+            {
+              "Variable" : "activations_3",
+              "Write" : "true",
+              "Type" : "Serial"
+            }
+          ],
+          "Cost" : "2499805184",
+          "Load/Store" : "10117447680",
+          "ID" : "ArcRNC6h2t",
+          "Starts" : [
+            "0"
+          ],
+          "Lengths" : [
+            "262144"
+          ]
+        },
+        {
+          "Name" : "forward_HmKGZlyhss",
+          "Pattern Node Type" : "ParallelCallNode",
+          "InputData" : [
+            {
+              "Name" : "activations_3",
+              "Data Type" : "float",
+              "Dimension" : "2",
+              "Shape" : ["262144","64"]
+            },
+            {
+              "Name" : "weights_4",
+              "Data Type" : "float",
+              "Dimension" : "2",
+              "Shape" : ["64","64"]
+            }
+          ],
+          "OutputData" : [
+            {
+              "Name" : "activations_4",
+              "Data Type" : "float",
+              "Dimension" : "2",
+              "Shape" : ["262144","64"]
+            }
+          ],
+          "InputAccesses" : [
+            {
+              "Variable" : "activations_3",
+              "Write" : "false",
+              "Type" : "Serial"
+            },
+            {
+              "Variable" : "weights_4",
+              "Write" : "false",
+              "Type" : "Serial"
+            }
+          ],
+          "OutputAccesses" : [
+            {
+              "Variable" : "activations_4",
+              "Write" : "true",
+              "Type" : "Serial"
+            }
+          ],
+          "Cost" : "2499805184",
+          "Load/Store" : "10117447680",
+          "ID" : "O6DFosnaAv",
+          "Starts" : [
+            "0"
+          ],
+          "Lengths" : [
+            "262144"
+          ]
+        },
+        {
+          "Name" : "forward_ojXO3RetP1",
+          "Pattern Node Type" : "ParallelCallNode",
+          "InputData" : [
+            {
+              "Name" : "activations_4",
+              "Data Type" : "float",
+              "Dimension" : "2",
+              "Shape" : ["262144","64"]
+            },
+            {
+              "Name" : "weights_5",
+              "Data Type" : "float",
+              "Dimension" : "2",
+              "Shape" : ["64","64"]
+            }
+          ],
+          "OutputData" : [
+            {
+              "Name" : "activations_5",
+              "Data Type" : "float",
+              "Dimension" : "2",
+              "Shape" : ["262144","64"]
+            }
+          ],
+          "InputAccesses" : [
+            {
+              "Variable" : "activations_4",
+              "Write" : "false",
+              "Type" : "Serial"
+            },
+            {
+              "Variable" : "weights_5",
+              "Write" : "false",
+              "Type" : "Serial"
+            }
+          ],
+          "OutputAccesses" : [
+            {
+              "Variable" : "activations_5",
+              "Write" : "true",
+              "Type" : "Serial"
+            }
+          ],
+          "Cost" : "2499805184",
+          "Load/Store" : "10117447680",
+          "ID" : "j2QUP96Rpp",
+          "Starts" : [
+            "0"
+          ],
+          "Lengths" : [
+            "262144"
+          ]
+        },
+        {
+          "Name" : "forward_QemoMWU8Ac",
+          "Pattern Node Type" : "ParallelCallNode",
+          "InputData" : [
+            {
+              "Name" : "activations_5",
+              "Data Type" : "float",
+              "Dimension" : "2",
+              "Shape" : ["262144","64"]
+            },
+            {
+              "Name" : "weights_6",
+              "Data Type" : "float",
+              "Dimension" : "2",
+              "Shape" : ["64","64"]
+            }
+          ],
+          "OutputData" : [
+            {
+              "Name" : "activations_6",
+              "Data Type" : "float",
+              "Dimension" : "2",
+              "Shape" : ["262144","64"]
+            }
+          ],
+          "InputAccesses" : [
+            {
+              "Variable" : "activations_5",
+              "Write" : "false",
+              "Type" : "Serial"
+            },
+            {
+              "Variable" : "weights_6",
+              "Write" : "false",
+              "Type" : "Serial"
+            }
+          ],
+          "OutputAccesses" : [
+            {
+              "Variable" : "activations_6",
+              "Write" : "true",
+              "Type" : "Serial"
+            }
+          ],
+          "Cost" : "2499805184",
+          "Load/Store" : "10117447680",
+          "ID" : "SDZaKGLNaJ",
+          "Starts" : [
+            "0"
+          ],
+          "Lengths" : [
+            "262144"
+          ]
+        },
+        {
+          "Name" : "forward_l600xy7egX",
+          "Pattern Node Type" : "ParallelCallNode",
+          "InputData" : [
+            {
+              "Name" : "activations_6",
+              "Data Type" : "float",
+              "Dimension" : "2",
+              "Shape" : ["262144","64"]
+            },
+            {
+              "Name" : "weights_7",
+              "Data Type" : "float",
+              "Dimension" : "2",
+              "Shape" : ["64","64"]
+            }
+          ],
+          "OutputData" : [
+            {
+              "Name" : "activations_7",
+              "Data Type" : "float",
+              "Dimension" : "2",
+              "Shape" : ["262144","64"]
+            }
+          ],
+          "InputAccesses" : [
+            {
+              "Variable" : "activations_6",
+              "Write" : "false",
+              "Type" : "Serial"
+            },
+            {
+              "Variable" : "weights_7",
+              "Write" : "false",
+              "Type" : "Serial"
+            }
+          ],
+          "OutputAccesses" : [
+            {
+              "Variable" : "activations_7",
+              "Write" : "true",
+              "Type" : "Serial"
+            }
+          ],
+          "Cost" : "2499805184",
+          "Load/Store" : "10117447680",
+          "ID" : "KZeOingj4j",
+          "Starts" : [
+            "0"
+          ],
+          "Lengths" : [
+            "262144"
+          ]
+        },
+        {
+          "Name" : "forward",
+          "Pattern Node Type" : "ParallelCallNode",
+          "InputData" : [
+            {
+              "Name" : "activations_7",
+              "Data Type" : "float",
+              "Dimension" : "2",
+              "Shape" : ["262144","64"]
+            },
+            {
+              "Name" : "weights_8",
+              "Data Type" : "float",
+              "Dimension" : "2",
+              "Shape" : ["10","64"]
+            }
+          ],
+          "OutputData" : [
+            {
+              "Name" : "result",
+              "Data Type" : "float",
+              "Dimension" : "2",
+              "Shape" : ["262144","10"]
+            }
+          ],
+          "InputAccesses" : [
+            {
+              "Variable" : "activations_7",
+              "Write" : "false",
+              "Type" : "Serial"
+            },
+            {
+              "Variable" : "weights_8",
+              "Write" : "false",
+              "Type" : "Serial"
+            }
+          ],
+          "OutputAccesses" : [
+            {
+              "Variable" : "result",
+              "Write" : "true",
+              "Type" : "Serial"
+            }
+          ],
+          "Cost" : "390594560",
+          "Load/Store" : "1581514752",
+          "ID" : "55Fv5kfcEE",
+          "Starts" : [
+            "0"
+          ],
+          "Lengths" : [
+            "262144"
+          ]
+        },
+        {
+          "Pattern Node Type" : "SimpleExpressionBlockNode",
+          "InputData" : [
+            {
+              "Name" : "result",
+              "Data Type" : "float",
+              "Dimension" : "2",
+              "Shape" : ["262144","10"]
+            }
+          ],
+          "OutputData" : [
+          ],
+          "InputAccesses" : [
+            {
+              "Variable" : "result",
+              "Write" : "false",
+              "Type" : "Serial"
+            }
+          ],
+          "OutputAccesses" : [
+          ],
+          "Cost" : "0",
+          "Load/Store" : "1",
+          "ID" : "K2INcFgGLg"        },
+        {
+          "Pattern Node Type" : "ReturnNode",
+          "InputData" : [
+          ],
+          "OutputData" : [
+          ],
+          "InputAccesses" : [
+          ],
+          "OutputAccesses" : [
+          ],
+          "Cost" : "0",
+          "Load/Store" : "0",
+          "ID" : "HudmlByeSh",
+          "Parallel Descendants" : "false",
+          "Result" : {
+            "Pattern Node Type" : "ComplexExpressionNode",
+            "InputData" : [
+            ],
+            "OutputData" : [
+            ],
+            "InputAccesses" : [
+            ],
+            "OutputAccesses" : [
+            ],
+            "Cost" : "0",
+            "Load/Store" : "0",
+            "ID" : "aTXWN3IjUJ",
+            "Parallel Descendants" : "false",
+            "Calls" : [
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "Name" : "layer",
+      "Pattern" : "Map",
+      "Input" : [
+        {
+          "Name" : "weights",
+          "Data Type" : "float",
+          "Dimension" : "2"
+        },
+        {
+          "Name" : "feature",
+          "Data Type" : "float",
+          "Dimension" : "1"
+        }
+      ],
+      "Output" : [
+        {
+          "Name" : "res",
+          "Data Type" : "float",
+          "Dimension" : "1"
+        }
+      ],
+      "Cost" : "149",
+      "Load/Store" : "598",
+      "Variables" : [
+        {
+          "Name" : "act",
+          "Data Type" : "float",
+          "Dimension" : "0"
+        },        {
+          "Name" : "z",
+          "Data Type" : "float",
+          "Dimension" : "0"
+        },        {
+          "Name" : "MAX_INT",
+          "Data Type" : "int32",
+          "Dimension" : "0"
+        }      ],
+      "Parallel Descendants" : "true",
+      "Children" : [
+        {
+          "Pattern Node Type" : "SimpleExpressionBlockNode",
+          "InputData" : [
+          ],
+          "OutputData" : [
+            {
+              "Name" : "z",
+              "Data Type" : "float",
+              "Dimension" : "0"
+            },
+            {
+              "Name" : "act",
+              "Data Type" : "float",
+              "Dimension" : "0"
+            }
+          ],
+          "InputAccesses" : [
+          ],
+          "OutputAccesses" : [
+            {
+              "Variable" : "z",
+              "Write" : "true",
+              "Type" : "Serial"
+            },
+            {
+              "Variable" : "act",
+              "Write" : "true",
+              "Type" : "Serial"
+            }
+          ],
+          "Cost" : "0",
+          "Load/Store" : "2",
+          "ID" : "dIDo1TKVRs"        },
+        {
+          "Name" : "mult_sum",
+          "Pattern Node Type" : "ParallelCallNode",
+          "InputData" : [
+            {
+              "Name" : "weights",
+              "Data Type" : "float",
+              "Dimension" : "2"
+            },
+            {
+              "Name" : "INDEX",
+              "Data Type" : "int32",
+              "Dimension" : "0"
+            },
+            {
+              "Name" : "feature",
+              "Data Type" : "float",
+              "Dimension" : "1"
+            }
+          ],
+          "OutputData" : [
+            {
+              "Name" : "z",
+              "Data Type" : "float",
+              "Dimension" : "0"
+            }
+          ],
+          "InputAccesses" : [
+            {
+              "Variable" : "weights",
+              "Write" : "false",
+              "Type" : "Map",
+              "Scaling" : ["1"],
+              "Shift" : ["0"],
+              "Iterator" : ["INDEX"]
+            },
+            {
+              "Variable" : "INDEX",
+              "Write" : "false",
+              "Type" : "Serial"
+            },
+            {
+              "Variable" : "feature",
+              "Write" : "false",
+              "Type" : "Serial"
+            }
+          ],
+          "OutputAccesses" : [
+            {
+              "Variable" : "z",
+              "Write" : "true",
+              "Type" : "Serial"
+            }
+          ],
+          "Cost" : "128",
+          "Load/Store" : "576",
+          "ID" : "2HhTKeCRte",
+          "Starts" : [
+            "0"
+          ],
+          "Lengths" : [
+            "64"
+          ]
+        },
+        {
+          "Pattern Node Type" : "ComplexExpressionNode",
+          "InputData" : [
+            {
+              "Name" : "z",
+              "Data Type" : "float",
+              "Dimension" : "0"
+            }
+          ],
+          "OutputData" : [
+            {
+              "Name" : "act",
+              "Data Type" : "float",
+              "Dimension" : "0"
+            }
+          ],
+          "InputAccesses" : [
+            {
+              "Variable" : "z",
+              "Write" : "false",
+              "Type" : "Serial"
+            }
+          ],
+          "OutputAccesses" : [
+            {
+              "Variable" : "act",
+              "Write" : "true",
+              "Type" : "Serial"
+            }
+          ],
+          "Cost" : "21",
+          "Load/Store" : "17",
+          "ID" : "zXDbag3uvH",
+          "Parallel Descendants" : "false",
+          "Calls" : [
+            {
+              "Pattern Node Type" : "CallNode",
+              "InputData" : [
+              ],
+              "OutputData" : [
+              ],
+              "InputAccesses" : [
+              ],
+              "OutputAccesses" : [
+              ],
+              "Cost" : "21",
+              "Load/Store" : "16",
+              "ID" : "ngXA8sDJLb",
+              "Parallel Descendants" : "false"
+            }
+          ]
+        },
+        {
+          "Pattern Node Type" : "SimpleExpressionBlockNode",
+          "InputData" : [
+            {
+              "Name" : "INDEX",
+              "Data Type" : "int32",
+              "Dimension" : "0"
+            },
+            {
+              "Name" : "act",
+              "Data Type" : "float",
+              "Dimension" : "0"
+            }
+          ],
+          "OutputData" : [
+            {
+              "Name" : "res",
+              "Data Type" : "float",
+              "Dimension" : "1"
+            }
+          ],
+          "InputAccesses" : [
+            {
+              "Variable" : "INDEX",
+              "Write" : "false",
+              "Type" : "Serial"
+            },
+            {
+              "Variable" : "act",
+              "Write" : "false",
+              "Type" : "Serial"
+            }
+          ],
+          "OutputAccesses" : [
+            {
+              "Variable" : "res",
+              "Write" : "true",
+              "Type" : "Map",
+              "Scaling" : ["1"],
+              "Shift" : ["0"],
+              "Iterator" : ["INDEX"]
+            }
+          ],
+          "Cost" : "0",
+          "Load/Store" : "3",
+          "ID" : "bqYi5suZxt"        }
+      ]
+    },
+    {
+      "Name" : "forward_l600xy7egX",
+      "Pattern" : "Map",
+      "Input" : [
+        {
+          "Name" : "batch",
+          "Data Type" : "float",
+          "Dimension" : "2"
+        },
+        {
+          "Name" : "weights",
+          "Data Type" : "float",
+          "Dimension" : "2"
+        }
+      ],
+      "Output" : [
+        {
+          "Name" : "res",
+          "Data Type" : "float",
+          "Dimension" : "2"
+        }
+      ],
+      "Cost" : "9536",
+      "Load/Store" : "38592",
+      "Variables" : [
+        {
+          "Name" : "MAX_INT",
+          "Data Type" : "int32",
+          "Dimension" : "0"
+        }      ],
+      "Parallel Descendants" : "true",
+      "Children" : [
+        {
+          "Name" : "layer_5fh5EmXI7W",
+          "Pattern Node Type" : "ParallelCallNode",
+          "InputData" : [
+            {
+              "Name" : "INDEX",
+              "Data Type" : "int32",
+              "Dimension" : "0"
+            },
+            {
+              "Name" : "weights",
+              "Data Type" : "float",
+              "Dimension" : "2"
+            },
+            {
+              "Name" : "batch",
+              "Data Type" : "float",
+              "Dimension" : "2"
+            }
+          ],
+          "OutputData" : [
+            {
+              "Name" : "res",
+              "Data Type" : "float",
+              "Dimension" : "2"
+            }
+          ],
+          "InputAccesses" : [
+            {
+              "Variable" : "INDEX",
+              "Write" : "false",
+              "Type" : "Serial"
+            },
+            {
+              "Variable" : "weights",
+              "Write" : "false",
+              "Type" : "Serial"
+            },
+            {
+              "Variable" : "batch",
+              "Write" : "false",
+              "Type" : "Map",
+              "Scaling" : ["1"],
+              "Shift" : ["0"],
+              "Iterator" : ["INDEX"]
+            },
+            {
+              "Variable" : "INDEX",
+              "Write" : "false",
+              "Type" : "Serial"
+            }
+          ],
+          "OutputAccesses" : [
+            {
+              "Variable" : "res",
+              "Write" : "true",
+              "Type" : "Map",
+              "Scaling" : ["1"],
+              "Shift" : ["0"],
+              "Iterator" : ["INDEX"]
+            }
+          ],
+          "Cost" : "9536",
+          "Load/Store" : "38592",
+          "ID" : "4e6BKzBn4c",
+          "Starts" : [
+            "0"
+          ],
+          "Lengths" : [
+            "64"
+          ]
+        }
+      ]
+    },
+    {
+      "Name" : "rand_init_VrA8skJMcp",
+      "Pattern" : "Map",
+      "Input" : [
+      ],
+      "Output" : [
+        {
+          "Name" : "res",
+          "Data Type" : "float",
+          "Dimension" : "2"
+        }
+      ],
+      "Cost" : "64",
+      "Load/Store" : "320",
+      "Variables" : [
+        {
+          "Name" : "MAX_INT",
+          "Data Type" : "int32",
+          "Dimension" : "0"
+        }      ],
+      "Parallel Descendants" : "true",
+      "Children" : [
+        {
+          "Name" : "rand_init_inner",
+          "Pattern Node Type" : "ParallelCallNode",
+          "InputData" : [
+            {
+              "Name" : "INDEX",
+              "Data Type" : "int32",
+              "Dimension" : "0"
+            }
+          ],
+          "OutputData" : [
+            {
+              "Name" : "res",
+              "Data Type" : "float",
+              "Dimension" : "2"
+            }
+          ],
+          "InputAccesses" : [
+            {
+              "Variable" : "INDEX",
+              "Write" : "false",
+              "Type" : "Serial"
+            }
+          ],
+          "OutputAccesses" : [
+            {
+              "Variable" : "res",
+              "Write" : "true",
+              "Type" : "Map",
+              "Scaling" : ["1"],
+              "Shift" : ["0"],
+              "Iterator" : ["INDEX"]
+            }
+          ],
+          "Cost" : "64",
+          "Load/Store" : "320",
+          "ID" : "MZ1vbDutzp",
+          "Starts" : [
+            "0"
+          ],
+          "Lengths" : [
+            "64"
+          ]
+        }
+      ]
+    },
+    {
+      "Name" : "layer_0GS1ogTrQc",
+      "Pattern" : "Map",
+      "Input" : [
+        {
+          "Name" : "weights",
+          "Data Type" : "float",
+          "Dimension" : "2"
+        },
+        {
+          "Name" : "feature",
+          "Data Type" : "float",
+          "Dimension" : "1"
+        }
+      ],
+      "Output" : [
+        {
+          "Name" : "res",
+          "Data Type" : "float",
+          "Dimension" : "1"
+        }
+      ],
+      "Cost" : "149",
+      "Load/Store" : "598",
+      "Variables" : [
+        {
+          "Name" : "act",
+          "Data Type" : "float",
+          "Dimension" : "0"
+        },        {
+          "Name" : "z",
+          "Data Type" : "float",
+          "Dimension" : "0"
+        },        {
+          "Name" : "MAX_INT",
+          "Data Type" : "int32",
+          "Dimension" : "0"
+        }      ],
+      "Parallel Descendants" : "true",
+      "Children" : [
+        {
+          "Pattern Node Type" : "SimpleExpressionBlockNode",
+          "InputData" : [
+          ],
+          "OutputData" : [
+            {
+              "Name" : "z",
+              "Data Type" : "float",
+              "Dimension" : "0"
+            },
+            {
+              "Name" : "act",
+              "Data Type" : "float",
+              "Dimension" : "0"
+            }
+          ],
+          "InputAccesses" : [
+          ],
+          "OutputAccesses" : [
+            {
+              "Variable" : "z",
+              "Write" : "true",
+              "Type" : "Serial"
+            },
+            {
+              "Variable" : "act",
+              "Write" : "true",
+              "Type" : "Serial"
+            }
+          ],
+          "Cost" : "0",
+          "Load/Store" : "2",
+          "ID" : "TDIuQJ58XA"        },
+        {
+          "Name" : "mult_sum",
+          "Pattern Node Type" : "ParallelCallNode",
+          "InputData" : [
+            {
+              "Name" : "weights",
+              "Data Type" : "float",
+              "Dimension" : "2"
+            },
+            {
+              "Name" : "INDEX",
+              "Data Type" : "int32",
+              "Dimension" : "0"
+            },
+            {
+              "Name" : "feature",
+              "Data Type" : "float",
+              "Dimension" : "1"
+            }
+          ],
+          "OutputData" : [
+            {
+              "Name" : "z",
+              "Data Type" : "float",
+              "Dimension" : "0"
+            }
+          ],
+          "InputAccesses" : [
+            {
+              "Variable" : "weights",
+              "Write" : "false",
+              "Type" : "Map",
+              "Scaling" : ["1"],
+              "Shift" : ["0"],
+              "Iterator" : ["INDEX"]
+            },
+            {
+              "Variable" : "INDEX",
+              "Write" : "false",
+              "Type" : "Serial"
+            },
+            {
+              "Variable" : "feature",
+              "Write" : "false",
+              "Type" : "Serial"
+            }
+          ],
+          "OutputAccesses" : [
+            {
+              "Variable" : "z",
+              "Write" : "true",
+              "Type" : "Serial"
+            }
+          ],
+          "Cost" : "128",
+          "Load/Store" : "576",
+          "ID" : "pusSOt5ims",
+          "Starts" : [
+            "0"
+          ],
+          "Lengths" : [
+            "64"
+          ]
+        },
+        {
+          "Pattern Node Type" : "ComplexExpressionNode",
+          "InputData" : [
+            {
+              "Name" : "z",
+              "Data Type" : "float",
+              "Dimension" : "0"
+            }
+          ],
+          "OutputData" : [
+            {
+              "Name" : "act",
+              "Data Type" : "float",
+              "Dimension" : "0"
+            }
+          ],
+          "InputAccesses" : [
+            {
+              "Variable" : "z",
+              "Write" : "false",
+              "Type" : "Serial"
+            }
+          ],
+          "OutputAccesses" : [
+            {
+              "Variable" : "act",
+              "Write" : "true",
+              "Type" : "Serial"
+            }
+          ],
+          "Cost" : "21",
+          "Load/Store" : "17",
+          "ID" : "sNHREcbQAV",
+          "Parallel Descendants" : "false",
+          "Calls" : [
+            {
+              "Pattern Node Type" : "CallNode",
+              "InputData" : [
+              ],
+              "OutputData" : [
+              ],
+              "InputAccesses" : [
+              ],
+              "OutputAccesses" : [
+              ],
+              "Cost" : "21",
+              "Load/Store" : "16",
+              "ID" : "dJsr1UGYXD",
+              "Parallel Descendants" : "false"
+            }
+          ]
+        },
+        {
+          "Pattern Node Type" : "SimpleExpressionBlockNode",
+          "InputData" : [
+            {
+              "Name" : "INDEX",
+              "Data Type" : "int32",
+              "Dimension" : "0"
+            },
+            {
+              "Name" : "act",
+              "Data Type" : "float",
+              "Dimension" : "0"
+            }
+          ],
+          "OutputData" : [
+            {
+              "Name" : "res",
+              "Data Type" : "float",
+              "Dimension" : "1"
+            }
+          ],
+          "InputAccesses" : [
+            {
+              "Variable" : "INDEX",
+              "Write" : "false",
+              "Type" : "Serial"
+            },
+            {
+              "Variable" : "act",
+              "Write" : "false",
+              "Type" : "Serial"
+            }
+          ],
+          "OutputAccesses" : [
+            {
+              "Variable" : "res",
+              "Write" : "true",
+              "Type" : "Map",
+              "Scaling" : ["1"],
+              "Shift" : ["0"],
+              "Iterator" : ["INDEX"]
+            }
+          ],
+          "Cost" : "0",
+          "Load/Store" : "3",
+          "ID" : "IEi7ozKmQN"        }
+      ]
+    },
+    {
+      "Name" : "forward_QemoMWU8Ac",
+      "Pattern" : "Map",
+      "Input" : [
+        {
+          "Name" : "batch",
+          "Data Type" : "float",
+          "Dimension" : "2"
+        },
+        {
+          "Name" : "weights",
+          "Data Type" : "float",
+          "Dimension" : "2"
+        }
+      ],
+      "Output" : [
+        {
+          "Name" : "res",
+          "Data Type" : "float",
+          "Dimension" : "2"
+        }
+      ],
+      "Cost" : "9536",
+      "Load/Store" : "38592",
+      "Variables" : [
+        {
+          "Name" : "MAX_INT",
+          "Data Type" : "int32",
+          "Dimension" : "0"
+        }      ],
+      "Parallel Descendants" : "true",
+      "Children" : [
+        {
+          "Name" : "layer_NiPMgnl68J",
+          "Pattern Node Type" : "ParallelCallNode",
+          "InputData" : [
+            {
+              "Name" : "INDEX",
+              "Data Type" : "int32",
+              "Dimension" : "0"
+            },
+            {
+              "Name" : "weights",
+              "Data Type" : "float",
+              "Dimension" : "2"
+            },
+            {
+              "Name" : "batch",
+              "Data Type" : "float",
+              "Dimension" : "2"
+            }
+          ],
+          "OutputData" : [
+            {
+              "Name" : "res",
+              "Data Type" : "float",
+              "Dimension" : "2"
+            }
+          ],
+          "InputAccesses" : [
+            {
+              "Variable" : "INDEX",
+              "Write" : "false",
+              "Type" : "Serial"
+            },
+            {
+              "Variable" : "weights",
+              "Write" : "false",
+              "Type" : "Serial"
+            },
+            {
+              "Variable" : "batch",
+              "Write" : "false",
+              "Type" : "Map",
+              "Scaling" : ["1"],
+              "Shift" : ["0"],
+              "Iterator" : ["INDEX"]
+            },
+            {
+              "Variable" : "INDEX",
+              "Write" : "false",
+              "Type" : "Serial"
+            }
+          ],
+          "OutputAccesses" : [
+            {
+              "Variable" : "res",
+              "Write" : "true",
+              "Type" : "Map",
+              "Scaling" : ["1"],
+              "Shift" : ["0"],
+              "Iterator" : ["INDEX"]
+            }
+          ],
+          "Cost" : "9536",
+          "Load/Store" : "38592",
+          "ID" : "hFZukBkpmV",
+          "Starts" : [
+            "0"
+          ],
+          "Lengths" : [
+            "64"
+          ]
+        }
+      ]
+    },
+    {
+      "Name" : "rand_init_inner",
+      "Pattern" : "Map",
+      "Input" : [
+      ],
+      "Output" : [
+        {
+          "Name" : "res",
+          "Data Type" : "float",
+          "Dimension" : "1"
+        }
+      ],
+      "Cost" : "1",
+      "Load/Store" : "3",
+      "Variables" : [
+        {
+          "Name" : "MAX_INT",
+          "Data Type" : "int32",
+          "Dimension" : "0"
+        }      ],
+      "Parallel Descendants" : "false",
+      "Children" : [
+        {
+          "Pattern Node Type" : "ComplexExpressionNode",
+          "InputData" : [
+            {
+              "Name" : "INDEX",
+              "Data Type" : "int32",
+              "Dimension" : "0"
+            },
+            {
+              "Name" : "MAX_INT",
+              "Data Type" : "int32",
+              "Dimension" : "0"
+            }
+          ],
+          "OutputData" : [
+            {
+              "Name" : "res",
+              "Data Type" : "float",
+              "Dimension" : "1"
+            }
+          ],
+          "InputAccesses" : [
+            {
+              "Variable" : "INDEX",
+              "Write" : "false",
+              "Type" : "Serial"
+            },
+            {
+              "Variable" : "MAX_INT",
+              "Write" : "false",
+              "Type" : "Serial"
+            }
+          ],
+          "OutputAccesses" : [
+            {
+              "Variable" : "res",
+              "Write" : "true",
+              "Type" : "Map",
+              "Scaling" : ["1"],
+              "Shift" : ["0"],
+              "Iterator" : ["INDEX"]
+            }
+          ],
+          "Cost" : "1",
+          "Load/Store" : "3",
+          "ID" : "rNJOT3DttL",
+          "Parallel Descendants" : "false",
+          "Calls" : [
+          ]
+        }
+      ]
+    },
+    {
+      "Name" : "layer_7V1ACO7Ujv",
+      "Pattern" : "Map",
+      "Input" : [
+        {
+          "Name" : "weights",
+          "Data Type" : "float",
+          "Dimension" : "2"
+        },
+        {
+          "Name" : "feature",
+          "Data Type" : "float",
+          "Dimension" : "1"
+        }
+      ],
+      "Output" : [
+        {
+          "Name" : "res",
+          "Data Type" : "float",
+          "Dimension" : "1"
+        }
+      ],
+      "Cost" : "149",
+      "Load/Store" : "598",
+      "Variables" : [
+        {
+          "Name" : "act",
+          "Data Type" : "float",
+          "Dimension" : "0"
+        },        {
+          "Name" : "z",
+          "Data Type" : "float",
+          "Dimension" : "0"
+        },        {
+          "Name" : "MAX_INT",
+          "Data Type" : "int32",
+          "Dimension" : "0"
+        }      ],
+      "Parallel Descendants" : "true",
+      "Children" : [
+        {
+          "Pattern Node Type" : "SimpleExpressionBlockNode",
+          "InputData" : [
+          ],
+          "OutputData" : [
+            {
+              "Name" : "z",
+              "Data Type" : "float",
+              "Dimension" : "0"
+            },
+            {
+              "Name" : "act",
+              "Data Type" : "float",
+              "Dimension" : "0"
+            }
+          ],
+          "InputAccesses" : [
+          ],
+          "OutputAccesses" : [
+            {
+              "Variable" : "z",
+              "Write" : "true",
+              "Type" : "Serial"
+            },
+            {
+              "Variable" : "act",
+              "Write" : "true",
+              "Type" : "Serial"
+            }
+          ],
+          "Cost" : "0",
+          "Load/Store" : "2",
+          "ID" : "TekJhTYWhb"        },
+        {
+          "Name" : "mult_sum",
+          "Pattern Node Type" : "ParallelCallNode",
+          "InputData" : [
+            {
+              "Name" : "weights",
+              "Data Type" : "float",
+              "Dimension" : "2"
+            },
+            {
+              "Name" : "INDEX",
+              "Data Type" : "int32",
+              "Dimension" : "0"
+            },
+            {
+              "Name" : "feature",
+              "Data Type" : "float",
+              "Dimension" : "1"
+            }
+          ],
+          "OutputData" : [
+            {
+              "Name" : "z",
+              "Data Type" : "float",
+              "Dimension" : "0"
+            }
+          ],
+          "InputAccesses" : [
+            {
+              "Variable" : "weights",
+              "Write" : "false",
+              "Type" : "Map",
+              "Scaling" : ["1"],
+              "Shift" : ["0"],
+              "Iterator" : ["INDEX"]
+            },
+            {
+              "Variable" : "INDEX",
+              "Write" : "false",
+              "Type" : "Serial"
+            },
+            {
+              "Variable" : "feature",
+              "Write" : "false",
+              "Type" : "Serial"
+            }
+          ],
+          "OutputAccesses" : [
+            {
+              "Variable" : "z",
+              "Write" : "true",
+              "Type" : "Serial"
+            }
+          ],
+          "Cost" : "128",
+          "Load/Store" : "576",
+          "ID" : "hRJjNqBTuS",
+          "Starts" : [
+            "0"
+          ],
+          "Lengths" : [
+            "64"
+          ]
+        },
+        {
+          "Pattern Node Type" : "ComplexExpressionNode",
+          "InputData" : [
+            {
+              "Name" : "z",
+              "Data Type" : "float",
+              "Dimension" : "0"
+            }
+          ],
+          "OutputData" : [
+            {
+              "Name" : "act",
+              "Data Type" : "float",
+              "Dimension" : "0"
+            }
+          ],
+          "InputAccesses" : [
+            {
+              "Variable" : "z",
+              "Write" : "false",
+              "Type" : "Serial"
+            }
+          ],
+          "OutputAccesses" : [
+            {
+              "Variable" : "act",
+              "Write" : "true",
+              "Type" : "Serial"
+            }
+          ],
+          "Cost" : "21",
+          "Load/Store" : "17",
+          "ID" : "AEgZCVkDOY",
+          "Parallel Descendants" : "false",
+          "Calls" : [
+            {
+              "Pattern Node Type" : "CallNode",
+              "InputData" : [
+              ],
+              "OutputData" : [
+              ],
+              "InputAccesses" : [
+              ],
+              "OutputAccesses" : [
+              ],
+              "Cost" : "21",
+              "Load/Store" : "16",
+              "ID" : "I2RDIYWcIo",
+              "Parallel Descendants" : "false"
+            }
+          ]
+        },
+        {
+          "Pattern Node Type" : "SimpleExpressionBlockNode",
+          "InputData" : [
+            {
+              "Name" : "INDEX",
+              "Data Type" : "int32",
+              "Dimension" : "0"
+            },
+            {
+              "Name" : "act",
+              "Data Type" : "float",
+              "Dimension" : "0"
+            }
+          ],
+          "OutputData" : [
+            {
+              "Name" : "res",
+              "Data Type" : "float",
+              "Dimension" : "1"
+            }
+          ],
+          "InputAccesses" : [
+            {
+              "Variable" : "INDEX",
+              "Write" : "false",
+              "Type" : "Serial"
+            },
+            {
+              "Variable" : "act",
+              "Write" : "false",
+              "Type" : "Serial"
+            }
+          ],
+          "OutputAccesses" : [
+            {
+              "Variable" : "res",
+              "Write" : "true",
+              "Type" : "Map",
+              "Scaling" : ["1"],
+              "Shift" : ["0"],
+              "Iterator" : ["INDEX"]
+            }
+          ],
+          "Cost" : "0",
+          "Load/Store" : "3",
+          "ID" : "P5FqGs1jFY"        }
+      ]
+    },
+    {
+      "Name" : "forward_qAsnKyB9OD",
+      "Pattern" : "Map",
+      "Input" : [
+        {
+          "Name" : "batch",
+          "Data Type" : "float",
+          "Dimension" : "2"
+        },
+        {
+          "Name" : "weights",
+          "Data Type" : "float",
+          "Dimension" : "2"
+        }
+      ],
+      "Output" : [
+        {
+          "Name" : "res",
+          "Data Type" : "float",
+          "Dimension" : "2"
+        }
+      ],
+      "Cost" : "9536",
+      "Load/Store" : "38592",
+      "Variables" : [
+        {
+          "Name" : "MAX_INT",
+          "Data Type" : "int32",
+          "Dimension" : "0"
+        }      ],
+      "Parallel Descendants" : "true",
+      "Children" : [
+        {
+          "Name" : "layer_7V1ACO7Ujv",
+          "Pattern Node Type" : "ParallelCallNode",
+          "InputData" : [
+            {
+              "Name" : "INDEX",
+              "Data Type" : "int32",
+              "Dimension" : "0"
+            },
+            {
+              "Name" : "weights",
+              "Data Type" : "float",
+              "Dimension" : "2"
+            },
+            {
+              "Name" : "batch",
+              "Data Type" : "float",
+              "Dimension" : "2"
+            }
+          ],
+          "OutputData" : [
+            {
+              "Name" : "res",
+              "Data Type" : "float",
+              "Dimension" : "2"
+            }
+          ],
+          "InputAccesses" : [
+            {
+              "Variable" : "INDEX",
+              "Write" : "false",
+              "Type" : "Serial"
+            },
+            {
+              "Variable" : "weights",
+              "Write" : "false",
+              "Type" : "Serial"
+            },
+            {
+              "Variable" : "batch",
+              "Write" : "false",
+              "Type" : "Map",
+              "Scaling" : ["1"],
+              "Shift" : ["0"],
+              "Iterator" : ["INDEX"]
+            },
+            {
+              "Variable" : "INDEX",
+              "Write" : "false",
+              "Type" : "Serial"
+            }
+          ],
+          "OutputAccesses" : [
+            {
+              "Variable" : "res",
+              "Write" : "true",
+              "Type" : "Map",
+              "Scaling" : ["1"],
+              "Shift" : ["0"],
+              "Iterator" : ["INDEX"]
+            }
+          ],
+          "Cost" : "9536",
+          "Load/Store" : "38592",
+          "ID" : "iNMqq7GHzQ",
+          "Starts" : [
+            "0"
+          ],
+          "Lengths" : [
+            "64"
+          ]
+        }
+      ]
+    },
+    {
+      "Name" : "rand_init_eeNUSUs3M2",
+      "Pattern" : "Map",
+      "Input" : [
+      ],
+      "Output" : [
+        {
+          "Name" : "res",
+          "Data Type" : "float",
+          "Dimension" : "2"
+        }
+      ],
+      "Cost" : "64",
+      "Load/Store" : "320",
+      "Variables" : [
+        {
+          "Name" : "MAX_INT",
+          "Data Type" : "int32",
+          "Dimension" : "0"
+        }      ],
+      "Parallel Descendants" : "true",
+      "Children" : [
+        {
+          "Name" : "rand_init_inner",
+          "Pattern Node Type" : "ParallelCallNode",
+          "InputData" : [
+            {
+              "Name" : "INDEX",
+              "Data Type" : "int32",
+              "Dimension" : "0"
+            }
+          ],
+          "OutputData" : [
+            {
+              "Name" : "res",
+              "Data Type" : "float",
+              "Dimension" : "2"
+            }
+          ],
+          "InputAccesses" : [
+            {
+              "Variable" : "INDEX",
+              "Write" : "false",
+              "Type" : "Serial"
+            }
+          ],
+          "OutputAccesses" : [
+            {
+              "Variable" : "res",
+              "Write" : "true",
+              "Type" : "Map",
+              "Scaling" : ["1"],
+              "Shift" : ["0"],
+              "Iterator" : ["INDEX"]
+            }
+          ],
+          "Cost" : "64",
+          "Load/Store" : "320",
+          "ID" : "NGUO66nR1X",
+          "Starts" : [
+            "0"
+          ],
+          "Lengths" : [
+            "64"
+          ]
+        }
+      ]
+    },
+    {
+      "Name" : "layer_RG5BLAshtX",
+      "Pattern" : "Map",
+      "Input" : [
+        {
+          "Name" : "weights",
+          "Data Type" : "float",
+          "Dimension" : "2"
+        },
+        {
+          "Name" : "feature",
+          "Data Type" : "float",
+          "Dimension" : "1"
+        }
+      ],
+      "Output" : [
+        {
+          "Name" : "res",
+          "Data Type" : "float",
+          "Dimension" : "1"
+        }
+      ],
+      "Cost" : "149",
+      "Load/Store" : "598",
+      "Variables" : [
+        {
+          "Name" : "act",
+          "Data Type" : "float",
+          "Dimension" : "0"
+        },        {
+          "Name" : "z",
+          "Data Type" : "float",
+          "Dimension" : "0"
+        },        {
+          "Name" : "MAX_INT",
+          "Data Type" : "int32",
+          "Dimension" : "0"
+        }      ],
+      "Parallel Descendants" : "true",
+      "Children" : [
+        {
+          "Pattern Node Type" : "SimpleExpressionBlockNode",
+          "InputData" : [
+          ],
+          "OutputData" : [
+            {
+              "Name" : "z",
+              "Data Type" : "float",
+              "Dimension" : "0"
+            },
+            {
+              "Name" : "act",
+              "Data Type" : "float",
+              "Dimension" : "0"
+            }
+          ],
+          "InputAccesses" : [
+          ],
+          "OutputAccesses" : [
+            {
+              "Variable" : "z",
+              "Write" : "true",
+              "Type" : "Serial"
+            },
+            {
+              "Variable" : "act",
+              "Write" : "true",
+              "Type" : "Serial"
+            }
+          ],
+          "Cost" : "0",
+          "Load/Store" : "2",
+          "ID" : "I0SI8sYFBo"        },
+        {
+          "Name" : "mult_sum",
+          "Pattern Node Type" : "ParallelCallNode",
+          "InputData" : [
+            {
+              "Name" : "weights",
+              "Data Type" : "float",
+              "Dimension" : "2"
+            },
+            {
+              "Name" : "INDEX",
+              "Data Type" : "int32",
+              "Dimension" : "0"
+            },
+            {
+              "Name" : "feature",
+              "Data Type" : "float",
+              "Dimension" : "1"
+            }
+          ],
+          "OutputData" : [
+            {
+              "Name" : "z",
+              "Data Type" : "float",
+              "Dimension" : "0"
+            }
+          ],
+          "InputAccesses" : [
+            {
+              "Variable" : "weights",
+              "Write" : "false",
+              "Type" : "Map",
+              "Scaling" : ["1"],
+              "Shift" : ["0"],
+              "Iterator" : ["INDEX"]
+            },
+            {
+              "Variable" : "INDEX",
+              "Write" : "false",
+              "Type" : "Serial"
+            },
+            {
+              "Variable" : "feature",
+              "Write" : "false",
+              "Type" : "Serial"
+            }
+          ],
+          "OutputAccesses" : [
+            {
+              "Variable" : "z",
+              "Write" : "true",
+              "Type" : "Serial"
+            }
+          ],
+          "Cost" : "128",
+          "Load/Store" : "576",
+          "ID" : "tPbHP8Vsak",
+          "Starts" : [
+            "0"
+          ],
+          "Lengths" : [
+            "64"
+          ]
+        },
+        {
+          "Pattern Node Type" : "ComplexExpressionNode",
+          "InputData" : [
+            {
+              "Name" : "z",
+              "Data Type" : "float",
+              "Dimension" : "0"
+            }
+          ],
+          "OutputData" : [
+            {
+              "Name" : "act",
+              "Data Type" : "float",
+              "Dimension" : "0"
+            }
+          ],
+          "InputAccesses" : [
+            {
+              "Variable" : "z",
+              "Write" : "false",
+              "Type" : "Serial"
+            }
+          ],
+          "OutputAccesses" : [
+            {
+              "Variable" : "act",
+              "Write" : "true",
+              "Type" : "Serial"
+            }
+          ],
+          "Cost" : "21",
+          "Load/Store" : "17",
+          "ID" : "bSbnD5L1pi",
+          "Parallel Descendants" : "false",
+          "Calls" : [
+            {
+              "Pattern Node Type" : "CallNode",
+              "InputData" : [
+              ],
+              "OutputData" : [
+              ],
+              "InputAccesses" : [
+              ],
+              "OutputAccesses" : [
+              ],
+              "Cost" : "21",
+              "Load/Store" : "16",
+              "ID" : "zxfxdC4XT0",
+              "Parallel Descendants" : "false"
+            }
+          ]
+        },
+        {
+          "Pattern Node Type" : "SimpleExpressionBlockNode",
+          "InputData" : [
+            {
+              "Name" : "INDEX",
+              "Data Type" : "int32",
+              "Dimension" : "0"
+            },
+            {
+              "Name" : "act",
+              "Data Type" : "float",
+              "Dimension" : "0"
+            }
+          ],
+          "OutputData" : [
+            {
+              "Name" : "res",
+              "Data Type" : "float",
+              "Dimension" : "1"
+            }
+          ],
+          "InputAccesses" : [
+            {
+              "Variable" : "INDEX",
+              "Write" : "false",
+              "Type" : "Serial"
+            },
+            {
+              "Variable" : "act",
+              "Write" : "false",
+              "Type" : "Serial"
+            }
+          ],
+          "OutputAccesses" : [
+            {
+              "Variable" : "res",
+              "Write" : "true",
+              "Type" : "Map",
+              "Scaling" : ["1"],
+              "Shift" : ["0"],
+              "Iterator" : ["INDEX"]
+            }
+          ],
+          "Cost" : "0",
+          "Load/Store" : "3",
+          "ID" : "iBEQKJHfX9"        }
+      ]
+    },
+    {
+      "Name" : "forward_ojXO3RetP1",
+      "Pattern" : "Map",
+      "Input" : [
+        {
+          "Name" : "batch",
+          "Data Type" : "float",
+          "Dimension" : "2"
+        },
+        {
+          "Name" : "weights",
+          "Data Type" : "float",
+          "Dimension" : "2"
+        }
+      ],
+      "Output" : [
+        {
+          "Name" : "res",
+          "Data Type" : "float",
+          "Dimension" : "2"
+        }
+      ],
+      "Cost" : "9536",
+      "Load/Store" : "38592",
+      "Variables" : [
+        {
+          "Name" : "MAX_INT",
+          "Data Type" : "int32",
+          "Dimension" : "0"
+        }      ],
+      "Parallel Descendants" : "true",
+      "Children" : [
+        {
+          "Name" : "layer_8lJLO96WuW",
+          "Pattern Node Type" : "ParallelCallNode",
+          "InputData" : [
+            {
+              "Name" : "INDEX",
+              "Data Type" : "int32",
+              "Dimension" : "0"
+            },
+            {
+              "Name" : "weights",
+              "Data Type" : "float",
+              "Dimension" : "2"
+            },
+            {
+              "Name" : "batch",
+              "Data Type" : "float",
+              "Dimension" : "2"
+            }
+          ],
+          "OutputData" : [
+            {
+              "Name" : "res",
+              "Data Type" : "float",
+              "Dimension" : "2"
+            }
+          ],
+          "InputAccesses" : [
+            {
+              "Variable" : "INDEX",
+              "Write" : "false",
+              "Type" : "Serial"
+            },
+            {
+              "Variable" : "weights",
+              "Write" : "false",
+              "Type" : "Serial"
+            },
+            {
+              "Variable" : "batch",
+              "Write" : "false",
+              "Type" : "Map",
+              "Scaling" : ["1"],
+              "Shift" : ["0"],
+              "Iterator" : ["INDEX"]
+            },
+            {
+              "Variable" : "INDEX",
+              "Write" : "false",
+              "Type" : "Serial"
+            }
+          ],
+          "OutputAccesses" : [
+            {
+              "Variable" : "res",
+              "Write" : "true",
+              "Type" : "Map",
+              "Scaling" : ["1"],
+              "Shift" : ["0"],
+              "Iterator" : ["INDEX"]
+            }
+          ],
+          "Cost" : "9536",
+          "Load/Store" : "38592",
+          "ID" : "7p1IDyJiTs",
+          "Starts" : [
+            "0"
+          ],
+          "Lengths" : [
+            "64"
+          ]
+        }
+      ]
+    },
+    {
+      "Name" : "rand_init",
+      "Pattern" : "Map",
+      "Input" : [
+      ],
+      "Output" : [
+        {
+          "Name" : "res",
+          "Data Type" : "float",
+          "Dimension" : "2"
+        }
+      ],
+      "Cost" : "64",
+      "Load/Store" : "320",
+      "Variables" : [
+        {
+          "Name" : "MAX_INT",
+          "Data Type" : "int32",
+          "Dimension" : "0"
+        }      ],
+      "Parallel Descendants" : "true",
+      "Children" : [
+        {
+          "Name" : "rand_init_inner",
+          "Pattern Node Type" : "ParallelCallNode",
+          "InputData" : [
+            {
+              "Name" : "INDEX",
+              "Data Type" : "int32",
+              "Dimension" : "0"
+            }
+          ],
+          "OutputData" : [
+            {
+              "Name" : "res",
+              "Data Type" : "float",
+              "Dimension" : "2"
+            }
+          ],
+          "InputAccesses" : [
+            {
+              "Variable" : "INDEX",
+              "Write" : "false",
+              "Type" : "Serial"
+            }
+          ],
+          "OutputAccesses" : [
+            {
+              "Variable" : "res",
+              "Write" : "true",
+              "Type" : "Map",
+              "Scaling" : ["1"],
+              "Shift" : ["0"],
+              "Iterator" : ["INDEX"]
+            }
+          ],
+          "Cost" : "64",
+          "Load/Store" : "320",
+          "ID" : "cZ02sSAZDs",
+          "Starts" : [
+            "0"
+          ],
+          "Lengths" : [
+            "64"
+          ]
+        }
+      ]
+    },
+    {
+      "Name" : "forward_BBhRO6II0W",
+      "Pattern" : "Map",
+      "Input" : [
+        {
+          "Name" : "batch",
+          "Data Type" : "float",
+          "Dimension" : "2"
+        },
+        {
+          "Name" : "weights",
+          "Data Type" : "float",
+          "Dimension" : "2"
+        }
+      ],
+      "Output" : [
+        {
+          "Name" : "res",
+          "Data Type" : "float",
+          "Dimension" : "2"
+        }
+      ],
+      "Cost" : "9536",
+      "Load/Store" : "38592",
+      "Variables" : [
+        {
+          "Name" : "MAX_INT",
+          "Data Type" : "int32",
+          "Dimension" : "0"
+        }      ],
+      "Parallel Descendants" : "true",
+      "Children" : [
+        {
+          "Name" : "layer_osQKQJzbQE",
+          "Pattern Node Type" : "ParallelCallNode",
+          "InputData" : [
+            {
+              "Name" : "INDEX",
+              "Data Type" : "int32",
+              "Dimension" : "0"
+            },
+            {
+              "Name" : "weights",
+              "Data Type" : "float",
+              "Dimension" : "2"
+            },
+            {
+              "Name" : "batch",
+              "Data Type" : "float",
+              "Dimension" : "2"
+            }
+          ],
+          "OutputData" : [
+            {
+              "Name" : "res",
+              "Data Type" : "float",
+              "Dimension" : "2"
+            }
+          ],
+          "InputAccesses" : [
+            {
+              "Variable" : "INDEX",
+              "Write" : "false",
+              "Type" : "Serial"
+            },
+            {
+              "Variable" : "weights",
+              "Write" : "false",
+              "Type" : "Serial"
+            },
+            {
+              "Variable" : "batch",
+              "Write" : "false",
+              "Type" : "Map",
+              "Scaling" : ["1"],
+              "Shift" : ["0"],
+              "Iterator" : ["INDEX"]
+            },
+            {
+              "Variable" : "INDEX",
+              "Write" : "false",
+              "Type" : "Serial"
+            }
+          ],
+          "OutputAccesses" : [
+            {
+              "Variable" : "res",
+              "Write" : "true",
+              "Type" : "Map",
+              "Scaling" : ["1"],
+              "Shift" : ["0"],
+              "Iterator" : ["INDEX"]
+            }
+          ],
+          "Cost" : "9536",
+          "Load/Store" : "38592",
+          "ID" : "Yk6XqxOZH7",
+          "Starts" : [
+            "0"
+          ],
+          "Lengths" : [
+            "64"
+          ]
+        }
+      ]
+    },
+    {
+      "Name" : "forward_F4SnxAXfxf",
+      "Pattern" : "Map",
+      "Input" : [
+        {
+          "Name" : "batch",
+          "Data Type" : "float",
+          "Dimension" : "2"
+        },
+        {
+          "Name" : "weights",
+          "Data Type" : "float",
+          "Dimension" : "2"
+        }
+      ],
+      "Output" : [
+        {
+          "Name" : "res",
+          "Data Type" : "float",
+          "Dimension" : "2"
+        }
+      ],
+      "Cost" : "9536",
+      "Load/Store" : "38592",
+      "Variables" : [
+        {
+          "Name" : "MAX_INT",
+          "Data Type" : "int32",
+          "Dimension" : "0"
+        }      ],
+      "Parallel Descendants" : "true",
+      "Children" : [
+        {
+          "Name" : "layer_0GS1ogTrQc",
+          "Pattern Node Type" : "ParallelCallNode",
+          "InputData" : [
+            {
+              "Name" : "INDEX",
+              "Data Type" : "int32",
+              "Dimension" : "0"
+            },
+            {
+              "Name" : "weights",
+              "Data Type" : "float",
+              "Dimension" : "2"
+            },
+            {
+              "Name" : "batch",
+              "Data Type" : "float",
+              "Dimension" : "2"
+            }
+          ],
+          "OutputData" : [
+            {
+              "Name" : "res",
+              "Data Type" : "float",
+              "Dimension" : "2"
+            }
+          ],
+          "InputAccesses" : [
+            {
+              "Variable" : "INDEX",
+              "Write" : "false",
+              "Type" : "Serial"
+            },
+            {
+              "Variable" : "weights",
+              "Write" : "false",
+              "Type" : "Serial"
+            },
+            {
+              "Variable" : "batch",
+              "Write" : "false",
+              "Type" : "Map",
+              "Scaling" : ["1"],
+              "Shift" : ["0"],
+              "Iterator" : ["INDEX"]
+            },
+            {
+              "Variable" : "INDEX",
+              "Write" : "false",
+              "Type" : "Serial"
+            }
+          ],
+          "OutputAccesses" : [
+            {
+              "Variable" : "res",
+              "Write" : "true",
+              "Type" : "Map",
+              "Scaling" : ["1"],
+              "Shift" : ["0"],
+              "Iterator" : ["INDEX"]
+            }
+          ],
+          "Cost" : "9536",
+          "Load/Store" : "38592",
+          "ID" : "RI1CKBNBFK",
+          "Starts" : [
+            "0"
+          ],
+          "Lengths" : [
+            "64"
+          ]
+        }
+      ]
+    },
+    {
+      "Name" : "forward",
+      "Pattern" : "Map",
+      "Input" : [
+        {
+          "Name" : "batch",
+          "Data Type" : "float",
+          "Dimension" : "2"
+        },
+        {
+          "Name" : "weights",
+          "Data Type" : "float",
+          "Dimension" : "2"
+        }
+      ],
+      "Output" : [
+        {
+          "Name" : "res",
+          "Data Type" : "float",
+          "Dimension" : "2"
+        }
+      ],
+      "Cost" : "1490",
+      "Load/Store" : "6030",
+      "Variables" : [
+        {
+          "Name" : "MAX_INT",
+          "Data Type" : "int32",
+          "Dimension" : "0"
+        }      ],
+      "Parallel Descendants" : "true",
+      "Children" : [
+        {
+          "Name" : "layer",
+          "Pattern Node Type" : "ParallelCallNode",
+          "InputData" : [
+            {
+              "Name" : "INDEX",
+              "Data Type" : "int32",
+              "Dimension" : "0"
+            },
+            {
+              "Name" : "weights",
+              "Data Type" : "float",
+              "Dimension" : "2"
+            },
+            {
+              "Name" : "batch",
+              "Data Type" : "float",
+              "Dimension" : "2"
+            }
+          ],
+          "OutputData" : [
+            {
+              "Name" : "res",
+              "Data Type" : "float",
+              "Dimension" : "2"
+            }
+          ],
+          "InputAccesses" : [
+            {
+              "Variable" : "INDEX",
+              "Write" : "false",
+              "Type" : "Serial"
+            },
+            {
+              "Variable" : "weights",
+              "Write" : "false",
+              "Type" : "Serial"
+            },
+            {
+              "Variable" : "batch",
+              "Write" : "false",
+              "Type" : "Map",
+              "Scaling" : ["1"],
+              "Shift" : ["0"],
+              "Iterator" : ["INDEX"]
+            },
+            {
+              "Variable" : "INDEX",
+              "Write" : "false",
+              "Type" : "Serial"
+            }
+          ],
+          "OutputAccesses" : [
+            {
+              "Variable" : "res",
+              "Write" : "true",
+              "Type" : "Map",
+              "Scaling" : ["1"],
+              "Shift" : ["0"],
+              "Iterator" : ["INDEX"]
+            }
+          ],
+          "Cost" : "1490",
+          "Load/Store" : "6030",
+          "ID" : "C9RSKLlAdO",
+          "Starts" : [
+            "0"
+          ],
+          "Lengths" : [
+            "10"
+          ]
+        }
+      ]
+    },
+    {
+      "Name" : "rand_init_png5hzlbR4",
+      "Pattern" : "Map",
+      "Input" : [
+      ],
+      "Output" : [
+        {
+          "Name" : "res",
+          "Data Type" : "float",
+          "Dimension" : "2"
+        }
+      ],
+      "Cost" : "64",
+      "Load/Store" : "320",
+      "Variables" : [
+        {
+          "Name" : "MAX_INT",
+          "Data Type" : "int32",
+          "Dimension" : "0"
+        }      ],
+      "Parallel Descendants" : "true",
+      "Children" : [
+        {
+          "Name" : "rand_init_inner",
+          "Pattern Node Type" : "ParallelCallNode",
+          "InputData" : [
+            {
+              "Name" : "INDEX",
+              "Data Type" : "int32",
+              "Dimension" : "0"
+            }
+          ],
+          "OutputData" : [
+            {
+              "Name" : "res",
+              "Data Type" : "float",
+              "Dimension" : "2"
+            }
+          ],
+          "InputAccesses" : [
+            {
+              "Variable" : "INDEX",
+              "Write" : "false",
+              "Type" : "Serial"
+            }
+          ],
+          "OutputAccesses" : [
+            {
+              "Variable" : "res",
+              "Write" : "true",
+              "Type" : "Map",
+              "Scaling" : ["1"],
+              "Shift" : ["0"],
+              "Iterator" : ["INDEX"]
+            }
+          ],
+          "Cost" : "64",
+          "Load/Store" : "320",
+          "ID" : "tF0SGdcENj",
+          "Starts" : [
+            "0"
+          ],
+          "Lengths" : [
+            "64"
+          ]
+        }
+      ]
+    },
+    {
+      "Name" : "tanh_taylor",
+      "Pattern" : "Serial",
+      "Input" : [
+        {
+          "Name" : "x",
+          "Data Type" : "float",
+          "Dimension" : "0"
+        }
+      ],
+      "Output" : [
+      ],
+      "Cost" : "21",
+      "Load/Store" : "16",
+      "Variables" : [
+        {
+          "Name" : "MAX_INT",
+          "Data Type" : "int32",
+          "Dimension" : "0"
+        }      ],
+      "Parallel Descendants" : "false",
+      "Children" : [
+        {
+          "Pattern Node Type" : "ReturnNode",
+          "InputData" : [
+            {
+              "Name" : "x",
+              "Data Type" : "float",
+              "Dimension" : "0"
+            }
+          ],
+          "OutputData" : [
+          ],
+          "InputAccesses" : [
+            {
+              "Variable" : "x",
+              "Write" : "false",
+              "Type" : "Serial"
+            },
+            {
+              "Variable" : "x",
+              "Write" : "false",
+              "Type" : "Serial"
+            },
+            {
+              "Variable" : "x",
+              "Write" : "false",
+              "Type" : "Serial"
+            },
+            {
+              "Variable" : "x",
+              "Write" : "false",
+              "Type" : "Serial"
+            },
+            {
+              "Variable" : "x",
+              "Write" : "false",
+              "Type" : "Serial"
+            },
+            {
+              "Variable" : "x",
+              "Write" : "false",
+              "Type" : "Serial"
+            },
+            {
+              "Variable" : "x",
+              "Write" : "false",
+              "Type" : "Serial"
+            },
+            {
+              "Variable" : "x",
+              "Write" : "false",
+              "Type" : "Serial"
+            },
+            {
+              "Variable" : "x",
+              "Write" : "false",
+              "Type" : "Serial"
+            },
+            {
+              "Variable" : "x",
+              "Write" : "false",
+              "Type" : "Serial"
+            },
+            {
+              "Variable" : "x",
+              "Write" : "false",
+              "Type" : "Serial"
+            },
+            {
+              "Variable" : "x",
+              "Write" : "false",
+              "Type" : "Serial"
+            },
+            {
+              "Variable" : "x",
+              "Write" : "false",
+              "Type" : "Serial"
+            },
+            {
+              "Variable" : "x",
+              "Write" : "false",
+              "Type" : "Serial"
+            },
+            {
+              "Variable" : "x",
+              "Write" : "false",
+              "Type" : "Serial"
+            },
+            {
+              "Variable" : "x",
+              "Write" : "false",
+              "Type" : "Serial"
+            }
+          ],
+          "OutputAccesses" : [
+          ],
+          "Cost" : "21",
+          "Load/Store" : "16",
+          "ID" : "cD8KKTMRrG",
+          "Parallel Descendants" : "false",
+          "Result" : {
+            "Pattern Node Type" : "ComplexExpressionNode",
+            "InputData" : [
+              {
+                "Name" : "x",
+                "Data Type" : "float",
+                "Dimension" : "0"
+              }
+            ],
+            "OutputData" : [
+            ],
+            "InputAccesses" : [
+              {
+                "Variable" : "x",
+                "Write" : "false",
+                "Type" : "Serial"
+              },
+              {
+                "Variable" : "x",
+                "Write" : "false",
+                "Type" : "Serial"
+              },
+              {
+                "Variable" : "x",
+                "Write" : "false",
+                "Type" : "Serial"
+              },
+              {
+                "Variable" : "x",
+                "Write" : "false",
+                "Type" : "Serial"
+              },
+              {
+                "Variable" : "x",
+                "Write" : "false",
+                "Type" : "Serial"
+              },
+              {
+                "Variable" : "x",
+                "Write" : "false",
+                "Type" : "Serial"
+              },
+              {
+                "Variable" : "x",
+                "Write" : "false",
+                "Type" : "Serial"
+              },
+              {
+                "Variable" : "x",
+                "Write" : "false",
+                "Type" : "Serial"
+              },
+              {
+                "Variable" : "x",
+                "Write" : "false",
+                "Type" : "Serial"
+              },
+              {
+                "Variable" : "x",
+                "Write" : "false",
+                "Type" : "Serial"
+              },
+              {
+                "Variable" : "x",
+                "Write" : "false",
+                "Type" : "Serial"
+              },
+              {
+                "Variable" : "x",
+                "Write" : "false",
+                "Type" : "Serial"
+              },
+              {
+                "Variable" : "x",
+                "Write" : "false",
+                "Type" : "Serial"
+              },
+              {
+                "Variable" : "x",
+                "Write" : "false",
+                "Type" : "Serial"
+              },
+              {
+                "Variable" : "x",
+                "Write" : "false",
+                "Type" : "Serial"
+              },
+              {
+                "Variable" : "x",
+                "Write" : "false",
+                "Type" : "Serial"
+              }
+            ],
+            "OutputAccesses" : [
+            ],
+            "Cost" : "21",
+            "Load/Store" : "16",
+            "ID" : "hpCGx9OQ5O",
+            "Parallel Descendants" : "false",
+            "Calls" : [
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "Name" : "layer_5fh5EmXI7W",
+      "Pattern" : "Map",
+      "Input" : [
+        {
+          "Name" : "weights",
+          "Data Type" : "float",
+          "Dimension" : "2"
+        },
+        {
+          "Name" : "feature",
+          "Data Type" : "float",
+          "Dimension" : "1"
+        }
+      ],
+      "Output" : [
+        {
+          "Name" : "res",
+          "Data Type" : "float",
+          "Dimension" : "1"
+        }
+      ],
+      "Cost" : "149",
+      "Load/Store" : "598",
+      "Variables" : [
+        {
+          "Name" : "act",
+          "Data Type" : "float",
+          "Dimension" : "0"
+        },        {
+          "Name" : "z",
+          "Data Type" : "float",
+          "Dimension" : "0"
+        },        {
+          "Name" : "MAX_INT",
+          "Data Type" : "int32",
+          "Dimension" : "0"
+        }      ],
+      "Parallel Descendants" : "true",
+      "Children" : [
+        {
+          "Pattern Node Type" : "SimpleExpressionBlockNode",
+          "InputData" : [
+          ],
+          "OutputData" : [
+            {
+              "Name" : "z",
+              "Data Type" : "float",
+              "Dimension" : "0"
+            },
+            {
+              "Name" : "act",
+              "Data Type" : "float",
+              "Dimension" : "0"
+            }
+          ],
+          "InputAccesses" : [
+          ],
+          "OutputAccesses" : [
+            {
+              "Variable" : "z",
+              "Write" : "true",
+              "Type" : "Serial"
+            },
+            {
+              "Variable" : "act",
+              "Write" : "true",
+              "Type" : "Serial"
+            }
+          ],
+          "Cost" : "0",
+          "Load/Store" : "2",
+          "ID" : "4TTcmUhSTq"        },
+        {
+          "Name" : "mult_sum",
+          "Pattern Node Type" : "ParallelCallNode",
+          "InputData" : [
+            {
+              "Name" : "weights",
+              "Data Type" : "float",
+              "Dimension" : "2"
+            },
+            {
+              "Name" : "INDEX",
+              "Data Type" : "int32",
+              "Dimension" : "0"
+            },
+            {
+              "Name" : "feature",
+              "Data Type" : "float",
+              "Dimension" : "1"
+            }
+          ],
+          "OutputData" : [
+            {
+              "Name" : "z",
+              "Data Type" : "float",
+              "Dimension" : "0"
+            }
+          ],
+          "InputAccesses" : [
+            {
+              "Variable" : "weights",
+              "Write" : "false",
+              "Type" : "Map",
+              "Scaling" : ["1"],
+              "Shift" : ["0"],
+              "Iterator" : ["INDEX"]
+            },
+            {
+              "Variable" : "INDEX",
+              "Write" : "false",
+              "Type" : "Serial"
+            },
+            {
+              "Variable" : "feature",
+              "Write" : "false",
+              "Type" : "Serial"
+            }
+          ],
+          "OutputAccesses" : [
+            {
+              "Variable" : "z",
+              "Write" : "true",
+              "Type" : "Serial"
+            }
+          ],
+          "Cost" : "128",
+          "Load/Store" : "576",
+          "ID" : "jbqUXUBQxO",
+          "Starts" : [
+            "0"
+          ],
+          "Lengths" : [
+            "64"
+          ]
+        },
+        {
+          "Pattern Node Type" : "ComplexExpressionNode",
+          "InputData" : [
+            {
+              "Name" : "z",
+              "Data Type" : "float",
+              "Dimension" : "0"
+            }
+          ],
+          "OutputData" : [
+            {
+              "Name" : "act",
+              "Data Type" : "float",
+              "Dimension" : "0"
+            }
+          ],
+          "InputAccesses" : [
+            {
+              "Variable" : "z",
+              "Write" : "false",
+              "Type" : "Serial"
+            }
+          ],
+          "OutputAccesses" : [
+            {
+              "Variable" : "act",
+              "Write" : "true",
+              "Type" : "Serial"
+            }
+          ],
+          "Cost" : "21",
+          "Load/Store" : "17",
+          "ID" : "XtK0PTeaUf",
+          "Parallel Descendants" : "false",
+          "Calls" : [
+            {
+              "Pattern Node Type" : "CallNode",
+              "InputData" : [
+              ],
+              "OutputData" : [
+              ],
+              "InputAccesses" : [
+              ],
+              "OutputAccesses" : [
+              ],
+              "Cost" : "21",
+              "Load/Store" : "16",
+              "ID" : "qj0uYVzPKc",
+              "Parallel Descendants" : "false"
+            }
+          ]
+        },
+        {
+          "Pattern Node Type" : "SimpleExpressionBlockNode",
+          "InputData" : [
+            {
+              "Name" : "INDEX",
+              "Data Type" : "int32",
+              "Dimension" : "0"
+            },
+            {
+              "Name" : "act",
+              "Data Type" : "float",
+              "Dimension" : "0"
+            }
+          ],
+          "OutputData" : [
+            {
+              "Name" : "res",
+              "Data Type" : "float",
+              "Dimension" : "1"
+            }
+          ],
+          "InputAccesses" : [
+            {
+              "Variable" : "INDEX",
+              "Write" : "false",
+              "Type" : "Serial"
+            },
+            {
+              "Variable" : "act",
+              "Write" : "false",
+              "Type" : "Serial"
+            }
+          ],
+          "OutputAccesses" : [
+            {
+              "Variable" : "res",
+              "Write" : "true",
+              "Type" : "Map",
+              "Scaling" : ["1"],
+              "Shift" : ["0"],
+              "Iterator" : ["INDEX"]
+            }
+          ],
+          "Cost" : "0",
+          "Load/Store" : "3",
+          "ID" : "Tf1VECFcOk"        }
+      ]
+    },
+    {
+      "Name" : "layer_NiPMgnl68J",
+      "Pattern" : "Map",
+      "Input" : [
+        {
+          "Name" : "weights",
+          "Data Type" : "float",
+          "Dimension" : "2"
+        },
+        {
+          "Name" : "feature",
+          "Data Type" : "float",
+          "Dimension" : "1"
+        }
+      ],
+      "Output" : [
+        {
+          "Name" : "res",
+          "Data Type" : "float",
+          "Dimension" : "1"
+        }
+      ],
+      "Cost" : "149",
+      "Load/Store" : "598",
+      "Variables" : [
+        {
+          "Name" : "act",
+          "Data Type" : "float",
+          "Dimension" : "0"
+        },        {
+          "Name" : "z",
+          "Data Type" : "float",
+          "Dimension" : "0"
+        },        {
+          "Name" : "MAX_INT",
+          "Data Type" : "int32",
+          "Dimension" : "0"
+        }      ],
+      "Parallel Descendants" : "true",
+      "Children" : [
+        {
+          "Pattern Node Type" : "SimpleExpressionBlockNode",
+          "InputData" : [
+          ],
+          "OutputData" : [
+            {
+              "Name" : "z",
+              "Data Type" : "float",
+              "Dimension" : "0"
+            },
+            {
+              "Name" : "act",
+              "Data Type" : "float",
+              "Dimension" : "0"
+            }
+          ],
+          "InputAccesses" : [
+          ],
+          "OutputAccesses" : [
+            {
+              "Variable" : "z",
+              "Write" : "true",
+              "Type" : "Serial"
+            },
+            {
+              "Variable" : "act",
+              "Write" : "true",
+              "Type" : "Serial"
+            }
+          ],
+          "Cost" : "0",
+          "Load/Store" : "2",
+          "ID" : "I8VrGhmAKO"        },
+        {
+          "Name" : "mult_sum",
+          "Pattern Node Type" : "ParallelCallNode",
+          "InputData" : [
+            {
+              "Name" : "weights",
+              "Data Type" : "float",
+              "Dimension" : "2"
+            },
+            {
+              "Name" : "INDEX",
+              "Data Type" : "int32",
+              "Dimension" : "0"
+            },
+            {
+              "Name" : "feature",
+              "Data Type" : "float",
+              "Dimension" : "1"
+            }
+          ],
+          "OutputData" : [
+            {
+              "Name" : "z",
+              "Data Type" : "float",
+              "Dimension" : "0"
+            }
+          ],
+          "InputAccesses" : [
+            {
+              "Variable" : "weights",
+              "Write" : "false",
+              "Type" : "Map",
+              "Scaling" : ["1"],
+              "Shift" : ["0"],
+              "Iterator" : ["INDEX"]
+            },
+            {
+              "Variable" : "INDEX",
+              "Write" : "false",
+              "Type" : "Serial"
+            },
+            {
+              "Variable" : "feature",
+              "Write" : "false",
+              "Type" : "Serial"
+            }
+          ],
+          "OutputAccesses" : [
+            {
+              "Variable" : "z",
+              "Write" : "true",
+              "Type" : "Serial"
+            }
+          ],
+          "Cost" : "128",
+          "Load/Store" : "576",
+          "ID" : "F4AUf2cd1r",
+          "Starts" : [
+            "0"
+          ],
+          "Lengths" : [
+            "64"
+          ]
+        },
+        {
+          "Pattern Node Type" : "ComplexExpressionNode",
+          "InputData" : [
+            {
+              "Name" : "z",
+              "Data Type" : "float",
+              "Dimension" : "0"
+            }
+          ],
+          "OutputData" : [
+            {
+              "Name" : "act",
+              "Data Type" : "float",
+              "Dimension" : "0"
+            }
+          ],
+          "InputAccesses" : [
+            {
+              "Variable" : "z",
+              "Write" : "false",
+              "Type" : "Serial"
+            }
+          ],
+          "OutputAccesses" : [
+            {
+              "Variable" : "act",
+              "Write" : "true",
+              "Type" : "Serial"
+            }
+          ],
+          "Cost" : "21",
+          "Load/Store" : "17",
+          "ID" : "QL9kE9o3Kl",
+          "Parallel Descendants" : "false",
+          "Calls" : [
+            {
+              "Pattern Node Type" : "CallNode",
+              "InputData" : [
+              ],
+              "OutputData" : [
+              ],
+              "InputAccesses" : [
+              ],
+              "OutputAccesses" : [
+              ],
+              "Cost" : "21",
+              "Load/Store" : "16",
+              "ID" : "8k3j69DvPo",
+              "Parallel Descendants" : "false"
+            }
+          ]
+        },
+        {
+          "Pattern Node Type" : "SimpleExpressionBlockNode",
+          "InputData" : [
+            {
+              "Name" : "INDEX",
+              "Data Type" : "int32",
+              "Dimension" : "0"
+            },
+            {
+              "Name" : "act",
+              "Data Type" : "float",
+              "Dimension" : "0"
+            }
+          ],
+          "OutputData" : [
+            {
+              "Name" : "res",
+              "Data Type" : "float",
+              "Dimension" : "1"
+            }
+          ],
+          "InputAccesses" : [
+            {
+              "Variable" : "INDEX",
+              "Write" : "false",
+              "Type" : "Serial"
+            },
+            {
+              "Variable" : "act",
+              "Write" : "false",
+              "Type" : "Serial"
+            }
+          ],
+          "OutputAccesses" : [
+            {
+              "Variable" : "res",
+              "Write" : "true",
+              "Type" : "Map",
+              "Scaling" : ["1"],
+              "Shift" : ["0"],
+              "Iterator" : ["INDEX"]
+            }
+          ],
+          "Cost" : "0",
+          "Load/Store" : "3",
+          "ID" : "R60P4Wg6hC"        }
+      ]
+    },
+    {
+      "Name" : "layer_osQKQJzbQE",
+      "Pattern" : "Map",
+      "Input" : [
+        {
+          "Name" : "weights",
+          "Data Type" : "float",
+          "Dimension" : "2"
+        },
+        {
+          "Name" : "feature",
+          "Data Type" : "float",
+          "Dimension" : "1"
+        }
+      ],
+      "Output" : [
+        {
+          "Name" : "res",
+          "Data Type" : "float",
+          "Dimension" : "1"
+        }
+      ],
+      "Cost" : "149",
+      "Load/Store" : "598",
+      "Variables" : [
+        {
+          "Name" : "act",
+          "Data Type" : "float",
+          "Dimension" : "0"
+        },        {
+          "Name" : "z",
+          "Data Type" : "float",
+          "Dimension" : "0"
+        },        {
+          "Name" : "MAX_INT",
+          "Data Type" : "int32",
+          "Dimension" : "0"
+        }      ],
+      "Parallel Descendants" : "true",
+      "Children" : [
+        {
+          "Pattern Node Type" : "SimpleExpressionBlockNode",
+          "InputData" : [
+          ],
+          "OutputData" : [
+            {
+              "Name" : "z",
+              "Data Type" : "float",
+              "Dimension" : "0"
+            },
+            {
+              "Name" : "act",
+              "Data Type" : "float",
+              "Dimension" : "0"
+            }
+          ],
+          "InputAccesses" : [
+          ],
+          "OutputAccesses" : [
+            {
+              "Variable" : "z",
+              "Write" : "true",
+              "Type" : "Serial"
+            },
+            {
+              "Variable" : "act",
+              "Write" : "true",
+              "Type" : "Serial"
+            }
+          ],
+          "Cost" : "0",
+          "Load/Store" : "2",
+          "ID" : "9vQ2rQoufW"        },
+        {
+          "Name" : "mult_sum",
+          "Pattern Node Type" : "ParallelCallNode",
+          "InputData" : [
+            {
+              "Name" : "weights",
+              "Data Type" : "float",
+              "Dimension" : "2"
+            },
+            {
+              "Name" : "INDEX",
+              "Data Type" : "int32",
+              "Dimension" : "0"
+            },
+            {
+              "Name" : "feature",
+              "Data Type" : "float",
+              "Dimension" : "1"
+            }
+          ],
+          "OutputData" : [
+            {
+              "Name" : "z",
+              "Data Type" : "float",
+              "Dimension" : "0"
+            }
+          ],
+          "InputAccesses" : [
+            {
+              "Variable" : "weights",
+              "Write" : "false",
+              "Type" : "Map",
+              "Scaling" : ["1"],
+              "Shift" : ["0"],
+              "Iterator" : ["INDEX"]
+            },
+            {
+              "Variable" : "INDEX",
+              "Write" : "false",
+              "Type" : "Serial"
+            },
+            {
+              "Variable" : "feature",
+              "Write" : "false",
+              "Type" : "Serial"
+            }
+          ],
+          "OutputAccesses" : [
+            {
+              "Variable" : "z",
+              "Write" : "true",
+              "Type" : "Serial"
+            }
+          ],
+          "Cost" : "128",
+          "Load/Store" : "576",
+          "ID" : "TBI39oCULk",
+          "Starts" : [
+            "0"
+          ],
+          "Lengths" : [
+            "64"
+          ]
+        },
+        {
+          "Pattern Node Type" : "ComplexExpressionNode",
+          "InputData" : [
+            {
+              "Name" : "z",
+              "Data Type" : "float",
+              "Dimension" : "0"
+            }
+          ],
+          "OutputData" : [
+            {
+              "Name" : "act",
+              "Data Type" : "float",
+              "Dimension" : "0"
+            }
+          ],
+          "InputAccesses" : [
+            {
+              "Variable" : "z",
+              "Write" : "false",
+              "Type" : "Serial"
+            }
+          ],
+          "OutputAccesses" : [
+            {
+              "Variable" : "act",
+              "Write" : "true",
+              "Type" : "Serial"
+            }
+          ],
+          "Cost" : "21",
+          "Load/Store" : "17",
+          "ID" : "A7S12i5gGF",
+          "Parallel Descendants" : "false",
+          "Calls" : [
+            {
+              "Pattern Node Type" : "CallNode",
+              "InputData" : [
+              ],
+              "OutputData" : [
+              ],
+              "InputAccesses" : [
+              ],
+              "OutputAccesses" : [
+              ],
+              "Cost" : "21",
+              "Load/Store" : "16",
+              "ID" : "2GCqhkYbAu",
+              "Parallel Descendants" : "false"
+            }
+          ]
+        },
+        {
+          "Pattern Node Type" : "SimpleExpressionBlockNode",
+          "InputData" : [
+            {
+              "Name" : "INDEX",
+              "Data Type" : "int32",
+              "Dimension" : "0"
+            },
+            {
+              "Name" : "act",
+              "Data Type" : "float",
+              "Dimension" : "0"
+            }
+          ],
+          "OutputData" : [
+            {
+              "Name" : "res",
+              "Data Type" : "float",
+              "Dimension" : "1"
+            }
+          ],
+          "InputAccesses" : [
+            {
+              "Variable" : "INDEX",
+              "Write" : "false",
+              "Type" : "Serial"
+            },
+            {
+              "Variable" : "act",
+              "Write" : "false",
+              "Type" : "Serial"
+            }
+          ],
+          "OutputAccesses" : [
+            {
+              "Variable" : "res",
+              "Write" : "true",
+              "Type" : "Map",
+              "Scaling" : ["1"],
+              "Shift" : ["0"],
+              "Iterator" : ["INDEX"]
+            }
+          ],
+          "Cost" : "0",
+          "Load/Store" : "3",
+          "ID" : "z8pFfmJ3kI"        }
+      ]
+    },
+    {
+      "Name" : "rand_init_KeVA7GQAem",
+      "Pattern" : "Map",
+      "Input" : [
+      ],
+      "Output" : [
+        {
+          "Name" : "res",
+          "Data Type" : "float",
+          "Dimension" : "2"
+        }
+      ],
+      "Cost" : "64",
+      "Load/Store" : "320",
+      "Variables" : [
+        {
+          "Name" : "MAX_INT",
+          "Data Type" : "int32",
+          "Dimension" : "0"
+        }      ],
+      "Parallel Descendants" : "true",
+      "Children" : [
+        {
+          "Name" : "rand_init_inner",
+          "Pattern Node Type" : "ParallelCallNode",
+          "InputData" : [
+            {
+              "Name" : "INDEX",
+              "Data Type" : "int32",
+              "Dimension" : "0"
+            }
+          ],
+          "OutputData" : [
+            {
+              "Name" : "res",
+              "Data Type" : "float",
+              "Dimension" : "2"
+            }
+          ],
+          "InputAccesses" : [
+            {
+              "Variable" : "INDEX",
+              "Write" : "false",
+              "Type" : "Serial"
+            }
+          ],
+          "OutputAccesses" : [
+            {
+              "Variable" : "res",
+              "Write" : "true",
+              "Type" : "Map",
+              "Scaling" : ["1"],
+              "Shift" : ["0"],
+              "Iterator" : ["INDEX"]
+            }
+          ],
+          "Cost" : "64",
+          "Load/Store" : "320",
+          "ID" : "NNCWhsVtYk",
+          "Starts" : [
+            "0"
+          ],
+          "Lengths" : [
+            "64"
+          ]
+        }
+      ]
+    },
+    {
+      "Name" : "rand_init_eq1HFX6DF2",
+      "Pattern" : "Map",
+      "Input" : [
+      ],
+      "Output" : [
+        {
+          "Name" : "res",
+          "Data Type" : "float",
+          "Dimension" : "2"
+        }
+      ],
+      "Cost" : "64",
+      "Load/Store" : "320",
+      "Variables" : [
+        {
+          "Name" : "MAX_INT",
+          "Data Type" : "int32",
+          "Dimension" : "0"
+        }      ],
+      "Parallel Descendants" : "true",
+      "Children" : [
+        {
+          "Name" : "rand_init_inner",
+          "Pattern Node Type" : "ParallelCallNode",
+          "InputData" : [
+            {
+              "Name" : "INDEX",
+              "Data Type" : "int32",
+              "Dimension" : "0"
+            }
+          ],
+          "OutputData" : [
+            {
+              "Name" : "res",
+              "Data Type" : "float",
+              "Dimension" : "2"
+            }
+          ],
+          "InputAccesses" : [
+            {
+              "Variable" : "INDEX",
+              "Write" : "false",
+              "Type" : "Serial"
+            }
+          ],
+          "OutputAccesses" : [
+            {
+              "Variable" : "res",
+              "Write" : "true",
+              "Type" : "Map",
+              "Scaling" : ["1"],
+              "Shift" : ["0"],
+              "Iterator" : ["INDEX"]
+            }
+          ],
+          "Cost" : "64",
+          "Load/Store" : "320",
+          "ID" : "DxRdUj7YeA",
+          "Starts" : [
+            "0"
+          ],
+          "Lengths" : [
+            "64"
+          ]
+        }
+      ]
+    }
+  ]
+
+
+
+}

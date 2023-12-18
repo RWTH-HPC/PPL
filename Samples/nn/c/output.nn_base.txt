@@ -1,0 +1,240 @@
+number of threads: 48 
+Allocation done
+Random init done
+Starting clock
+Stopping clock
+Computation took: 0.302594 with result: 0.000299
+number of threads: 48 
+Allocation done
+Random init done
+Starting clock
+Stopping clock
+Computation took: 0.454908 with result: 0.000299
+number of threads: 48 
+Allocation done
+Random init done
+Starting clock
+Stopping clock
+Computation took: 0.302343 with result: 0.000299
+number of threads: 48 
+Allocation done
+Random init done
+Starting clock
+Stopping clock
+Computation took: 0.302520 with result: 0.000299
+number of threads: 48 
+Allocation done
+Random init done
+Starting clock
+Stopping clock
+Computation took: 0.304193 with result: 0.000299
+number of threads: 48 
+Allocation done
+Random init done
+Starting clock
+Stopping clock
+Computation took: 0.305303 with result: 0.000299
+number of threads: 48 
+Allocation done
+Random init done
+Starting clock
+Stopping clock
+Computation took: 0.309858 with result: 0.000299
+number of threads: 48 
+Allocation done
+Random init done
+Starting clock
+Stopping clock
+Computation took: 0.320776 with result: 0.000299
+number of threads: 48 
+Allocation done
+Random init done
+Starting clock
+Stopping clock
+Computation took: 0.451980 with result: 0.000299
+number of threads: 48 
+Allocation done
+Random init done
+Starting clock
+Stopping clock
+Computation took: 0.304812 with result: 0.000299
+number of threads: 48 
+Allocation done
+Random init done
+Starting clock
+Stopping clock
+Computation took: 0.302736 with result: 0.000299
+number of threads: 48 
+Allocation done
+Random init done
+Starting clock
+Stopping clock
+Computation took: 0.301103 with result: 0.000299
+number of threads: 48 
+Allocation done
+Random init done
+Starting clock
+Stopping clock
+Computation took: 0.303289 with result: 0.000299
+number of threads: 48 
+Allocation done
+Random init done
+Starting clock
+Stopping clock
+Computation took: 0.302048 with result: 0.000299
+number of threads: 48 
+Allocation done
+Random init done
+Starting clock
+Stopping clock
+Computation took: 0.302171 with result: 0.000299
+number of threads: 48 
+Allocation done
+Random init done
+Starting clock
+Stopping clock
+Computation took: 0.302288 with result: 0.000299
+number of threads: 48 
+Allocation done
+Random init done
+Starting clock
+Stopping clock
+Computation took: 0.302428 with result: 0.000299
+number of threads: 48 
+Allocation done
+Random init done
+Starting clock
+Stopping clock
+Computation took: 0.302635 with result: 0.000299
+number of threads: 48 
+Allocation done
+Random init done
+Starting clock
+Stopping clock
+Computation took: 0.302407 with result: 0.000299
+number of threads: 48 
+Allocation done
+Random init done
+Starting clock
+Stopping clock
+Computation took: 0.305464 with result: 0.000299
+number of threads: 48 
+Allocation done
+Random init done
+Starting clock
+Stopping clock
+Computation took: 0.301344 with result: 0.000299
+number of threads: 48 
+Allocation done
+Random init done
+Starting clock
+Stopping clock
+Computation took: 0.331068 with result: 0.000299
+number of threads: 48 
+Allocation done
+Random init done
+Starting clock
+Stopping clock
+Computation took: 0.302764 with result: 0.000299
+number of threads: 48 
+Allocation done
+Random init done
+Starting clock
+Stopping clock
+Computation took: 0.302567 with result: 0.000299
+number of threads: 48 
+Allocation done
+Random init done
+Starting clock
+Stopping clock
+Computation took: 0.312842 with result: 0.000299
+number of threads: 48 
+Allocation done
+Random init done
+Starting clock
+Stopping clock
+Computation took: 0.302358 with result: 0.000299
+number of threads: 48 
+Allocation done
+Random init done
+Starting clock
+Stopping clock
+Computation took: 0.305267 with result: 0.000299
+number of threads: 48 
+Allocation done
+Random init done
+Starting clock
+Stopping clock
+Computation took: 0.302362 with result: 0.000299
+number of threads: 48 
+Allocation done
+Random init done
+Starting clock
+Stopping clock
+Computation took: 0.302654 with result: 0.000299
+number of threads: 48 
+Allocation done
+Random init done
+Starting clock
+Stopping clock
+Computation took: 0.302663 with result: 0.000299
+number of threads: 48 
+Allocation done
+Random init done
+Starting clock
+Stopping clock
+Computation took: 0.301068 with result: 0.000299
+number of threads: 48 
+Allocation done
+Random init done
+Starting clock
+Stopping clock
+Computation took: 0.326123 with result: 0.000299
+number of threads: 48 
+Allocation done
+Random init done
+Starting clock
+Stopping clock
+Computation took: 0.301043 with result: 0.000299
+number of threads: 48 
+Allocation done
+Random init done
+Starting clock
+Stopping clock
+Computation took: 0.302865 with result: 0.000299
+number of threads: 48 
+Allocation done
+Random init done
+Starting clock
+Stopping clock
+Computation took: 0.302636 with result: 0.000299
+number of threads: 48 
+Allocation done
+Random init done
+Starting clock
+Stopping clock
+Computation took: 0.302449 with result: 0.000299
+number of threads: 48 
+Allocation done
+Random init done
+Starting clock
+Stopping clock
+Computation took: 0.302355 with result: 0.000299
+number of threads: 48 
+Allocation done
+Random init done
+Starting clock
+Stopping clock
+Computation took: 0.302601 with result: 0.000299
+number of threads: 48 
+Allocation done
+Random init done
+Starting clock
+Stopping clock
+Computation took: 0.302282 with result: 0.000299
+number of threads: 48 
+Allocation done
+Random init done
+Starting clock
+Stopping clock
+Computation took: 0.301548 with result: 0.000299

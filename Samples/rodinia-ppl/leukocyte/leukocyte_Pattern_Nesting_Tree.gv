@@ -1,0 +1,68 @@
+// Abstract Pattern Tree
+digraph {
+	UKXdihxpt9rmkUFtuAAK [label=Main]
+	SyiYsWvrt1IyV7Ym6OO7 [label=Serial fillcolor=lawngreen style=filled]
+	qeuGZUDfDr3RHmFaWGVT [label="For Loop" fillcolor=cyan style=filled]
+	JGCoEfqZUULSfVQKiVWi [label="Map: cell_tracking" fillcolor=orangered style=filled]
+	IdEhBhI0FeTnYBBjVHkj [label=Serial fillcolor=lawngreen style=filled]
+	"6sYNNhBPGfhhR0EyAiHN" [label="While Loop" fillcolor=cyan style=filled]
+	uZ6XJp2NfRtv6DfoDL2s [label="Stencil: heaviside" fillcolor=orangered style=filled]
+	zA0m7u4Dh8uYszTcd0Wk [label=Serial fillcolor=lawngreen style=filled]
+	uUoiFqDyZzxCRhYKsPLG [label="Stencil: heaviside" fillcolor=orangered style=filled]
+	r3P4LqeyVLWYXLtLlAxr [label=Serial fillcolor=lawngreen style=filled]
+	NjO2uGYgPNAZvJpTUAdJ [label="Stencil: heaviside" fillcolor=orangered style=filled]
+	d7M5Cstpuzb92WnXkM7m [label=Serial fillcolor=lawngreen style=filled]
+	DjZaDAJ5dAvCsoVtHH2B [label="Stencil: heaviside" fillcolor=orangered style=filled]
+	"72o3kInRj9Gfi4RDL7DM" [label=Serial fillcolor=lawngreen style=filled]
+	APmddKpClDLWhlsOMIoO [label="Stencil: heaviside" fillcolor=orangered style=filled]
+	I91ihruedMCDjZBUIu4c [label=Serial fillcolor=lawngreen style=filled]
+	QWeiEtkn1pOETeXL9NWj [label="Stencil: heaviside" fillcolor=orangered style=filled]
+	fOX4uPYZCEL0CcyOi15x [label=Serial fillcolor=lawngreen style=filled]
+	BCdO4D9EXKsT0ysMh7Qp [label="Stencil: heaviside" fillcolor=orangered style=filled]
+	"0G9R1mUaLEEgyqa3vjXX" [label=Serial fillcolor=lawngreen style=filled]
+	W2rZIP9lN1ZQCByYWDyf [label="Stencil: heaviside" fillcolor=orangered style=filled]
+	jAFNeRaKP7n1pkiy8Mpo [label=Serial fillcolor=lawngreen style=filled]
+	TqGUn8YuSrWXBxNFpcR9 [label=Serial fillcolor=lawngreen style=filled]
+	E7nfVvRabIfIyS5I5nFl [label="While Loop" fillcolor=cyan style=filled]
+	fUadlM62A9z7rkk1CZSu [label=Branch fillcolor=cyan style=filled]
+	WoVIdoOysyC9QhBrtrJk [label="Reduction: sum" fillcolor=orangered style=filled]
+	zJWZJDOQTxOyMyJjzTO2 [label=Serial fillcolor=lawngreen style=filled]
+	jUsEGMNYqbU7oL0FjPAN [label="Reduction: sum" fillcolor=orangered style=filled]
+	k7UsMr7Msxti9cGbXGIY [label=Serial fillcolor=lawngreen style=filled]
+	C06ckuk60bUdQ9otr2W0 [label="Reduction: sum" fillcolor=orangered style=filled]
+	"9BYuO6WymC3ymhsYctzS" [label=Serial fillcolor=lawngreen style=filled]
+	qZ0B3S97E142KpQAt0HY [label=Serial fillcolor=lawngreen style=filled]
+	B70ZTdy13F84cuPLU5nB [label=Serial fillcolor=lawngreen style=filled]
+	UKXdihxpt9rmkUFtuAAK -> SyiYsWvrt1IyV7Ym6OO7
+	UKXdihxpt9rmkUFtuAAK -> qeuGZUDfDr3RHmFaWGVT
+	qeuGZUDfDr3RHmFaWGVT -> JGCoEfqZUULSfVQKiVWi
+	JGCoEfqZUULSfVQKiVWi -> IdEhBhI0FeTnYBBjVHkj
+	JGCoEfqZUULSfVQKiVWi -> "6sYNNhBPGfhhR0EyAiHN"
+	"6sYNNhBPGfhhR0EyAiHN" -> uZ6XJp2NfRtv6DfoDL2s
+	uZ6XJp2NfRtv6DfoDL2s -> zA0m7u4Dh8uYszTcd0Wk
+	"6sYNNhBPGfhhR0EyAiHN" -> uUoiFqDyZzxCRhYKsPLG
+	uUoiFqDyZzxCRhYKsPLG -> r3P4LqeyVLWYXLtLlAxr
+	"6sYNNhBPGfhhR0EyAiHN" -> NjO2uGYgPNAZvJpTUAdJ
+	NjO2uGYgPNAZvJpTUAdJ -> d7M5Cstpuzb92WnXkM7m
+	"6sYNNhBPGfhhR0EyAiHN" -> DjZaDAJ5dAvCsoVtHH2B
+	DjZaDAJ5dAvCsoVtHH2B -> "72o3kInRj9Gfi4RDL7DM"
+	"6sYNNhBPGfhhR0EyAiHN" -> APmddKpClDLWhlsOMIoO
+	APmddKpClDLWhlsOMIoO -> I91ihruedMCDjZBUIu4c
+	"6sYNNhBPGfhhR0EyAiHN" -> QWeiEtkn1pOETeXL9NWj
+	QWeiEtkn1pOETeXL9NWj -> fOX4uPYZCEL0CcyOi15x
+	"6sYNNhBPGfhhR0EyAiHN" -> BCdO4D9EXKsT0ysMh7Qp
+	BCdO4D9EXKsT0ysMh7Qp -> "0G9R1mUaLEEgyqa3vjXX"
+	"6sYNNhBPGfhhR0EyAiHN" -> W2rZIP9lN1ZQCByYWDyf
+	W2rZIP9lN1ZQCByYWDyf -> jAFNeRaKP7n1pkiy8Mpo
+	"6sYNNhBPGfhhR0EyAiHN" -> TqGUn8YuSrWXBxNFpcR9
+	JGCoEfqZUULSfVQKiVWi -> E7nfVvRabIfIyS5I5nFl
+	E7nfVvRabIfIyS5I5nFl -> fUadlM62A9z7rkk1CZSu
+	fUadlM62A9z7rkk1CZSu -> WoVIdoOysyC9QhBrtrJk
+	WoVIdoOysyC9QhBrtrJk -> zJWZJDOQTxOyMyJjzTO2
+	fUadlM62A9z7rkk1CZSu -> jUsEGMNYqbU7oL0FjPAN
+	jUsEGMNYqbU7oL0FjPAN -> k7UsMr7Msxti9cGbXGIY
+	fUadlM62A9z7rkk1CZSu -> C06ckuk60bUdQ9otr2W0
+	C06ckuk60bUdQ9otr2W0 -> "9BYuO6WymC3ymhsYctzS"
+	fUadlM62A9z7rkk1CZSu -> qZ0B3S97E142KpQAt0HY
+	qeuGZUDfDr3RHmFaWGVT -> B70ZTdy13F84cuPLU5nB
+}

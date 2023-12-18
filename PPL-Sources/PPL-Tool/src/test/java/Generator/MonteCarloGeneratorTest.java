@@ -12,7 +12,7 @@ public class MonteCarloGeneratorTest {
     @Test
     public void test() {
 
-        String[] args = new String[]{"-i", BENCHMARK_PATH, "-n", CLUSTER_SPEC_PATH, "-s", "24", "-d", "24", "-b", "-JSON", "-o", "out/Monte.cxx"};
+        String[] args = new String[]{"-i", BENCHMARK_PATH, "-n", CLUSTER_SPEC_PATH, "-s", "24", "-d", "24", "-b", "-JSON", "-o", "out/Monte.cxx", "-seed" ,"1"};
         Tool.main(args);
 
     }

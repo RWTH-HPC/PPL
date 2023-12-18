@@ -1,0 +1,558 @@
+[INFO] Module CUDA/11.8.0 loaded.
+
+APPTAINER_CACHEDIR=/work/as388453/.apptainer/cache
+BASH_ENV=/usr/local_host/etc/bashenv
+BEEOND=/mnt/beegfs
+CC=icc
+CFXHOSTS='ncg39*1'
+CLASSPATH=/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/impi/2021.6.0-intel-compilers-2022.1.0/mpi/latest/lib64/mpi.jar
+CMAKE_LIBRARY_PATH=/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/GCCcore/11.3.0/lib64
+CMAKE_PREFIX_PATH=/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/CUDA/11.8.0:/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/imkl-FFTW/2022.1.0-iimpi-2022a:/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/imkl/2022.1.0:/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/impi/2021.6.0-intel-compilers-2022.1.0:/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/UCX/1.12.1-GCCcore-11.3.0:/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/numactl/2.0.14-GCCcore-11.3.0:/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/intel-compilers/2022.1.0/compiler/latest/linux/IntelDPCPP:/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/intel-compilers/2022.1.0/tbb/latest:/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/binutils/2.38-GCCcore-11.3.0:/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/zlib/1.2.12-GCCcore-11.3.0:/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/GCCcore/11.3.0
+CMPLR_ROOT=/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/intel-compilers/2022.1.0/compiler/latest
+CPATH=/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/CUDA/11.8.0/nvvm/include:/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/CUDA/11.8.0/extras/CUPTI/include:/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/CUDA/11.8.0/include:/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/imkl/2022.1.0/mkl/2022.1.0/include/fftw:/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/imkl/2022.1.0/mkl/2022.1.0/include:/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/impi/2021.6.0-intel-compilers-2022.1.0/mpi/2021.6.0/include:/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/UCX/1.12.1-GCCcore-11.3.0/include:/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/numactl/2.0.14-GCCcore-11.3.0/include:/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/intel-compilers/2022.1.0/dev-utilities/latest/include:/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/intel-compilers/2022.1.0/mpi/latest/include:/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/intel-compilers/2022.1.0/tbb/latest/include:/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/intel-compilers/2022.1.0/tbb/2021.6.0/include:/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/binutils/2.38-GCCcore-11.3.0/include:/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/zlib/1.2.12-GCCcore-11.3.0/include:/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/GCCcore/11.3.0/include
+CUDA_HOME=/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/CUDA/11.8.0
+CUDA_PATH=/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/CUDA/11.8.0
+CUDA_ROOT=/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/CUDA/11.8.0
+CUDA_VISIBLE_DEVICES=0,1
+CXX=icpc
+DAPL_CM_ROUTE_TIMEOUT_MS=20000
+DBUS_SESSION_BUS_ADDRESS='unix:path=/run/user/32088/bus'
+DELIM_LINE=------------------------------------------------------------------------------
+DIAGUTIL_PATH=/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/intel-compilers/2022.1.0/compiler/latest/sys_check/sys_check.sh:/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/intel-compilers/2022.1.0/debugger/latest/sys_check/debugger_sys_check.py
+EBDEVELBINUTILS=/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/binutils/2.38-GCCcore-11.3.0/easybuild/Compiler-GCCcore-11.3.0-binutils-2.38-easybuild-devel
+EBDEVELCUDA=/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/CUDA/11.8.0/easybuild/Core-CUDA-11.8.0-easybuild-devel
+EBDEVELGCCCORE=/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/GCCcore/11.3.0/easybuild/Core-GCCcore-.11.3.0-easybuild-devel
+EBDEVELIMKL=/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/imkl/2022.1.0/easybuild/Core-imkl-2022.1.0-easybuild-devel
+EBDEVELIMKLMINFFTW=/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/imkl-FFTW/2022.1.0-iimpi-2022a/easybuild/MPI-intel-2022.1.0-impi-2021.6.0-imkl-FFTW-2022.1.0-easybuild-devel
+EBDEVELIMPI=/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/impi/2021.6.0-intel-compilers-2022.1.0/easybuild/Compiler-intel-2022.1.0-impi-2021.6.0-easybuild-devel
+EBDEVELINTEL=/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/intel/2022a/easybuild/Core-intel-2022a-easybuild-devel
+EBDEVELINTELMINCOMPILERS=/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/intel-compilers/2022.1.0/easybuild/Core-intel-compilers-2022.1.0-easybuild-devel
+EBDEVELNUMACTL=/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/numactl/2.0.14-GCCcore-11.3.0/easybuild/Compiler-GCCcore-11.3.0-numactl-2.0.14-easybuild-devel
+EBDEVELUCX=/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/UCX/1.12.1-GCCcore-11.3.0/easybuild/Compiler-GCCcore-11.3.0-UCX-1.12.1-easybuild-devel
+EBDEVELZLIB=/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/zlib/1.2.12-GCCcore-11.3.0/easybuild/Compiler-GCCcore-11.3.0-zlib-1.2.12-easybuild-devel
+EBROOTBINUTILS=/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/binutils/2.38-GCCcore-11.3.0
+EBROOTCUDA=/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/CUDA/11.8.0
+EBROOTGCCCORE=/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/GCCcore/11.3.0
+EBROOTIMKL=/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/imkl/2022.1.0
+EBROOTIMKLMINFFTW=/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/imkl-FFTW/2022.1.0-iimpi-2022a
+EBROOTIMPI=/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/impi/2021.6.0-intel-compilers-2022.1.0
+EBROOTINTEL=/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/intel/2022a
+EBROOTINTELMINCOMPILERS=/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/intel-compilers/2022.1.0
+EBROOTNUMACTL=/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/numactl/2.0.14-GCCcore-11.3.0
+EBROOTUCX=/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/UCX/1.12.1-GCCcore-11.3.0
+EBROOTZLIB=/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/zlib/1.2.12-GCCcore-11.3.0
+EBVERSIONBINUTILS=2.38
+EBVERSIONCUDA=11.8.0
+EBVERSIONGCCCORE=11.3.0
+EBVERSIONIMKL=2022.1.0
+EBVERSIONIMKLMINFFTW=2022.1.0
+EBVERSIONIMPI=2021.6.0
+EBVERSIONINTEL=2022a
+EBVERSIONINTELMINCOMPILERS=2022.1.0
+EBVERSIONNUMACTL=2.0.14
+EBVERSIONUCX=1.12.1
+EBVERSIONZLIB=1.2.12
+ENV=/usr/local_host/etc/kshenv
+ENVIRONMENT=BATCH
+F77='ifort -f77rtl -fpconstant -intconstant'
+FC=ifort
+FI_PROVIDER_PATH=/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/impi/2021.6.0-intel-compilers-2022.1.0/mpi/2021.6.0/libfabric/lib/prov:/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/intel-compilers/2022.1.0/mpi/latest/libfabric/lib/prov
+FLAGS_ARCH64=-m64
+FLAGS_AUTOPAR=-parallel
+FLAGS_DEBUG=-g
+FLAGS_FAST='-O3 -ip -xSSE4.2 -axCORE-AVX2,AVX -fp-model fast=2'
+FLAGS_FAST_NO_FPOPT='-O3 -ip -xSSE4.2 -axCORE-AVX2,AVX -fp-model precise'
+FLAGS_FREE='-free -fpp'
+FLAGS_GCCcore_ARCH64=-m64
+FLAGS_GCCcore_DEBUG=-g
+FLAGS_GCCcore_FAST='-O3 -ffast-math -mtune=native'
+FLAGS_GCCcore_FAST_NO_FPOPT='-O3 -mtune=native'
+FLAGS_GCCcore_FREE=-ffree-form
+FLAGS_GCCcore_OFFLOAD_OPENACC=-fopenacc
+FLAGS_GCCcore_OFFLOAD_OPENMP=-fopenmp
+FLAGS_GCCcore_OPENMP=-fopenmp
+FLAGS_GCCcore_PIC='-fPIC -shared'
+FLAGS_GCCcore_RPATH='-Wl,-rpath=/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/GCCcore/11.3.0/lib64'
+FLAGS_GCCcore_RUNTIME_LINKER='-Wl,-rpath='
+FLAGS_MPI_BATCH=''
+FLAGS_OPENMP=-qopenmp
+FLAGS_PIC='-fPIC -shared'
+FLAGS_RPATH='-Wl,-rpath=/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/intel-compilers/2022.1.0/compiler/latest/linux/compiler/lib/intel64_lin'
+FLAGS_RUNTIME_LINKER='-Wl,-rpath='
+FLAGS_intel_compilers_ARCH64=-m64
+FLAGS_intel_compilers_AUTOPAR=-parallel
+FLAGS_intel_compilers_DEBUG=-g
+FLAGS_intel_compilers_FAST='-O3 -ip -xSSE4.2 -axCORE-AVX2,AVX -fp-model fast=2'
+FLAGS_intel_compilers_FAST_NO_FPOPT='-O3 -ip -xSSE4.2 -axCORE-AVX2,AVX -fp-model precise'
+FLAGS_intel_compilers_FREE='-free -fpp'
+FLAGS_intel_compilers_OPENMP=-qopenmp
+FLAGS_intel_compilers_PIC='-fPIC -shared'
+FLAGS_intel_compilers_RPATH='-Wl,-rpath=/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/intel-compilers/2022.1.0/compiler/latest/linux/compiler/lib/intel64_lin'
+FLAGS_intel_compilers_RUNTIME_LINKER='-Wl,-rpath='
+FLEXIBLAS_LIBRARY_PATH=/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/imkl/2022.1.0/mkl/2022.1.0/lib/intel64/flexiblas
+FPGA_VARS_DIR=/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/intel-compilers/2022.1.0/compiler/latest/linux/lib/oclfpga
+GCCcore_CC=gcc
+GCCcore_CPP=cpp
+GCCcore_CXX=g++
+GCCcore_F77='gfortran -fno-sign-zero'
+GCCcore_FC=gfortran
+GCCcore_OBJC=gcc
+GCCcore_OBJCXX=g++
+GCCcore_ROOT=/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/GCCcore/11.3.0
+GDB_INFO=/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/intel-compilers/2022.1.0/debugger/latest/documentation/info
+GPU_DEVICE_ORDINAL=0,1
+HOME=/home/as388453
+HOME_SNAPSHOT=/home/as388453/.snapshot
+HOSTNAME=ncg39.hpc.itc.rwth-aachen.de
+HPCWORK=/hpcwork/as388453
+INFOPATH=/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/intel-compilers/2022.1.0/debugger/latest/gdb/intel64/lib
+INTELARCH=64
+INTELFPGAOCLSDKROOT=/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/intel-compilers/2022.1.0/compiler/latest/linux/lib/oclfpga
+INTEL_PYTHONHOME=/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/intel-compilers/2022.1.0/debugger/latest/dep
+I_MPI_FABRICS=shm:ofi
+I_MPI_JOB_SIGNAL_PROPAGATION=on
+I_MPI_OFI_PROVIDER=psm2
+I_MPI_PMI_LIBRARY=/opt/slurm/current/lib/libpmi2.so
+I_MPI_ROOT=/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/impi/2021.6.0-intel-compilers-2022.1.0/mpi/2021.6.0
+JAVA_TOOL_OPTIONS=-Xmx2048m
+LANG=en_US.UTF-8
+LASTCOMPILER=intel_compilers
+LASTMPI=impi
+LD_LIBRARY_PATH=/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/CUDA/11.8.0/nvvm/lib64:/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/CUDA/11.8.0/extras/CUPTI/lib64:/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/CUDA/11.8.0/lib:/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/imkl-FFTW/2022.1.0-iimpi-2022a/lib:/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/imkl/2022.1.0/mkl/2022.1.0/lib/intel64:/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/imkl/2022.1.0/compiler/2022.1.0/linux/compiler/lib/intel64_lin:/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/impi/2021.6.0-intel-compilers-2022.1.0/mpi/2021.6.0/libfabric/lib:/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/impi/2021.6.0-intel-compilers-2022.1.0/mpi/2021.6.0/lib/release:/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/impi/2021.6.0-intel-compilers-2022.1.0/mpi/2021.6.0/lib:/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/UCX/1.12.1-GCCcore-11.3.0/lib:/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/numactl/2.0.14-GCCcore-11.3.0/lib:/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/intel-compilers/2022.1.0/tbb/2021.6.0/lib/intel64/gcc4.8:/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/intel-compilers/2022.1.0/compiler/2022.1.0/linux/compiler/lib/intel64_lin:/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/intel-compilers/2022.1.0/compiler/2022.1.0/linux/lib/x64:/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/intel-compilers/2022.1.0/compiler/2022.1.0/linux/lib:/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/binutils/2.38-GCCcore-11.3.0/lib:/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/zlib/1.2.12-GCCcore-11.3.0/lib:/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/GCCcore/11.3.0/lib64
+LIBRARY_PATH=/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/CUDA/11.8.0/stubs/lib64:/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/CUDA/11.8.0/lib:/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/imkl-FFTW/2022.1.0-iimpi-2022a/lib:/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/imkl/2022.1.0/mkl/2022.1.0/lib/intel64:/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/imkl/2022.1.0/compiler/2022.1.0/linux/compiler/lib/intel64_lin:/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/impi/2021.6.0-intel-compilers-2022.1.0/mpi/2021.6.0/libfabric/lib:/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/impi/2021.6.0-intel-compilers-2022.1.0/mpi/2021.6.0/lib/release:/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/impi/2021.6.0-intel-compilers-2022.1.0/mpi/2021.6.0/lib:/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/UCX/1.12.1-GCCcore-11.3.0/lib:/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/numactl/2.0.14-GCCcore-11.3.0/lib:/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/intel-compilers/2022.1.0/compiler/latest/linux/lib:/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/intel-compilers/2022.1.0/compiler/latest/linux/compiler/lib/intel64_lin:/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/intel-compilers/2022.1.0/mpi/latest/lib:/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/intel-compilers/2022.1.0/mpi/latest/lib/release:/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/intel-compilers/2022.1.0/mpi/latest/libfabric/lib:/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/intel-compilers/2022.1.0/tbb/latest/lib/intel64/gcc4.8:/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/intel-compilers/2022.1.0/tbb/2021.6.0/lib/intel64/gcc4.8:/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/intel-compilers/2022.1.0/compiler/2022.1.0/linux/compiler/lib/intel64_lin:/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/intel-compilers/2022.1.0/compiler/2022.1.0/linux/lib/x64:/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/intel-compilers/2022.1.0/compiler/2022.1.0/linux/lib:/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/binutils/2.38-GCCcore-11.3.0/lib:/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/zlib/1.2.12-GCCcore-11.3.0/lib
+LMOD_AVAIL_STYLE='system:<grouped>'
+LMOD_CMD=/opt/lmod/8.7.32/libexec/lmod
+LMOD_DIR=/opt/lmod/8.7.32/libexec
+LMOD_FAMILY_MPI=impi
+LMOD_FAMILY_MPI_VERSION=2021.6.0
+LMOD_PACKAGE_PATH=/opt/lmod/config
+LMOD_PKG=/opt/lmod/8.7.32
+LMOD_ROOT=/opt/lmod
+LMOD_SETTARG_FULL_SUPPORT=no
+LMOD_SYSTEM_DEFAULT_MODULES=NHRDEFAULT/2022a
+LMOD_VERSION=8.7.32
+LMOD_sys=Linux
+LOADEDMODULES=GCCcore/.11.3.0:zlib/1.2.12:binutils/2.38:intel-compilers/2022.1.0:numactl/2.0.14:UCX/1.12.1:impi/2021.6.0:imkl/2022.1.0:imkl-FFTW/2022.1.0:intel/2022a:CUDA/11.8.0
+LOGINPID=266565
+LOGNAME=as388453
+MANPATH=/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/impi/2021.6.0-intel-compilers-2022.1.0/mpi/2021.6.0/man:/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/numactl/2.0.14-GCCcore-11.3.0/share/man:/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/intel-compilers/2022.1.0/compiler/2022.1.0/documentation/en/man/common:/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/binutils/2.38-GCCcore-11.3.0/share/man:/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/zlib/1.2.12-GCCcore-11.3.0/share/man:/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/GCCcore/11.3.0/share/man:/usr/local_host/man:/usr/local_rwth/man:/usr/man:/usr/share/man:/usr/local/man:/usr/local/share/man:/opt/slurm/current/share/man
+MKLROOT=/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/imkl/2022.1.0/mkl/2022.1.0
+MKL_EXAMPLES=/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/imkl/2022.1.0/mkl/2022.1.0/examples
+MODULEPATH=/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/modules/all/MPI/intel/2022.1.0/impi/2021.6.0:/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/modules/all/Compiler/intel/2022.1.0:/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/modules/all/Compiler/GCCcore/11.3.0:/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/modules/all/Core:/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/modules/all/Containers:/work/as388453/.local/easybuild/modules/all/MPI/intel/2022.1.0/impi/2021.6.0:/work/as388453/.local/easybuild/modules/all/Compiler/intel/2022.1.0:/work/as388453/.local/easybuild/modules/all/Compiler/GCCcore/11.3.0:/work/as388453/.local/easybuild/modules/all/Core:/work/as388453/.local/easybuild/modules/all/Containers
+MODULEPATH_ROOT=/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/modules/all
+MODULESHOME=/opt/lmod/8.7.32
+MPICC=mpiicc
+MPICXX=mpiicpc
+MPIEXEC=/usr/local_host/bin/srun
+MPIF77='mpiifort -f77rtl -fpconstant -intconstant'
+MPIFC=mpiifort
+MPI_BINDIR=/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/impi/2021.6.0-intel-compilers-2022.1.0/mpi/latest/bin
+MPI_INCLUDE=/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/impi/2021.6.0-intel-compilers-2022.1.0/mpi/latest/include
+MPI_LIBDIR=/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/impi/2021.6.0-intel-compilers-2022.1.0/mpi/latest/lib
+MPI_NAME=intelmpi
+NHR_SCRATCH=/hpcwork/as388453
+NLSPATH=/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/intel-compilers/2022.1.0/compiler/latest/linux/compiler/lib/intel64_lin/locale/%l_%t/%N
+NODENAME=unknown
+NVCC_PREPEND_FLAGS='--std=c++14'
+OCL_ICD_FILENAMES=libintelocl_emu.so:libalteracl.so:/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/intel-compilers/2022.1.0/compiler/latest/linux/lib/x64/libintelocl.so
+OLDPWD=/rwthfs/rz/cluster/home/as388453/parallel-pattern-dsl/Samples/nn/c
+OMP_NUM_THREADS=1
+ONEAPI_ROOT=/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/intel-compilers/2022.1.0
+PATH=/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/CUDA/11.8.0/nvvm/bin:/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/CUDA/11.8.0/bin:/home/as388453/.cargo/bin:/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/impi/2021.6.0-intel-compilers-2022.1.0/mpi/2021.6.0/libfabric/bin:/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/impi/2021.6.0-intel-compilers-2022.1.0/mpi/2021.6.0/bin:/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/UCX/1.12.1-GCCcore-11.3.0/bin:/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/numactl/2.0.14-GCCcore-11.3.0/bin:/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/intel-compilers/2022.1.0/compiler/2022.1.0/linux/bin/intel64:/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/intel-compilers/2022.1.0/compiler/2022.1.0/linux/bin:/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/binutils/2.38-GCCcore-11.3.0/bin:/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/GCCcore/11.3.0/bin:/usr/local_host/bin:/usr/local_host/sbin:/usr/local_rwth/bin:/usr/local_rwth/sbin:/usr/bin:/usr/sbin:/bin:/sbin:/opt/singularity/bin:/usr/local/bin:/usr/local/sbin:/opt/slurm/current/sbin:/opt/slurm/current/bin
+PKG_CONFIG_PATH=/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/CUDA/11.8.0/pkgconfig:/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/imkl/2022.1.0/mkl/2022.1.0/lib/pkgconfig:/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/UCX/1.12.1-GCCcore-11.3.0/lib/pkgconfig:/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/numactl/2.0.14-GCCcore-11.3.0/lib/pkgconfig:/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/zlib/1.2.12-GCCcore-11.3.0/lib/pkgconfig
+PSRC=/rwthfs/rz/SW/HPC/examples
+PUREOPTIONS=' -cache-dir=/work/as388453'
+PWD=/rwthfs/rz/cluster/home/as388453/parallel-pattern-dsl/Samples/nn/c
+ROCR_VISIBLE_DEVICES=0,1
+RWTH_HPC_FAMILY_MPI=impi
+RWTH_HPC_FAMILY_MPI_VERSION=2021.6.0
+R_CPUGROUPS=skylake-sp
+R_DELIMITER=------------------------------------------------------------------------------
+R_GROUPS=lmod,nvidia_driver,claix-2018
+R_HOSTNAME=ncg39.hpc.itc.rwth-aachen.de
+R_HWARCH=intel_64
+R_HWTYPE=i386
+R_HW_HOSTNAME=ncg39.hpc.itc.rwth-aachen.de
+R_HW_NPROC=48
+R_HW_REALMEM=196608
+R_IB=''
+R_INITENVDIR=/usr/local_host/etc
+R_LOGFILEDIR=/usr/local_host/logfiles
+R_LOGINHOST=ncg39.hpc.itc.rwth-aachen.de
+R_LOGINMODE=BATCH
+R_LOGINNAME=as388453
+R_LOGINPID=266565
+R_LOGINTAG=266565@ncg39.hpc.itc.rwth-aachen.de
+R_LOGINTAG_UID=ncg39_32088
+R_LOGNAME=as388453
+R_MPI_ROOT=/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/impi/2021.6.0-intel-compilers-2022.1.0/mpi/latest
+R_NAME=ncg39
+R_OPA=claix18
+R_OSDIST=ROCKY
+R_OSDISTMAJVERS=8
+R_OSDISTVERS=8.8
+R_OSNAME=LINUX
+R_OSTYPE=LINUX
+R_OSVERSION=4.18
+R_REMOTEHOST=unknown
+R_SERVICE=batch
+R_SERVICES=batch
+R_SHLVL=2
+R_SLURM_CLUSTER=rcc
+R_SLURM_HOSTLISTFILE=/w0/tmp/slurm_as388453.40807679/.hostfile
+R_SLURM_ROLES=compute
+R_SVC_LDAP_MASTER=ldap01.hpc.itc.rwth-aachen.de
+R_WLM_ABAQUSHOSTLIST='[['\''ncg39.hpc.itc.rwth-aachen.de'\'', 1]]'
+R_WLM_CFXHOSTLIST='ncg39*1'
+R_WLM_HOSTLISTFILE=/w0/tmp/slurm_as388453.40807679/.hostfile
+R_WLM_JOB_ID=SLURM_40807679
+R_WLM_TYPE=slurm
+R_yARCH=x86_64/intel/skylake_avx512
+SHELL=/usr/local_rwth/bin/zsh
+SHLVL=2
+SLURMD_NODENAME=ncg39
+SLURM_CLUSTER_NAME=rcc
+SLURM_CONF=/etc/slurm/slurm.conf
+SLURM_CPUS_ON_NODE=1
+SLURM_CPUS_PER_TASK=1
+SLURM_EXPORT_ENV=NONE
+SLURM_GET_USER_ENV=1
+SLURM_GPUS_ON_NODE=2
+SLURM_GTIDS=0
+SLURM_JOBID=40807679
+SLURM_JOB_ACCOUNT=default
+SLURM_JOB_CPUS_PER_NODE=1
+SLURM_JOB_GID=32088
+SLURM_JOB_GPUS=0,1
+SLURM_JOB_ID=40807679
+SLURM_JOB_NAME=NN
+SLURM_JOB_NODELIST=ncg39
+SLURM_JOB_NUM_NODES=1
+SLURM_JOB_PARTITION=c18g
+SLURM_JOB_QOS=normal
+SLURM_JOB_UID=32088
+SLURM_JOB_USER=as388453
+SLURM_LOCALID=0
+SLURM_MEM_PER_CPU=20480
+SLURM_MPI_TYPE=pmi2
+SLURM_NNODES=1
+SLURM_NODEID=0
+SLURM_NODELIST=ncg39
+SLURM_NODE_ALIASES='(null)'
+SLURM_PRIO_PROCESS=0
+SLURM_PROCID=0
+SLURM_SCRIPT_CONTEXT=prolog_task
+SLURM_SUBMIT_DIR=/rwthfs/rz/cluster/home/as388453/parallel-pattern-dsl/Samples/nn/c
+SLURM_SUBMIT_HOST=hpc-build1.hpc.itc.rwth-aachen.de
+SLURM_TASKS_PER_NODE=1
+SLURM_TASK_PID=266565
+SLURM_TOPOLOGY_ADDR=sw18-ops.sw18-ope-34.ncg39
+SLURM_TOPOLOGY_ADDR_PATTERN=switch.switch.node
+SLURM_WORKING_CLUSTER=rcc:wlm1:6750:9728:109
+SRUN_CPUS_PER_TASK=1
+TBBROOT=/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/intel-compilers/2022.1.0/tbb/latest
+TEMP=/w0/tmp/slurm_as388453.40807679
+TMP=/w0/tmp/slurm_as388453.40807679
+TMPDIR=/w0/tmp/slurm_as388453.40807679
+TMPSESS=/w0/tmp/slurm_as388453.40807679
+TZ=:/etc/localtime
+UCX_TLS=all
+USER=as388453
+WORK=/work/as388453
+WORK_SNAPSHOT=/work/as388453/.snapshot
+XDG_DATA_DIRS=/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/CUDA/11.8.0/share:/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/UCX/1.12.1-GCCcore-11.3.0/share:/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/numactl/2.0.14-GCCcore-11.3.0/share:/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/binutils/2.38-GCCcore-11.3.0/share:/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/zlib/1.2.12-GCCcore-11.3.0/share:/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/GCCcore/11.3.0/share:/usr/local/share:/usr/share
+XDG_RUNTIME_DIR=/run/user/32088
+XDG_SESSION_ID=c25573
+ZE_AFFINITY_MASK=0,1
+_LMFILES_=/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/modules/all/Core/GCCcore/.11.3.0.lua:/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/modules/all/Compiler/GCCcore/11.3.0/zlib/1.2.12.lua:/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/modules/all/Compiler/GCCcore/11.3.0/binutils/2.38.lua:/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/modules/all/Core/intel-compilers/2022.1.0.lua:/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/modules/all/Compiler/GCCcore/11.3.0/numactl/2.0.14.lua:/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/modules/all/Compiler/GCCcore/11.3.0/UCX/1.12.1.lua:/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/modules/all/Compiler/intel/2022.1.0/impi/2021.6.0.lua:/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/modules/all/Core/imkl/2022.1.0.lua:/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/modules/all/MPI/intel/2022.1.0/impi/2021.6.0/imkl-FFTW/2022.1.0.lua:/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/modules/all/Core/intel/2022a.lua:/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/modules/all/Core/CUDA/11.8.0.lua
+_ModuleTable001_=X01vZHVsZVRhYmxlXyA9IHsKTVR2ZXJzaW9uID0gMywKY19yZWJ1aWxkVGltZSA9IGZhbHNlLApjX3Nob3J0VGltZSA9IGZhbHNlLApkZXB0aFQgPSB7fSwKZmFtaWx5ID0gewptcGkgPSAiaW1waSIsCn0sCm1UID0gewpDVURBID0gewpmbiA9ICIvY3ZtZnMvc29mdHdhcmUuaHBjLnJ3dGguZGUvTGludXgvUkg4L3g4Nl82NC9pbnRlbC9za3lsYWtlX2F2eDUxMi9tb2R1bGVzL2FsbC9Db3JlL0NVREEvMTEuOC4wLmx1YSIsCmZ1bGxOYW1lID0gIkNVREEvMTEuOC4wIiwKbG9hZE9yZGVyID0gMTEsCnByb3BUID0ge30sCnN0YWNrRGVwdGggPSAwLApzdGF0dXMgPSAiYWN0aXZlIiwKdXNlck5hbWUgPSAiQ1VEQSIsCndWID0gInMwMDAwMDAxMS4wMDAwMDAwMDguKnpmaW5hbCIs
+_ModuleTable002_=Cn0sCkdDQ2NvcmUgPSB7CmZuID0gIi9jdm1mcy9zb2Z0d2FyZS5ocGMucnd0aC5kZS9MaW51eC9SSDgveDg2XzY0L2ludGVsL3NreWxha2VfYXZ4NTEyL21vZHVsZXMvYWxsL0NvcmUvR0NDY29yZS8uMTEuMy4wLmx1YSIsCmZ1bGxOYW1lID0gIkdDQ2NvcmUvLjExLjMuMCIsCmxvYWRPcmRlciA9IDEsCnByb3BUID0gewp0eXBlXyA9IHsKY29tcGlsZXIgPSAxLAp9LAp9LApyZWZfY291bnQgPSAxLApzdGFja0RlcHRoID0gMSwKc3RhdHVzID0gImFjdGl2ZSIsCnVzZXJOYW1lID0gIkdDQ2NvcmUvLjExLjMuMCIsCndWID0gInMwMDAwMDAwMC4wMDAwMDAwMTEuMDAwMDAwMDAzLip6ZmluYWwiLAp9LApVQ1ggPSB7CmZuID0gIi9jdm1mcy9zb2Z0d2FyZS5ocGMucnd0aC5kZS9M
+_ModuleTable003_=aW51eC9SSDgveDg2XzY0L2ludGVsL3NreWxha2VfYXZ4NTEyL21vZHVsZXMvYWxsL0NvbXBpbGVyL0dDQ2NvcmUvMTEuMy4wL1VDWC8xLjEyLjEubHVhIiwKZnVsbE5hbWUgPSAiVUNYLzEuMTIuMSIsCmxvYWRPcmRlciA9IDYsCnByb3BUID0ge30sCnN0YWNrRGVwdGggPSAyLApzdGF0dXMgPSAiYWN0aXZlIiwKdXNlck5hbWUgPSAiVUNYLzEuMTIuMSIsCndWID0gIjAwMDAwMDAwMS4wMDAwMDAwMTIuMDAwMDAwMDAxLip6ZmluYWwiLAp9LApiaW51dGlscyA9IHsKZm4gPSAiL2N2bWZzL3NvZnR3YXJlLmhwYy5yd3RoLmRlL0xpbnV4L1JIOC94ODZfNjQvaW50ZWwvc2t5bGFrZV9hdng1MTIvbW9kdWxlcy9hbGwvQ29tcGlsZXIvR0NDY29yZS8xMS4zLjAvYmludXRpbHMvMi4z
+_ModuleTable004_=OC5sdWEiLApmdWxsTmFtZSA9ICJiaW51dGlscy8yLjM4IiwKbG9hZE9yZGVyID0gMywKcHJvcFQgPSB7fSwKc3RhY2tEZXB0aCA9IDEsCnN0YXR1cyA9ICJhY3RpdmUiLAp1c2VyTmFtZSA9ICJiaW51dGlscy8yLjM4IiwKd1YgPSAiMDAwMDAwMDAyLjAwMDAwMDAzOC4qemZpbmFsIiwKfSwKaW1rbCA9IHsKZm4gPSAiL2N2bWZzL3NvZnR3YXJlLmhwYy5yd3RoLmRlL0xpbnV4L1JIOC94ODZfNjQvaW50ZWwvc2t5bGFrZV9hdng1MTIvbW9kdWxlcy9hbGwvQ29yZS9pbWtsLzIwMjIuMS4wLmx1YSIsCmZ1bGxOYW1lID0gImlta2wvMjAyMi4xLjAiLApsb2FkT3JkZXIgPSA4LApwcm9wVCA9IHsKdHlwZV8gPSB7Cm1hdGggPSAxLAp9LAp9LApyZWZfY291bnQgPSAxLApzdGFja0Rl
+_ModuleTable005_=cHRoID0gMSwKc3RhdHVzID0gImFjdGl2ZSIsCnVzZXJOYW1lID0gImlta2wvMjAyMi4xLjAiLAp3ViA9ICIwMDAwMDIwMjIuMDAwMDAwMDAxLip6ZmluYWwiLAp9LApbImlta2wtRkZUVyJdID0gewpmbiA9ICIvY3ZtZnMvc29mdHdhcmUuaHBjLnJ3dGguZGUvTGludXgvUkg4L3g4Nl82NC9pbnRlbC9za3lsYWtlX2F2eDUxMi9tb2R1bGVzL2FsbC9NUEkvaW50ZWwvMjAyMi4xLjAvaW1waS8yMDIxLjYuMC9pbWtsLUZGVFcvMjAyMi4xLjAubHVhIiwKZnVsbE5hbWUgPSAiaW1rbC1GRlRXLzIwMjIuMS4wIiwKbG9hZE9yZGVyID0gOSwKcHJvcFQgPSB7fSwKcmVmX2NvdW50ID0gMSwKc3RhY2tEZXB0aCA9IDEsCnN0YXR1cyA9ICJhY3RpdmUiLAp1c2VyTmFtZSA9ICJpbWtsLUZG
+_ModuleTable006_=VFcvMjAyMi4xLjAiLAp3ViA9ICIwMDAwMDIwMjIuMDAwMDAwMDAxLip6ZmluYWwiLAp9LAppbXBpID0gewpmbiA9ICIvY3ZtZnMvc29mdHdhcmUuaHBjLnJ3dGguZGUvTGludXgvUkg4L3g4Nl82NC9pbnRlbC9za3lsYWtlX2F2eDUxMi9tb2R1bGVzL2FsbC9Db21waWxlci9pbnRlbC8yMDIyLjEuMC9pbXBpLzIwMjEuNi4wLmx1YSIsCmZ1bGxOYW1lID0gImltcGkvMjAyMS42LjAiLApsb2FkT3JkZXIgPSA3LApwcm9wVCA9IHsKdHlwZV8gPSB7Cm1waSA9IDEsCn0sCn0sCnJlZl9jb3VudCA9IDEsCnN0YWNrRGVwdGggPSAxLApzdGF0dXMgPSAiYWN0aXZlIiwKdXNlck5hbWUgPSAiaW1waS8yMDIxLjYuMCIsCndWID0gInMwMDAwMjAyMS4wMDAwMDAwMDYuKnpmaW5hbCIsCn0s
+_ModuleTable007_=CmludGVsID0gewpmbiA9ICIvY3ZtZnMvc29mdHdhcmUuaHBjLnJ3dGguZGUvTGludXgvUkg4L3g4Nl82NC9pbnRlbC9za3lsYWtlX2F2eDUxMi9tb2R1bGVzL2FsbC9Db3JlL2ludGVsLzIwMjJhLmx1YSIsCmZ1bGxOYW1lID0gImludGVsLzIwMjJhIiwKbG9hZE9yZGVyID0gMTAsCm9yaWdVc2VyTmFtZSA9ICJOSFJERUZBVUxULzIwMjJhIiwKcHJvcFQgPSB7CnR5cGVfID0gewp0b29sY2hhaW4gPSAxLAp9LAp9LApzdGFja0RlcHRoID0gMCwKc3RhdHVzID0gImFjdGl2ZSIsCnVzZXJOYW1lID0gImludGVsLzIwMjJhIiwKd1YgPSAiczAwMDAyMDIyLiphLip6ZmluYWwiLAp9LApbImludGVsLWNvbXBpbGVycyJdID0gewpmbiA9ICIvY3ZtZnMvc29mdHdhcmUuaHBjLnJ3dGgu
+_ModuleTable008_=ZGUvTGludXgvUkg4L3g4Nl82NC9pbnRlbC9za3lsYWtlX2F2eDUxMi9tb2R1bGVzL2FsbC9Db3JlL2ludGVsLWNvbXBpbGVycy8yMDIyLjEuMC5sdWEiLApmdWxsTmFtZSA9ICJpbnRlbC1jb21waWxlcnMvMjAyMi4xLjAiLApsb2FkT3JkZXIgPSA0LApwcm9wVCA9IHsKdHlwZV8gPSB7CmNvbXBpbGVyID0gMSwKfSwKfSwKcmVmX2NvdW50ID0gMSwKc3RhY2tEZXB0aCA9IDEsCnN0YXR1cyA9ICJhY3RpdmUiLAp1c2VyTmFtZSA9ICJpbnRlbC1jb21waWxlcnMvMjAyMi4xLjAiLAp3ViA9ICJzMDAwMDIwMjIuMDAwMDAwMDAxLip6ZmluYWwiLAp9LApudW1hY3RsID0gewpmbiA9ICIvY3ZtZnMvc29mdHdhcmUuaHBjLnJ3dGguZGUvTGludXgvUkg4L3g4Nl82NC9pbnRlbC9za3ls
+_ModuleTable009_=YWtlX2F2eDUxMi9tb2R1bGVzL2FsbC9Db21waWxlci9HQ0Njb3JlLzExLjMuMC9udW1hY3RsLzIuMC4xNC5sdWEiLApmdWxsTmFtZSA9ICJudW1hY3RsLzIuMC4xNCIsCmxvYWRPcmRlciA9IDUsCnByb3BUID0ge30sCnN0YWNrRGVwdGggPSAzLApzdGF0dXMgPSAiYWN0aXZlIiwKdXNlck5hbWUgPSAibnVtYWN0bC8yLjAuMTQiLAp3ViA9ICIwMDAwMDAwMDIuMDAwMDAwMDAwLjAwMDAwMDAxNC4qemZpbmFsIiwKfSwKemxpYiA9IHsKZm4gPSAiL2N2bWZzL3NvZnR3YXJlLmhwYy5yd3RoLmRlL0xpbnV4L1JIOC94ODZfNjQvaW50ZWwvc2t5bGFrZV9hdng1MTIvbW9kdWxlcy9hbGwvQ29tcGlsZXIvR0NDY29yZS8xMS4zLjAvemxpYi8xLjIuMTIubHVhIiwKZnVsbE5hbWUgPSAi
+_ModuleTable010_=emxpYi8xLjIuMTIiLApsb2FkT3JkZXIgPSAyLApwcm9wVCA9IHt9LApzdGFja0RlcHRoID0gMiwKc3RhdHVzID0gImFjdGl2ZSIsCnVzZXJOYW1lID0gInpsaWIvMS4yLjEyIiwKd1YgPSAiMDAwMDAwMDAxLjAwMDAwMDAwMi4wMDAwMDAwMTIuKnpmaW5hbCIsCn0sCn0sCm1wYXRoQSA9IHsKCiIvY3ZtZnMvc29mdHdhcmUuaHBjLnJ3dGguZGUvTGludXgvUkg4L3g4Nl82NC9pbnRlbC9za3lsYWtlX2F2eDUxMi9tb2R1bGVzL2FsbC9NUEkvaW50ZWwvMjAyMi4xLjAvaW1waS8yMDIxLjYuMCIKLCAiL2N2bWZzL3NvZnR3YXJlLmhwYy5yd3RoLmRlL0xpbnV4L1JIOC94ODZfNjQvaW50ZWwvc2t5bGFrZV9hdng1MTIvbW9kdWxlcy9hbGwvQ29tcGlsZXIvaW50ZWwvMjAyMi4xLjAi
+_ModuleTable011_=CiwgIi9jdm1mcy9zb2Z0d2FyZS5ocGMucnd0aC5kZS9MaW51eC9SSDgveDg2XzY0L2ludGVsL3NreWxha2VfYXZ4NTEyL21vZHVsZXMvYWxsL0NvbXBpbGVyL0dDQ2NvcmUvMTEuMy4wIgosICIvY3ZtZnMvc29mdHdhcmUuaHBjLnJ3dGguZGUvTGludXgvUkg4L3g4Nl82NC9pbnRlbC9za3lsYWtlX2F2eDUxMi9tb2R1bGVzL2FsbC9Db3JlIgosICIvY3ZtZnMvc29mdHdhcmUuaHBjLnJ3dGguZGUvTGludXgvUkg4L3g4Nl82NC9pbnRlbC9za3lsYWtlX2F2eDUxMi9tb2R1bGVzL2FsbC9Db250YWluZXJzIgosICIvd29yay9hczM4ODQ1My8ubG9jYWwvZWFzeWJ1aWxkL21vZHVsZXMvYWxsL01QSS9pbnRlbC8yMDIyLjEuMC9pbXBpLzIwMjEuNi4wIgosICIvd29yay9hczM4ODQ1
+_ModuleTable012_=My8ubG9jYWwvZWFzeWJ1aWxkL21vZHVsZXMvYWxsL0NvbXBpbGVyL2ludGVsLzIwMjIuMS4wIgosICIvd29yay9hczM4ODQ1My8ubG9jYWwvZWFzeWJ1aWxkL21vZHVsZXMvYWxsL0NvbXBpbGVyL0dDQ2NvcmUvMTEuMy4wIgosICIvd29yay9hczM4ODQ1My8ubG9jYWwvZWFzeWJ1aWxkL21vZHVsZXMvYWxsL0NvcmUiLCAiL3dvcmsvYXMzODg0NTMvLmxvY2FsL2Vhc3lidWlsZC9tb2R1bGVzL2FsbC9Db250YWluZXJzIiwKfSwKc3lzdGVtQmFzZU1QQVRIID0gIi9jdm1mcy9zb2Z0d2FyZS5ocGMucnd0aC5kZS9MaW51eC9SSDgveDg2XzY0L2ludGVsL3NreWxha2VfYXZ4NTEyL21vZHVsZXMvYWxsL0NvbnRhaW5lcnM6L2N2bWZzL3NvZnR3YXJlLmhwYy5yd3RoLmRlL0xpbnV4
+_ModuleTable013_=L1JIOC94ODZfNjQvaW50ZWwvc2t5bGFrZV9hdng1MTIvbW9kdWxlcy9hbGwvQ29yZSIsCn0K
+_ModuleTable_Sz_=13
+__Init_Default_Modules=1
+__LMOD_REF_COUNT_CMAKE_LIBRARY_PATH=/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/GCCcore/11.3.0/lib64:1
+__LMOD_REF_COUNT_CMAKE_PREFIX_PATH='/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/CUDA/11.8.0:1;/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/imkl-FFTW/2022.1.0-iimpi-2022a:1;/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/imkl/2022.1.0:1;/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/impi/2021.6.0-intel-compilers-2022.1.0:1;/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/UCX/1.12.1-GCCcore-11.3.0:1;/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/numactl/2.0.14-GCCcore-11.3.0:1;/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/intel-compilers/2022.1.0/compiler/latest/linux/IntelDPCPP:1;/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/intel-compilers/2022.1.0/tbb/latest:1;/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/binutils/2.38-GCCcore-11.3.0:1;/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/zlib/1.2.12-GCCcore-11.3.0:1;/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/GCCcore/11.3.0:1'
+__LMOD_REF_COUNT_CPATH='/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/CUDA/11.8.0/nvvm/include:1;/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/CUDA/11.8.0/extras/CUPTI/include:1;/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/CUDA/11.8.0/include:1;/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/imkl/2022.1.0/mkl/2022.1.0/include/fftw:1;/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/imkl/2022.1.0/mkl/2022.1.0/include:1;/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/impi/2021.6.0-intel-compilers-2022.1.0/mpi/2021.6.0/include:1;/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/UCX/1.12.1-GCCcore-11.3.0/include:1;/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/numactl/2.0.14-GCCcore-11.3.0/include:1;/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/intel-compilers/2022.1.0/dev-utilities/latest/include:1;/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/intel-compilers/2022.1.0/mpi/latest/include:1;/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/intel-compilers/2022.1.0/tbb/latest/include:1;/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/intel-compilers/2022.1.0/tbb/2021.6.0/include:1;/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/binutils/2.38-GCCcore-11.3.0/include:1;/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/zlib/1.2.12-GCCcore-11.3.0/include:1;/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/GCCcore/11.3.0/include:1'
+__LMOD_REF_COUNT_DIAGUTIL_PATH='/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/intel-compilers/2022.1.0/compiler/latest/sys_check/sys_check.sh:1;/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/intel-compilers/2022.1.0/debugger/latest/sys_check/debugger_sys_check.py:1'
+__LMOD_REF_COUNT_FI_PROVIDER_PATH='/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/impi/2021.6.0-intel-compilers-2022.1.0/mpi/2021.6.0/libfabric/lib/prov:1;/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/intel-compilers/2022.1.0/mpi/latest/libfabric/lib/prov:1'
+__LMOD_REF_COUNT_FLEXIBLAS_LIBRARY_PATH=/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/imkl/2022.1.0/mkl/2022.1.0/lib/intel64/flexiblas:1
+__LMOD_REF_COUNT_INFOPATH=/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/intel-compilers/2022.1.0/debugger/latest/gdb/intel64/lib:1
+__LMOD_REF_COUNT_LD_LIBRARY_PATH='/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/CUDA/11.8.0/nvvm/lib64:1;/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/CUDA/11.8.0/extras/CUPTI/lib64:1;/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/CUDA/11.8.0/lib:1;/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/imkl-FFTW/2022.1.0-iimpi-2022a/lib:1;/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/imkl/2022.1.0/mkl/2022.1.0/lib/intel64:1;/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/imkl/2022.1.0/compiler/2022.1.0/linux/compiler/lib/intel64_lin:1;/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/impi/2021.6.0-intel-compilers-2022.1.0/mpi/2021.6.0/libfabric/lib:1;/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/impi/2021.6.0-intel-compilers-2022.1.0/mpi/2021.6.0/lib/release:1;/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/impi/2021.6.0-intel-compilers-2022.1.0/mpi/2021.6.0/lib:1;/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/UCX/1.12.1-GCCcore-11.3.0/lib:1;/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/numactl/2.0.14-GCCcore-11.3.0/lib:1;/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/intel-compilers/2022.1.0/tbb/2021.6.0/lib/intel64/gcc4.8:1;/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/intel-compilers/2022.1.0/compiler/2022.1.0/linux/compiler/lib/intel64_lin:1;/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/intel-compilers/2022.1.0/compiler/2022.1.0/linux/lib/x64:1;/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/intel-compilers/2022.1.0/compiler/2022.1.0/linux/lib:1;/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/binutils/2.38-GCCcore-11.3.0/lib:1;/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/zlib/1.2.12-GCCcore-11.3.0/lib:1;/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/GCCcore/11.3.0/lib64:1'
+__LMOD_REF_COUNT_LIBRARY_PATH='/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/CUDA/11.8.0/stubs/lib64:1;/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/CUDA/11.8.0/lib:1;/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/imkl-FFTW/2022.1.0-iimpi-2022a/lib:1;/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/imkl/2022.1.0/mkl/2022.1.0/lib/intel64:1;/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/imkl/2022.1.0/compiler/2022.1.0/linux/compiler/lib/intel64_lin:1;/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/impi/2021.6.0-intel-compilers-2022.1.0/mpi/2021.6.0/libfabric/lib:1;/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/impi/2021.6.0-intel-compilers-2022.1.0/mpi/2021.6.0/lib/release:1;/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/impi/2021.6.0-intel-compilers-2022.1.0/mpi/2021.6.0/lib:1;/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/UCX/1.12.1-GCCcore-11.3.0/lib:1;/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/numactl/2.0.14-GCCcore-11.3.0/lib:1;/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/intel-compilers/2022.1.0/compiler/latest/linux/lib:1;/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/intel-compilers/2022.1.0/compiler/latest/linux/compiler/lib/intel64_lin:1;/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/intel-compilers/2022.1.0/mpi/latest/lib:1;/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/intel-compilers/2022.1.0/mpi/latest/lib/release:1;/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/intel-compilers/2022.1.0/mpi/latest/libfabric/lib:1;/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/intel-compilers/2022.1.0/tbb/latest/lib/intel64/gcc4.8:1;/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/intel-compilers/2022.1.0/tbb/2021.6.0/lib/intel64/gcc4.8:1;/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/intel-compilers/2022.1.0/compiler/2022.1.0/linux/compiler/lib/intel64_lin:1;/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/intel-compilers/2022.1.0/compiler/2022.1.0/linux/lib/x64:1;/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/intel-compilers/2022.1.0/compiler/2022.1.0/linux/lib:1;/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/binutils/2.38-GCCcore-11.3.0/lib:1;/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/zlib/1.2.12-GCCcore-11.3.0/lib:1'
+__LMOD_REF_COUNT_MANPATH='/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/impi/2021.6.0-intel-compilers-2022.1.0/mpi/2021.6.0/man:1;/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/numactl/2.0.14-GCCcore-11.3.0/share/man:1;/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/intel-compilers/2022.1.0/compiler/2022.1.0/documentation/en/man/common:1;/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/binutils/2.38-GCCcore-11.3.0/share/man:1;/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/zlib/1.2.12-GCCcore-11.3.0/share/man:1;/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/GCCcore/11.3.0/share/man:1;/usr/local_host/man:1;/usr/local_rwth/man:1;/usr/man:1;/usr/share/man:1;/usr/local/man:1;/usr/local/share/man:1;/opt/slurm/current/share/man:1'
+__LMOD_REF_COUNT_MODULEPATH='/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/modules/all/MPI/intel/2022.1.0/impi/2021.6.0:1;/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/modules/all/Compiler/intel/2022.1.0:1;/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/modules/all/Compiler/GCCcore/11.3.0:1;/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/modules/all/Core:1;/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/modules/all/Containers:1;/work/as388453/.local/easybuild/modules/all/MPI/intel/2022.1.0/impi/2021.6.0:2;/work/as388453/.local/easybuild/modules/all/Compiler/intel/2022.1.0:2;/work/as388453/.local/easybuild/modules/all/Compiler/GCCcore/11.3.0:2;/work/as388453/.local/easybuild/modules/all/Core:2;/work/as388453/.local/easybuild/modules/all/Containers:2'
+__LMOD_REF_COUNT_NLSPATH=/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/intel-compilers/2022.1.0/compiler/latest/linux/compiler/lib/intel64_lin/locale/%l_%t/%N:1
+__LMOD_REF_COUNT_PATH='/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/CUDA/11.8.0/nvvm/bin:1;/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/CUDA/11.8.0/bin:1;/home/as388453/.cargo/bin:1;/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/impi/2021.6.0-intel-compilers-2022.1.0/mpi/2021.6.0/libfabric/bin:1;/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/impi/2021.6.0-intel-compilers-2022.1.0/mpi/2021.6.0/bin:1;/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/UCX/1.12.1-GCCcore-11.3.0/bin:1;/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/numactl/2.0.14-GCCcore-11.3.0/bin:1;/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/intel-compilers/2022.1.0/compiler/2022.1.0/linux/bin/intel64:1;/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/intel-compilers/2022.1.0/compiler/2022.1.0/linux/bin:1;/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/binutils/2.38-GCCcore-11.3.0/bin:1;/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/GCCcore/11.3.0/bin:1;/usr/local_host/bin:1;/usr/local_host/sbin:1;/usr/local_rwth/bin:1;/usr/local_rwth/sbin:1;/usr/bin:1;/usr/sbin:1;/bin:1;/sbin:1;/opt/singularity/bin:1;/usr/local/bin:1;/usr/local/sbin:1;/opt/slurm/current/sbin:1;/opt/slurm/current/bin:1'
+__LMOD_REF_COUNT_PKG_CONFIG_PATH='/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/CUDA/11.8.0/pkgconfig:1;/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/imkl/2022.1.0/mkl/2022.1.0/lib/pkgconfig:1;/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/UCX/1.12.1-GCCcore-11.3.0/lib/pkgconfig:1;/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/numactl/2.0.14-GCCcore-11.3.0/lib/pkgconfig:1;/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/zlib/1.2.12-GCCcore-11.3.0/lib/pkgconfig:1'
+__LMOD_REF_COUNT_XDG_DATA_DIRS='/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/CUDA/11.8.0/share:1;/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/UCX/1.12.1-GCCcore-11.3.0/share:1;/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/numactl/2.0.14-GCCcore-11.3.0/share:1;/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/binutils/2.38-GCCcore-11.3.0/share:1;/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/zlib/1.2.12-GCCcore-11.3.0/share:1;/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/GCCcore/11.3.0/share:1;/usr/local/share:1;/usr/share:1'
+__LMOD_STACK_CC=aWNj:Z2Nj
+__LMOD_STACK_CPP=false:Y3Bw
+__LMOD_STACK_CXX='aWNwYw==:Zysr'
+__LMOD_STACK_F77='aWZvcnQgLWY3N3J0bCAtZnBjb25zdGFudCAtaW50Y29uc3RhbnQ=:Z2ZvcnRyYW4gLWZuby1zaWduLXplcm8='
+__LMOD_STACK_FC='aWZvcnQ=:Z2ZvcnRyYW4='
+__LMOD_STACK_FLAGS_ARCH64='LW02NA==:LW02NA=='
+__LMOD_STACK_FLAGS_AUTOPAR=LXBhcmFsbGVs:false
+__LMOD_STACK_FLAGS_DEBUG='LWc=:LWc='
+__LMOD_STACK_FLAGS_FAST='LU8zIC1pcCAteFNTRTQuMiAtYXhDT1JFLUFWWDIsQVZYIC1mcC1tb2RlbCBmYXN0PTI=:LU8zIC1mZmFzdC1tYXRoIC1tdHVuZT1uYXRpdmU='
+__LMOD_STACK_FLAGS_FAST_NO_FPOPT='LU8zIC1pcCAteFNTRTQuMiAtYXhDT1JFLUFWWDIsQVZYIC1mcC1tb2RlbCBwcmVjaXNl:LU8zIC1tdHVuZT1uYXRpdmU='
+__LMOD_STACK_FLAGS_FREE='LWZyZWUgLWZwcA==:LWZmcmVlLWZvcm0='
+__LMOD_STACK_FLAGS_LINKER=false
+__LMOD_STACK_FLAGS_LPATH=false
+__LMOD_STACK_FLAGS_MATH_INCLUDE=false
+__LMOD_STACK_FLAGS_MATH_LINKER=false
+__LMOD_STACK_FLAGS_MATH_RPATH=false
+__LMOD_STACK_FLAGS_OFFLOAD_OPENACC=false:LWZvcGVuYWNj
+__LMOD_STACK_FLAGS_OFFLOAD_OPENMP='false:LWZvcGVubXA='
+__LMOD_STACK_FLAGS_OPENMP='LXFvcGVubXA=:LWZvcGVubXA='
+__LMOD_STACK_FLAGS_PIC='LWZQSUMgLXNoYXJlZA==:LWZQSUMgLXNoYXJlZA=='
+__LMOD_STACK_FLAGS_RPATH='LVdsLC1ycGF0aD0vY3ZtZnMvc29mdHdhcmUuaHBjLnJ3dGguZGUvTGludXgvUkg4L3g4Nl82NC9pbnRlbC9za3lsYWtlX2F2eDUxMi9zb2Z0d2FyZS9pbnRlbC1jb21waWxlcnMvMjAyMi4xLjAvY29tcGlsZXIvbGF0ZXN0L2xpbnV4L2NvbXBpbGVyL2xpYi9pbnRlbDY0X2xpbg==:LVdsLC1ycGF0aD0vY3ZtZnMvc29mdHdhcmUuaHBjLnJ3dGguZGUvTGludXgvUkg4L3g4Nl82NC9pbnRlbC9za3lsYWtlX2F2eDUxMi9zb2Z0d2FyZS9HQ0Njb3JlLzExLjMuMC9saWI2NA=='
+__LMOD_STACK_FLAGS_RUNTIME_LINKER='LVdsLC1ycGF0aD0=:LVdsLC1ycGF0aD0='
+__LMOD_STACK_LASTCOMPILER='aW50ZWxfY29tcGlsZXJz:R0NDY29yZQ=='
+__LMOD_STACK_LASTMPI='aW1waQ=='
+__LMOD_STACK_MPICC=bXBpaWNj
+__LMOD_STACK_MPICXX='bXBpaWNwYw=='
+__LMOD_STACK_MPIF77='bXBpaWZvcnQgLWY3N3J0bCAtZnBjb25zdGFudCAtaW50Y29uc3RhbnQ='
+__LMOD_STACK_MPIFC='bXBpaWZvcnQ='
+__LMOD_STACK_OBJC=false:Z2Nj
+__LMOD_STACK_OBJCXX=false:Zysr
+intel_compilers_CC=icc
+intel_compilers_CXX=icpc
+intel_compilers_F77='ifort -f77rtl -fpconstant -intconstant'
+intel_compilers_FC=ifort
+intel_compilers_ROOT=/cvmfs/software.hpc.rwth.de/Linux/RH8/x86_64/intel/skylake_avx512/software/intel-compilers/2022.1.0
+
+Wed Nov 15 14:36:14 2023       
++-----------------------------------------------------------------------------+
+| NVIDIA-SMI 525.147.05   Driver Version: 525.147.05   CUDA Version: 12.0     |
+|-------------------------------+----------------------+----------------------+
+| GPU  Name        Persistence-M| Bus-Id        Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp  Perf  Pwr:Usage/Cap|         Memory-Usage | GPU-Util  Compute M. |
+|                               |                      |               MIG M. |
+|===============================+======================+======================|
+|   0  Tesla V100-SXM2...  Off  | 00000000:61:00.0 Off |                    0 |
+| N/A   35C    P0    55W / 300W |      0MiB / 16384MiB |      0%      Default |
+|                               |                      |                  N/A |
++-------------------------------+----------------------+----------------------+
+|   1  Tesla V100-SXM2...  Off  | 00000000:62:00.0 Off |                    0 |
+| N/A   34C    P0    56W / 300W |      0MiB / 16384MiB |      0%      Default |
+|                               |                      |                  N/A |
++-------------------------------+----------------------+----------------------+
+                                                                               
++-----------------------------------------------------------------------------+
+| Processes:                                                                  |
+|  GPU   GI   CI        PID   Type   Process name                  GPU Memory |
+|        ID   ID                                                   Usage      |
+|=============================================================================|
+|  No running processes found                                                 |
++-----------------------------------------------------------------------------+
+
+Allocation done
+Random init done
+Starting clock
+Stopping clock
+Computation took: 0.237530 with result: -0.001915
+Allocation done
+Random init done
+Starting clock
+Stopping clock
+Computation took: 0.235285 with result: -0.000275
+Allocation done
+Random init done
+Starting clock
+Stopping clock
+Computation took: 0.235537 with result: -0.000702
+Allocation done
+Random init done
+Starting clock
+Stopping clock
+Computation took: 0.235895 with result: -0.000740
+Allocation done
+Random init done
+Starting clock
+Stopping clock
+Computation took: 0.233805 with result: -0.001656
+Allocation done
+Random init done
+Starting clock
+Stopping clock
+Computation took: 0.239330 with result: -0.001152
+Allocation done
+Random init done
+Starting clock
+Stopping clock
+Computation took: 0.237249 with result: -0.001404
+Allocation done
+Random init done
+Starting clock
+Stopping clock
+Computation took: 0.237109 with result: -0.000229
+Allocation done
+Random init done
+Starting clock
+Stopping clock
+Computation took: 0.236757 with result: -0.001259
+Allocation done
+Random init done
+Starting clock
+Stopping clock
+Computation took: 0.236576 with result: -0.000320
+Allocation done
+Random init done
+Starting clock
+Stopping clock
+Computation took: 0.236328 with result: -0.001167
+Allocation done
+Random init done
+Starting clock
+Stopping clock
+Computation took: 0.235389 with result: -0.000473
+Allocation done
+Random init done
+Starting clock
+Stopping clock
+Computation took: 0.234908 with result: -0.001091
+Allocation done
+Random init done
+Starting clock
+Stopping clock
+Computation took: 0.237700 with result: -0.001350
+Allocation done
+Random init done
+Starting clock
+Stopping clock
+Computation took: 0.236645 with result: -0.001595
+Allocation done
+Random init done
+Starting clock
+Stopping clock
+Computation took: 0.236047 with result: -0.001068
+Allocation done
+Random init done
+Starting clock
+Stopping clock
+Computation took: 0.235670 with result: -0.000343
+Allocation done
+Random init done
+Starting clock
+Stopping clock
+Computation took: 0.235002 with result: -0.000984
+Allocation done
+Random init done
+Starting clock
+Stopping clock
+Computation took: 0.239585 with result: -0.001137
+Allocation done
+Random init done
+Starting clock
+Stopping clock
+Computation took: 0.236414 with result: -0.000793
+Allocation done
+Random init done
+Starting clock
+Stopping clock
+Computation took: 0.235898 with result: -0.001862
+Allocation done
+Random init done
+Starting clock
+Stopping clock
+Computation took: 0.234779 with result: -0.001076
+Allocation done
+Random init done
+Starting clock
+Stopping clock
+Computation took: 0.239011 with result: -0.000671
+Allocation done
+Random init done
+Starting clock
+Stopping clock
+Computation took: 0.235759 with result: -0.001152
+Allocation done
+Random init done
+Starting clock
+Stopping clock
+Computation took: 0.235413 with result: -0.000412
+Allocation done
+Random init done
+Starting clock
+Stopping clock
+Computation took: 0.236108 with result: -0.001076
+Allocation done
+Random init done
+Starting clock
+Stopping clock
+Computation took: 0.237605 with result: -0.001167
+Allocation done
+Random init done
+Starting clock
+Stopping clock
+Computation took: 0.237917 with result: -0.001457
+Allocation done
+Random init done
+Starting clock
+Stopping clock
+Computation took: 0.237281 with result: -0.000717
+Allocation done
+Random init done
+Starting clock
+Stopping clock
+Computation took: 0.236057 with result: -0.001175
+Allocation done
+Random init done
+Starting clock
+Stopping clock
+Computation took: 0.238927 with result: -0.000710
+Allocation done
+Random init done
+Starting clock
+Stopping clock
+Computation took: 0.235729 with result: -0.001587
+Allocation done
+Random init done
+Starting clock
+Stopping clock
+Computation took: 0.237688 with result: -0.001732
+Allocation done
+Random init done
+Starting clock
+Stopping clock
+Computation took: 0.235738 with result: -0.001595
+Allocation done
+Random init done
+Starting clock
+Stopping clock
+Computation took: 0.235756 with result: -0.001228
+Allocation done
+Random init done
+Starting clock
+Stopping clock
+Computation took: 0.236965 with result: -0.000282
+Allocation done
+Random init done
+Starting clock
+Stopping clock
+Computation took: 0.236033 with result: -0.001686
+Allocation done
+Random init done
+Starting clock
+Stopping clock
+Computation took: 0.237077 with result: -0.000557
+Allocation done
+Random init done
+Starting clock
+Stopping clock
+Computation took: 0.236535 with result: -0.000977
+Allocation done
+Random init done
+Starting clock
+Stopping clock
+Computation took: 0.234726 with result: -0.000061

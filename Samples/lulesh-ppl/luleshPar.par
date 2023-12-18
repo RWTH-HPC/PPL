@@ -1,0 +1,925 @@
+luleshPar{
+    include "constants"
+    /*
+    stencil replaceArrayIndirectionUpdate0([[[[Double]]]] oneDirectionUpdate,
+            [[[[Double]]]] oldValues): [[[[Double]]]] res_newValues {
+        res_newValues[INDEX0    ][INDEX1    ][INDEX2    ][INDEX3] =
+            oldValues[INDEX0    ][INDEX1    ][INDEX2    ][INDEX3] + oneDirectionUpdate[INDEX0][INDEX1][INDEX2][INDEX3]
+    }
+    stencil replaceArrayIndirectionUpdate1([[[[Double]]]] oneDirectionUpdate,
+            [[[[Double]]]] oldValues): [[[[Double]]]] res_newValues {
+        res_newValues[INDEX0    ][INDEX1    ][INDEX2 + 1][INDEX3] =
+            oldValues[INDEX0    ][INDEX1    ][INDEX2 + 1][INDEX3] + oneDirectionUpdate[INDEX0][INDEX1][INDEX2][INDEX3]
+    }
+    stencil replaceArrayIndirectionUpdate2([[[[Double]]]] oneDirectionUpdate,
+            [[[[Double]]]] oldValues): [[[[Double]]]] res_newValues {
+        res_newValues[INDEX0    ][INDEX1 + 1][INDEX2 + 1][INDEX3] =
+            oldValues[INDEX0    ][INDEX1 + 1][INDEX2 + 1][INDEX3] + oneDirectionUpdate[INDEX0][INDEX1][INDEX2][INDEX3]
+    }
+    stencil replaceArrayIndirectionUpdate3([[[[Double]]]] oneDirectionUpdate,
+            [[[[Double]]]] oldValues): [[[[Double]]]] res_newValues {
+        res_newValues[INDEX0    ][INDEX1 + 1][INDEX2    ][INDEX3] =
+            oldValues[INDEX0    ][INDEX1 + 1][INDEX2    ][INDEX3] + oneDirectionUpdate[INDEX0][INDEX1][INDEX2][INDEX3]
+    }
+    stencil replaceArrayIndirectionUpdate4([[[[Double]]]] oneDirectionUpdate,
+            [[[[Double]]]] oldValues): [[[[Double]]]] res_newValues {
+        res_newValues[INDEX0 + 1][INDEX1    ][INDEX2    ][INDEX3] =
+            oldValues[INDEX0 + 1][INDEX1    ][INDEX2    ][INDEX3] + oneDirectionUpdate[INDEX0][INDEX1][INDEX2][INDEX3]
+    }
+    stencil replaceArrayIndirectionUpdate5([[[[Double]]]] oneDirectionUpdate,
+            [[[[Double]]]] oldValues): [[[[Double]]]] res_newValues {
+        res_newValues[INDEX0 + 1][INDEX1    ][INDEX2 + 1][INDEX3] =
+            oldValues[INDEX0 + 1][INDEX1    ][INDEX2 + 1][INDEX3] + oneDirectionUpdate[INDEX0][INDEX1][INDEX2][INDEX3]
+    }
+    stencil replaceArrayIndirectionUpdate6([[[[Double]]]] oneDirectionUpdate,
+            [[[[Double]]]] oldValues): [[[[Double]]]] res_newValues {
+        res_newValues[INDEX0 + 1][INDEX1 + 1][INDEX2 + 1][INDEX3] =
+            oldValues[INDEX0 + 1][INDEX1 + 1][INDEX2 + 1][INDEX3] + oneDirectionUpdate[INDEX0][INDEX1][INDEX2][INDEX3]
+    }
+    stencil replaceArrayIndirectionUpdate7([[[[Double]]]] oneDirectionUpdate,
+            [[[[Double]]]] oldValues): [[[[Double]]]] res_newValues {
+        res_newValues[INDEX0 + 1][INDEX1 + 1][INDEX2    ][INDEX3] =
+            oldValues[INDEX0 + 1][INDEX1 + 1][INDEX2    ][INDEX3] + oneDirectionUpdate[INDEX0][INDEX1][INDEX2][INDEX3]
+    }
+    
+    */
+    
+    stencil replaceArrayIndirectionUpdate0([[[[[Double]]]]] oneDirectionUpdate,
+            [[[[Double]]]] oldValues): [[[[Double]]]] res_newValues {
+        res_newValues[INDEX0    ][INDEX1    ][INDEX2    ][INDEX3] =
+            oldValues[INDEX0    ][INDEX1    ][INDEX2    ][INDEX3] + getLocalElement(oneDirectionUpdate[INDEX0][INDEX1][INDEX2], INDEX3, 0)
+    }
+    stencil replaceArrayIndirectionUpdate1([[[[[Double]]]]] oneDirectionUpdate,
+            [[[[Double]]]] oldValues): [[[[Double]]]] res_newValues {
+        res_newValues[INDEX0    ][INDEX1    ][INDEX2 + 1][INDEX3] =
+            oldValues[INDEX0    ][INDEX1    ][INDEX2 + 1][INDEX3] + getLocalElement(oneDirectionUpdate[INDEX0][INDEX1][INDEX2], INDEX3, 1)
+    }
+    stencil replaceArrayIndirectionUpdate2([[[[[Double]]]]] oneDirectionUpdate,
+            [[[[Double]]]] oldValues): [[[[Double]]]] res_newValues {
+        res_newValues[INDEX0    ][INDEX1 + 1][INDEX2 + 1][INDEX3] =
+            oldValues[INDEX0    ][INDEX1 + 1][INDEX2 + 1][INDEX3] + getLocalElement(oneDirectionUpdate[INDEX0][INDEX1][INDEX2], INDEX3, 2)
+    }
+    stencil replaceArrayIndirectionUpdate3([[[[[Double]]]]] oneDirectionUpdate,
+            [[[[Double]]]] oldValues): [[[[Double]]]] res_newValues {
+        res_newValues[INDEX0    ][INDEX1 + 1][INDEX2    ][INDEX3] =
+            oldValues[INDEX0    ][INDEX1 + 1][INDEX2    ][INDEX3] + getLocalElement(oneDirectionUpdate[INDEX0][INDEX1][INDEX2], INDEX3, 3)
+    }
+    stencil replaceArrayIndirectionUpdate4([[[[[Double]]]]] oneDirectionUpdate,
+            [[[[Double]]]] oldValues): [[[[Double]]]] res_newValues {
+        res_newValues[INDEX0 + 1][INDEX1    ][INDEX2    ][INDEX3] =
+            oldValues[INDEX0 + 1][INDEX1    ][INDEX2    ][INDEX3] + getLocalElement(oneDirectionUpdate[INDEX0][INDEX1][INDEX2], INDEX3, 4)
+    }
+    stencil replaceArrayIndirectionUpdate5([[[[[Double]]]]] oneDirectionUpdate,
+            [[[[Double]]]] oldValues): [[[[Double]]]] res_newValues {
+        res_newValues[INDEX0 + 1][INDEX1    ][INDEX2 + 1][INDEX3] =
+            oldValues[INDEX0 + 1][INDEX1    ][INDEX2 + 1][INDEX3] + getLocalElement(oneDirectionUpdate[INDEX0][INDEX1][INDEX2], INDEX3, 5)
+    }
+    stencil replaceArrayIndirectionUpdate6([[[[[Double]]]]] oneDirectionUpdate,
+            [[[[Double]]]] oldValues): [[[[Double]]]] res_newValues {
+        res_newValues[INDEX0 + 1][INDEX1 + 1][INDEX2 + 1][INDEX3] =
+            oldValues[INDEX0 + 1][INDEX1 + 1][INDEX2 + 1][INDEX3] + getLocalElement(oneDirectionUpdate[INDEX0][INDEX1][INDEX2], INDEX3, 6)
+    }
+    stencil replaceArrayIndirectionUpdate7([[[[[Double]]]]] oneDirectionUpdate,
+            [[[[Double]]]] oldValues): [[[[Double]]]] res_newValues {
+        res_newValues[INDEX0 + 1][INDEX1 + 1][INDEX2    ][INDEX3] =
+            oldValues[INDEX0 + 1][INDEX1 + 1][INDEX2    ][INDEX3] + getLocalElement(oneDirectionUpdate[INDEX0][INDEX1][INDEX2], INDEX3, 7)
+    }
+    
+    
+    seq getLocalElement([[Double]] array, Int index3, Int directionIndex) : Double {
+    	var Double res = array[directionIndex][index3]
+    	return res
+    }
+
+    stencil luleshPar_par_initListDouble4 (Double initValue): [[[[Double]]]] res {
+        res[INDEX0][INDEX1][INDEX2][INDEX3] = initValue
+    }
+
+    stencil luleshPar_getNonPosElemErrorCodes([[[Double]]] array): [[[Int32]]] res_errorCodes {
+        var Int32 tmp
+        if (array[INDEX0][INDEX1][INDEX2] <= 0.0) {
+            tmp = VolumeError
+        }
+        else {
+            tmp = 1
+        }
+        res_errorCodes[INDEX0][INDEX1][INDEX2] = tmp
+    }
+
+
+    stencil luleshPar_getNonPosElemErrorCodes2([[[Double]]] domain_v): [[[Int32]]] res_errorCodes {
+        // This check may not make perfect sense in LULESH, but
+        // it's representative of something in the full code -
+        // just leave it in, please
+        var Double v_tmp = domain_v[INDEX0][INDEX1][INDEX2]
+        if (m_eosvmin != 0.0) {
+            if (v_tmp < m_eosvmin) {
+                v_tmp = m_eosvmin
+            }
+        }
+        if (m_eosvmax != 0.0) {
+            if (v_tmp > m_eosvmax) {
+                v_tmp = m_eosvmax
+            }   
+        }
+
+        var Int32 tmp
+        if (v_tmp <= 0.0) {
+            tmp = VolumeError
+        }
+        else {
+            tmp = 1
+        }
+        res_errorCodes[INDEX0][INDEX1][INDEX2] = tmp
+    }
+    
+
+    stencil luleshPar_getGreaterThanErrorCodes([[[Double]]] array, Double threshold): [[[Int32]]] res_errorCodes {
+        var Int32 tmp
+        if (array[INDEX0][INDEX1][INDEX2] > threshold) {
+            tmp = QStopError
+        }
+        else {
+            tmp = 1
+        }
+        res_errorCodes[INDEX0][INDEX1][INDEX2] = tmp
+    }
+
+
+    stencil luleshPar_InitStressTermsForElems([[[Double]]] domain_p, [[[Double]]] domain_q): [[[[Double]]]] res_sig {
+        // pull in the stresses appropriate to the hydro integration
+        res_sig[INDEX0][INDEX1][INDEX2][INDEX3] = 0 - domain_p[INDEX0][INDEX1][INDEX2] - domain_q[INDEX0][INDEX1][INDEX2]
+    }
+
+    stencil luleshPar_par_a_IntegrateStressForElems(
+            [[[[Double]]]] domain_coordinates): [[[Double]]] res_determ {
+
+        var [[Double]] B = [[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0], [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0], [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]] // shape function derivatives
+        var [[Double]] coordinates_local = [[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0], [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0], [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]]
+
+        // get nodal coordinates from global arrays and copy into local arrays.
+        coordinates_local = luleshSeq_CollectDomainNodesToElemNodes(domain_coordinates, INDEX0, INDEX1, INDEX2)
+
+        // Volume calculation involves extra work for numerical consistency
+        var [[[Double]]] result = [[[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0], [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0], [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]], [[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0], [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0], [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]]]
+        result = luleshSeq_CalcElemShapeFunctionDerivatives(coordinates_local)
+        res_determ[INDEX0][INDEX1][INDEX2] = result[0][0][0]
+
+        // B is not used anymore and newly calculated in luleshPar_par_b_IntegrateStressForElems
+        B = result[1]   
+    }
+    
+    stencil luleshPar_par_b_IntegrateStressForElems([[[[Double]]]] domain_coordinates): [[[[[Double]]]]] res_B_all {
+        var [[Double]] coordinates_local = [[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0], [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0], [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]]
+        // get nodal coordinates from global arrays and copy into local arrays.
+        coordinates_local = luleshSeq_CollectDomainNodesToElemNodes(domain_coordinates, INDEX0, INDEX1, INDEX2)
+
+        //B_dummy is created and passed over since lulesh original does similar unnecessary comp.
+        var [[Double]] B_dummy = [[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0], [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0], [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]]
+        res_B_all[INDEX0][INDEX1][INDEX2] = luleshSeq_CalcElemNodeNormals(B_dummy, coordinates_local)
+    }
+
+    stencil luleshPar_par_c_IntegrateStressForElems([[[[Double]]]] sig,
+            [[[[[Double]]]]] B_all): [[[[[Double]]]]] res_domain_forcesTimes8Reversed {
+        // copy nodal force contributions to global force UPDATE arrray.
+        res_domain_forcesTimes8Reversed[INDEX0][INDEX1][INDEX2] = 
+                luleshSeq_SumElemStressesToNodeForces(sig[INDEX0][INDEX1][INDEX2], B_all[INDEX0][INDEX1][INDEX2])  
+    }
+
+    stencil luleshPar_par_a_CalcHourglassControlForElems([[[[Double]]]] domain_coordinates): [[[[[Double]]]]] res_xyz8n { 
+        /* load into temporary storage for FB Hour Glass control */
+        // get local coordinates
+        res_xyz8n[INDEX0][INDEX1][INDEX2] = luleshSeq_CollectDomainNodesToElemNodes(domain_coordinates, INDEX0, INDEX1, INDEX2)
+    }
+
+    stencil luleshPar_par_b_CalcHourglassControlForElems([[[[[Double]]]]] xyz8n)
+            : [[[[[Double]]]]] res_dvd { 
+        /* load into temporary storage for FB Hour Glass control */
+        res_dvd[INDEX0][INDEX1][INDEX2] = luleshSeq_CalcElemVolumeDerivative(xyz8n[INDEX0][INDEX1][INDEX2])
+    }
+
+
+        stencil luleshPar_par_c_CalcHourglassControlForElems(
+            [[[Double]]] domain_volo, [[[Double]]] domain_v): [[[Double]]] res_determ { 
+        res_determ[INDEX0][INDEX1][INDEX2] = domain_volo[INDEX0][INDEX1][INDEX2] * domain_v[INDEX0][INDEX1][INDEX2]
+    }
+
+    stencil luleshPar_par_calcHourglassModes([[[Double]]] domain_ss, 
+            [[[Double]]] domain_elemMass, [[[[Double]]]] domain_velocities,
+            [[[Double]]] determ, [[Double]] gamma, [[[[[Double]]]]] xyz8n,
+            [[[[[Double]]]]] dvd, Double hourg): [[[[[Double]]]]] res_domain_forcesTimes8Reversed { 
+        var Double coefficient
+        var Double volinv = 1.0 / determ[INDEX0][INDEX1][INDEX2]
+
+        var [Double] hourgam = [[0.0,0.0,0.0,0.0], [0.0,0.0,0.0,0.0], [0.0,0.0,0.0,0.0], [0.0,0.0,0.0,0.0], [0.0,0.0,0.0,0.0], [0.0,0.0,0.0,0.0], [0.0,0.0,0.0,0.0], [0.0,0.0,0.0,0.0]]
+        hourgam = luleshSeq_calcHourgam(xyz8n[INDEX0][INDEX1][INDEX2],
+                 dvd[INDEX0][INDEX1][INDEX2], gamma, volinv)
+
+        /* compute forces */
+        /* store forces into h arrays (force arrays) */
+        var [[Double]] velocities_local = [[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0], [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0], [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]]
+        velocities_local = luleshSeq_CollectDomainNodesToElemNodes(domain_velocities, INDEX0, INDEX1, INDEX2)
+
+        var Double ss1 = domain_ss[INDEX0][INDEX1][INDEX2]
+        var Double mass1 = domain_elemMass[INDEX0][INDEX1][INDEX2]
+        var Double volume13 = cbrt(determ[INDEX0][INDEX1][INDEX2])
+        coefficient = 0 - (hourg * 0.01 * ss1 * mass1 / volume13)
+
+        var [[Double]] hgf = [[0.0,0.0,0.0], [0.0,0.0,0.0], [0.0,0.0,0.0], [0.0,0.0,0.0], [0.0,0.0,0.0], [0.0,0.0,0.0], [0.0,0.0,0.0], [0.0,0.0,0.0]]
+        hgf = luleshSeq_CalcElemFBHourglassForce(velocities_local, hourgam, coefficient)
+
+        // copy nodal force contributions to global force UPDATE arrray.
+        res_domain_forcesTimes8Reversed[INDEX0][INDEX1][INDEX2] = hgf
+
+    }
+
+    stencil luleshPar_CalcAccelerationForNodes([[[Double]]] domain_nodalMass, [[[[Double]]]] domain_forces)
+            :[[[[Double]]]] res_domain_accelerations { 
+        res_domain_accelerations[INDEX0][INDEX1][INDEX2][INDEX3] = domain_forces[INDEX0][INDEX1][INDEX2][INDEX3] / domain_nodalMass[INDEX0][INDEX1][INDEX2]
+    }
+
+    stencil luleshPar_ApplyAccelerationBoundaryConditionsForNodes([[[[Double]]]] domain_accelerations_old)
+            : [[[[Double]]]] res_domain_accelerations {
+        res_domain_accelerations[INDEX0][INDEX1][INDEX2] = 
+                luleshSeq_ApplyAccelerationBoundaryConditionsForNodes_check(domain_accelerations_old[INDEX0][INDEX1][INDEX2], INDEX0, INDEX1, INDEX2)
+    }
+
+
+    stencil luleshPar_CalcVelocityForNodes([[[[Double]]]] domain_accelerations, [[[[Double]]]] domain_velocities_old,
+            Double dt): [[[[Double]]]] res_domain_velocities { 
+        // INDEX3 stands for the xyz components
+        var Double dtmp = domain_velocities_old[INDEX0][INDEX1][INDEX2][INDEX3] +
+                domain_accelerations[INDEX0][INDEX1][INDEX2][INDEX3] * dt
+        if (fabs(dtmp) < m_u_cut) {
+            dtmp = 0.0
+        } 
+        res_domain_velocities[INDEX0][INDEX1][INDEX2][INDEX3] = dtmp
+    }
+
+    stencil luleshPar_CalcPositionForNodes([[[[Double]]]] domain_velocities, Double dt)
+            : [[[[Double]]]] res_domain_coordinates {  
+        // INDEX3 stands for the xyz components
+        res_domain_coordinates[INDEX0][INDEX1][INDEX2][INDEX3] += 
+                domain_velocities[INDEX0][INDEX1][INDEX2][INDEX3] * dt
+    }
+
+    stencil luleshPar_par_CalcCourantConstraintForElems_part1([[[Double]]] domain_ss, [[[Double]]] domain_arealg, 
+            [[[Double]]] domain_vdov, Double qqc, Double dtcourant)
+            : [[[Double]]] res_dtcourantAll { 
+        res_dtcourantAll[INDEX0][INDEX1][INDEX2] = dtcourant
+
+        var Double qqc2 = 64.0 * qqc * qqc
+        var Double dtcourant_tmp = domain_ss[INDEX0][INDEX1][INDEX2] * domain_ss[INDEX0][INDEX1][INDEX2]
+
+        if (domain_vdov[INDEX0][INDEX1][INDEX2] < 0.0) {
+            dtcourant_tmp = dtcourant_tmp
+                + qqc2 * domain_arealg[INDEX0][INDEX1][INDEX2] * domain_arealg[INDEX0][INDEX1][INDEX2]
+                * domain_vdov[INDEX0][INDEX1][INDEX2]* domain_vdov[INDEX0][INDEX1][INDEX2]
+        }
+        dtcourant_tmp = sqrt(dtcourant_tmp)
+        dtcourant_tmp = domain_arealg[INDEX0][INDEX1][INDEX2] / dtcourant_tmp
+        
+        if (domain_vdov[INDEX0][INDEX1][INDEX2] != 0.) {
+            if (dtcourant_tmp < dtcourant) {
+                res_dtcourantAll[INDEX0][INDEX1][INDEX2] = dtcourant_tmp
+            }
+        }
+    }
+
+    stencil luleshPar_par_CalcHydroConstraintForElems([[[Double]]] domain_vdov,
+             Double dthydro): [[[Double]]] res_dthydroALL{ 
+        res_dthydroALL[INDEX0][INDEX1][INDEX2]  = dthydro
+
+        var Double dthydro_tmp
+         if (domain_vdov[INDEX0][INDEX1][INDEX2] != 0.0) {
+            dthydro_tmp = m_dvovmax / (fabs(domain_vdov[INDEX0][INDEX1][INDEX2]) + 1.e-20)
+
+            if (dthydro_tmp < dthydro) {
+                 res_dthydroALL[INDEX0][INDEX1][INDEX2]  = dthydro_tmp
+            }
+         }
+    }
+           
+    reduction luleshPar_DimByDimMinReduction3DInt([[[Int32]]] array3D): Int32 res_min{
+        var Int32 localMin = 42
+        localMin = DimByDimMinReduction2DInt<<<>>>(array3D[INDEX])
+        res_min = min(res_min, localMin) 
+    }
+
+    reduction luleshPar_DimByDimMinReduction3D([[[Double]]] array3D): Double res_min{
+        var Double localMin = 42
+        localMin = DimByDimMinReduction2D<<<>>>(array3D[INDEX])
+        res_min = min(res_min, localMin) 
+    }
+
+    reduction DimByDimMinReduction2DInt([[Int32]] array2D): Int32 res_min{
+        var Int32 localMin = 42
+        localMin = DimByDimMinReduction1DInt<<<>>>(array2D[INDEX])
+        res_min = min(res_min, localMin)
+    }
+
+    reduction DimByDimMinReduction2D([[Double]] array2D): Double res_min{
+        var Double localMin = 42
+        localMin = DimByDimMinReduction1D<<<>>>(array2D[INDEX])
+        res_min = min(res_min, localMin)
+    }
+
+    reduction DimByDimMinReduction1DInt([Int32] array1D): Int32 res_min{
+        var Int32 localMin
+        localMin = array1D[INDEX]
+        res_min = min(res_min, localMin)
+    }
+
+    reduction DimByDimMinReduction1D([Double] array1D): Double res_min{
+        var Double localMin
+        localMin = array1D[INDEX]
+        res_min = min(res_min, localMin)
+    }
+
+    stencil luleshPar_UpdateVolumesForElems([[[Double]]] domain_vnew)
+            : [[[Double]]] res_domain_v {
+        var Double tmpV = domain_vnew[INDEX0][INDEX1][INDEX2]
+        if (fabs(tmpV - 1.0) < m_v_cut) {
+            tmpV = 1.0
+        }
+        res_domain_v[INDEX0][INDEX1][INDEX2] = tmpV
+    }
+
+    stencil luleshPar_par_ApplyMaterialPropertiesForElems([[[Double]]] domain_vnew): [[[Double]]] res_vnewc {
+        var Double vnewc_tmp = domain_vnew[INDEX0][INDEX1][INDEX2]
+
+        // Bound the updated relative volumes with eosvmin/max
+        if (m_eosvmin != 0.0) {
+            if (vnewc_tmp < m_eosvmin) {
+                vnewc_tmp = m_eosvmin
+            }
+        }
+        if (m_eosvmax != 0.0) {
+            if (vnewc_tmp > m_eosvmax) {
+                vnewc_tmp = m_eosvmax
+            }
+        }
+       res_vnewc[INDEX0][INDEX1][INDEX2] = vnewc_tmp
+
+    }
+
+    stencil luleshPar_EvalEOSForElems([[[Double]]] vnewc, [[[Double]]] domain_e,
+            [[[Double]]] domain_delv, [[[Double]]] domain_p, [[[Double]]] domain_q,
+            [[[Double]]] domain_qq, [[[Double]]] domain_ql): [[[[Double]]]] res_terms{
+        // res_terms[0] stands for domain_p_reversed
+        // res_terms[1] stands for domain_e_reversed
+        // res_terms[2] stands for domain_q_reversed
+        // res_terms[3] stands for domain_ss_reversed
+
+         /* compress data, minimal set */
+        var Double e_old = domain_e[INDEX0][INDEX1][INDEX2]
+        var Double delvc = domain_delv[INDEX0][INDEX1][INDEX2]
+        var Double p_old = domain_p[INDEX0][INDEX1][INDEX2]
+        var Double q_old = domain_q[INDEX0][INDEX1][INDEX2]
+        var Double qq_old = domain_qq[INDEX0][INDEX1][INDEX2]
+        var Double ql_old = domain_ql[INDEX0][INDEX1][INDEX2]
+
+        var Double compression = (1.0 / vnewc[INDEX0][INDEX1][INDEX2]) - 1.0
+        var Double vchalf = vnewc[INDEX0][INDEX1][INDEX2] - (delvc * 0.5)
+        var Double compHalfStep = (1.0 / vchalf) - 1.0
+
+        /* following checks are redundant or impossible because of check in luleshSeq_ApplyMaterialPropertiesForElems
+            as it was mentioned there, it still included */
+        /* Check for v > eosvmax or v < eosvmin */
+        if (m_eosvmin != 0.0) {
+            if (vnewc[INDEX0][INDEX1][INDEX2] <= m_eosvmin) { /* impossible due to calling func? */
+                compHalfStep = compression
+            }
+        }
+        if (m_eosvmax != 0.0) {
+            if (vnewc[INDEX0][INDEX1][INDEX2] >= m_eosvmax) { /* impossible due to calling func? */
+                p_old        = 0.0
+                compression  = 0.0
+                compHalfStep = 0.0
+            }
+        }
+
+        var Double work = 0.0
+        var Double p_new
+        var Double e_new
+        var Double q_new
+        var Double bvc
+        var Double pbvc
+
+        // ---------------------------------------------------------------------------------------
+        // following replaces CalcEnergyForElems()          
+        // ---------------------------------------------------------------------------------------
+        {
+            var Double pHalfStep
+
+            e_new = e_old - 0.5 * delvc * (p_old + q_old)
+                    + 0.5 * work
+
+            if (e_new  < m_emin ) {
+                e_new = m_emin
+            }
+
+            var [Double] result = [0.0,0.0,0.0]
+            
+
+            result = luleshSeq_CalcPressureForElems(vnewc[INDEX0][INDEX1][INDEX2],
+                    compHalfStep, e_new)
+            bvc   = result[0]
+            pbvc  = result[1]
+            pHalfStep = result[2]
+
+
+
+
+            var Double vhalf = 1.0 / (1.0 + compHalfStep)
+
+            if (delvc > 0.0) {
+                q_new /* = qq_old = ql_old */ = 0.0
+            }
+            else {
+                var Double ssc = (pbvc * e_new
+                    + vhalf * vhalf * bvc * pHalfStep) / m_refdens
+
+                if (ssc <= 0.1111111e-36) {
+                    ssc = 0.3333333e-18
+                } else {
+                    ssc = sqrt(ssc)
+                }
+
+                q_new = (ssc*ql_old + qq_old)
+            }
+
+            e_new = e_new + 0.5 * delvc
+                * (3.0 * (p_old + q_old) 
+                 - 4.0 * (pHalfStep + q_new))
+
+
+            e_new += 0.5 * work
+
+            if (fabs(e_new) < m_e_cut) {
+                e_new = 0.0
+            }
+            if (e_new < m_emin) {
+                e_new = m_emin
+            }
+
+            result = luleshSeq_CalcPressureForElems(vnewc[INDEX0][INDEX1][INDEX2],
+                    compression, e_new)
+            bvc   = result[0]
+            pbvc  = result[1]
+            p_new = result[2]
+
+            var Double sixth = 1.0 / 6.0
+            var Double q_tilde
+
+            if (delvc > 0.0) {
+                q_tilde = 0.0
+            }
+            else {
+                var Double ssc = (pbvc * e_new
+                    + vnewc[INDEX0][INDEX1][INDEX2] * vnewc[INDEX0][INDEX1][INDEX2]
+                      * bvc * p_new ) / m_refdens
+
+                if (ssc <= 0.1111111e-36) {
+                    ssc = 0.3333333e-18
+                } else {
+                    ssc = sqrt(ssc)
+                }
+                q_tilde = (ssc*ql_old + qq_old)
+            }
+
+            e_new = e_new - (7.0 * (p_old + q_old)
+                               - 8.0 * (pHalfStep + q_new)
+                               + (p_new + q_tilde)) * delvc*sixth
+
+            if (fabs(e_new) < m_e_cut) {
+                e_new = 0.0
+            }
+            if (e_new  < m_emin ) {
+                e_new = m_emin
+            }
+
+            result = luleshSeq_CalcPressureForElems(vnewc[INDEX0][INDEX1][INDEX2],
+                    compression, e_new)
+            bvc   = result[0]
+            pbvc  = result[1]
+            p_new = result[2]
+
+            if (delvc <= 0.0) {
+                var Double ssc = ( pbvc * e_new
+                        + vnewc[INDEX0][INDEX1][INDEX2] * vnewc[INDEX0][INDEX1][INDEX2]
+                         * bvc * p_new) / m_refdens
+
+                if (ssc <= 0.1111111e-36) {
+                    ssc = 0.3333333e-18
+                } else {
+                    ssc = sqrt(ssc)
+                }
+
+                q_new = (ssc * ql_old) + qq_old
+
+                if (fabs(q_new) < m_q_cut) {
+                    q_new = 0.0
+                }
+            } 
+        }
+        // ---------------------------------------------------------------------------------------
+        // preceding replaces CalcEnergyForElems()          
+        // ---------------------------------------------------------------------------------------
+        var [Double] resultTerms = [0.0,0.0,0.0,0.0]
+        resultTerms[0] = p_new
+        resultTerms[1] = e_new
+        resultTerms[2] = q_new
+        resultTerms[3] = luleshSeq_CalcSoundSpeedForElems(pbvc, bvc, e_new, p_new, vnewc[INDEX0][INDEX1][INDEX2])
+        res_terms[INDEX0][INDEX1][INDEX2] = resultTerms
+    }
+
+    stencil luleshPar_CalcMonotonicQGradientsForElems([[[Double]]] domain_volo, [[[Double]]] domain_vnew,
+            [[[[Double]]]] domain_coordinates, [[[[Double]]]] domain_velocities):  [[[[[Double]]]]] res_coordANDVelocGradients { 
+        // first par should be of size edgeElems, edgeElems, edgeElems as domain_volo 
+
+        var [[Double]] coordANDvelocGradient = [[0.0,0.0,0.0], [0.0,0.0,0.0]]
+
+        var Double ptiny = 1.e-36  
+        var [Double] x = [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]
+        var [Double] y = [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]
+        var [Double] z = [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]
+
+        var [Double] xv = [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]
+        var [Double] yv = [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]
+        var [Double] zv = [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]
+
+        x = luleshSeq_replaceDomainNodelist(domain_coordinates, INDEX0, INDEX1, INDEX2, m_x)
+        y = luleshSeq_replaceDomainNodelist(domain_coordinates, INDEX0, INDEX1, INDEX2, m_y)
+        z = luleshSeq_replaceDomainNodelist(domain_coordinates, INDEX0, INDEX1, INDEX2, m_z)
+
+
+        xv = luleshSeq_replaceDomainNodelist(domain_velocities, INDEX0, INDEX1, INDEX2, m_xd)
+        yv = luleshSeq_replaceDomainNodelist(domain_velocities, INDEX0, INDEX1, INDEX2, m_yd)
+        zv = luleshSeq_replaceDomainNodelist(domain_velocities, INDEX0, INDEX1, INDEX2, m_zd)
+ 
+        var Double vol = domain_volo[INDEX0][INDEX1][INDEX2] * domain_vnew[INDEX0][INDEX1][INDEX2]
+        var Double norm = 1.0 / (vol + ptiny)
+
+        var Double dxj = (0-0.25) * ((x[0]+x[1]+x[5]+x[4]) - (x[3]+x[2]+x[6]+x[7]))
+        var Double dyj = (0-0.25) * ((y[0]+y[1]+y[5]+y[4]) - (y[3]+y[2]+y[6]+y[7]))
+        var Double dzj = (0-0.25) * ((z[0]+z[1]+z[5]+z[4]) - (z[3]+z[2]+z[6]+z[7]))
+
+        var Double dxi =  0.25 * ((x[1]+x[2]+x[6]+x[5]) - (x[0]+x[3]+x[7]+x[4]))
+        var Double dyi =  0.25 * ((y[1]+y[2]+y[6]+y[5]) - (y[0]+y[3]+y[7]+y[4]))
+        var Double dzi =  0.25 * ((z[1]+z[2]+z[6]+z[5]) - (z[0]+z[3]+z[7]+z[4]))
+
+        var Double dxk =  0.25 * ((x[4]+x[5]+x[6]+x[7]) - (x[0]+x[1]+x[2]+x[3]))
+        var Double dyk =  0.25 * ((y[4]+y[5]+y[6]+y[7]) - (y[0]+y[1]+y[2]+y[3]))
+        var Double dzk =  0.25 * ((z[4]+z[5]+z[6]+z[7]) - (z[0]+z[1]+z[2]+z[3]))
+
+        /* find delvk and delxk ( i cross j ) */
+
+        var Double ax = dyi*dzj - dzi*dyj
+        var Double ay = dzi*dxj - dxi*dzj
+        var Double az = dxi*dyj - dyi*dxj
+
+        // 2nd index 2 == delx_zeta
+        coordANDvelocGradient[0][2] = vol / sqrt(ax*ax + ay*ay + az*az + ptiny)
+
+        ax *= norm
+        ay *= norm
+        az *= norm
+
+        var Double dxv = 0.25 * ((xv[4]+xv[5]+xv[6]+xv[7]) - (xv[0]+xv[1]+xv[2]+xv[3]))
+        var Double dyv = 0.25 * ((yv[4]+yv[5]+yv[6]+yv[7]) - (yv[0]+yv[1]+yv[2]+yv[3]))
+        var Double dzv = 0.25 * ((zv[4]+zv[5]+zv[6]+zv[7]) - (zv[0]+zv[1]+zv[2]+zv[3]))
+
+        // 2nd index 2 == delv_zeta
+        coordANDvelocGradient[1][2] = ax*dxv + ay*dyv + az*dzv
+
+        /* find delxi and delvi ( j cross k ) */
+
+        ax = dyj*dzk - dzj*dyk
+        ay = dzj*dxk - dxj*dzk
+        az = dxj*dyk - dyj*dxk
+
+        // 2nd index 0 == delx_xi
+        coordANDvelocGradient[0][0] = vol / sqrt(ax*ax + ay*ay + az*az + ptiny)
+
+        ax *= norm
+        ay *= norm
+        az *= norm
+
+        dxv = 0.25 * ((xv[1]+xv[2]+xv[6]+xv[5]) - (xv[0]+xv[3]+xv[7]+xv[4]))
+        dyv = 0.25 * ((yv[1]+yv[2]+yv[6]+yv[5]) - (yv[0]+yv[3]+yv[7]+yv[4]))
+        dzv = 0.25 * ((zv[1]+zv[2]+zv[6]+zv[5]) - (zv[0]+zv[3]+zv[7]+zv[4]))
+
+        // 2nd index 0 == delv_xi
+        coordANDvelocGradient[1][0] = ax*dxv + ay*dyv + az*dzv
+
+        /* find delxj and delvj ( k cross i ) */
+
+        ax = dyk*dzi - dzk*dyi
+        ay = dzk*dxi - dxk*dzi
+        az = dxk*dyi - dyk*dxi
+
+        // 2nd index 1 == delx_eta
+        coordANDvelocGradient[0][1] = vol / sqrt(ax*ax + ay*ay + az*az + ptiny)
+
+        ax *= norm
+        ay *= norm
+        az *= norm
+
+        dxv = (0-0.25) * ((xv[0]+xv[1]+xv[5]+xv[4]) - (xv[3]+xv[2]+xv[6]+xv[7]))
+        dyv = (0-0.25) * ((yv[0]+yv[1]+yv[5]+yv[4]) - (yv[3]+yv[2]+yv[6]+yv[7]))
+        dzv = (0-0.25) * ((zv[0]+zv[1]+zv[5]+zv[4]) - (zv[3]+zv[2]+zv[6]+zv[7]))
+
+        // 2nd index 1 == delv_eta
+        coordANDvelocGradient[1][1] = ax*dxv + ay*dyv + az*dzv
+
+        res_coordANDVelocGradients[INDEX0][INDEX1][INDEX2] = coordANDvelocGradient
+    }
+
+    stencil luleshPar_CalcMonotonicQRegionForElems_partA_delvm(
+            [[[[Double]]]] domain_velocGradients, Double ptiny) : [[[Double]]] res_delvm_phixi { 
+        var Double norm = 1.0 / (luleshSeq_getWishedValue1D(domain_velocGradients[INDEX0][INDEX1][INDEX2], m_delv_xi) + ptiny)
+
+        //if (INDEX2 != 0) { this branch is implicitly checked by the  fact that ppl eliminates the iteration for INDEX2==0
+        res_delvm_phixi[INDEX0][INDEX1][INDEX2] = luleshSeq_getWishedValue1D(domain_velocGradients[INDEX0][INDEX1][INDEX2 - 1], m_delv_xi) * norm
+        //} else { // INDEX2 == 0
+
+        if (INDEX2 == 1) {
+            res_delvm_phixi[INDEX0][INDEX1][INDEX2 - 1] = luleshSeq_getWishedValue1D(domain_velocGradients[INDEX0][INDEX1][INDEX2 - 1], m_delv_xi) * norm
+        } 
+    }
+
+    stencil luleshPar_CalcMonotonicQRegionForElems_partA_delvp(
+            [[[[Double]]]] domain_velocGradients, Double ptiny, Int32 edgeElems) : [[[Double]]] res_delvp_phixi { 
+        var Double norm = 1.0 / (luleshSeq_getWishedValue1D(domain_velocGradients[INDEX0][INDEX1][INDEX2], m_delv_xi) + ptiny)
+
+        //if (INDEX2 != edgeElems-1) {this branch is implicitly checked by the  fact that ppl eliminates the iteration for INDEX2==edgeElems-1
+        res_delvp_phixi[INDEX0][INDEX1][INDEX2]  = luleshSeq_getWishedValue1D(domain_velocGradients[INDEX0][INDEX1][INDEX2 + 1], m_delv_xi) * norm
+        //} else{ // INDEX2 == edgeElems-1
+
+        if (INDEX2 == edgeElems-2) {
+            res_delvp_phixi[INDEX0][INDEX1][INDEX2 + 1]  = 0.0 
+        }
+    }
+
+    stencil luleshPar_CalcMonotonicQRegionForElems_partB(
+            [[[Double]]] delvm, [[[Double]]] delvp) : [[[Double]]] res_phixi { 
+        var Double phixi = 0.5  * (delvm[INDEX0][INDEX1][INDEX2] + delvp[INDEX0][INDEX1][INDEX2])
+        
+        var Double delvm_new = delvm[INDEX0][INDEX1][INDEX2] * m_monoq_limiter_mult
+        var Double delvp_new = delvp[INDEX0][INDEX1][INDEX2] * m_monoq_limiter_mult
+
+        if (delvm_new < phixi) {
+            phixi = delvm_new
+        }
+        if (delvp_new < phixi) {
+            phixi = delvp_new
+        }
+        if (phixi < 0.0) {
+            phixi = 0.0
+        }
+        if (phixi > m_monoq_max_slope) {
+            phixi = m_monoq_max_slope
+        }
+        res_phixi[INDEX0][INDEX1][INDEX2] = phixi
+    }
+
+    stencil luleshPar_CalcMonotonicQRegionForElems_partC_delvm(
+            [[[[Double]]]] domain_velocGradients, Double ptiny) : [[[Double]]] res_delvm_phieta { 
+        var Double  norm = 1. / (luleshSeq_getWishedValue1D(domain_velocGradients[INDEX0][INDEX1][INDEX2], m_delv_eta) + ptiny)
+        //if (INDEX1 != 0) { this branch is implicitly checked by the  fact that ppl eliminates the iteration for INDEX1==0
+        res_delvm_phieta[INDEX0][INDEX1][INDEX2] = luleshSeq_getWishedValue1D(domain_velocGradients[INDEX0][INDEX1 - 1][INDEX2], m_delv_eta) * norm
+        //} else { // INDEX1 == 0
+        
+        if (INDEX1 == 1) {
+            res_delvm_phieta[INDEX0][INDEX1 - 1][INDEX2] = luleshSeq_getWishedValue1D(domain_velocGradients[INDEX0][INDEX1 - 1][INDEX2], m_delv_eta) * norm
+        }
+    }
+
+    stencil luleshPar_CalcMonotonicQRegionForElems_partC_delvp(
+            [[[[Double]]]] domain_velocGradients, Double ptiny, Int32 edgeElems) : [[[Double]]] res_delvp_phieta { 
+        var Double norm = 1. / (luleshSeq_getWishedValue1D(domain_velocGradients[INDEX0][INDEX1][INDEX2], m_delv_eta) + ptiny)
+        //if (INDEX1 != edgeElems-1) { this branch is implicitly checked by the  fact that ppl eliminates the iteration for INDEX1==edgeElems-1
+        res_delvp_phieta[INDEX0][INDEX1][INDEX2] = luleshSeq_getWishedValue1D(domain_velocGradients[INDEX0][INDEX1 + 1][INDEX2], m_delv_eta) * norm
+        //} else { // INDEX1 == 0
+        
+        if (INDEX1 == edgeElems-2) {
+            res_delvp_phieta[INDEX0][INDEX1 + 1][INDEX2] = 0
+        }
+    }
+
+
+
+
+    stencil luleshPar_CalcMonotonicQRegionForElems_partD(
+            [[[Double]]] delvm, [[[Double]]] delvp) : [[[Double]]] res_phieta { 
+        var Double phieta = 0.5  * (delvm[INDEX0][INDEX1][INDEX2] + delvp[INDEX0][INDEX1][INDEX2])
+        
+        var Double delvm_new = delvm[INDEX0][INDEX1][INDEX2] * m_monoq_limiter_mult
+        var Double delvp_new = delvp[INDEX0][INDEX1][INDEX2] * m_monoq_limiter_mult
+
+        if (delvm_new < phieta) {
+            phieta = delvm_new
+        }
+        if (delvp_new < phieta) {
+            phieta = delvp_new
+        }
+        if (phieta < 0.0) {
+            phieta = 0.0
+        }
+        if (phieta > m_monoq_max_slope) {
+            phieta = m_monoq_max_slope
+        }
+        res_phieta[INDEX0][INDEX1][INDEX2] = phieta
+    }
+
+    stencil luleshPar_CalcMonotonicQRegionForElems_partE_delvm(
+            [[[[Double]]]] domain_velocGradients, Double ptiny) : [[[Double]]] res_delvm_phizeta { 
+        var Double norm = 1. / (luleshSeq_getWishedValue1D(domain_velocGradients[INDEX0][INDEX1][INDEX2], m_delv_zeta) + ptiny)
+        //if (INDEX0 != 0) { this branch is implicitly checked by the  fact that ppl eliminates the iteration for INDEX0==0
+        res_delvm_phizeta[INDEX0][INDEX1][INDEX2] = luleshSeq_getWishedValue1D(domain_velocGradients[INDEX0 - 1][INDEX1][INDEX2], m_delv_zeta) * norm
+        //} else { // INDEX1 == 0
+        
+        if (INDEX0 == 1) {
+            res_delvm_phizeta[INDEX0 - 1][INDEX1][INDEX2] = luleshSeq_getWishedValue1D(domain_velocGradients[INDEX0 - 1][INDEX1][INDEX2], m_delv_zeta) * norm
+        }
+    }
+
+
+    stencil luleshPar_CalcMonotonicQRegionForElems_partE_delvp(
+            [[[[Double]]]] domain_velocGradients, Double ptiny, Int32 edgeElems) : [[[Double]]] res_delvp_phizeta { 
+        var Double norm = 1. / (luleshSeq_getWishedValue1D(domain_velocGradients[INDEX0][INDEX1][INDEX2], m_delv_zeta) + ptiny)
+        //if (INDEX0 != edgeElems-1) { this branch is implicitly checked by the  fact that ppl eliminates the iteration for INDEX0==edgeElems-1
+        res_delvp_phizeta[INDEX0][INDEX1][INDEX2] = luleshSeq_getWishedValue1D(domain_velocGradients[INDEX0 + 1][INDEX1][INDEX2], m_delv_zeta) * norm
+        //} else { // INDEX1 == 0
+        
+        if (INDEX0 == edgeElems-2) {
+            res_delvp_phizeta[INDEX0 + 1][INDEX1][INDEX2] = 0
+        }
+    }
+
+    stencil luleshPar_CalcMonotonicQRegionForElems_partF(
+            [[[Double]]] delvm, [[[Double]]] delvp) : [[[Double]]] res_phizeta { 
+        var Double phizeta = 0.5  * (delvm[INDEX0][INDEX1][INDEX2] + delvp[INDEX0][INDEX1][INDEX2])
+        
+        var Double delvm_new = delvm[INDEX0][INDEX1][INDEX2] * m_monoq_limiter_mult
+        var Double delvp_new = delvp[INDEX0][INDEX1][INDEX2] * m_monoq_limiter_mult
+
+        if (delvm_new < phizeta) {
+            phizeta = delvm_new
+        }
+        if (delvp_new < phizeta) {
+            phizeta = delvp_new
+        }
+        if (phizeta < 0.0) {
+            phizeta = 0.0
+        }
+        if (phizeta > m_monoq_max_slope) {
+            phizeta = m_monoq_max_slope
+        }
+        res_phizeta[INDEX0][INDEX1][INDEX2] = phizeta
+    }
+
+
+
+    stencil luleshPar_CalcMonotonicQRegionForElems_partG([[[[Double]]]] domain_coordGradients,
+            [[[[Double]]]] domain_velocGradients, [[[Double]]] domain_vdov,
+            [[[Double]]] domain_elemMass, [[[Double]]] domain_volo, 
+            [[[Double]]] domain_vnew, [[[Double]]] phixi, [[[Double]]] phieta,
+            [[[Double]]] phizeta) : [[[[Double]]]] res_qquadANDqlin { 
+        /* Remove length scale */
+        var Double qlin
+        var Double qquad
+        if (domain_vdov[INDEX0][INDEX1][INDEX2] > 0.0) {
+            qlin  = 0.0
+            qquad = 0.0
+        }
+        else {
+            var Double delvxxi   = luleshSeq_getWishedValue1D(domain_velocGradients[INDEX0][INDEX1][INDEX2], m_delv_xi)   * luleshSeq_getWishedValue1D(domain_coordGradients[INDEX0][INDEX1][INDEX2], m_delx_xi)
+            var Double delvxeta  = luleshSeq_getWishedValue1D(domain_velocGradients[INDEX0][INDEX1][INDEX2], m_delv_eta)  * luleshSeq_getWishedValue1D(domain_coordGradients[INDEX0][INDEX1][INDEX2], m_delx_eta)
+            var Double delvxzeta = luleshSeq_getWishedValue1D(domain_velocGradients[INDEX0][INDEX1][INDEX2], m_delv_zeta) * luleshSeq_getWishedValue1D(domain_coordGradients[INDEX0][INDEX1][INDEX2], m_delx_zeta)
+
+            if (delvxxi > 0.0) {
+                delvxxi = 0.0
+            }
+            if (delvxeta  > 0.0) {
+                delvxeta  = 0.0
+            }
+            if (delvxzeta > 0.0) {
+                delvxzeta = 0.0
+            }
+
+            var Double rho = domain_elemMass[INDEX0][INDEX1][INDEX2] / 
+                    (domain_volo[INDEX0][INDEX1][INDEX2] * domain_vnew[INDEX0][INDEX1][INDEX2])
+
+            qlin = (0-m_qlc_monoq) * rho *
+                    (  ((delvxxi   * 1.0) - phixi[INDEX0][INDEX1][INDEX2]) +
+                       ((delvxeta  * 1.0) - phieta[INDEX0][INDEX1][INDEX2]) +
+                       ((delvxzeta * 1.0) - phizeta[INDEX0][INDEX1][INDEX2])  )
+
+            qquad = m_qqc_monoq * rho *
+                    (  (((delvxxi*delvxxi)     * 1.0) - (phixi[INDEX0][INDEX1][INDEX2] * phixi[INDEX0][INDEX1][INDEX2])) +
+                       (((delvxeta*delvxeta)   * 1.0) - (phieta[INDEX0][INDEX1][INDEX2] * phieta[INDEX0][INDEX1][INDEX2])) +
+                       (((delvxzeta*delvxzeta) * 1.0) - (phizeta[INDEX0][INDEX1][INDEX2] * phizeta[INDEX0][INDEX1][INDEX2]))  )
+        }
+
+        var [Double] qquadANDqlin = [0.0,0.0]
+        qquadANDqlin[0] = qquad
+        qquadANDqlin[1] = qlin
+        res_qquadANDqlin[INDEX0][INDEX1][INDEX2] = qquadANDqlin
+    }
+
+
+    stencil luleshPar_par_a_CalcLagrangeElements([[[[Double]]]] domain_strains): [[[Double]]] res_domain_vdov{
+        // calc strain rate and apply as constraint (only done in FB element)
+        // make the rate of deformation tensor deviatoric
+        res_domain_vdov[INDEX0][INDEX1][INDEX2] = luleshSeq_get3DSum(domain_strains[INDEX0][INDEX1][INDEX2])
+    }
+
+    stencil luleshPar_par_b_CalcLagrangeElements([[[Double]]] vdov, [[[[Double]]]] domain_strains_old)
+            : [[[[Double]]]] res_domain_strains{ 
+        // calc strain rate and apply as constraint (only done in FB element)
+        var Double vdovthird = vdov[INDEX0][INDEX1][INDEX2] / 3.0
+
+        // make the rate of deformation tensor deviatoric
+        res_domain_strains[INDEX0][INDEX1][INDEX2][INDEX3] = domain_strains_old[INDEX0][INDEX1][INDEX2][INDEX3] - vdovthird
+    }
+
+    stencil luleshPar_a_CalcKinematicsForElems([[[Double]]] domain_volo, [[[Double]]] domain_v, 
+            [[[[Double]]]] domain_coordinates): [[[[Double]]]] res_terms { 
+        // res_terms[0] stands for domain_vnew_reversed
+        // res_terms[1] stands for domain_delv_reversed
+        // res_terms[2] stands for domain_arealg_reversed
+
+        // get nodal coordinates from global arrays and copy into local arrays.
+        var [[Double]] coordinates_local  = [[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0], [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0], [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]]
+        coordinates_local = luleshSeq_CollectDomainNodesToElemNodes(domain_coordinates, INDEX0, INDEX1, INDEX2)
+
+        // volume calculations
+        var Double volume = luleshSeq_CalcElemVolume(coordinates_local[xIdx], coordinates_local[yIdx], coordinates_local[zIdx])
+        var Double  relativeVolume = volume / domain_volo[INDEX0][INDEX1][INDEX2]
+
+        var [Double] terms = [0.0,0.0,0.0]
+        terms[0] = relativeVolume
+        terms[1] = relativeVolume - domain_v[INDEX0][INDEX1][INDEX2]
+
+        // set characteristic length
+        terms[2] =  luleshSeq_CalcElemCharacteristicLength(coordinates_local[xIdx],
+                coordinates_local[yIdx], coordinates_local[zIdx], volume)
+
+        res_terms[INDEX0][INDEX1][INDEX2] = terms
+    }
+
+    stencil luleshPar_b_CalcKinematicsForElems([[[[Double]]]] domain_coordinates, [[[[Double]]]] domain_velocities, 
+            Double deltaTime): [[[[Double]]]] res_domain_strains { 
+
+        // get nodal coordinates from global arrays and copy into local arrays.
+        var [[Double]] coordinates_local  = [[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0], [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0], [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]]
+        coordinates_local = luleshSeq_CollectDomainNodesToElemNodes(domain_coordinates, INDEX0, INDEX1, INDEX2)
+
+        // get nodal velocities from global array and copy into local arrays.
+        var [[Double]] velocities_local  = [[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0], [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0], [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]]
+        velocities_local = luleshSeq_CollectDomainNodesToElemNodes(domain_velocities, INDEX0, INDEX1, INDEX2)
+
+
+        var Double dt2 = 0.5 * deltaTime
+        for var Int32 j = 0; j < 8; j++ {
+            coordinates_local[xIdx][j] -= dt2 * velocities_local[xIdx][j]
+            coordinates_local[yIdx][j] -= dt2 * velocities_local[yIdx][j]
+            coordinates_local[zIdx][j] -= dt2 * velocities_local[zIdx][j]
+        }
+
+        
+        var [[[Double]]] result = [[[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0], [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0], [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]], [[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0], [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0], [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]]]
+        result = luleshSeq_CalcElemShapeFunctionDerivatives(coordinates_local)
+        var Double detJ = result[0][0][0]
+        var [[Double]] B = [[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0], [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0], [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]]  /** shape function derivatives */
+        B = result[1]
+
+        var [Double] D = [0.0,0.0,0.0,0.0,0.0,0.0]
+        D = luleshSeq_CalcElemVelocityGradient(velocities_local[xIdx], velocities_local[yIdx],
+                velocities_local[zIdx], B, detJ)
+        var [Double] D_limited = [0.0,0.0,0.0]
+        D_limited[0] = D[0]
+        D_limited[1] = D[1]
+        D_limited[2] = D[2]
+
+        // put velocity gradient quantities into their global arrays.
+        res_domain_strains[INDEX0][INDEX1][INDEX2] = D_limited
+    }
+
+    stencil luleshPar_reverseDimensions([[[[[Double]]]]] domain_forcesTimes8Reversed)
+            :[[[[[Double]]]]] res_domain_forcesTimes8 {
+        res_domain_forcesTimes8[INDEX3][INDEX0][INDEX1][INDEX2][INDEX4] = domain_forcesTimes8Reversed[INDEX0][INDEX1][INDEX2][INDEX3][INDEX4]
+    }
+
+    
+    stencil luleshPar_getSubArray3D([[[[Double]]]] bigArray, Int32 wishedIndex): [[[Double]]] res_subArray {
+        res_subArray[INDEX0][INDEX1][INDEX2] = luleshSeq_getWishedValue1D(bigArray[INDEX0][INDEX1][INDEX2], wishedIndex)
+    }
+    
+    stencil luleshPar_getSubArray4D([[[[[Double]]]]] bigArray, Int32 wishedIndex): [[[[Double]]]] res_subArray {
+        res_subArray[INDEX0][INDEX1][INDEX2] = luleshSeq_getWishedValue2D(bigArray[INDEX0][INDEX1][INDEX2], wishedIndex)
+    }
+
+}

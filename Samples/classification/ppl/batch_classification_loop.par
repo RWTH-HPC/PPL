@@ -70,11 +70,17 @@ batch_classification_loop {
         var [Double] features = init_List([524288])
         var [Int] classes = init_List([524288])
 
-        data = read("data.txt")
+        data = read("data.csv")
         
+        //var Double time = get_time()
         normalized = normalize<<<>>>(data)
         features = extract<<<>>>(normalized)
         classes = classify<<<>>>(features)
+        
+        
+        //time = get_time() - time
+        
+        //print("Time: " {time})
 
         return 0
     }

@@ -12,7 +12,7 @@ public class NeuralNetworkGeneratorTest {
     @Test
     public void test() {
 
-        String[] args = new String[]{"-i", BENCHMARK_PATH, "-n", CLUSTER_SPEC_PATH, "-s", "8192", "-d", "8192", "-b", "-JSON", "-o", "out/nn.cxx"};
+        String[] args = new String[]{"-i", BENCHMARK_PATH, "-n", CLUSTER_SPEC_PATH, "-s", "4096", "-d", "4096", "-b", "-JSON", "-o", "out/nn.cxx"};
         Tool.main(args);
 
     }

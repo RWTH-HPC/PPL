@@ -1,0 +1,86 @@
+// Abstract Pattern Tree
+digraph {
+	E8aZ2KNMBsNXKsVRYUYS [label=Main]
+	afhTTC9sYW5Ju1lZg0Jf [label=Serial fillcolor=lawngreen style=filled]
+	PNtrRyuLVFziFeReWKBm [label="Map: init" fillcolor=orangered style=filled]
+	TAWpVOSpcoF8PkxfUfp2 [label=Serial fillcolor=lawngreen style=filled]
+	JmTF52pXkDfh1qZledso [label=Serial fillcolor=lawngreen style=filled]
+	gsrIy0O3vAqJVtxfN1LI [label="Map: init" fillcolor=orangered style=filled]
+	THRTPiaAeyjKD7sgLsNO [label=Serial fillcolor=lawngreen style=filled]
+	o45yGsyCCN3qnO7tIDEQ [label="Map: init" fillcolor=orangered style=filled]
+	t42FM0r7g7sZ8AJq2njm [label=Serial fillcolor=lawngreen style=filled]
+	LAUlPsMpXuVeHQDMDTFP [label="For Loop" fillcolor=cyan style=filled]
+	tnledoAlyMOpRXxt9aOL [label="Map: addRand" fillcolor=orangered style=filled]
+	NK6arEPjEy9H5f05fzet [label=Serial fillcolor=lawngreen style=filled]
+	"2HYckCfc45ZhTqqB4bKE" [label="Map: addRand" fillcolor=orangered style=filled]
+	jErF44E3BlhnF7spWue9 [label=Serial fillcolor=lawngreen style=filled]
+	aYCzWy4nRAyWU3l9YxUS [label="Map: compLikelihood" fillcolor=orangered style=filled]
+	"1bfJcuyLEgqqhkzoAV9a" [label=Serial fillcolor=lawngreen style=filled]
+	v4Hdki3tk096OBH2FBn8 [label="Map: updateWeights" fillcolor=orangered style=filled]
+	HPTV9MrAxr5aLZ8Cupui [label=Serial fillcolor=lawngreen style=filled]
+	x4JV0GIN2EnYWf5XdKgF [label=Serial fillcolor=lawngreen style=filled]
+	"2t3rl0ULDOXkDfE9VszL" [label="Reduction: sum" fillcolor=orangered style=filled]
+	mBXPsTQeNo3gsxPlez1B [label=Serial fillcolor=lawngreen style=filled]
+	"5CXvN5syWXzz4OqgmM6U" [label="Map: normalize" fillcolor=orangered style=filled]
+	rJUsdeRgVCrkh8g7Dqqm [label=Serial fillcolor=lawngreen style=filled]
+	zYiysPfYUbj2z1iqTurt [label=Serial fillcolor=lawngreen style=filled]
+	fAsJRFkl0UQcAD0MDvt5 [label="Reduction: location_estimation" fillcolor=orangered style=filled]
+	NCSafuxlG1ptfBisflU6 [label=Serial fillcolor=lawngreen style=filled]
+	"3LHVKOdtmmnQMNMiscuG" [label="Reduction: location_estimation" fillcolor=orangered style=filled]
+	"1QNioWO0gELZnUz5n1Lv" [label=Serial fillcolor=lawngreen style=filled]
+	Casox8FXjaKrtoUmXNGx [label=Serial fillcolor=lawngreen style=filled]
+	aCYyA8IrBqNgUJG0Gn4A [label="Map: u_init" fillcolor=orangered style=filled]
+	NSE1VIGjIaH9PN6OVHzH [label=Serial fillcolor=lawngreen style=filled]
+	nclJi4NhboOfvNZ0TK9h [label="Map: find_particle" fillcolor=orangered style=filled]
+	Tciq8cX6s4cBd2WMfL8T [label=Serial fillcolor=lawngreen style=filled]
+	SkPuYpHmg7gkmxs5SvjW [label="Map: find_particle" fillcolor=orangered style=filled]
+	a1meS1rN6txmm23sLjQX [label=Serial fillcolor=lawngreen style=filled]
+	a7U734G1sC5rsQxBnEkv [label="Map: set" fillcolor=orangered style=filled]
+	xSvg4EHjjFT57OcVCYlv [label=Serial fillcolor=lawngreen style=filled]
+	olGKYTjjj923mDKsyrLR [label="Map: set" fillcolor=orangered style=filled]
+	JIgspv4OjPlHuvyNuo5L [label=Serial fillcolor=lawngreen style=filled]
+	l6FgJTKQ82EqOV1rMq03 [label="Map: init" fillcolor=orangered style=filled]
+	m9NmM67njvSkZ8PjaKO3 [label=Serial fillcolor=lawngreen style=filled]
+	KHg5BVVofG6Va9cSlOOn [label=Serial fillcolor=lawngreen style=filled]
+	E8aZ2KNMBsNXKsVRYUYS -> afhTTC9sYW5Ju1lZg0Jf
+	E8aZ2KNMBsNXKsVRYUYS -> PNtrRyuLVFziFeReWKBm
+	PNtrRyuLVFziFeReWKBm -> TAWpVOSpcoF8PkxfUfp2
+	E8aZ2KNMBsNXKsVRYUYS -> JmTF52pXkDfh1qZledso
+	E8aZ2KNMBsNXKsVRYUYS -> gsrIy0O3vAqJVtxfN1LI
+	gsrIy0O3vAqJVtxfN1LI -> THRTPiaAeyjKD7sgLsNO
+	E8aZ2KNMBsNXKsVRYUYS -> o45yGsyCCN3qnO7tIDEQ
+	o45yGsyCCN3qnO7tIDEQ -> t42FM0r7g7sZ8AJq2njm
+	E8aZ2KNMBsNXKsVRYUYS -> LAUlPsMpXuVeHQDMDTFP
+	LAUlPsMpXuVeHQDMDTFP -> tnledoAlyMOpRXxt9aOL
+	tnledoAlyMOpRXxt9aOL -> NK6arEPjEy9H5f05fzet
+	LAUlPsMpXuVeHQDMDTFP -> "2HYckCfc45ZhTqqB4bKE"
+	"2HYckCfc45ZhTqqB4bKE" -> jErF44E3BlhnF7spWue9
+	LAUlPsMpXuVeHQDMDTFP -> aYCzWy4nRAyWU3l9YxUS
+	aYCzWy4nRAyWU3l9YxUS -> "1bfJcuyLEgqqhkzoAV9a"
+	LAUlPsMpXuVeHQDMDTFP -> v4Hdki3tk096OBH2FBn8
+	v4Hdki3tk096OBH2FBn8 -> HPTV9MrAxr5aLZ8Cupui
+	LAUlPsMpXuVeHQDMDTFP -> x4JV0GIN2EnYWf5XdKgF
+	LAUlPsMpXuVeHQDMDTFP -> "2t3rl0ULDOXkDfE9VszL"
+	"2t3rl0ULDOXkDfE9VszL" -> mBXPsTQeNo3gsxPlez1B
+	LAUlPsMpXuVeHQDMDTFP -> "5CXvN5syWXzz4OqgmM6U"
+	"5CXvN5syWXzz4OqgmM6U" -> rJUsdeRgVCrkh8g7Dqqm
+	LAUlPsMpXuVeHQDMDTFP -> zYiysPfYUbj2z1iqTurt
+	LAUlPsMpXuVeHQDMDTFP -> fAsJRFkl0UQcAD0MDvt5
+	fAsJRFkl0UQcAD0MDvt5 -> NCSafuxlG1ptfBisflU6
+	LAUlPsMpXuVeHQDMDTFP -> "3LHVKOdtmmnQMNMiscuG"
+	"3LHVKOdtmmnQMNMiscuG" -> "1QNioWO0gELZnUz5n1Lv"
+	LAUlPsMpXuVeHQDMDTFP -> Casox8FXjaKrtoUmXNGx
+	LAUlPsMpXuVeHQDMDTFP -> aCYyA8IrBqNgUJG0Gn4A
+	aCYyA8IrBqNgUJG0Gn4A -> NSE1VIGjIaH9PN6OVHzH
+	LAUlPsMpXuVeHQDMDTFP -> nclJi4NhboOfvNZ0TK9h
+	nclJi4NhboOfvNZ0TK9h -> Tciq8cX6s4cBd2WMfL8T
+	LAUlPsMpXuVeHQDMDTFP -> SkPuYpHmg7gkmxs5SvjW
+	SkPuYpHmg7gkmxs5SvjW -> a1meS1rN6txmm23sLjQX
+	LAUlPsMpXuVeHQDMDTFP -> a7U734G1sC5rsQxBnEkv
+	a7U734G1sC5rsQxBnEkv -> xSvg4EHjjFT57OcVCYlv
+	LAUlPsMpXuVeHQDMDTFP -> olGKYTjjj923mDKsyrLR
+	olGKYTjjj923mDKsyrLR -> JIgspv4OjPlHuvyNuo5L
+	LAUlPsMpXuVeHQDMDTFP -> l6FgJTKQ82EqOV1rMq03
+	l6FgJTKQ82EqOV1rMq03 -> m9NmM67njvSkZ8PjaKO3
+	E8aZ2KNMBsNXKsVRYUYS -> KHg5BVVofG6Va9cSlOOn
+}

@@ -4,13 +4,11 @@ monte_carlo {
         return 16807 * x mod 2147483647
     }
 
-    seq uniform(Int x) : Double {
-        return x / 2147483647
+    seq uniform(Int x) : Float {
+        return x / 2147483647.0
     }
 
-    map monte_carlo([[Int]] seeds) : [Float] res {
-        // Workaround
-        var Int s = seeds[INDEX]
+    map monte_carlo() : [Int] res {
 
         var Int sx = INDEX * 2133
         var Int sy = INDEX * 33
@@ -20,10 +18,10 @@ monte_carlo {
         for var Int i = 0; i < 1000000000; i++ {
             sx = lehmer_random_number_generator(sx)
             sy = lehmer_random_number_generator(sy)
-            var Int x = uniform(sx)
-            var Int y = uniform(sy)
+            var Float x = uniform(sx)
+            var Float y = uniform(sy)
 
-            var Int k = x * x + y * y
+            var Float k = x * x + y * y
             if k <= 1 {
                 inside = inside + 1
             } else {
@@ -31,25 +29,23 @@ monte_carlo {
             }
         }
 
-        res[INDEX] = 4 * inside / (inside + outside)
+        res[INDEX] = 4.0 * inside / (inside + outside)
     }
 
-    reduction sum([Float] values) : Float res {
+    reduction sum([Int] values) : Int res {
         res += values[INDEX]
     }
 
     seq main() : Int {
-        // Seeds only necessary for length of map.
-        var [Int] seeds = init_List([96])
-        var [Int] pis = init_List([96])
+        var [Float] pis = init_List([96])
 
-        seeds = read("seeds.txt")
+        pis = monte_carlo<<<>>>()   
 
-        pis = monte_carlo<<<>>>(seeds)
-
-        var Int pi = 0
+        var Float pi = 0
         pi = sum<<<>>>(pis)
         pi = pi / 96
+        
+        print("Pi: " {pi})
 
         return 0
     }

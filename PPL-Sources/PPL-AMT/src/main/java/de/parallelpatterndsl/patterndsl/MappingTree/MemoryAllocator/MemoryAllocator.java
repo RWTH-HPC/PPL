@@ -202,7 +202,7 @@ public class MemoryAllocator {
                 } else if (child instanceof BarrierMapping) {
                     HashSet<Device> sync = getDevices((BarrierMapping) child);
                     for (OffloadDataEncoding encoding: onGPU) {
-                        if (sync.contains(encoding.getDevice())) {
+                        if (sync.contains(encoding.getDevice()) && hasFollowUpRead(i, encoding)) {
                             handleGPUDataClosing(result, encoding);
                         }
                     }
@@ -261,6 +261,18 @@ public class MemoryAllocator {
             }
         }
 
+        return result;
+    }
+
+    private boolean hasFollowUpRead(int index, OffloadDataEncoding encoding) {
+        HashSet<OffloadDataEncoding> encodings = new HashSet<>();
+        encodings.add(encoding);
+        boolean result = false;
+        for (int i = index; i < root.getChildren().size(); i++) {
+            if (!(root.getChildren().get(i) instanceof ReturnMapping)) {
+                result |= !HandleDataPlacements.hasGPUOverlap(encodings, root.getChildren().get(i).getOutputData()).isEmpty();
+            }
+        }
         return result;
     }
 

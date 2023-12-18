@@ -1,0 +1,49 @@
+classification.c:105:52: warning: format specifies type 'int' but the argument has type 'size_t' (aka 'unsigned long') [-Wformat]
+    printf("Class A: %d, Class B: %d, Time: %f\n", class_A, class_B, time);
+                     ~~                            ^~~~~~~
+                     %zu
+classification.c:105:61: warning: format specifies type 'int' but the argument has type 'size_t' (aka 'unsigned long') [-Wformat]
+    printf("Class A: %d, Class B: %d, Time: %f\n", class_A, class_B, time);
+                                  ~~                        ^~~~~~~
+                                  %zu
+2 warnings generated.
+Class A: 24267, Class B: 500021, Time: 0.824601
+Class A: 24267, Class B: 500021, Time: 0.773463
+Class A: 24267, Class B: 500021, Time: 0.827506
+Class A: 24267, Class B: 500021, Time: 0.783579
+Class A: 24267, Class B: 500021, Time: 0.811445
+Class A: 24267, Class B: 500021, Time: 0.820077
+Class A: 24267, Class B: 500021, Time: 0.781543
+Class A: 24267, Class B: 500021, Time: 0.787421
+Class A: 24267, Class B: 500021, Time: 0.811996
+Class A: 24267, Class B: 500021, Time: 0.795736
+Class A: 24267, Class B: 500021, Time: 0.787813
+Class A: 24267, Class B: 500021, Time: 0.823803
+Class A: 24267, Class B: 500021, Time: 0.785415
+Class A: 24267, Class B: 500021, Time: 0.776381
+Class A: 24267, Class B: 500021, Time: 0.805345
+Class A: 24267, Class B: 500021, Time: 0.799749
+Class A: 24267, Class B: 500021, Time: 0.812735
+Class A: 24267, Class B: 500021, Time: 0.792519
+Class A: 24267, Class B: 500021, Time: 0.783549
+Class A: 24267, Class B: 500021, Time: 0.804515
+Class A: 24267, Class B: 500021, Time: 0.792571
+Class A: 24267, Class B: 500021, Time: 0.805977
+Class A: 24267, Class B: 500021, Time: 0.798581
+Class A: 24267, Class B: 500021, Time: 0.805016
+Class A: 24267, Class B: 500021, Time: 0.783901
+Class A: 24267, Class B: 500021, Time: 0.824673
+Class A: 24267, Class B: 500021, Time: 0.802567
+Class A: 24267, Class B: 500021, Time: 0.807683
+Class A: 24267, Class B: 500021, Time: 0.684839
+Class A: 24267, Class B: 500021, Time: 0.788231
+Class A: 24267, Class B: 500021, Time: 0.792398
+Class A: 24267, Class B: 500021, Time: 0.805497
+Class A: 24267, Class B: 500021, Time: 0.782745
+Class A: 24267, Class B: 500021, Time: 0.793137
+Class A: 24267, Class B: 500021, Time: 0.810787
+Class A: 24267, Class B: 500021, Time: 0.786307
+Class A: 24267, Class B: 500021, Time: 0.805951
+Class A: 24267, Class B: 500021, Time: 0.801034
+Class A: 24267, Class B: 500021, Time: 0.828420
+Class A: 24267, Class B: 500021, Time: 0.810165

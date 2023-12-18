@@ -9,20 +9,16 @@
 #SBATCH --output=output.nn.second.txt
 #SBATCH -p=c18g
  
-module unload intel
-
-module load gcc/8
-
-module load cuda
+ml CUDA
  
 #print some debug informations
 echo; export; echo;  nvidia-smi; echo
 
 ### beginning of executable commands
 
-cd ~/benchmark/c/nn
+#cd ~/benchmark/c/nn
 nvcc -Xcompiler -fopenmp -o nn.out neural_network.cu -lcurand
-for i in {1..30}
+for i in {1..40}
 do
    ./nn.out
 done

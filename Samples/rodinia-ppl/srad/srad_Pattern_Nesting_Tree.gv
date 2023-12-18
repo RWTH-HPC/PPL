@@ -1,0 +1,44 @@
+// Abstract Pattern Tree
+digraph {
+	"7YTyobD5nNBp8Ld5oM3D" [label=Main]
+	HyNsprxYNVP3xteo3b1j [label=Serial fillcolor=lawngreen style=filled]
+	YhokXXoUGEFK7zJion3U [label="For Loop" fillcolor=cyan style=filled]
+	eO6aoAESMuCTy6KLsKgn [label="Map: deriv_N" fillcolor=orangered style=filled]
+	ikgrcYRQQ6AvH63uxQUf [label=Serial fillcolor=lawngreen style=filled]
+	"6cllgJe6xLjatP985okI" [label="Map: deriv_row" fillcolor=orangered style=filled]
+	RoaZRr5G8LpJ0VXLeqNp [label=Serial fillcolor=lawngreen style=filled]
+	SLr2UvVjJeiyBAr6F7NA [label="Map: deriv_S" fillcolor=orangered style=filled]
+	ZbBsGWl7Kf9VVfBJ7A2R [label=Serial fillcolor=lawngreen style=filled]
+	PTomFqb1jNBk2PAUApmX [label="Map: deriv_row" fillcolor=orangered style=filled]
+	V5yYXlo6aIxsYiCpRx7j [label=Serial fillcolor=lawngreen style=filled]
+	vDDG849nNaEcv4M9s3hF [label="Stencil: deriv_W" fillcolor=orangered style=filled]
+	rZ9h6Ak3bJ8aWuSu31QW [label=Serial fillcolor=lawngreen style=filled]
+	ynVe1cmGLxE7Y8EZa0I4 [label="Stencil: deriv_E" fillcolor=orangered style=filled]
+	ZSv00ByAPRpnZLol1a13 [label=Serial fillcolor=lawngreen style=filled]
+	PRonDXbU4fb7sQD9P5JI [label=Serial fillcolor=lawngreen style=filled]
+	couDkPsgKBsZvTLFXWhr [label="Stencil: diffuse" fillcolor=orangered style=filled]
+	STjtlMJVvgdYpSrj4AD4 [label=Serial fillcolor=lawngreen style=filled]
+	ViiqNqb0XkMTa3S3SC4Q [label="Stencil: update" fillcolor=orangered style=filled]
+	CPKei0EBAhKeSZg7uDJR [label=Serial fillcolor=lawngreen style=filled]
+	ic7gMpax0MibUhf0rkMb [label=Serial fillcolor=lawngreen style=filled]
+	"7YTyobD5nNBp8Ld5oM3D" -> HyNsprxYNVP3xteo3b1j
+	"7YTyobD5nNBp8Ld5oM3D" -> YhokXXoUGEFK7zJion3U
+	YhokXXoUGEFK7zJion3U -> eO6aoAESMuCTy6KLsKgn
+	eO6aoAESMuCTy6KLsKgn -> ikgrcYRQQ6AvH63uxQUf
+	eO6aoAESMuCTy6KLsKgn -> "6cllgJe6xLjatP985okI"
+	"6cllgJe6xLjatP985okI" -> RoaZRr5G8LpJ0VXLeqNp
+	YhokXXoUGEFK7zJion3U -> SLr2UvVjJeiyBAr6F7NA
+	SLr2UvVjJeiyBAr6F7NA -> ZbBsGWl7Kf9VVfBJ7A2R
+	SLr2UvVjJeiyBAr6F7NA -> PTomFqb1jNBk2PAUApmX
+	PTomFqb1jNBk2PAUApmX -> V5yYXlo6aIxsYiCpRx7j
+	YhokXXoUGEFK7zJion3U -> vDDG849nNaEcv4M9s3hF
+	vDDG849nNaEcv4M9s3hF -> rZ9h6Ak3bJ8aWuSu31QW
+	YhokXXoUGEFK7zJion3U -> ynVe1cmGLxE7Y8EZa0I4
+	ynVe1cmGLxE7Y8EZa0I4 -> ZSv00ByAPRpnZLol1a13
+	YhokXXoUGEFK7zJion3U -> PRonDXbU4fb7sQD9P5JI
+	YhokXXoUGEFK7zJion3U -> couDkPsgKBsZvTLFXWhr
+	couDkPsgKBsZvTLFXWhr -> STjtlMJVvgdYpSrj4AD4
+	YhokXXoUGEFK7zJion3U -> ViiqNqb0XkMTa3S3SC4Q
+	ViiqNqb0XkMTa3S3SC4Q -> CPKei0EBAhKeSZg7uDJR
+	"7YTyobD5nNBp8Ld5oM3D" -> ic7gMpax0MibUhf0rkMb
+}

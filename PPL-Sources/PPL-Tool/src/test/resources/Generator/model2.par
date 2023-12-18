@@ -1,153 +1,132 @@
 model2 {
 
-var Int rows = 512
-var Int cols = 512
-var Float lambda = 0.5
-	var Int MAX_INT = 2147483647
 
-seq powi(Float x, Int n) : Float {
-		var Float res = 1
-		for var Int i = 0; i < n; i++ {
-			res *= x
+var Int particles_per_box = 100
+var Float alpha = 0.5
+var Float a2 = 2 * alpha * alpha
+
+stencil kernel([[[[[Float]]]]] rv_cpu, [[[[Float]]]] qv_cpu) : [[[[[Float]]]]] fv_cpu {
+	var [[[Float]]] rv_neighbor = init_List([26,100,4])
+	var [[Float]] qv_neighbor = init_List([26,100])
+
+	//define neighboring boxes
+	rv_neighbor[0] = rv_cpu[INDEX0 - 1][INDEX1 - 1][INDEX2 - 1]
+	qv_neighbor[0] = qv_cpu[INDEX0 - 1][INDEX1 - 1][INDEX2 - 1]
+	rv_neighbor[1] = rv_cpu[INDEX0 - 1][INDEX1 - 1][INDEX2]
+	qv_neighbor[1] = qv_cpu[INDEX0 - 1][INDEX1 - 1][INDEX2]
+	rv_neighbor[2] = rv_cpu[INDEX0 - 1][INDEX1 - 1][INDEX2 + 1]
+	qv_neighbor[2] = qv_cpu[INDEX0 - 1][INDEX1 - 1][INDEX2 + 1]
+	rv_neighbor[3] = rv_cpu[INDEX0 - 1][INDEX1][INDEX2 - 1]
+	qv_neighbor[3] = qv_cpu[INDEX0 - 1][INDEX1][INDEX2 - 1]
+	rv_neighbor[4] = rv_cpu[INDEX0 - 1][INDEX1][INDEX2]
+	qv_neighbor[4] = qv_cpu[INDEX0 - 1][INDEX1][INDEX2]
+	rv_neighbor[5] = rv_cpu[INDEX0 - 1][INDEX1][INDEX2 + 1]
+	qv_neighbor[5] = qv_cpu[INDEX0 - 1][INDEX1][INDEX2 + 1]
+	rv_neighbor[6] = rv_cpu[INDEX0 - 1][INDEX1 + 1][INDEX2 - 1]
+	qv_neighbor[6] = qv_cpu[INDEX0 - 1][INDEX1 + 1][INDEX2 - 1]
+	rv_neighbor[7] = rv_cpu[INDEX0 - 1][INDEX1 + 1][INDEX2]
+	qv_neighbor[7] = qv_cpu[INDEX0 - 1][INDEX1 + 1][INDEX2]
+	rv_neighbor[8] = rv_cpu[INDEX0 - 1][INDEX1 + 1][INDEX2 + 1]
+	qv_neighbor[8] = qv_cpu[INDEX0 - 1][INDEX1 + 1][INDEX2 + 1]
+
+	rv_neighbor[9] = rv_cpu[INDEX0][INDEX1 - 1][INDEX2 - 1]
+	qv_neighbor[9] = qv_cpu[INDEX0][INDEX1 - 1][INDEX2 - 1]
+	rv_neighbor[10] = rv_cpu[INDEX0][INDEX1 - 1][INDEX2]
+	qv_neighbor[10] = qv_cpu[INDEX0][INDEX1 - 1][INDEX2]
+	rv_neighbor[11] = rv_cpu[INDEX0][INDEX1 - 1][INDEX2 + 1]
+	qv_neighbor[11] = qv_cpu[INDEX0][INDEX1 - 1][INDEX2 + 1]
+	rv_neighbor[12] = rv_cpu[INDEX0][INDEX1][INDEX2 - 1]
+	qv_neighbor[12] = qv_cpu[INDEX0][INDEX1][INDEX2 - 1]
+	rv_neighbor[13] = rv_cpu[INDEX0][INDEX1][INDEX2 + 1]
+	qv_neighbor[13] = qv_cpu[INDEX0][INDEX1][INDEX2 + 1]
+	rv_neighbor[14] = rv_cpu[INDEX0][INDEX1 + 1][INDEX2 - 1]
+	qv_neighbor[14] = qv_cpu[INDEX0][INDEX1 + 1][INDEX2 - 1]
+	rv_neighbor[15] = rv_cpu[INDEX0][INDEX1 + 1][INDEX2]
+	qv_neighbor[15] = qv_cpu[INDEX0][INDEX1 + 1][INDEX2]
+	rv_neighbor[16] = rv_cpu[INDEX0][INDEX1 + 1][INDEX2 + 1]
+	qv_neighbor[16] = qv_cpu[INDEX0][INDEX1 + 1][INDEX2 + 1]
+
+	rv_neighbor[17] = rv_cpu[INDEX0 + 1][INDEX1 - 1][INDEX2 - 1]
+	qv_neighbor[17] = qv_cpu[INDEX0 + 1][INDEX1 - 1][INDEX2 - 1]
+	rv_neighbor[18] = rv_cpu[INDEX0 + 1][INDEX1 - 1][INDEX2]
+	qv_neighbor[18] = qv_cpu[INDEX0 + 1][INDEX1 - 1][INDEX2]
+	rv_neighbor[19] = rv_cpu[INDEX0 + 1][INDEX1 - 1][INDEX2 + 1]
+	qv_neighbor[19] = qv_cpu[INDEX0 + 1][INDEX1 - 1][INDEX2 + 1]
+	rv_neighbor[20] = rv_cpu[INDEX0 + 1][INDEX1][INDEX2 - 1]
+	qv_neighbor[20] = qv_cpu[INDEX0 + 1][INDEX1][INDEX2 - 1]
+	rv_neighbor[21] = rv_cpu[INDEX0 + 1][INDEX1][INDEX2]
+	qv_neighbor[21] = qv_cpu[INDEX0 + 1][INDEX1][INDEX2]
+	rv_neighbor[22] = rv_cpu[INDEX0 + 1][INDEX1][INDEX2 + 1]
+	qv_neighbor[22] = qv_cpu[INDEX0 + 1][INDEX1][INDEX2 + 1]
+	rv_neighbor[23] = rv_cpu[INDEX0 + 1][INDEX1 + 1][INDEX2 - 1]
+	qv_neighbor[23] = qv_cpu[INDEX0 + 1][INDEX1 + 1][INDEX2 - 1]
+	rv_neighbor[24] = rv_cpu[INDEX0 + 1][INDEX1 + 1][INDEX2]
+	qv_neighbor[24] = qv_cpu[INDEX0 + 1][INDEX1 + 1][INDEX2]
+	rv_neighbor[25] = rv_cpu[INDEX0 + 1][INDEX1 + 1][INDEX2 + 1]
+	qv_neighbor[25] = qv_cpu[INDEX0 + 1][INDEX1 + 1][INDEX2 + 1]
+
+	fv_cpu[INDEX0][INDEX1][INDEX2] = particle_iteration<<<>>>(rv_cpu[INDEX0][INDEX1][INDEX2], rv_neighbor, qv_neighbor)
+}
+
+map particle_iteration([[Float]] rv_home, [[[Float]]] rv_neighbor, [[Float]] qv_neighbor) : [[Float]] fv_cpu {
+	fv_cpu[INDEX] = force_combination(rv_home[INDEX], rv_neighbor, qv_neighbor)
+}
+
+seq force_combination([Float] rv_home, [[[Float]]] rv_neighbor, [[Float]] qv_neighbor) : [Float] {
+	var [Float] result = init_List([4],0)
+	for var Int i = 0; i < #rv_neighbor; i++ {
+		for var Int j = 0; j < particles_per_box; j++ {
+			var Float r2 = rv_home[0] + rv_neighbor[i][j][0] - rv_home[1] * rv_neighbor[i][j][1] + rv_home[2] * rv_neighbor[i][j][2] + rv_home[3] * rv_neighbor[i][j][3]
+			var Float u2 = a2 * r2
+			var Float v = exp(0 - u2)
+
+			var Float fs = 2 * v
+			var Float d_x = rv_home[1] - rv_neighbor[i][j][1]
+			var Float d_y = rv_home[2] - rv_neighbor[i][j][2]
+			var Float d_z = rv_home[3] - rv_neighbor[i][j][3]
+
+			var Float f_x = fs * d_x
+			var Float f_y = fs * d_y
+			var Float f_z = fs * d_z
+
+			result[0] += qv_neighbor[i][j] * v
+			result[1] += qv_neighbor[i][j] * f_x
+			result[2] += qv_neighbor[i][j] * f_y
+			result[3] += qv_neighbor[i][j] * f_z
 		}
-		return res
 	}
-
-map deriv_N([[Float]] J) : [[Float]] dN {
-	dN[INDEX] = deriv_row<<<>>>(J[INDEX], J[INDEX - 1])
+	return result
 }
 
-map deriv_S([[Float]] J) : [[Float]] dS {
-	dS[INDEX] = deriv_row<<<>>>(J[INDEX], J[INDEX + 1])
+stencil init_rv() : [[[[[Float]]]]] rv_cpu {
+    rv_cpu[INDEX0][INDEX1][INDEX2][INDEX3][INDEX4] = (rand()%10 + 1) / 10.0
 }
 
-map deriv_row([Float] J, [Float] D) : [Float] dcol {
-	dcol[INDEX] = D[INDEX] + J[INDEX]
+stencil init_qv() : [[[[[Float]]]]] qv_cpu {
+    qv_cpu[INDEX0][INDEX1][INDEX2][INDEX3] = (rand()%10 + 1) / 10.0
 }
-
-stencil deriv_W([[Float]] J) : [[Float]] dW {
-	dW[INDEX0][INDEX1] = J[INDEX0][INDEX1 - 1] + J[INDEX0][INDEX1]
-}
-
-stencil deriv_E([[Float]] J) : [[Float]] dE {
-	dE[INDEX0][INDEX1] = J[INDEX0][INDEX1 - 1] + J[INDEX0][INDEX1]
-}
-
-stencil diffuse([[Float]] dN,[[Float]] dS, [[Float]] dW,[[Float]] dE, [[Float]] J, Float q0sqr) : [[Float]] c {
-	var Float G2 = (powi(dN[INDEX0][INDEX1],2) + powi(dS[INDEX0][INDEX1],2) + powi(dW[INDEX0][INDEX1],2) + powi(dE[INDEX0][INDEX1],2) )/ powi(J[INDEX0][INDEX1],2)
-	var Float L = (dN[INDEX0][INDEX1] + dS[INDEX0][INDEX1] + dW[INDEX0][INDEX1] + dE[INDEX0][INDEX1] )/ J[INDEX0][INDEX1]
-
-	var Float num  = (0.5*G2) - ((1.0/16.0)*(L*L))
-    var Float den  = 1 + (0.25*L)
-    var Float qsqr = num/(den*den)
-
-    // diffusion coefficent (equ 33)
-    den = (qsqr-q0sqr) / (q0sqr * (1+q0sqr))
-    c[INDEX0][INDEX1] = 1.0 / (1.0+den)
-
-    // saturate diffusion coefficent
-    if c[INDEX0][INDEX1] < 0 {c[INDEX0][INDEX1] = 0}
-    else if c[INDEX0][INDEX1] > 1 {c[INDEX0][INDEX1] = 1}
-}
-
-seq get_cS([[Float]] c, Int i, Int j) : Float {
-	if i == rows - 1 {
-		return c[rows-1][j]
-	}
-	return c[i+1][j]
-}
-
-seq get_cE([[Float]] c, Int i, Int j) : Float {
-	if j == cols - 1 {
-		return c[i][cols-1]
-	}
-	return c[i][j+1]
-}
-
-stencil update([[Float]] dN,[[Float]] dS, [[Float]] dW,[[Float]] dE, [[Float]] c) : [[Float]] J {
-	// diffusion coefficent
-	var Float cN = c[INDEX0][INDEX1]
-	var Float cS = get_cS(c,INDEX0,INDEX1)
-	var Float cW = c[INDEX0][INDEX1]
-	var Float cE = get_cE(c,INDEX0,INDEX1)
-
-    // divergence (equ 58)
-    var Float D = cN * dN[INDEX0][INDEX1] + cS * dS[INDEX0][INDEX1] + cW * dW[INDEX0][INDEX1] + cE * dE[INDEX0][INDEX1]
-
-    // image update (equ 61)
-    J[INDEX0][INDEX1] += 0.25*lambda*D
-}
-
-
 
 seq main(): Int {
-
-	var Int r1 = 0
-	var Int r2 = 63
-	var Int c1 = 0
-	var Int c2 = 63
-
-	var Int niter = 4
-
-	var Int size_R = (r2-r1+1)*(c2-c1+1)
-
-	var [[Float]] J = init_List([512,512])
-	var [[Float]] c = init_List([512,512])
-
-	var [[Float]] dN = init_List([512,512])
-	var [[Float]] dS = init_List([512,512])
-	var [[Float]] dW = init_List([512,512])
-	var [[Float]] dE = init_List([512,512])
+	// use an array of size 4 to store the values of (v x y z) in this order
+	var [[[[[Float]]]]] rv_cpu = init_List([100,100,100,100,4])
+	var [[[[[Float]]]]] fv_cpu = init_List([100,100,100,100,4], 0)
+	var [[[[Float]]]] qv_cpu = init_List([100,100,100,100])
 
 
-	for var Int i = 0; i < rows; i++ {
-		for var Int j = 0; j < cols; j++ {
-			J[i][j] = rand()/MAX_INT
-		}
-	}
+	rv_cpu = init_rv<<<>>>()
+	qv_cpu = init_qv<<<>>>()
+
 	//var Long time = get_time()
 
-	for var Int iter = 0; iter < 4; iter++ { // niter=4
-		var Float sum=0
-		var Float sum2=0
-		var Float tmp
-		for var Int i=r1; i<=r2; i++ {
-            for var Int j=c1; j<=c2; j++ {
-                tmp   = J[i][j]
-                sum  += tmp
-                sum2 += tmp*tmp
-            }
-        }
+	fv_cpu = kernel<<<>>>(rv_cpu, qv_cpu)
 
-        var Float meanROI = sum / size_R
-        var Float varROI  = (sum2 / size_R) - meanROI*meanROI
-        var Float q0sqr   = varROI / (meanROI*meanROI)
-
-		dN = deriv_N<<<>>>(J)
-		dS = deriv_S<<<>>>(J)
-		dW = deriv_W<<<>>>(J)
-		dE = deriv_E<<<>>>(J)
-
-		for var Int i = 0; i < rows; i++ {
-			dW[i][0] = 2 * J[i][0]
-			dE[i][cols - 1] = 2 * J[i][cols - 1]
-		}
-		for var Int i = 0; i < cols; i++ {
-			dN[0][i] = 2 * J[0][i]
-			dS[cols - 1][i] = 2 * J[cols - 1][i]
-		}
-
-		c = diffuse<<<>>>(dN, dS, dW, dE, J, q0sqr)
-
-		J = update<<<>>>(dN, dS, dW, dE, c)
-
-	}
 	//time = get_time() - time
-	//print("Kernel took: " {time} " us")
 
-	write("res.txt", {J})
+	//print("Kernel duration:" {time} "us")
 
-	return 0
+	write("result.txt", {fv_cpu})
+
+    return 0
 }
 
 }

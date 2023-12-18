@@ -330,7 +330,7 @@ public class Tool {
             if (timeMeasure) {
                 durationReference = System.currentTimeMillis();
             }
-            MappingGenerator mappingGenerator = new MappingGenerator(flatAPT, network, model, (Integer) ToolOptions.options.get(ToolOptions.LOOKAHEAD).getValue(), (Integer) ToolOptions.options.get(ToolOptions.TIMELIMIT).getValue());
+            MappingGenerator mappingGenerator = new MappingGenerator(flatAPT, network, model, (Integer) ToolOptions.options.get(ToolOptions.LOOKAHEAD).getValue(), (Integer) ToolOptions.options.get(ToolOptions.TIMELIMIT).getValue(), (Integer) ToolOptions.options.get(ToolOptions.SEED).getValue());
             Pair<Mapping, Double> mapping = mappingGenerator.generate();
             if (memoryMeasure) {
                 memory.add(Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory() - memoryReference);

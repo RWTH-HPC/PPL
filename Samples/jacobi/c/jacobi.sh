@@ -10,13 +10,10 @@
 
 ### beginning of executable commands
 
-module unload intel
-module load gcc/9
-
 export OMP_NUM_THREADS=48
 
-cd ~/PP/benchmark/c/jacobi
-$CC -fopenmp -std=c99 -O2 -fdump-rtl-loop2 jacobi.c -o jacobi.out -lm
+#cd ~/PP/benchmark/c/jacobi
+icx -fopenmp -std=c99 -O2 -fdump-rtl-loop2 jacobi.c -o jacobi.out -lm
 
 for i in {1..30}
 do

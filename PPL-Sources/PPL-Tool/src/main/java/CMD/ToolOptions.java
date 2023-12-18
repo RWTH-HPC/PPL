@@ -35,6 +35,7 @@ public enum ToolOptions {
     EXPLICITMAPPING,
     UNROLL,
     GPUTHREAD,
+    SEED,
     ;
 
     public static final HashMap<ToolOptions, Option> options;
@@ -67,6 +68,7 @@ public enum ToolOptions {
         options.put(EXPLICITMAPPING, new Option<>(false, "Turn off the global mapping optimization, to use predefined splits within the source code.", false, "-exm", "--explicitMode", false, Boolean.class));
         options.put(UNROLL, new Option<>(false, "Turn off the unrolling of simple for loops before the optimization.", false, "-noro", "--NoUnrolling", false, Boolean.class));
         options.put(GPUTHREAD, new Option<>(0, "Pinns the GPU management thread to this thread.", false, "-gpup", "--gpupinthread", true, Integer.class));
+        options.put(SEED, new Option<>(0, "Sets a seed for gurobi.", false, "-seed", "--randomseed", true, Integer.class));
         Flags = new HashMap<>();
         generateFlags();
     }

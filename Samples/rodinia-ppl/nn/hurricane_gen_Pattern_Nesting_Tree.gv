@@ -1,0 +1,6 @@
+// Abstract Pattern Tree
+digraph {
+	"72gDlmgNIW4DfHXFLLGt" [label=Main]
+	Cb4oI0oCbGhx2rLpQAOx [label=Serial fillcolor=lawngreen style=filled]
+	"72gDlmgNIW4DfHXFLLGt" -> Cb4oI0oCbGhx2rLpQAOx
+}

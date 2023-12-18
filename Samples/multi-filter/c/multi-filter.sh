@@ -9,15 +9,13 @@
 #SBATCH -p=c18m
 
 ### beginning of executable commands
-module unload intel
-module load gcc/9
 
 export OMP_NUM_THREADS=48
 
-cd ~/PP/benchmark/c/multi-filter
-gcc -fopenmp -std=c99 multi-filter.c -o multi-filter.out
+#cd ~/PP/benchmark/c/multi-filter
+icx -fopenmp -std=c99 multi-filter.c -o multi-filter.out
 
-for i in {1..30}
+for i in {1..40}
 do
    OMP_PROC_BIND=spread ./multi-filter.out
 done

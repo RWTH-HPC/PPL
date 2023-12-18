@@ -1,0 +1,3 @@
+AST Size: &117958111\\
+APT Size: &1016603\\
+Reduction Factor: &116.03163771895224\\

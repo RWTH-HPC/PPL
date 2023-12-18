@@ -236,9 +236,12 @@ public class CppPlainNodePrinter implements ExtendedAMTShapeVisitor {
             builder.append(";\n");
 
             int num_gpus = 0;
-            for (Device device: currentNode.getDevices() ) {
-                if (device.getType().equalsIgnoreCase("gpu")) {
-                    num_gpus++;
+            gpuTester tester = new gpuTester(node);
+            if (tester.usesGPUs()) {
+                for (Device device : currentNode.getDevices()) {
+                    if (device.getType().equalsIgnoreCase("gpu")) {
+                        num_gpus++;
+                    }
                 }
             }
             indent();
@@ -2271,8 +2274,10 @@ public class CppPlainNodePrinter implements ExtendedAMTShapeVisitor {
             numIndents = currentIndent;
         } else {
             int core_offset = 0;
+            long remainder = (end - start) % call.getExecutor().getCores();
             if (call.getExecutor().isFirstCG()) {
                 length = (length*call.getExecutor().getCores())/(call.getExecutor().getCores() - 1);
+                remainder = (end - start) % (call.getExecutor().getCores() - 1);
                 core_offset = 1;
             }
             for (int i = core_offset; i < call.getExecutor().getCores(); i++) {
@@ -2283,6 +2288,12 @@ public class CppPlainNodePrinter implements ExtendedAMTShapeVisitor {
                 // length and start are defined as the first and second additional arguments by the language standard.
                 String index = "INDEX_" + call.getCallExpression().getInlineEnding();
 
+                if (i == core_offset && remainder > 0) {
+                    length++;
+                }
+                if (i == core_offset + remainder && remainder != 0) {
+                    length--;
+                }
                 if (i == call.getExecutor().getCores() - 1) {
                     length = end - start;
                 }
@@ -3123,7 +3134,13 @@ public class CppPlainNodePrinter implements ExtendedAMTShapeVisitor {
             long end = start + length;
 
 
+            indent();
+            String partialName = "partialResult_" + call.getCallExpression().getInlineEnding();
 
+            builder.append(CppTypesPrinter.doPrintType(function.getReturnElement().getTypeName()));
+            builder.append("* ");
+            builder.append(partialName);
+            builder.append( ";\n");
 
 
             if (needsMPI) {
@@ -3133,18 +3150,12 @@ public class CppPlainNodePrinter implements ExtendedAMTShapeVisitor {
                 builder.append(") {\n");
                 addIndent();
             }
-            indent();
-            String partialName = "partialResult_" + call.getCallExpression().getInlineEnding();
 
-            builder.append(CppTypesPrinter.doPrintType(function.getReturnElement().getTypeName()));
-            builder.append("* ");
-            builder.append(partialName);
-            builder.append( ";\n");
             indent();
 
             builder.append(partialName);
             builder.append(" = Init_List(");
-            builder.append(((AssignmentExpression) call.getDefinition().getExpression()).getOutputElement().getIdentifier());
+            builder.append(getNeutralElement(function.getCombinerFunction(), call.getOutputElements().get(0).getTypeName()));
             builder.append(", ");
             builder.append(partialName);
             builder.append(", ");
@@ -3645,8 +3656,10 @@ public class CppPlainNodePrinter implements ExtendedAMTShapeVisitor {
         } else {
 
             int core_offset = 0;
+            long remainder = (end - starts.get(0)) % call.getExecutor().getCores();
             if (call.getExecutor().isFirstCG()) {
                 lengths.set(0, (lengths.get(0)*call.getExecutor().getCores())/(call.getExecutor().getCores() - 1));
+                remainder = (end - starts.get(0)) % (call.getExecutor().getCores() - 1);
                 core_offset = 1;
             }
             for (int j = core_offset; j < call.getExecutor().getCores(); j++) {
@@ -3655,9 +3668,17 @@ public class CppPlainNodePrinter implements ExtendedAMTShapeVisitor {
                     createLambdaHeader(lambda, call);
                 }
 
+                if (j == core_offset && remainder > 0) {
+                    lengths.set(0, lengths.get(0) + 1);
+                }
+                if (j == core_offset + remainder && remainder > 0) {
+                    lengths.set(0, lengths.get(0) - 1);
+                }
                 if (j == call.getExecutor().getCores() - 1) {
                     lengths.set(0, end - starts.get(0));
                 }
+
+
                 for (int i = 0; i < dimensions; i++) {
                     String index = "INDEX" + i + "_" + call.getCallExpression().getInlineEnding();
 
@@ -4531,5 +4552,35 @@ public class CppPlainNodePrinter implements ExtendedAMTShapeVisitor {
     private boolean hasListArguments(CallMapping node) {
         FunctionMapping function = AbstractMappingTree.getFunctionTable().get(node.getFunctionIdentifier());
         return function.getArgumentValues().stream().anyMatch(c -> c instanceof ArrayData);
+    }
+
+    private static class gpuTester implements ExtendedAMTShapeVisitor{
+
+        private final MainMapping root;
+        private boolean usage;
+
+        public gpuTester(MainMapping root) {
+            this.root = root;
+            usage = false;
+        }
+
+        public boolean usesGPUs(){
+            root.accept(this.getRealThis());
+            return usage;
+        }
+
+        @Override
+        public void traverse(ParallelCallMapping node) {
+            if (node instanceof GPUParallelCallMapping) {
+                usage = true;
+            } else if (node instanceof ReductionCallMapping) {
+                usage |= ((ReductionCallMapping) node).getOnGPU();
+            }
+        }
+
+        @Override
+        public void visit(ReductionCallMapping node) {
+            usage |= node.getOnGPU();
+        }
     }
 }

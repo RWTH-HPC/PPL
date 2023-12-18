@@ -1,0 +1,13 @@
+{
+    "type": "CPU",
+    "latency": "42.38",
+    "bandwidth": "21330.0",
+    "max-bandwidth": "97300.0",
+    "size": "192000.0",
+    "cache-group": [
+      {
+        "identifier": "1",
+        "template": "socket_platinum_8160_8.json"
+      }
+    ]
+  }

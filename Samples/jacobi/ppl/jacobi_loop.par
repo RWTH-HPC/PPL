@@ -1,0 +1,63 @@
+jacobi_loop {
+
+	reduction combine([Double] row, [Double] x_, Int j) : Double res {
+		var Double temp = 0.0
+		
+		if j != INDEX {
+			temp = row[INDEX] * x_[INDEX]
+		}
+		
+		res -= temp
+	}	
+
+    map iterate([[Double]] A, [Double] b, [Double] x_) : [Double] res {
+		var Double intermediate = 0
+		
+		intermediate = combine<<<>>>(A[INDEX], x_, INDEX)
+		
+		intermediate += b[INDEX]
+
+        res[INDEX] = intermediate / A[INDEX][INDEX]
+    }
+
+    seq main() : Int {
+        var [[Double]] A = init_List([8192, 8192])
+        var [Double] b1 = init_List([8192])
+        var [Double] b2 = init_List([8192])
+        var [Double] b3 = init_List([8192])
+
+        A = read("A.txt")
+        b1 = read("b1.txt")
+        b2 = read("b2.txt")
+        b3 = read("b3.txt")
+
+        var [Double] x0 = init_List([8192])
+        var [Double] x1 = init_List([8192])
+        
+        var [Double] y0 = init_List([8192])
+        var [Double] y1 = init_List([8192])
+        
+        var [Double] z0 = init_List([8192])
+        var [Double] z1 = init_List([8192])
+        
+        //var Double time = get_time()
+        for var Int i = 0; i < 25; i++ {
+        
+        	x1 = iterate<<<>>>(A,b1,x0)
+        	x0 = iterate<<<>>>(A,b1,x1)
+        
+        	y1 = iterate<<<>>>(A,b1,y0)
+        	y0 = iterate<<<>>>(A,b1,y1)
+        	
+        	z1 = iterate<<<>>>(A,b1,z0)
+        	z0 = iterate<<<>>>(A,b1,z1)
+        }
+        
+        //time = get_time() - time
+        
+        //print("Time: " {time})
+
+        return 0
+    }
+
+}

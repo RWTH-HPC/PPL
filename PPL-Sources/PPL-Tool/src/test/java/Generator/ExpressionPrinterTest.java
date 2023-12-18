@@ -36,7 +36,7 @@ public class ExpressionPrinterTest {
 
     @Test
     public void testGeneratorModuleWithDataStructures() {
-        String[] args = new String[]{"-i", MODEL_SOURCE_PATH, "-n", CLUSTER_SPEC_PATH, "-o", "out/module2.cxx", "-d", "120", "-s", "120"};
+        String[] args = new String[]{"-i", MODEL_SOURCE_PATH, "-n", CLUSTER_SPEC_PATH, "-s", "50",  "-d", "50", "-o", "out/module2.cxx"};
         Tool.main(args);
 
         return;

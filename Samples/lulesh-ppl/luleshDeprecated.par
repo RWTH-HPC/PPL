@@ -1,0 +1,217 @@
+luleshDeprecated {
+    
+    // ---------------------------------------------------------------------------------------
+    // following replaces constructor of domain
+    // ---------------------------------------------------------------------------------------
+        //not been used the, see at meshAndDecompose function
+        //var Int32 domain_tp = meshAndDecompose[side]
+
+        // following three not used, see written thesis
+        // var Int32 domain_imbCost = cmdOpts[cost]
+        // var Int32 domain_numRanks = numRanks
+        //var [[Int32]] domain_symmPlaneNodesets = init_List([$edgeNodes, $edgeNodes, 3])
+        
+        // not used due to ppl limitations, see written thesis for details
+        //var [Int32] domain_nodelist = init_List([8 * $domain_numElem])
+
+        // construct a uniform box for this processor
+
+        //var Int32 domain_sizeX = edgeElems
+        //var Int32 domain_sizeY = edgeElems
+        //var Int32 domain_sizeZ = edgeElems
+
+        //not been used, see at meshAndDecompose function
+        //var Int32 domain_colLoc = meshAndDecompose[col] == 0
+        //var Int32 domain_rowLoc = meshAndDecompose[row] == 0
+        //var Int32 domain_planeLoc = meshAndDecompose[plane] == 0
+
+        // Elem-centered 
+        // Done while defining the respective array
+        // AllocateElemPersistent($domain_numElem)
+
+        // Node-centered
+        // Done while defining the respective array
+        // AllocateNodePersistent(numNode())
+
+        // not needed, MPI/OMP specific
+        //SetupCommBuffers(edgeNodes)
+        // following from SetupCommBuffers
+        // assume communication to 6 neighbors by default 
+        //var Int32 domain_rowMin = condExpresssion((domain_rowLoc == 0), 0, 1)
+        //var Int32 domain_rowMax = condExpresssion((domain_rowLoc == domain_tp-1), 0, 1)
+        //var Int32 domain_colMin = condExpresssion((domain_colLoc == 0), 0, 1)
+        //var Int32 domain_colMax = condExpresssion((domain_colLoc == domain_tp-1), 0, 1)
+        //var Int32 domain_planeMin = condExpresssion((domain_planeLoc == 0), 0, 1)
+        //var Int32 domain_planeMax = condExpresssion((domain_planeLoc == domain_tp-1), 0, 1)
+
+
+....
+    
+    // ---------------------------------------------------------------------------------------
+    // following replaces lulesh_init_SetupSymmetryPlanes(edgeNodes)
+    // ---------------------------------------------------------------------------------------
+    /*{
+        for var Int32 planeIdx = 0; planeIdx < edgeNodes; planeIdx++ {
+            var Int32 planeInc = planeIdx * edgeNodes * edgeNodes
+            var Int32 rowInc   = planeIdx * edgeNodes
+            for var Int32 rowIdx = 0; rowIdx < edgeNodes; rowIdx++ {
+                if (domain_planeLoc == 0) {
+                    domain_symmPlaneNodesets[planeIdx][rowIdx][m_symmZ] = rowInc + rowIdx
+                }
+                if (domain_rowLoc == 0) {
+                    domain_symmPlaneNodesets[planeIdx][rowIdx][m_symmY] = planeInc + rowIdx
+                }
+                if (domain_colLoc == 0) {
+                    domain_symmPlaneNodesets[planeIdx][rowIdx][m_symmX] = planeInc + rowIdx * edgeNodes
+                }
+            }
+        }
+    }*/
+    // ---------------------------------------------------------------------------------------
+    // preceding replaces lulesh_init_SetupSymmetryPlanes(Int_t edgeNodes)
+    // ---------------------------------------------------------------------------------------
+
+    // ---------------------------------------------------------------------------------------
+    // following replaces lulesh_init_SetupElementConnectivities(edgeElems)
+    // ---------------------------------------------------------------------------------------
+    //var [[Double]] domain_elemConnectivity = init_List([$domain_numElem, 6])
+    /*{
+            domain_elemConnectivity[m_lxim][0] = 0
+            for var Int32 i = 1; i < $domain_numElem; i++ {
+                domain_elemConnectivity[m_lxim][i] = i - 1
+                domain_elemConnectivity[m_lxip][i-1] = i
+        }
+        domain_elemConnectivity[m_lxip][$domain_numElem-1] = $domain_numElem - 1
+
+        for var Int32 i = 0; i < edgeElems; i++ {
+            domain_elemConnectivity[m_letam][i] = i 
+            domain_elemConnectivity[m_letap][$domain_numElem-$edgeElems+i] = $domain_numElem - $edgeElems + i
+        }
+
+        for var Int32 i = edgeElems; i < $domain_numElem; i++ {
+            domain_elemConnectivity[m_letam][i] = i - $edgeElems
+            domain_elemConnectivity[m_letap][i-$edgeElems] = i
+        }
+
+        for var Int32 i = 0; i < edgeElems * $edgeElems; i++ {
+            domain_elemConnectivity[m_lzetam][i] = i
+            domain_elemConnectivity[m_lzetap][$domain_numElem-$edgeElems*$edgeElems+i] = $domain_numElem - $edgeElems * $edgeElems + i
+        }
+
+        for var Int32 i = edgeElems * edgeElems; i < domain_numElem; i++ {
+            domain_elemConnectivity[m_lzetam][i] = i - $edgeElems * $edgeElems
+            domain_elemConnectivity[m_lzetap][i-$edgeElems*$edgeElems] = i
+        }
+    }*/
+    // ---------------------------------------------------------------------------------------
+    // preceding replaces lulesh_init_SetupElementConnectivities(edgeElems)
+    // ---------------------------------------------------------------------------------------
+
+    ...
+    // ---------------------------------------------------------------------------------------
+    // following replaces lulesh_init_SetupBoundaryConditions(edgeElems)
+    // ---------------------------------------------------------------------------------------
+    
+    // set up boundary condition information
+    /*
+    var [Int32] domain_elemBC = init_List([$edgeElems, $edgeElems, $edgeElems], 0)
+    {
+        var [Int32] ghostIdx = init_List([6]) // offsets to ghost locations
+
+        for var Int32 i = 0; i < 6; i++ {
+            ghostIdx[i] = INT_MIN
+        }
+
+
+        var Int32 pidx = $domain_numElem
+        if (domain_planeMin != 0) {
+            ghostIdx[0] = pidx
+            pidx += domain_sizeX * domain_sizeY
+        }
+
+        if (domain_planeMax != 0) {
+            ghostIdx[1] = pidx
+            pidx += domain_sizeX * domain_sizeY
+        }
+
+        if (domain_rowMin != 0) {
+            ghostIdx[2] = pidx
+            pidx += domain_sizeX * domain_sizeZ
+        }
+
+        if (domain_rowMax != 0) {
+            ghostIdx[3] = pidx 
+            pidx += domain_sizeX * domain_sizeZ
+        }
+
+        if (domain_colMin != 0) {
+            ghostIdx[4] = pidx
+            pidx += domain_sizeY * domain_sizeZ
+        }
+
+        if (domain_colMax != 0) {
+            ghostIdx[5] = pidx
+        }
+
+
+        // symmetry plane or free surface BCs 
+        for var Int32 i = 0; i < edgeElems; i++ {
+            var Int32 planeInc = i * edgeElems * edgeElems
+            var Int32 rowInc   = i * edgeElems
+            for var Int32 j = 0; j < edgeElems; j++ {
+                if (domain_planeLoc == 0) {
+                    domain_elemBC[rowInc+j] |= ZETA_M_SYMM
+                }          
+                else {
+                    domain_elemBC[rowInc+j] |= ZETA_M_COMM 
+                    domain_elemConnectivity[m_lzetam][rowInc+j] = ghostIdx[0] + rowInc + j
+                }
+
+                if (domain_planeLoc == domain_tp-1) {
+                    domain_elemBC[rowInc+j+$domain_numElem-$edgeElems*$edgeElems] |= ZETA_P_FREE
+                }
+                else {
+                    domain_elemBC[rowInc+j+$domain_numElem-$edgeElems*$edgeElems] |= ZETA_P_COMM
+                    domain_elemConnectivity[m_lzetap][rowInc+j+$domain_numElem-$edgeElems*$edgeElems] = ghostIdx[1] + rowInc + j
+                }
+
+                if (domain_rowLoc == 0) {
+                    domain_elemBC[planeInc+j] |= ETA_M_SYMM
+                }
+                else {
+                    domain_elemBC[planeInc+j] |= ETA_M_COMM
+                    domain_elemConnectivity[m_letam][planeInc+j] = ghostIdx[2] + rowInc + j
+                }
+
+                if (domain_rowLoc == domain_tp-1) {
+                    domain_elemBC[planeInc+j+$edgeElems*$edgeElems-$edgeElems] |= ETA_P_FREE
+                    }
+                else {
+                    domain_elemBC[planeInc+j+$edgeElems*$edgeElems-$edgeElems] |= ETA_P_COMM
+                    domain_elemConnectivity[m_letap][planeInc+j+$edgeElems*$edgeElems-$edgeElems] = ghostIdx[3] + rowInc + j
+                }
+
+                if (domain_colLoc == 0) {
+                    domain_elemBC[planeInc+j*$edgeElems] |= XI_M_SYMM
+                }
+                else {
+                    domain_elemBC[planeInc+j*$edgeElems] |= XI_M_COMM
+                    domain_elemConnectivity[m_lxim][planeInc+j*$edgeElems] = ghostIdx[4] + rowInc + j
+                }
+
+                if (domain_colLoc == domain_tp-1) {
+                    domain_elemBC[planeInc+j*$edgeElems+$edgeElems-1] |= XI_P_FREE
+                }
+                else {
+                    domain_elemBC[planeInc+j*$edgeElems+$edgeElems-1] |= XI_P_COMM
+                    domain_elemConnectivity[m_lxip][planeInc+j*$edgeElems+$edgeElems-1] = ghostIdx[5] + rowInc + j
+                }
+            }
+        }
+    }
+    */
+    // ---------------------------------------------------------------------------------------
+    // preceding replaces lulesh_init_SetupBoundaryConditions(edgeElems)
+    // ---------------------------------------------------------------------------------------
+
+}

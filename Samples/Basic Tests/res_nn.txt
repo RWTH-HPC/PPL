@@ -1,0 +1,200 @@
+Unable to open file
+Array size mismatch
+Expected:16777216
+Provided:0
+Time: 192999
+Unable to open file
+Array size mismatch
+Expected:16777216
+Provided:0
+Time: 173034
+Unable to open file
+Array size mismatch
+Expected:16777216
+Provided:0
+Time: 151960
+Unable to open file
+Array size mismatch
+Expected:16777216
+Provided:0
+Time: 147933
+Unable to open file
+Array size mismatch
+Expected:16777216
+Provided:0
+Time: 155939
+Unable to open file
+Array size mismatch
+Expected:16777216
+Provided:0
+Time: 150067
+Unable to open file
+Array size mismatch
+Expected:16777216
+Provided:0
+Time: 145960
+Unable to open file
+Array size mismatch
+Expected:16777216
+Provided:0
+Time: 189941
+Unable to open file
+Array size mismatch
+Expected:16777216
+Provided:0
+Time: 143259
+Unable to open file
+Array size mismatch
+Expected:16777216
+Provided:0
+Time: 199487
+Unable to open file
+Array size mismatch
+Expected:16777216
+Provided:0
+Time: 142971
+Unable to open file
+Array size mismatch
+Expected:16777216
+Provided:0
+Time: 157941
+Unable to open file
+Array size mismatch
+Expected:16777216
+Provided:0
+Time: 200925
+Unable to open file
+Array size mismatch
+Expected:16777216
+Provided:0
+Time: 191946
+Unable to open file
+Array size mismatch
+Expected:16777216
+Provided:0
+Time: 133989
+Unable to open file
+Array size mismatch
+Expected:16777216
+Provided:0
+Time: 132987
+Unable to open file
+Array size mismatch
+Expected:16777216
+Provided:0
+Time: 136536
+Unable to open file
+Array size mismatch
+Expected:16777216
+Provided:0
+Time: 352103
+Unable to open file
+Array size mismatch
+Expected:16777216
+Provided:0
+Time: 136926
+Unable to open file
+Array size mismatch
+Expected:16777216
+Provided:0
+Time: 191994
+Unable to open file
+Array size mismatch
+Expected:16777216
+Provided:0
+Time: 159931
+Unable to open file
+Array size mismatch
+Expected:16777216
+Provided:0
+Time: 177933
+Unable to open file
+Array size mismatch
+Expected:16777216
+Provided:0
+Time: 141770
+Unable to open file
+Array size mismatch
+Expected:16777216
+Provided:0
+Time: 145918
+Unable to open file
+Array size mismatch
+Expected:16777216
+Provided:0
+Time: 157943
+Unable to open file
+Array size mismatch
+Expected:16777216
+Provided:0
+Time: 161028
+Unable to open file
+Array size mismatch
+Expected:16777216
+Provided:0
+Time: 164949
+Unable to open file
+Array size mismatch
+Expected:16777216
+Provided:0
+Time: 144935
+Unable to open file
+Array size mismatch
+Expected:16777216
+Provided:0
+Time: 205931
+Unable to open file
+Array size mismatch
+Expected:16777216
+Provided:0
+Time: 130942
+Unable to open file
+Array size mismatch
+Expected:16777216
+Provided:0
+Time: 145015
+Unable to open file
+Array size mismatch
+Expected:16777216
+Provided:0
+Time: 143289
+Unable to open file
+Array size mismatch
+Expected:16777216
+Provided:0
+Time: 143927
+Unable to open file
+Array size mismatch
+Expected:16777216
+Provided:0
+Time: 149940
+Unable to open file
+Array size mismatch
+Expected:16777216
+Provided:0
+Time: 147062
+Unable to open file
+Array size mismatch
+Expected:16777216
+Provided:0
+Time: 141048
+Unable to open file
+Array size mismatch
+Expected:16777216
+Provided:0
+Time: 166345
+Unable to open file
+Array size mismatch
+Expected:16777216
+Provided:0
+Time: 178915
+Unable to open file
+Array size mismatch
+Expected:16777216
+Provided:0
+Time: 200936
+Unable to open file
+Array size mismatch
+Expected:16777216
+Provided:0
+Time: 148926

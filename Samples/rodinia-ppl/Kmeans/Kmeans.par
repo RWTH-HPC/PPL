@@ -8,16 +8,16 @@ var Int NITERS = 37
 var Int Dim = 35
 
 map determine_cemtroids([[Float]] points, [[Float]] centroids) : [Int] assignment {
-	assignment[INDEX] = assign_centroid(points[INDEX], centroids[INDEX])
+	assignment[INDEX] = assign_centroid(points[INDEX], centroids)
 } 
 
-seq assign_centroid([Float] point, [Float] centroid) : Int{
+seq assign_centroid([Float] point, [[Float]] centroid) : Int{
 	var Float opt_dist = MAX_FLOAT
 	var Int result = 0
 	for var Int i = 0; i < K; i++ {
         var Float dist = 0
         for var Int j = 0; j < Dim; j++{
-            dist += (point[j] - centroid[j]) * (point[j] - centroid[j])
+            dist += (point[j] - centroid[i][j]) * (point[j] - centroid[i][j])
         }
 		if dist < opt_dist {
 			opt_dist = dist

@@ -1,0 +1,34 @@
+// Abstract Pattern Tree
+digraph {
+	vvvOS0VvTh0BdxUkKDCA [label=Main]
+	"95p7RT5KgB1fzpT1K87K" [label=Serial fillcolor=lawngreen style=filled]
+	kMG1o96bT6SYKJOihSC2 [label="Map: initialize_vars" fillcolor=orangered style=filled]
+	JzZXUHzVbmUYzM9djru7 [label=Serial fillcolor=lawngreen style=filled]
+	aqv2KUAgnDX4NH1pCpRM [label=Serial fillcolor=lawngreen style=filled]
+	liX6WIfxa7pyY2G2vmSh [label="For Loop" fillcolor=cyan style=filled]
+	KRHWCrJs3Ku2nVFRXBn0 [label="Map: copy" fillcolor=orangered style=filled]
+	"9Hh8jxYGuMCesdAvqXrP" [label=Serial fillcolor=lawngreen style=filled]
+	vLOxvekYYpHZBHUJsKOr [label="Map: compute_step_factor" fillcolor=orangered style=filled]
+	lpRbPXR7PiBeXB9Kr5FX [label=Serial fillcolor=lawngreen style=filled]
+	XPJ5o92vQUV0qhm4mBYG [label="For Loop" fillcolor=cyan style=filled]
+	c3rJ5IEsSnrVM22lH99x [label="Map: compute_flux" fillcolor=orangered style=filled]
+	g9gYvdvJ12pYB8UgIy3E [label=Serial fillcolor=lawngreen style=filled]
+	nnEMnWiEIWqllb0WIzkc [label="Map: time_step" fillcolor=orangered style=filled]
+	JQP9HQOvbm3xtksBAAvp [label=Serial fillcolor=lawngreen style=filled]
+	VZb1dkTBMLSf4GqE8dgW [label=Serial fillcolor=lawngreen style=filled]
+	vvvOS0VvTh0BdxUkKDCA -> "95p7RT5KgB1fzpT1K87K"
+	vvvOS0VvTh0BdxUkKDCA -> kMG1o96bT6SYKJOihSC2
+	kMG1o96bT6SYKJOihSC2 -> JzZXUHzVbmUYzM9djru7
+	vvvOS0VvTh0BdxUkKDCA -> aqv2KUAgnDX4NH1pCpRM
+	vvvOS0VvTh0BdxUkKDCA -> liX6WIfxa7pyY2G2vmSh
+	liX6WIfxa7pyY2G2vmSh -> KRHWCrJs3Ku2nVFRXBn0
+	KRHWCrJs3Ku2nVFRXBn0 -> "9Hh8jxYGuMCesdAvqXrP"
+	liX6WIfxa7pyY2G2vmSh -> vLOxvekYYpHZBHUJsKOr
+	vLOxvekYYpHZBHUJsKOr -> lpRbPXR7PiBeXB9Kr5FX
+	liX6WIfxa7pyY2G2vmSh -> XPJ5o92vQUV0qhm4mBYG
+	XPJ5o92vQUV0qhm4mBYG -> c3rJ5IEsSnrVM22lH99x
+	c3rJ5IEsSnrVM22lH99x -> g9gYvdvJ12pYB8UgIy3E
+	XPJ5o92vQUV0qhm4mBYG -> nnEMnWiEIWqllb0WIzkc
+	nnEMnWiEIWqllb0WIzkc -> JQP9HQOvbm3xtksBAAvp
+	vvvOS0VvTh0BdxUkKDCA -> VZb1dkTBMLSf4GqE8dgW
+}

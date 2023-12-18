@@ -1,0 +1,15 @@
+{
+    "type": "numa",
+    "connectivity-bandwidth": [
+      [ "0"]
+    ],
+    "connectivity-latency": [
+      [ "0"]
+    ],
+    "devices": [
+      {
+        "identifier": "CPU1",
+        "template": "CPU/cpu_platinum_8160_48.json"
+      }
+    ]
+  }

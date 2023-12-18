@@ -10,15 +10,12 @@
 
 ### beginning of executable commands
 
-module unload intel
-module load gcc/9
-
 export OMP_NUM_THREADS=48
 
-cd ~/PP/benchmark/c/classification
-$CC -fopenmp -std=c99 -O2 classification.c -o classification.out
+#cd ~/PP/benchmark/c/classification
+icx -fopenmp -std=c99 -O2 classification.c -o classification.out
 
-for i in {1..30}
+for i in {1..40}
 do
    ./classification.out
 done

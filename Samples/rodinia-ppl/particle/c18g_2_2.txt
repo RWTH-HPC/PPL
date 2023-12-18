@@ -1,0 +1,1200 @@
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+ XE: 2698.81
+ YE: 2580.35
+3010.02
+ XE: 555.905
+ YE: 549.984
+58.0558
+ XE: 504.964
+ YE: 501.986
+12.2387
+ XE: 447.726
+ YE: 28.0494
+488.2
+ XE: 455.576
+ YE: 452.999
+81.6386
+ XE: 462.842
+ YE: 460.281
+71.3534
+ XE: 488.401
+ YE: 485.76
+35.2909
+ XE: 443.708
+ YE: 441.366
+98.2494
+ XE: 517.767
+ YE: 515.103
+6.54909
+Time: 12005583
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+ XE: 551.118
+ YE: 526.928
+41.8691
+ XE: 555.905
+ YE: 549.984
+58.0558
+ XE: 504.964
+ YE: 501.986
+12.2387
+ XE: 447.726
+ YE: 445.139
+92.7447
+ XE: 455.576
+ YE: 452.999
+81.6386
+ XE: 462.842
+ YE: 460.281
+71.3534
+ XE: 488.401
+ YE: 485.76
+35.2909
+ XE: 1345.85
+ YE: 1338.75
+1174.23
+ XE: 517.767
+ YE: 515.103
+6.54909
+Time: 12068816
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+ XE: 0.844717
+ YE: 0.055857
+723.441
+ XE: 555.905
+ YE: 549.984
+58.0558
+ XE: 504.964
+ YE: 501.986
+12.2387
+ XE: 447.726
+ YE: 445.139
+92.7447
+ XE: 455.576
+ YE: 452.999
+81.6386
+ XE: 462.842
+ YE: 460.281
+71.3534
+ XE: 489.102
+ YE: 486.457
+34.3041
+ XE: 443.708
+ YE: 441.366
+98.2494
+ XE: 517.767
+ YE: 515.103
+6.54909
+Time: 12028692
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+ XE: 551.118
+ YE: 526.928
+41.8691
+ XE: 555.905
+ YE: 549.984
+58.0558
+ XE: 605.871
+ YE: 602.297
+130.251
+ XE: 447.726
+ YE: 445.139
+92.7447
+ XE: 455.576
+ YE: 452.999
+81.6386
+ XE: 462.842
+ YE: 460.281
+71.3534
+ XE: 44.8305
+ YE: 2.30901
+691.399
+ XE: 1.13936e+08
+ YE: 1.13334e+08
+1.60704e+08
+ XE: 517.767
+ YE: 515.103
+6.54909
+Time: 12467151
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+ XE: 573.503
+ YE: 548.331
+71.4327
+ XE: 8414.52
+ YE: 8324.9
+11112.7
+ XE: 504.964
+ YE: 501.986
+12.2387
+ XE: 644.017
+ YE: 640.296
+184.087
+ XE: 368.101
+ YE: 452.999
+155.525
+ XE: 462.842
+ YE: 460.281
+71.3534
+ XE: 488.401
+ YE: 485.76
+35.2909
+ XE: 443.708
+ YE: 441.366
+98.2494
+ XE: 517.767
+ YE: 515.103
+6.54909
+Time: 11919199
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+ XE: 551.118
+ YE: 526.928
+41.8691
+ XE: 555.905
+ YE: 549.984
+58.0558
+ XE: 504.964
+ YE: 501.986
+12.2387
+ XE: 447.726
+ YE: 445.139
+92.7447
+ XE: 455.576
+ YE: 452.999
+81.6386
+ XE: 462.842
+ YE: 460.281
+71.3534
+ XE: 488.401
+ YE: 485.76
+35.2909
+ XE: 443.708
+ YE: 441.366
+98.2494
+ XE: 517.767
+ YE: 515.103
+6.54909
+Time: 11469696
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+ XE: 551.118
+ YE: 526.928
+41.8691
+ XE: 555.905
+ YE: 549.984
+58.0558
+ XE: 504.964
+ YE: 501.986
+12.2387
+ XE: 1669.32
+ YE: 1659.68
+1629.9
+ XE: 455.576
+ YE: 452.999
+81.6386
+ XE: 462.842
+ YE: 460.281
+71.3534
+ XE: 488.401
+ YE: 485.76
+35.2909
+ XE: 443.708
+ YE: 441.366
+98.2494
+ XE: 517.767
+ YE: 515.103
+6.54909
+Time: 11997754
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+ XE: 551.143
+ YE: 526.952
+41.9019
+ XE: 556.235
+ YE: 550.311
+58.5187
+ XE: 505.866
+ YE: 502.883
+10.9885
+ XE: 643.839
+ YE: 640.12
+183.838
+ XE: 457.017
+ YE: 454.432
+79.6063
+ XE: 462.842
+ YE: 460.281
+71.3534
+ XE: 594.88
+ YE: 591.664
+114.959
+ XE: 443.708
+ YE: 441.366
+98.2494
+ XE: 517.767
+ YE: 515.103
+6.54909
+Time: 11482019
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+ XE: 595.844
+ YE: 569.691
+101.775
+ XE: 649.13
+ YE: 642.216
+189.105
+ XE: 605.87
+ YE: 602.296
+130.25
+ XE: 1807.42
+ YE: 1796.98
+1824.63
+ XE: 455.576
+ YE: 452.999
+81.6386
+ XE: 462.842
+ YE: 460.281
+71.3534
+ XE: 488.401
+ YE: 485.76
+35.2909
+ XE: 443.708
+ YE: 441.366
+98.2494
+ XE: 517.767
+ YE: 515.103
+6.54909
+Time: 11503394
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+ XE: 578.931
+ YE: 553.52
+78.7632
+ XE: 2271.65
+ YE: 2247.45
+2471.47
+ XE: 506.692
+ YE: 503.703
+9.84994
+ XE: 447.726
+ YE: 445.139
+92.7447
+ XE: 455.576
+ YE: 452.999
+81.6386
+ XE: 462.842
+ YE: 460.281
+71.3534
+ XE: 489.453
+ YE: 486.807
+33.8096
+ XE: 443.708
+ YE: 441.366
+98.2494
+ XE: 517.767
+ YE: 515.103
+6.54909
+Time: 11576697
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+ XE: 0.0103297
+ YE: 0.229048
+723.908
+ XE: 555.905
+ YE: 549.984
+58.0558
+ XE: 504.964
+ YE: 501.986
+12.2387
+ XE: 447.726
+ YE: 445.139
+92.7447
+ XE: 455.576
+ YE: 452.999
+81.6386
+ XE: 462.842
+ YE: 460.281
+71.3534
+ XE: 488.401
+ YE: 485.76
+35.2909
+ XE: 1685.37
+ YE: 1676.48
+1653.12
+ XE: 517.767
+ YE: 515.103
+6.54909
+Time: 11400635
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+ XE: 551.118
+ YE: 526.928
+41.8691
+ XE: 555.905
+ YE: 549.984
+58.0558
+ XE: 504.964
+ YE: 501.986
+12.2387
+ XE: 447.954
+ YE: 445.366
+92.4229
+ XE: 455.576
+ YE: 452.999
+81.6386
+ XE: 519.635
+ YE: 516.76
+8.99666
+ XE: 488.401
+ YE: 485.76
+35.2909
+ XE: 443.708
+ YE: 441.366
+98.2494
+ XE: 517.767
+ YE: 515.103
+6.54909
+Time: 11472748
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+ XE: 551.118
+ YE: 526.928
+41.8691
+ XE: 555.905
+ YE: 549.984
+58.0558
+ XE: 504.964
+ YE: 501.986
+12.2387
+ XE: 447.726
+ YE: 445.139
+92.7447
+ XE: 455.576
+ YE: 452.999
+81.6386
+ XE: 462.842
+ YE: 460.281
+71.3534
+ XE: 488.401
+ YE: 485.76
+35.2909
+ XE: 1883.82
+ YE: 1873.88
+1933.03
+ XE: 517.767
+ YE: 515.103
+6.54909
+Time: 12495256
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+ XE: 551.118
+ YE: 526.928
+41.8691
+ XE: 559.555
+ YE: 553.595
+63.1789
+ XE: 504.964
+ YE: 501.986
+12.2387
+ XE: 929.344
+ YE: 48.8981
+623.41
+ XE: 15.5304
+ YE: 11.0965
+705.256
+ XE: 462.842
+ YE: 460.281
+71.3534
+ XE: 6.07004e+06
+ YE: 6.03723e+06
+8.56044e+06
+ XE: 443.708
+ YE: 441.366
+98.2494
+ XE: 517.767
+ YE: 515.103
+6.54909
+Time: 11664820
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+ XE: 551.118
+ YE: 526.928
+41.8691
+ XE: 555.905
+ YE: 549.984
+58.0558
+ XE: 504.964
+ YE: 501.986
+12.2387
+ XE: 447.726
+ YE: 445.139
+92.7447
+ XE: 455.576
+ YE: 452.999
+81.6386
+ XE: 464.07
+ YE: 461.502
+69.6232
+ XE: 450.207
+ YE: 0.0104607
+515.705
+ XE: 443.708
+ YE: 441.366
+98.2494
+ XE: 517.767
+ YE: 515.103
+6.54909
+Time: 13380764
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+ XE: 551.118
+ YE: 526.928
+41.8691
+ XE: 555.906
+ YE: 549.985
+58.0567
+ XE: 504.964
+ YE: 501.986
+12.2387
+ XE: 447.739
+ YE: 445.152
+92.7261
+ XE: 1099.74
+ YE: 1093.52
+826.805
+ XE: 462.842
+ YE: 460.281
+71.3534
+ XE: 488.401
+ YE: 485.76
+35.2909
+ XE: 443.71
+ YE: 441.369
+98.2459
+ XE: 517.767
+ YE: 515.103
+6.54909
+Time: 11378856
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+ XE: 444.281
+ YE: 533.333
+71.0002
+ XE: 555.905
+ YE: 549.984
+58.0558
+ XE: 504.964
+ YE: 501.986
+12.2387
+ XE: 447.727
+ YE: 445.14
+92.7431
+ XE: 455.576
+ YE: 452.999
+81.6386
+ XE: 462.842
+ YE: 460.281
+71.3534
+ XE: 488.401
+ YE: 485.76
+35.2909
+ XE: 507.418
+ YE: 504.74
+8.58543
+ XE: 531.951
+ YE: 529.214
+26.351
+Time: 11923455
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+ XE: 20257
+ YE: 19367.9
+27302.2
+ XE: 2272
+ YE: 2247.8
+2471.97
+ XE: 504.964
+ YE: 501.986
+12.2387
+ XE: 659.366
+ YE: 655.556
+205.731
+ XE: 455.576
+ YE: 452.999
+81.6386
+ XE: 462.842
+ YE: 460.281
+71.3534
+ XE: 1178.98
+ YE: 1172.61
+938.756
+ XE: 443.708
+ YE: 441.366
+98.2494
+ XE: 517.767
+ YE: 515.103
+6.54909
+Time: 12680991
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+ XE: 551.118
+ YE: 126.837
+387.145
+ XE: 555.905
+ YE: 549.984
+58.0558
+ XE: 504.964
+ YE: 501.986
+12.2387
+ XE: 447.726
+ YE: 445.139
+92.7447
+ XE: 455.576
+ YE: 452.999
+81.6386
+ XE: 462.842
+ YE: 460.281
+71.3534
+ XE: 488.401
+ YE: 485.76
+35.2909
+ XE: 6.9815
+ YE: 2.89951
+717.096
+ XE: 517.767
+ YE: 515.103
+6.54909
+Time: 11785698
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+ XE: 551.118
+ YE: 526.928
+41.8691
+ XE: 555.906
+ YE: 549.985
+58.0564
+ XE: 504.964
+ YE: 501.986
+12.2387
+ XE: 1807.42
+ YE: 1796.98
+1824.63
+ XE: 455.576
+ YE: 452.999
+81.6386
+ XE: 567.214
+ YE: 564.076
+75.8982
+ XE: 0.00607926
+ YE: 0.0670886
+724.026
+ XE: 1791.2
+ YE: 1781.75
+1802.39
+ XE: 517.767
+ YE: 515.103
+6.54909
+Time: 11422493
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+ XE: 551.143
+ YE: 526.952
+41.9019
+ XE: 555.905
+ YE: 549.984
+58.0558
+ XE: 504.964
+ YE: 501.986
+12.2387
+ XE: 447.726
+ YE: 445.139
+92.7447
+ XE: 455.576
+ YE: 452.999
+81.6386
+ XE: 467.322
+ YE: 464.737
+65.0379
+ XE: 702.563
+ YE: 698.765
+266.825
+ XE: 1697.58
+ YE: 1688.62
+1670.34
+ XE: 517.767
+ YE: 515.103
+6.54909
+Time: 12490035
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+ XE: 1.08035e+08
+ YE: 1.03293e+08
+1.49469e+08
+ XE: 2272.43
+ YE: 2248.23
+2472.58
+ XE: 504.964
+ YE: 501.986
+12.2387
+ XE: 1.88804
+ YE: 445.139
+514.475
+ XE: 101.715
+ YE: 862.762
+539.785
+ XE: 462.842
+ YE: 460.281
+71.3534
+ XE: 488.523
+ YE: 485.882
+35.1189
+ XE: 1976.45
+ YE: 1966.02
+2063.68
+ XE: 517.767
+ YE: 515.103
+6.54909
+Time: 11679343
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+ XE: 552.468
+ YE: 528.219
+43.5966
+ XE: 555.905
+ YE: 549.984
+58.0558
+ XE: 504.964
+ YE: 501.986
+12.2387
+ XE: 1807.42
+ YE: 1796.98
+1824.63
+ XE: 455.576
+ YE: 452.999
+81.6386
+ XE: 462.842
+ YE: 460.281
+71.3534
+ XE: 490.4
+ YE: 487.748
+32.4763
+ XE: 532.376
+ YE: 529.566
+26.9023
+ XE: 517.767
+ YE: 515.103
+6.54909
+Time: 11993400
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+ XE: 11513
+ YE: 11007.7
+15204.7
+ XE: 555.905
+ YE: 549.984
+58.0558
+ XE: 504.964
+ YE: 501.986
+12.2387
+ XE: 447.726
+ YE: 445.139
+92.7447
+ XE: 455.576
+ YE: 452.999
+81.6386
+ XE: 462.842
+ YE: 460.281
+71.3534
+ XE: 488.401
+ YE: 485.76
+35.2909
+ XE: 122.192
+ YE: 1781.75
+1328.23
+ XE: 517.768
+ YE: 515.103
+6.54966
+Time: 12588977
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+ XE: 551.118
+ YE: 526.928
+41.8691
+ XE: 555.906
+ YE: 549.985
+58.0564
+ XE: 504.964
+ YE: 501.986
+12.2387
+ XE: 794.794
+ YE: 790.202
+396.697
+ XE: 463.107
+ YE: 460.488
+71.0208
+ XE: 462.842
+ YE: 460.281
+71.3534
+ XE: 876.252
+ YE: 871.515
+511.792
+ XE: 443.708
+ YE: 441.366
+98.2494
+ XE: 517.768
+ YE: 515.103
+6.54966
+Time: 11449635
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+ XE: 551.118
+ YE: 526.928
+41.8691
+ XE: 1360.82
+ YE: 1346.32
+1190.2
+ XE: 504.964
+ YE: 501.986
+12.2387
+ XE: 447.726
+ YE: 445.139
+92.7447
+ XE: 455.576
+ YE: 452.999
+81.6386
+ XE: 462.842
+ YE: 460.281
+71.3534
+ XE: 488.401
+ YE: 485.76
+35.2909
+ XE: 1791.2
+ YE: 1781.75
+1802.39
+ XE: 517.767
+ YE: 515.103
+6.54909
+Time: 12399170
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+ XE: 551.118
+ YE: 526.928
+41.8691
+ XE: 555.905
+ YE: 549.984
+58.0558
+ XE: 905.554
+ YE: 900.213
+552.806
+ XE: 447.726
+ YE: 445.139
+92.7447
+ XE: 455.576
+ YE: 452.999
+81.6386
+ XE: 462.842
+ YE: 460.281
+71.3534
+ XE: 488.401
+ YE: 485.76
+35.2909
+ XE: 443.708
+ YE: 441.366
+98.2494
+ XE: 517.767
+ YE: 515.103
+6.54909
+Time: 11767376
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+ XE: 698.816
+ YE: 668.143
+243.477
+ XE: 556.565
+ YE: 550.637
+58.9821
+ XE: 506.772
+ YE: 503.783
+9.73959
+ XE: 1465.8
+ YE: 1457.33
+1342.9
+ XE: 655.128
+ YE: 651.422
+199.81
+ XE: 830.776
+ YE: 826.179
+447.578
+ XE: 488.401
+ YE: 485.76
+35.2909
+ XE: 443.708
+ YE: 441.366
+98.2494
+ XE: 531.951
+ YE: 529.214
+26.351
+Time: 12064091
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+ XE: 25435.2
+ YE: 24318.8
+34466.3
+ XE: 555.905
+ YE: 549.984
+58.0558
+ XE: 504.964
+ YE: 501.986
+12.2387
+ XE: 447.726
+ YE: 445.139
+92.7447
+ XE: 455.576
+ YE: 452.999
+81.6386
+ XE: 462.842
+ YE: 460.281
+71.3534
+ XE: 488.401
+ YE: 485.76
+35.2909
+ XE: 443.708
+ YE: 441.366
+98.2494
+ XE: 517.767
+ YE: 515.103
+6.54909
+Time: 11377070
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+ XE: 551.118
+ YE: 526.928
+41.8691
+ XE: 2494.88
+ YE: 2468.31
+2785.49
+ XE: 46.6629
+ YE: 501.986
+465.445
+ XE: 447.726
+ YE: 445.139
+92.7447
+ XE: 455.576
+ YE: 452.999
+81.6386
+ XE: 462.842
+ YE: 460.281
+71.3534
+ XE: 1179
+ YE: 1172.63
+938.784
+ XE: 443.708
+ YE: 441.366
+98.2494
+ XE: 517.767
+ YE: 515.103
+6.54909
+Time: 11668629
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+ XE: 856.639
+ YE: 819.04
+461.573
+ XE: 555.905
+ YE: 549.984
+58.0558
+ XE: 504.964
+ YE: 501.986
+12.2387
+ XE: 447.726
+ YE: 445.139
+92.7447
+ XE: 499.973
+ YE: 497.146
+19.1126
+ XE: 462.96
+ YE: 460.399
+71.1871
+ XE: 488.401
+ YE: 485.76
+35.2909
+ XE: 443.708
+ YE: 441.348
+98.2624
+ XE: 517.767
+ YE: 515.103
+6.54909
+Time: 12130169
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+ XE: 588.206
+ YE: 562.389
+91.3589
+ XE: 2271.65
+ YE: 2247.45
+2471.47
+ XE: 504.964
+ YE: 13.3112
+498.738
+ XE: 447.726
+ YE: 445.139
+92.7447
+ XE: 455.576
+ YE: 452.999
+81.6386
+ XE: 462.842
+ YE: 460.281
+71.3534
+ XE: 3863.8
+ YE: 3842.91
+4725.41
+ XE: 1574.16
+ YE: 1565.85
+1496.26
+ XE: 517.767
+ YE: 515.103
+6.54909
+Time: 11628258
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+ XE: 68.8757
+ YE: 54.6295
+636.826
+ XE: 555.933
+ YE: 550.012
+58.0946
+ XE: 504.964
+ YE: 501.986
+12.2387
+ XE: 447.726
+ YE: 445.139
+92.7447
+ XE: 455.576
+ YE: 452.999
+81.6386
+ XE: 462.842
+ YE: 460.281
+71.3534
+ XE: 488.401
+ YE: 485.76
+35.2909
+ XE: 1071.09
+ YE: 1065.44
+786.69
+ XE: 517.778
+ YE: 515.113
+6.56287
+Time: 11467825
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+ XE: 478.157
+ YE: 569.694
+66.8873
+ XE: 5.83333e+06
+ YE: 5.77119e+06
+8.20503e+06
+ XE: 902.1
+ YE: 896.779
+547.935
+ XE: 5.56452e+06
+ YE: 5.53237e+06
+7.84599e+06
+ XE: 455.576
+ YE: 452.999
+81.6386
+ XE: 462.842
+ YE: 460.281
+71.3534
+ XE: 0.00386316
+ YE: 0.084358
+724.015
+ XE: 443.708
+ YE: 441.366
+98.2494
+ XE: 0.446837
+ YE: 228.741
+584.741
+Time: 12978222
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+ XE: 2398.55
+ YE: 2293.28
+2594.62
+ XE: 18700.8
+ YE: 18501.6
+25582.4
+ XE: 504.964
+ YE: 501.986
+12.2387
+ XE: 643.812
+ YE: 640.093
+183.799
+ XE: 455.576
+ YE: 452.999
+81.6386
+ XE: 462.842
+ YE: 460.281
+71.3534
+ XE: 702.563
+ YE: 698.765
+266.825
+ XE: 638.044
+ YE: 634.677
+175.888
+ XE: 517.767
+ YE: 515.103
+6.54909
+Time: 11491144
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+ XE: 557.062
+ YE: 532.611
+49.5516
+ XE: 557.426
+ YE: 551.489
+60.1908
+ XE: 507.991
+ YE: 504.995
+8.0711
+ XE: 447.726
+ YE: 445.139
+92.7447
+ XE: 808.73
+ YE: 804.156
+416.417
+ XE: 462.842
+ YE: 460.281
+71.3534
+ XE: 0.00360711
+ YE: 0.000185773
+724.075
+ XE: 56.4402
+ YE: 1132.38
+769.677
+ XE: 517.767
+ YE: 515.103
+6.54909
+Time: 12480405
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+ XE: 551.188
+ YE: 526.995
+41.959
+ XE: 557.688
+ YE: 551.748
+60.5582
+ XE: 505.658
+ YE: 502.675
+11.2777
+ XE: 448.458
+ YE: 446.048
+91.5819
+ XE: 655.344
+ YE: 651.638
+200.116
+ XE: 462.842
+ YE: 460.281
+71.3534
+ XE: 585.999
+ YE: 582.831
+102.435
+ XE: 443.708
+ YE: 441.366
+98.2494
+ XE: 528.158
+ YE: 525.44
+21.0167
+Time: 11430215
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+ XE: 551.118
+ YE: 526.928
+41.8691
+ XE: 557.43
+ YE: 551.493
+60.1966
+ XE: 504.964
+ YE: 501.986
+12.2387
+ XE: 512.012
+ YE: 509.054
+2.94583
+ XE: 459.321
+ YE: 456.723
+76.359
+ XE: 462.842
+ YE: 460.281
+71.3534
+ XE: 488.401
+ YE: 485.76
+35.2909
+ XE: 6.94031e+07
+ YE: 1.13334e+08
+1.32896e+08
+ XE: 517.767
+ YE: 515.103
+6.54909
+Time: 12180900
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+ XE: 551.374
+ YE: 527.173
+42.1966
+ XE: 2271.46
+ YE: 2247.27
+2471.2
+ XE: 605.873
+ YE: 602.299
+130.254
+ XE: 643.839
+ YE: 640.12
+183.838
+ XE: 455.584
+ YE: 453.008
+81.6262
+ XE: 462.842
+ YE: 460.281
+71.3534
+ XE: 489.024
+ YE: 486.38
+34.4137
+ XE: 1071.09
+ YE: 1065.44
+786.69
+ XE: 517.767
+ YE: 515.103
+6.54909
+Time: 11455902
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+ XE: 551.118
+ YE: 526.928
+41.8691
+ XE: 555.905
+ YE: 549.984
+58.0558
+ XE: 504.964
+ YE: 501.986
+12.2387
+ XE: 447.726
+ YE: 445.139
+92.7447
+ XE: 455.576
+ YE: 452.999
+81.6386
+ XE: 462.842
+ YE: 460.281
+71.3534
+ XE: 1178.98
+ YE: 1172.61
+938.756
+ XE: 443.708
+ YE: 441.366
+98.2494
+ XE: 517.767
+ YE: 515.103
+6.54909
+Time: 12137241

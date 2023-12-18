@@ -1,0 +1,200 @@
+Unable to open file
+Array size mismatch
+Expected:67141636
+Provided:0
+Time: 41064
+Unable to open file
+Array size mismatch
+Expected:67141636
+Provided:0
+Time: 41176
+Unable to open file
+Array size mismatch
+Expected:67141636
+Provided:0
+Time: 40788
+Unable to open file
+Array size mismatch
+Expected:67141636
+Provided:0
+Time: 40669
+Unable to open file
+Array size mismatch
+Expected:67141636
+Provided:0
+Time: 41181
+Unable to open file
+Array size mismatch
+Expected:67141636
+Provided:0
+Time: 40842
+Unable to open file
+Array size mismatch
+Expected:67141636
+Provided:0
+Time: 41009
+Unable to open file
+Array size mismatch
+Expected:67141636
+Provided:0
+Time: 40933
+Unable to open file
+Array size mismatch
+Expected:67141636
+Provided:0
+Time: 40979
+Unable to open file
+Array size mismatch
+Expected:67141636
+Provided:0
+Time: 40921
+Unable to open file
+Array size mismatch
+Expected:67141636
+Provided:0
+Time: 41031
+Unable to open file
+Array size mismatch
+Expected:67141636
+Provided:0
+Time: 138936
+Unable to open file
+Array size mismatch
+Expected:67141636
+Provided:0
+Time: 41332
+Unable to open file
+Array size mismatch
+Expected:67141636
+Provided:0
+Time: 40683
+Unable to open file
+Array size mismatch
+Expected:67141636
+Provided:0
+Time: 40934
+Unable to open file
+Array size mismatch
+Expected:67141636
+Provided:0
+Time: 41002
+Unable to open file
+Array size mismatch
+Expected:67141636
+Provided:0
+Time: 41372
+Unable to open file
+Array size mismatch
+Expected:67141636
+Provided:0
+Time: 40741
+Unable to open file
+Array size mismatch
+Expected:67141636
+Provided:0
+Time: 41089
+Unable to open file
+Array size mismatch
+Expected:67141636
+Provided:0
+Time: 40906
+Unable to open file
+Array size mismatch
+Expected:67141636
+Provided:0
+Time: 40851
+Unable to open file
+Array size mismatch
+Expected:67141636
+Provided:0
+Time: 41241
+Unable to open file
+Array size mismatch
+Expected:67141636
+Provided:0
+Time: 40746
+Unable to open file
+Array size mismatch
+Expected:67141636
+Provided:0
+Time: 40975
+Unable to open file
+Array size mismatch
+Expected:67141636
+Provided:0
+Time: 40876
+Unable to open file
+Array size mismatch
+Expected:67141636
+Provided:0
+Time: 40970
+Unable to open file
+Array size mismatch
+Expected:67141636
+Provided:0
+Time: 41152
+Unable to open file
+Array size mismatch
+Expected:67141636
+Provided:0
+Time: 40808
+Unable to open file
+Array size mismatch
+Expected:67141636
+Provided:0
+Time: 40839
+Unable to open file
+Array size mismatch
+Expected:67141636
+Provided:0
+Time: 40835
+Unable to open file
+Array size mismatch
+Expected:67141636
+Provided:0
+Time: 41289
+Unable to open file
+Array size mismatch
+Expected:67141636
+Provided:0
+Time: 70164
+Unable to open file
+Array size mismatch
+Expected:67141636
+Provided:0
+Time: 41033
+Unable to open file
+Array size mismatch
+Expected:67141636
+Provided:0
+Time: 40947
+Unable to open file
+Array size mismatch
+Expected:67141636
+Provided:0
+Time: 41132
+Unable to open file
+Array size mismatch
+Expected:67141636
+Provided:0
+Time: 40785
+Unable to open file
+Array size mismatch
+Expected:67141636
+Provided:0
+Time: 41145
+Unable to open file
+Array size mismatch
+Expected:67141636
+Provided:0
+Time: 40973
+Unable to open file
+Array size mismatch
+Expected:67141636
+Provided:0
+Time: 41024
+Unable to open file
+Array size mismatch
+Expected:67141636
+Provided:0
+Time: 41160

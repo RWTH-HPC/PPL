@@ -22,6 +22,7 @@ void fill_rand(float *weights, int rows, int cols)
     curandGenerateUniform(prng, weights, rows * cols);
 }
 
+
 __device__
 float activation(float* weights, float* features, int length) {
     float z = 0;

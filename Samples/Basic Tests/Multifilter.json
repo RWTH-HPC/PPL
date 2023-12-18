@@ -1,0 +1,1354 @@
+{
+
+    "file" : "/home/adrian/Documents/PPL/parallel-pattern-dsl/PPL-Sources/PPL-Tool/out/Multifilter",
+
+  "Name" : "/home/adrian/Documents/PPL/parallel-pattern-dsl/PPL-Sources/PPL-Tool/out/Multifilter",
+  "Root" : {
+        "Name" : "main",
+    "Pattern" : "Serial",
+    "Input" : [
+    ],
+    "Output" : [
+    ],
+    "Cost" : "738009100",
+    "Load/Store" : "3287531574",
+    "Variables" : [
+      {
+        "Name" : "image",
+        "Data Type" : "double",
+        "Dimension" : "2",
+        "Shape" : ["8194","8194"]
+      },      {
+        "Name" : "lower_half",
+        "Data Type" : "double",
+        "Dimension" : "2",
+        "Shape" : ["4096","8192"]
+      },      {
+        "Name" : "upper_half",
+        "Data Type" : "double",
+        "Dimension" : "2",
+        "Shape" : ["4096","8192"]
+      },      {
+        "Name" : "full",
+        "Data Type" : "double",
+        "Dimension" : "2",
+        "Shape" : ["8192","8192"]
+      }    ],
+    "Parallel Descendants" : "true",
+    "Children" : [
+      {
+        "Pattern Node Type" : "ComplexExpressionNode",
+        "InputData" : [
+        ],
+        "OutputData" : [
+          {
+            "Name" : "image",
+            "Data Type" : "double",
+            "Dimension" : "2",
+            "Shape" : ["8194","8194"]
+          }
+        ],
+        "InputAccesses" : [
+        ],
+        "OutputAccesses" : [
+          {
+            "Variable" : "image",
+            "Write" : "true",
+            "Type" : "Serial"
+          }
+        ],
+        "Cost" : "0",
+        "Load/Store" : "1",
+        "ID" : "afn2HRYg44",
+        "Parallel Descendants" : "false",
+        "Calls" : [
+        ]
+      },
+      {
+        "Pattern Node Type" : "ComplexExpressionNode",
+        "InputData" : [
+        ],
+        "OutputData" : [
+          {
+            "Name" : "upper_half",
+            "Data Type" : "double",
+            "Dimension" : "2",
+            "Shape" : ["4096","8192"]
+          }
+        ],
+        "InputAccesses" : [
+        ],
+        "OutputAccesses" : [
+          {
+            "Variable" : "upper_half",
+            "Write" : "true",
+            "Type" : "Serial"
+          }
+        ],
+        "Cost" : "0",
+        "Load/Store" : "1",
+        "ID" : "9DCSRHuf89",
+        "Parallel Descendants" : "false",
+        "Calls" : [
+        ]
+      },
+      {
+        "Pattern Node Type" : "ComplexExpressionNode",
+        "InputData" : [
+        ],
+        "OutputData" : [
+          {
+            "Name" : "lower_half",
+            "Data Type" : "double",
+            "Dimension" : "2",
+            "Shape" : ["4096","8192"]
+          }
+        ],
+        "InputAccesses" : [
+        ],
+        "OutputAccesses" : [
+          {
+            "Variable" : "lower_half",
+            "Write" : "true",
+            "Type" : "Serial"
+          }
+        ],
+        "Cost" : "0",
+        "Load/Store" : "1",
+        "ID" : "3fG6ofql10",
+        "Parallel Descendants" : "false",
+        "Calls" : [
+        ]
+      },
+      {
+        "Pattern Node Type" : "ComplexExpressionNode",
+        "InputData" : [
+        ],
+        "OutputData" : [
+          {
+            "Name" : "full",
+            "Data Type" : "double",
+            "Dimension" : "2",
+            "Shape" : ["8192","8192"]
+          }
+        ],
+        "InputAccesses" : [
+        ],
+        "OutputAccesses" : [
+          {
+            "Variable" : "full",
+            "Write" : "true",
+            "Type" : "Serial"
+          }
+        ],
+        "Cost" : "0",
+        "Load/Store" : "1",
+        "ID" : "i5YTArYRbu",
+        "Parallel Descendants" : "false",
+        "Calls" : [
+        ]
+      },
+      {
+        "Pattern Node Type" : "SimpleExpressionBlockNode",
+        "InputData" : [
+          {
+            "Name" : "image",
+            "Data Type" : "double",
+            "Dimension" : "2",
+            "Shape" : ["8194","8194"]
+          }
+        ],
+        "OutputData" : [
+          {
+            "Name" : "image",
+            "Data Type" : "double",
+            "Dimension" : "2",
+            "Shape" : ["8194","8194"]
+          }
+        ],
+        "InputAccesses" : [
+          {
+            "Variable" : "image",
+            "Write" : "false",
+            "Type" : "Serial"
+          }
+        ],
+        "OutputAccesses" : [
+          {
+            "Variable" : "image",
+            "Write" : "true",
+            "Type" : "Serial"
+          }
+        ],
+        "Cost" : "0",
+        "Load/Store" : "1",
+        "ID" : "e7zaSQubYt"      },
+      {
+        "Name" : "sobel_horizontal",
+        "Pattern Node Type" : "ParallelCallNode",
+        "InputData" : [
+          {
+            "Name" : "image",
+            "Data Type" : "double",
+            "Dimension" : "2",
+            "Shape" : ["8194","8194"]
+          }
+        ],
+        "OutputData" : [
+          {
+            "Name" : "upper_half",
+            "Data Type" : "double",
+            "Dimension" : "2",
+            "Shape" : ["4096","8192"]
+          }
+        ],
+        "InputAccesses" : [
+          {
+            "Variable" : "image",
+            "Write" : "false",
+            "Type" : "Serial"
+          }
+        ],
+        "OutputAccesses" : [
+          {
+            "Variable" : "upper_half",
+            "Write" : "true",
+            "Type" : "Serial"
+          }
+        ],
+        "Cost" : "234795015",
+        "Load/Store" : "905637915",
+        "ID" : "RIdk3q1ssI",
+        "Starts" : [
+          "1", "1" 
+        ],
+        "Lengths" : [
+          "4095", "8191" 
+        ]
+      },
+      {
+        "Name" : "prewitt_horizontal",
+        "Pattern Node Type" : "ParallelCallNode",
+        "InputData" : [
+          {
+            "Name" : "image",
+            "Data Type" : "double",
+            "Dimension" : "2",
+            "Shape" : ["8194","8194"]
+          }
+        ],
+        "OutputData" : [
+          {
+            "Name" : "lower_half",
+            "Data Type" : "double",
+            "Dimension" : "2",
+            "Shape" : ["4096","8192"]
+          }
+        ],
+        "InputAccesses" : [
+          {
+            "Variable" : "image",
+            "Write" : "false",
+            "Type" : "Serial"
+          }
+        ],
+        "OutputAccesses" : [
+          {
+            "Variable" : "lower_half",
+            "Write" : "true",
+            "Type" : "Serial"
+          }
+        ],
+        "Cost" : "167751680",
+        "Load/Store" : "905859072",
+        "ID" : "sTaIcQzkRK",
+        "Starts" : [
+          "0", "1" 
+        ],
+        "Lengths" : [
+          "4096", "8191" 
+        ]
+      },
+      {
+        "Name" : "laplacian",
+        "Pattern Node Type" : "ParallelCallNode",
+        "InputData" : [
+          {
+            "Name" : "image",
+            "Data Type" : "double",
+            "Dimension" : "2",
+            "Shape" : ["8194","8194"]
+          }
+        ],
+        "OutputData" : [
+          {
+            "Name" : "full",
+            "Data Type" : "double",
+            "Dimension" : "2",
+            "Shape" : ["8192","8192"]
+          }
+        ],
+        "InputAccesses" : [
+          {
+            "Variable" : "image",
+            "Write" : "false",
+            "Type" : "Serial"
+          }
+        ],
+        "OutputAccesses" : [
+          {
+            "Variable" : "full",
+            "Write" : "true",
+            "Type" : "Serial"
+          }
+        ],
+        "Cost" : "335462405",
+        "Load/Store" : "1476034582",
+        "ID" : "3ApjX0FZgE",
+        "Starts" : [
+          "1", "1" 
+        ],
+        "Lengths" : [
+          "8191", "8191" 
+        ]
+      },
+      {
+        "Pattern Node Type" : "ReturnNode",
+        "InputData" : [
+        ],
+        "OutputData" : [
+        ],
+        "InputAccesses" : [
+        ],
+        "OutputAccesses" : [
+        ],
+        "Cost" : "0",
+        "Load/Store" : "0",
+        "ID" : "CfyDrGdmEn",
+        "Parallel Descendants" : "false",
+        "Result" : {
+          "Pattern Node Type" : "ComplexExpressionNode",
+          "InputData" : [
+          ],
+          "OutputData" : [
+          ],
+          "InputAccesses" : [
+          ],
+          "OutputAccesses" : [
+          ],
+          "Cost" : "0",
+          "Load/Store" : "0",
+          "ID" : "rVytTMmvry",
+          "Parallel Descendants" : "false",
+          "Calls" : [
+          ]
+        }
+      }
+    ]
+  },
+  "Global Variables" : [
+
+  ],
+  "Functions" : [
+    {
+      "Name" : "prewitt_horizontal",
+      "Pattern" : "Stencil",
+      "Input" : [
+        {
+          "Name" : "input",
+          "Data Type" : "double",
+          "Dimension" : "2"
+        }
+      ],
+      "Output" : [
+        {
+          "Name" : "res",
+          "Data Type" : "double",
+          "Dimension" : "2"
+        }
+      ],
+      "Cost" : "5",
+      "Load/Store" : "25",
+      "Variables" : [
+        {
+          "Name" : "right",
+          "Data Type" : "double",
+          "Dimension" : "0"
+        },        {
+          "Name" : "left",
+          "Data Type" : "double",
+          "Dimension" : "0"
+        }      ],
+      "Parallel Descendants" : "false",
+      "Children" : [
+        {
+          "Pattern Node Type" : "SimpleExpressionBlockNode",
+          "InputData" : [
+            {
+              "Name" : "input",
+              "Data Type" : "double",
+              "Dimension" : "2"
+            },
+            {
+              "Name" : "INDEX0",
+              "Data Type" : "int32",
+              "Dimension" : "0"
+            },
+            {
+              "Name" : "INDEX1",
+              "Data Type" : "int32",
+              "Dimension" : "0"
+            },
+            {
+              "Name" : "right",
+              "Data Type" : "double",
+              "Dimension" : "0"
+            },
+            {
+              "Name" : "left",
+              "Data Type" : "double",
+              "Dimension" : "0"
+            }
+          ],
+          "OutputData" : [
+            {
+              "Name" : "right",
+              "Data Type" : "double",
+              "Dimension" : "0"
+            },
+            {
+              "Name" : "left",
+              "Data Type" : "double",
+              "Dimension" : "0"
+            },
+            {
+              "Name" : "res",
+              "Data Type" : "double",
+              "Dimension" : "2"
+            }
+          ],
+          "InputAccesses" : [
+            {
+              "Variable" : "input",
+              "Write" : "false",
+              "Type" : "Stencil",
+              "Scaling" : ["1","1"],
+              "Shift" : ["4096","1"],
+              "Iterator" : ["INDEX0","INDEX1"]
+            },
+            {
+              "Variable" : "INDEX0",
+              "Write" : "false",
+              "Type" : "Serial"
+            },
+            {
+              "Variable" : "INDEX1",
+              "Write" : "false",
+              "Type" : "Serial"
+            },
+            {
+              "Variable" : "input",
+              "Write" : "false",
+              "Type" : "Stencil",
+              "Scaling" : ["1","1"],
+              "Shift" : ["4095","1"],
+              "Iterator" : ["INDEX0","INDEX1"]
+            },
+            {
+              "Variable" : "INDEX0",
+              "Write" : "false",
+              "Type" : "Serial"
+            },
+            {
+              "Variable" : "INDEX1",
+              "Write" : "false",
+              "Type" : "Serial"
+            },
+            {
+              "Variable" : "input",
+              "Write" : "false",
+              "Type" : "Stencil",
+              "Scaling" : ["1","1"],
+              "Shift" : ["4097","1"],
+              "Iterator" : ["INDEX0","INDEX1"]
+            },
+            {
+              "Variable" : "INDEX0",
+              "Write" : "false",
+              "Type" : "Serial"
+            },
+            {
+              "Variable" : "INDEX1",
+              "Write" : "false",
+              "Type" : "Serial"
+            },
+            {
+              "Variable" : "input",
+              "Write" : "false",
+              "Type" : "Stencil",
+              "Scaling" : ["1","1"],
+              "Shift" : ["4096","-1"],
+              "Iterator" : ["INDEX0","INDEX1"]
+            },
+            {
+              "Variable" : "INDEX0",
+              "Write" : "false",
+              "Type" : "Serial"
+            },
+            {
+              "Variable" : "INDEX1",
+              "Write" : "false",
+              "Type" : "Serial"
+            },
+            {
+              "Variable" : "input",
+              "Write" : "false",
+              "Type" : "Stencil",
+              "Scaling" : ["1","1"],
+              "Shift" : ["4095","-1"],
+              "Iterator" : ["INDEX0","INDEX1"]
+            },
+            {
+              "Variable" : "INDEX0",
+              "Write" : "false",
+              "Type" : "Serial"
+            },
+            {
+              "Variable" : "INDEX1",
+              "Write" : "false",
+              "Type" : "Serial"
+            },
+            {
+              "Variable" : "input",
+              "Write" : "false",
+              "Type" : "Stencil",
+              "Scaling" : ["1","1"],
+              "Shift" : ["4097","-1"],
+              "Iterator" : ["INDEX0","INDEX1"]
+            },
+            {
+              "Variable" : "INDEX0",
+              "Write" : "false",
+              "Type" : "Serial"
+            },
+            {
+              "Variable" : "INDEX1",
+              "Write" : "false",
+              "Type" : "Serial"
+            },
+            {
+              "Variable" : "INDEX0",
+              "Write" : "false",
+              "Type" : "Serial"
+            },
+            {
+              "Variable" : "INDEX1",
+              "Write" : "false",
+              "Type" : "Serial"
+            },
+            {
+              "Variable" : "right",
+              "Write" : "false",
+              "Type" : "Serial"
+            },
+            {
+              "Variable" : "left",
+              "Write" : "false",
+              "Type" : "Serial"
+            }
+          ],
+          "OutputAccesses" : [
+            {
+              "Variable" : "right",
+              "Write" : "true",
+              "Type" : "Serial"
+            },
+            {
+              "Variable" : "left",
+              "Write" : "true",
+              "Type" : "Serial"
+            },
+            {
+              "Variable" : "res",
+              "Write" : "true",
+              "Type" : "Stencil",
+              "Scaling" : ["1","1"],
+              "Shift" : ["0","0"],
+              "Iterator" : ["INDEX0","INDEX1"]
+            }
+          ],
+          "Cost" : "5",
+          "Load/Store" : "25",
+          "ID" : "iyolcVe4nM"        }
+      ]
+    },
+    {
+      "Name" : "laplacian",
+      "Pattern" : "Stencil",
+      "Input" : [
+        {
+          "Name" : "input",
+          "Data Type" : "double",
+          "Dimension" : "2"
+        }
+      ],
+      "Output" : [
+        {
+          "Name" : "res",
+          "Data Type" : "double",
+          "Dimension" : "2"
+        }
+      ],
+      "Cost" : "5",
+      "Load/Store" : "20",
+      "Variables" : [
+        {
+          "Name" : "outer",
+          "Data Type" : "double",
+          "Dimension" : "0"
+        }      ],
+      "Parallel Descendants" : "false",
+      "Children" : [
+        {
+          "Pattern Node Type" : "SimpleExpressionBlockNode",
+          "InputData" : [
+            {
+              "Name" : "input",
+              "Data Type" : "double",
+              "Dimension" : "2"
+            },
+            {
+              "Name" : "INDEX0",
+              "Data Type" : "int32",
+              "Dimension" : "0"
+            },
+            {
+              "Name" : "INDEX1",
+              "Data Type" : "int32",
+              "Dimension" : "0"
+            },
+            {
+              "Name" : "outer",
+              "Data Type" : "double",
+              "Dimension" : "0"
+            }
+          ],
+          "OutputData" : [
+            {
+              "Name" : "outer",
+              "Data Type" : "double",
+              "Dimension" : "0"
+            },
+            {
+              "Name" : "res",
+              "Data Type" : "double",
+              "Dimension" : "2"
+            }
+          ],
+          "InputAccesses" : [
+            {
+              "Variable" : "input",
+              "Write" : "false",
+              "Type" : "Stencil",
+              "Scaling" : ["1","1"],
+              "Shift" : ["-1","0"],
+              "Iterator" : ["INDEX0","INDEX1"]
+            },
+            {
+              "Variable" : "INDEX0",
+              "Write" : "false",
+              "Type" : "Serial"
+            },
+            {
+              "Variable" : "INDEX1",
+              "Write" : "false",
+              "Type" : "Serial"
+            },
+            {
+              "Variable" : "input",
+              "Write" : "false",
+              "Type" : "Stencil",
+              "Scaling" : ["1","1"],
+              "Shift" : ["0","-1"],
+              "Iterator" : ["INDEX0","INDEX1"]
+            },
+            {
+              "Variable" : "INDEX0",
+              "Write" : "false",
+              "Type" : "Serial"
+            },
+            {
+              "Variable" : "INDEX1",
+              "Write" : "false",
+              "Type" : "Serial"
+            },
+            {
+              "Variable" : "input",
+              "Write" : "false",
+              "Type" : "Stencil",
+              "Scaling" : ["1","1"],
+              "Shift" : ["0","1"],
+              "Iterator" : ["INDEX0","INDEX1"]
+            },
+            {
+              "Variable" : "INDEX0",
+              "Write" : "false",
+              "Type" : "Serial"
+            },
+            {
+              "Variable" : "INDEX1",
+              "Write" : "false",
+              "Type" : "Serial"
+            },
+            {
+              "Variable" : "input",
+              "Write" : "false",
+              "Type" : "Stencil",
+              "Scaling" : ["1","1"],
+              "Shift" : ["1","0"],
+              "Iterator" : ["INDEX0","INDEX1"]
+            },
+            {
+              "Variable" : "INDEX0",
+              "Write" : "false",
+              "Type" : "Serial"
+            },
+            {
+              "Variable" : "INDEX1",
+              "Write" : "false",
+              "Type" : "Serial"
+            },
+            {
+              "Variable" : "INDEX0",
+              "Write" : "false",
+              "Type" : "Serial"
+            },
+            {
+              "Variable" : "INDEX1",
+              "Write" : "false",
+              "Type" : "Serial"
+            },
+            {
+              "Variable" : "outer",
+              "Write" : "false",
+              "Type" : "Serial"
+            },
+            {
+              "Variable" : "input",
+              "Write" : "false",
+              "Type" : "Stencil",
+              "Scaling" : ["1","1"],
+              "Shift" : ["0","0"],
+              "Iterator" : ["INDEX0","INDEX1"]
+            },
+            {
+              "Variable" : "INDEX0",
+              "Write" : "false",
+              "Type" : "Serial"
+            },
+            {
+              "Variable" : "INDEX1",
+              "Write" : "false",
+              "Type" : "Serial"
+            }
+          ],
+          "OutputAccesses" : [
+            {
+              "Variable" : "outer",
+              "Write" : "true",
+              "Type" : "Serial"
+            },
+            {
+              "Variable" : "res",
+              "Write" : "true",
+              "Type" : "Stencil",
+              "Scaling" : ["1","1"],
+              "Shift" : ["0","0"],
+              "Iterator" : ["INDEX0","INDEX1"]
+            }
+          ],
+          "Cost" : "5",
+          "Load/Store" : "20",
+          "ID" : "MWiH5RnDah"        }
+      ]
+    },
+    {
+      "Name" : "main",
+      "Pattern" : "Serial",
+      "Input" : [
+      ],
+      "Output" : [
+      ],
+      "Cost" : "738009100",
+      "Load/Store" : "3287531574",
+      "Variables" : [
+        {
+          "Name" : "image",
+          "Data Type" : "double",
+          "Dimension" : "2",
+          "Shape" : ["8194","8194"]
+        },        {
+          "Name" : "lower_half",
+          "Data Type" : "double",
+          "Dimension" : "2",
+          "Shape" : ["4096","8192"]
+        },        {
+          "Name" : "upper_half",
+          "Data Type" : "double",
+          "Dimension" : "2",
+          "Shape" : ["4096","8192"]
+        },        {
+          "Name" : "full",
+          "Data Type" : "double",
+          "Dimension" : "2",
+          "Shape" : ["8192","8192"]
+        }      ],
+      "Parallel Descendants" : "true",
+      "Children" : [
+        {
+          "Pattern Node Type" : "ComplexExpressionNode",
+          "InputData" : [
+          ],
+          "OutputData" : [
+            {
+              "Name" : "image",
+              "Data Type" : "double",
+              "Dimension" : "2",
+              "Shape" : ["8194","8194"]
+            }
+          ],
+          "InputAccesses" : [
+          ],
+          "OutputAccesses" : [
+            {
+              "Variable" : "image",
+              "Write" : "true",
+              "Type" : "Serial"
+            }
+          ],
+          "Cost" : "0",
+          "Load/Store" : "1",
+          "ID" : "5qhBA3ukkU",
+          "Parallel Descendants" : "false",
+          "Calls" : [
+          ]
+        },
+        {
+          "Pattern Node Type" : "ComplexExpressionNode",
+          "InputData" : [
+          ],
+          "OutputData" : [
+            {
+              "Name" : "upper_half",
+              "Data Type" : "double",
+              "Dimension" : "2",
+              "Shape" : ["4096","8192"]
+            }
+          ],
+          "InputAccesses" : [
+          ],
+          "OutputAccesses" : [
+            {
+              "Variable" : "upper_half",
+              "Write" : "true",
+              "Type" : "Serial"
+            }
+          ],
+          "Cost" : "0",
+          "Load/Store" : "1",
+          "ID" : "uJjqaKyHBr",
+          "Parallel Descendants" : "false",
+          "Calls" : [
+          ]
+        },
+        {
+          "Pattern Node Type" : "ComplexExpressionNode",
+          "InputData" : [
+          ],
+          "OutputData" : [
+            {
+              "Name" : "lower_half",
+              "Data Type" : "double",
+              "Dimension" : "2",
+              "Shape" : ["4096","8192"]
+            }
+          ],
+          "InputAccesses" : [
+          ],
+          "OutputAccesses" : [
+            {
+              "Variable" : "lower_half",
+              "Write" : "true",
+              "Type" : "Serial"
+            }
+          ],
+          "Cost" : "0",
+          "Load/Store" : "1",
+          "ID" : "OllcgNWMTJ",
+          "Parallel Descendants" : "false",
+          "Calls" : [
+          ]
+        },
+        {
+          "Pattern Node Type" : "ComplexExpressionNode",
+          "InputData" : [
+          ],
+          "OutputData" : [
+            {
+              "Name" : "full",
+              "Data Type" : "double",
+              "Dimension" : "2",
+              "Shape" : ["8192","8192"]
+            }
+          ],
+          "InputAccesses" : [
+          ],
+          "OutputAccesses" : [
+            {
+              "Variable" : "full",
+              "Write" : "true",
+              "Type" : "Serial"
+            }
+          ],
+          "Cost" : "0",
+          "Load/Store" : "1",
+          "ID" : "QgdNXE9FOT",
+          "Parallel Descendants" : "false",
+          "Calls" : [
+          ]
+        },
+        {
+          "Pattern Node Type" : "SimpleExpressionBlockNode",
+          "InputData" : [
+            {
+              "Name" : "image",
+              "Data Type" : "double",
+              "Dimension" : "2",
+              "Shape" : ["8194","8194"]
+            }
+          ],
+          "OutputData" : [
+            {
+              "Name" : "image",
+              "Data Type" : "double",
+              "Dimension" : "2",
+              "Shape" : ["8194","8194"]
+            }
+          ],
+          "InputAccesses" : [
+            {
+              "Variable" : "image",
+              "Write" : "false",
+              "Type" : "Serial"
+            }
+          ],
+          "OutputAccesses" : [
+            {
+              "Variable" : "image",
+              "Write" : "true",
+              "Type" : "Serial"
+            }
+          ],
+          "Cost" : "0",
+          "Load/Store" : "1",
+          "ID" : "J8uyLRE5Ms"        },
+        {
+          "Name" : "sobel_horizontal",
+          "Pattern Node Type" : "ParallelCallNode",
+          "InputData" : [
+            {
+              "Name" : "image",
+              "Data Type" : "double",
+              "Dimension" : "2",
+              "Shape" : ["8194","8194"]
+            }
+          ],
+          "OutputData" : [
+            {
+              "Name" : "upper_half",
+              "Data Type" : "double",
+              "Dimension" : "2",
+              "Shape" : ["4096","8192"]
+            }
+          ],
+          "InputAccesses" : [
+            {
+              "Variable" : "image",
+              "Write" : "false",
+              "Type" : "Serial"
+            }
+          ],
+          "OutputAccesses" : [
+            {
+              "Variable" : "upper_half",
+              "Write" : "true",
+              "Type" : "Serial"
+            }
+          ],
+          "Cost" : "234795015",
+          "Load/Store" : "905637915",
+          "ID" : "tOqFNat5Fu",
+          "Starts" : [
+            "1", "1" 
+          ],
+          "Lengths" : [
+            "4095", "8191" 
+          ]
+        },
+        {
+          "Name" : "prewitt_horizontal",
+          "Pattern Node Type" : "ParallelCallNode",
+          "InputData" : [
+            {
+              "Name" : "image",
+              "Data Type" : "double",
+              "Dimension" : "2",
+              "Shape" : ["8194","8194"]
+            }
+          ],
+          "OutputData" : [
+            {
+              "Name" : "lower_half",
+              "Data Type" : "double",
+              "Dimension" : "2",
+              "Shape" : ["4096","8192"]
+            }
+          ],
+          "InputAccesses" : [
+            {
+              "Variable" : "image",
+              "Write" : "false",
+              "Type" : "Serial"
+            }
+          ],
+          "OutputAccesses" : [
+            {
+              "Variable" : "lower_half",
+              "Write" : "true",
+              "Type" : "Serial"
+            }
+          ],
+          "Cost" : "167751680",
+          "Load/Store" : "905859072",
+          "ID" : "JUsu6erPuj",
+          "Starts" : [
+            "0", "1" 
+          ],
+          "Lengths" : [
+            "4096", "8191" 
+          ]
+        },
+        {
+          "Name" : "laplacian",
+          "Pattern Node Type" : "ParallelCallNode",
+          "InputData" : [
+            {
+              "Name" : "image",
+              "Data Type" : "double",
+              "Dimension" : "2",
+              "Shape" : ["8194","8194"]
+            }
+          ],
+          "OutputData" : [
+            {
+              "Name" : "full",
+              "Data Type" : "double",
+              "Dimension" : "2",
+              "Shape" : ["8192","8192"]
+            }
+          ],
+          "InputAccesses" : [
+            {
+              "Variable" : "image",
+              "Write" : "false",
+              "Type" : "Serial"
+            }
+          ],
+          "OutputAccesses" : [
+            {
+              "Variable" : "full",
+              "Write" : "true",
+              "Type" : "Serial"
+            }
+          ],
+          "Cost" : "335462405",
+          "Load/Store" : "1476034582",
+          "ID" : "lQFqrf5XPD",
+          "Starts" : [
+            "1", "1" 
+          ],
+          "Lengths" : [
+            "8191", "8191" 
+          ]
+        },
+        {
+          "Pattern Node Type" : "ReturnNode",
+          "InputData" : [
+          ],
+          "OutputData" : [
+          ],
+          "InputAccesses" : [
+          ],
+          "OutputAccesses" : [
+          ],
+          "Cost" : "0",
+          "Load/Store" : "0",
+          "ID" : "M8PRP1lNzH",
+          "Parallel Descendants" : "false",
+          "Result" : {
+            "Pattern Node Type" : "ComplexExpressionNode",
+            "InputData" : [
+            ],
+            "OutputData" : [
+            ],
+            "InputAccesses" : [
+            ],
+            "OutputAccesses" : [
+            ],
+            "Cost" : "0",
+            "Load/Store" : "0",
+            "ID" : "FzE92Yi6cj",
+            "Parallel Descendants" : "false",
+            "Calls" : [
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "Name" : "sobel_horizontal",
+      "Pattern" : "Stencil",
+      "Input" : [
+        {
+          "Name" : "input",
+          "Data Type" : "double",
+          "Dimension" : "2"
+        }
+      ],
+      "Output" : [
+        {
+          "Name" : "res",
+          "Data Type" : "double",
+          "Dimension" : "2"
+        }
+      ],
+      "Cost" : "7",
+      "Load/Store" : "25",
+      "Variables" : [
+        {
+          "Name" : "right",
+          "Data Type" : "double",
+          "Dimension" : "0"
+        },        {
+          "Name" : "left",
+          "Data Type" : "double",
+          "Dimension" : "0"
+        }      ],
+      "Parallel Descendants" : "false",
+      "Children" : [
+        {
+          "Pattern Node Type" : "SimpleExpressionBlockNode",
+          "InputData" : [
+            {
+              "Name" : "input",
+              "Data Type" : "double",
+              "Dimension" : "2"
+            },
+            {
+              "Name" : "INDEX0",
+              "Data Type" : "int32",
+              "Dimension" : "0"
+            },
+            {
+              "Name" : "INDEX1",
+              "Data Type" : "int32",
+              "Dimension" : "0"
+            },
+            {
+              "Name" : "right",
+              "Data Type" : "double",
+              "Dimension" : "0"
+            },
+            {
+              "Name" : "left",
+              "Data Type" : "double",
+              "Dimension" : "0"
+            }
+          ],
+          "OutputData" : [
+            {
+              "Name" : "right",
+              "Data Type" : "double",
+              "Dimension" : "0"
+            },
+            {
+              "Name" : "left",
+              "Data Type" : "double",
+              "Dimension" : "0"
+            },
+            {
+              "Name" : "res",
+              "Data Type" : "double",
+              "Dimension" : "2"
+            }
+          ],
+          "InputAccesses" : [
+            {
+              "Variable" : "input",
+              "Write" : "false",
+              "Type" : "Stencil",
+              "Scaling" : ["1","1"],
+              "Shift" : ["0","1"],
+              "Iterator" : ["INDEX0","INDEX1"]
+            },
+            {
+              "Variable" : "INDEX0",
+              "Write" : "false",
+              "Type" : "Serial"
+            },
+            {
+              "Variable" : "INDEX1",
+              "Write" : "false",
+              "Type" : "Serial"
+            },
+            {
+              "Variable" : "input",
+              "Write" : "false",
+              "Type" : "Stencil",
+              "Scaling" : ["1","1"],
+              "Shift" : ["-1","1"],
+              "Iterator" : ["INDEX0","INDEX1"]
+            },
+            {
+              "Variable" : "INDEX0",
+              "Write" : "false",
+              "Type" : "Serial"
+            },
+            {
+              "Variable" : "INDEX1",
+              "Write" : "false",
+              "Type" : "Serial"
+            },
+            {
+              "Variable" : "input",
+              "Write" : "false",
+              "Type" : "Stencil",
+              "Scaling" : ["1","1"],
+              "Shift" : ["1","1"],
+              "Iterator" : ["INDEX0","INDEX1"]
+            },
+            {
+              "Variable" : "INDEX0",
+              "Write" : "false",
+              "Type" : "Serial"
+            },
+            {
+              "Variable" : "INDEX1",
+              "Write" : "false",
+              "Type" : "Serial"
+            },
+            {
+              "Variable" : "input",
+              "Write" : "false",
+              "Type" : "Stencil",
+              "Scaling" : ["1","1"],
+              "Shift" : ["0","-1"],
+              "Iterator" : ["INDEX0","INDEX1"]
+            },
+            {
+              "Variable" : "INDEX0",
+              "Write" : "false",
+              "Type" : "Serial"
+            },
+            {
+              "Variable" : "INDEX1",
+              "Write" : "false",
+              "Type" : "Serial"
+            },
+            {
+              "Variable" : "input",
+              "Write" : "false",
+              "Type" : "Stencil",
+              "Scaling" : ["1","1"],
+              "Shift" : ["-1","-1"],
+              "Iterator" : ["INDEX0","INDEX1"]
+            },
+            {
+              "Variable" : "INDEX0",
+              "Write" : "false",
+              "Type" : "Serial"
+            },
+            {
+              "Variable" : "INDEX1",
+              "Write" : "false",
+              "Type" : "Serial"
+            },
+            {
+              "Variable" : "input",
+              "Write" : "false",
+              "Type" : "Stencil",
+              "Scaling" : ["1","1"],
+              "Shift" : ["1","-1"],
+              "Iterator" : ["INDEX0","INDEX1"]
+            },
+            {
+              "Variable" : "INDEX0",
+              "Write" : "false",
+              "Type" : "Serial"
+            },
+            {
+              "Variable" : "INDEX1",
+              "Write" : "false",
+              "Type" : "Serial"
+            },
+            {
+              "Variable" : "INDEX0",
+              "Write" : "false",
+              "Type" : "Serial"
+            },
+            {
+              "Variable" : "INDEX1",
+              "Write" : "false",
+              "Type" : "Serial"
+            },
+            {
+              "Variable" : "right",
+              "Write" : "false",
+              "Type" : "Serial"
+            },
+            {
+              "Variable" : "left",
+              "Write" : "false",
+              "Type" : "Serial"
+            }
+          ],
+          "OutputAccesses" : [
+            {
+              "Variable" : "right",
+              "Write" : "true",
+              "Type" : "Serial"
+            },
+            {
+              "Variable" : "left",
+              "Write" : "true",
+              "Type" : "Serial"
+            },
+            {
+              "Variable" : "res",
+              "Write" : "true",
+              "Type" : "Stencil",
+              "Scaling" : ["1","1"],
+              "Shift" : ["0","0"],
+              "Iterator" : ["INDEX0","INDEX1"]
+            }
+          ],
+          "Cost" : "7",
+          "Load/Store" : "25",
+          "ID" : "1Krar9soG9"        }
+      ]
+    }
+  ]
+
+
+
+}
